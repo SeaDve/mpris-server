@@ -1,4 +1,4 @@
-use std::cell::{Cell, RefCell};
+use std::cell::{Cell, Ref, RefCell};
 
 use zbus::Result;
 
@@ -17,6 +17,7 @@ pub struct Player {
 struct Inner {
     raise_cbs: RefCell<Vec<Box<dyn Fn()>>>,
     quit_cbs: RefCell<Vec<Box<dyn Fn()>>>,
+    set_fullscreen_cbs: RefCell<Vec<Box<dyn Fn(bool)>>>, // Property
     can_quit: Cell<bool>,
     fullscreen: Cell<bool>,
     can_set_fullscreen: Cell<bool>,
@@ -36,6 +37,10 @@ struct Inner {
     seek_cbs: RefCell<Vec<Box<dyn Fn(TimeInUs)>>>,
     set_position_cbs: RefCell<Vec<Box<dyn Fn(&TrackId, TimeInUs)>>>,
     open_uri_cbs: RefCell<Vec<Box<dyn Fn(&str)>>>,
+    set_loop_status_cbs: RefCell<Vec<Box<dyn Fn(LoopStatus)>>>, // Property
+    set_rate_cbs: RefCell<Vec<Box<dyn Fn(PlaybackRate)>>>,      // Property
+    set_shuffle_cbs: RefCell<Vec<Box<dyn Fn(bool)>>>,           // Property
+    set_volume_cbs: RefCell<Vec<Box<dyn Fn(Volume)>>>,          // Property
     playback_status: Cell<PlaybackStatus>,
     loop_status: Cell<LoopStatus>,
     rate: Cell<PlaybackRate>,
@@ -60,6 +65,7 @@ impl Player {
             Inner {
                 raise_cbs: RefCell::new(Vec::new()),
                 quit_cbs: RefCell::new(Vec::new()),
+                set_fullscreen_cbs: RefCell::new(Vec::new()),
                 can_quit: Cell::new(false),
                 fullscreen: Cell::new(false),
                 can_set_fullscreen: Cell::new(false),
@@ -78,6 +84,10 @@ impl Player {
                 seek_cbs: RefCell::new(Vec::new()),
                 set_position_cbs: RefCell::new(Vec::new()),
                 open_uri_cbs: RefCell::new(Vec::new()),
+                set_loop_status_cbs: RefCell::new(Vec::new()),
+                set_rate_cbs: RefCell::new(Vec::new()),
+                set_shuffle_cbs: RefCell::new(Vec::new()),
+                set_volume_cbs: RefCell::new(Vec::new()),
                 playback_status: Cell::new(PlaybackStatus::Stopped),
                 loop_status: Cell::new(LoopStatus::None),
                 rate: Cell::new(1.0),
@@ -116,6 +126,10 @@ impl Player {
     }
 
     pub async fn set_can_quit(&self, can_quit: bool) -> Result<()> {
+        if self.can_quit() == can_quit {
+            return Ok(());
+        }
+
         self.server.imp().can_quit.set(can_quit);
         self.server.can_quit_changed().await
     }
@@ -125,6 +139,10 @@ impl Player {
     }
 
     pub async fn set_fullscreen(&self, fullscreen: bool) -> Result<()> {
+        if self.fullscreen() == fullscreen {
+            return Ok(());
+        }
+
         self.server.imp().fullscreen.set(fullscreen);
         self.server.fullscreen_changed().await
     }
@@ -134,6 +152,10 @@ impl Player {
     }
 
     pub async fn set_can_set_fullscreen(&self, can_set_fullscreen: bool) -> Result<()> {
+        if self.can_set_fullscreen() == can_set_fullscreen {
+            return Ok(());
+        }
+
         self.server.imp().can_set_fullscreen.set(can_set_fullscreen);
         self.server.can_set_fullscreen_changed().await
     }
@@ -143,6 +165,10 @@ impl Player {
     }
 
     pub async fn set_can_raise(&self, can_raise: bool) -> Result<()> {
+        if self.can_raise() == can_raise {
+            return Ok(());
+        }
+
         self.server.imp().can_raise.set(can_raise);
         self.server.can_raise_changed().await
     }
@@ -152,36 +178,52 @@ impl Player {
     }
 
     pub async fn set_has_track_list(&self, has_track_list: bool) -> Result<()> {
+        if self.has_track_list() == has_track_list {
+            return Ok(());
+        }
+
         self.server.imp().has_track_list.set(has_track_list);
         self.server.has_track_list_changed().await
     }
 
-    pub fn identity(&self) -> String {
-        self.server.imp().identity.borrow().clone()
+    pub fn identity(&self) -> Ref<'_, String> {
+        self.server.imp().identity.borrow()
     }
 
     pub async fn set_identity(&self, identity: String) -> Result<()> {
+        if *self.identity() == identity {
+            return Ok(());
+        }
+
         self.server.imp().identity.replace(identity);
         self.server.identity_changed().await
     }
 
-    pub fn desktop_entry(&self) -> String {
-        self.server.imp().desktop_entry.borrow().clone()
+    pub fn desktop_entry(&self) -> Ref<'_, String> {
+        self.server.imp().desktop_entry.borrow()
     }
 
     pub async fn set_desktop_entry(&self, desktop_entry: String) -> Result<()> {
+        if *self.desktop_entry() == desktop_entry {
+            return Ok(());
+        }
+
         self.server.imp().desktop_entry.replace(desktop_entry);
         self.server.desktop_entry_changed().await
     }
 
-    pub fn supported_uri_schemes(&self) -> Vec<String> {
-        self.server.imp().supported_uri_schemes.borrow().clone()
+    pub fn supported_uri_schemes(&self) -> Ref<'_, Vec<String>> {
+        self.server.imp().supported_uri_schemes.borrow()
     }
 
     pub async fn set_supported_uri_schemes(
         &self,
         supported_uri_schemes: Vec<String>,
     ) -> Result<()> {
+        if *self.supported_uri_schemes() == supported_uri_schemes {
+            return Ok(());
+        }
+
         self.server
             .imp()
             .supported_uri_schemes
@@ -189,11 +231,15 @@ impl Player {
         self.server.supported_uri_schemes_changed().await
     }
 
-    pub fn supported_mime_types(&self) -> Vec<String> {
-        self.server.imp().supported_mime_types.borrow().clone()
+    pub fn supported_mime_types(&self) -> Ref<'_, Vec<String>> {
+        self.server.imp().supported_mime_types.borrow()
     }
 
     pub async fn set_supported_mime_types(&self, supported_mime_types: Vec<String>) -> Result<()> {
+        if *self.supported_mime_types() == supported_mime_types {
+            return Ok(());
+        }
+
         self.server
             .imp()
             .supported_mime_types
@@ -262,6 +308,10 @@ impl Player {
     }
 
     pub async fn set_playback_status(&self, playback_status: PlaybackStatus) -> Result<()> {
+        if self.playback_status() == playback_status {
+            return Ok(());
+        }
+
         self.server.imp().playback_status.set(playback_status);
         self.server.playback_status_changed().await
     }
@@ -271,6 +321,10 @@ impl Player {
     }
 
     pub async fn set_loop_status(&self, loop_status: LoopStatus) -> Result<()> {
+        if self.loop_status() == loop_status {
+            return Ok(());
+        }
+
         self.server.imp().loop_status.set(loop_status);
         self.server.loop_status_changed().await
     }
@@ -280,6 +334,10 @@ impl Player {
     }
 
     pub async fn set_rate(&self, rate: PlaybackRate) -> Result<()> {
+        if self.rate() == rate {
+            return Ok(());
+        }
+
         self.server.imp().rate.set(rate);
         self.server.rate_changed().await
     }
@@ -289,15 +347,23 @@ impl Player {
     }
 
     pub async fn set_shuffle(&self, shuffle: bool) -> Result<()> {
+        if self.shuffle() == shuffle {
+            return Ok(());
+        }
+
         self.server.imp().shuffle.set(shuffle);
         self.server.shuffle_changed().await
     }
 
-    pub fn metadata(&self) -> Metadata {
-        self.server.imp().metadata.borrow().clone()
+    pub fn metadata(&self) -> Ref<'_, Metadata> {
+        self.server.imp().metadata.borrow()
     }
 
     pub async fn set_metadata(&self, metadata: Metadata) -> Result<()> {
+        if *self.metadata() == metadata {
+            return Ok(());
+        }
+
         self.server.imp().metadata.replace(metadata);
         self.server.metadata_changed().await
     }
@@ -307,6 +373,10 @@ impl Player {
     }
 
     pub async fn set_volume(&self, volume: Volume) -> Result<()> {
+        if self.volume() == volume {
+            return Ok(());
+        }
+
         self.server.imp().volume.set(volume);
         self.server.volume_changed().await
     }
@@ -316,6 +386,10 @@ impl Player {
     }
 
     pub async fn set_position(&self, position: TimeInUs) -> Result<()> {
+        if self.position() == position {
+            return Ok(());
+        }
+
         self.server.imp().position.set(position);
         self.server.position_changed().await
     }
@@ -325,6 +399,10 @@ impl Player {
     }
 
     pub async fn set_minimum_rate(&self, minimum_rate: PlaybackRate) -> Result<()> {
+        if self.minimum_rate() == minimum_rate {
+            return Ok(());
+        }
+
         self.server.imp().minimum_rate.set(minimum_rate);
         self.server.minimum_rate_changed().await
     }
@@ -334,6 +412,10 @@ impl Player {
     }
 
     pub async fn set_maximum_rate(&self, maximum_rate: PlaybackRate) -> Result<()> {
+        if self.maximum_rate() == maximum_rate {
+            return Ok(());
+        }
+
         self.server.imp().maximum_rate.set(maximum_rate);
         self.server.maximum_rate_changed().await
     }
@@ -343,6 +425,10 @@ impl Player {
     }
 
     pub async fn set_can_go_next(&self, can_go_next: bool) -> Result<()> {
+        if self.can_go_next() == can_go_next {
+            return Ok(());
+        }
+
         self.server.imp().can_go_next.set(can_go_next);
         self.server.can_go_next_changed().await
     }
@@ -352,6 +438,10 @@ impl Player {
     }
 
     pub async fn set_can_go_previous(&self, can_go_previous: bool) -> Result<()> {
+        if self.can_go_previous() == can_go_previous {
+            return Ok(());
+        }
+
         self.server.imp().can_go_previous.set(can_go_previous);
         self.server.can_go_previous_changed().await
     }
@@ -361,6 +451,10 @@ impl Player {
     }
 
     pub async fn set_can_play(&self, can_play: bool) -> Result<()> {
+        if self.can_play() == can_play {
+            return Ok(());
+        }
+
         self.server.imp().can_play.set(can_play);
         self.server.can_play_changed().await
     }
@@ -370,6 +464,10 @@ impl Player {
     }
 
     pub async fn set_can_pause(&self, can_pause: bool) -> Result<()> {
+        if self.can_pause() == can_pause {
+            return Ok(());
+        }
+
         self.server.imp().can_pause.set(can_pause);
         self.server.can_pause_changed().await
     }
@@ -379,6 +477,10 @@ impl Player {
     }
 
     pub async fn set_can_seek(&self, can_seek: bool) -> Result<()> {
+        if self.can_seek() == can_seek {
+            return Ok(());
+        }
+
         self.server.imp().can_seek.set(can_seek);
         self.server.can_seek_changed().await
     }
@@ -388,6 +490,10 @@ impl Player {
     }
 
     pub async fn set_can_control(&self, can_control: bool) -> Result<()> {
+        if self.can_control() == can_control {
+            return Ok(());
+        }
+
         self.server.imp().can_control.set(can_control);
         self.server.can_control_changed().await
     }
@@ -415,7 +521,9 @@ impl RootInterface for Inner {
     }
 
     fn set_fullscreen(&self, fullscreen: bool) {
-        self.fullscreen.set(fullscreen);
+        for cb in self.set_fullscreen_cbs.borrow().iter() {
+            cb(fullscreen);
+        }
     }
 
     fn can_set_fullscreen(&self) -> bool {
@@ -511,7 +619,9 @@ impl PlayerInterface for Inner {
     }
 
     fn set_loop_status(&self, loop_status: LoopStatus) {
-        self.loop_status.set(loop_status);
+        for cb in self.set_loop_status_cbs.borrow().iter() {
+            cb(loop_status);
+        }
     }
 
     fn rate(&self) -> PlaybackRate {
@@ -519,7 +629,9 @@ impl PlayerInterface for Inner {
     }
 
     fn set_rate(&self, rate: PlaybackRate) {
-        self.rate.set(rate);
+        for cb in self.set_rate_cbs.borrow().iter() {
+            cb(rate);
+        }
     }
 
     fn shuffle(&self) -> bool {
@@ -527,7 +639,9 @@ impl PlayerInterface for Inner {
     }
 
     fn set_shuffle(&self, shuffle: bool) {
-        self.shuffle.set(shuffle);
+        for cb in self.set_shuffle_cbs.borrow().iter() {
+            cb(shuffle);
+        }
     }
 
     fn metadata(&self) -> Metadata {
@@ -539,7 +653,9 @@ impl PlayerInterface for Inner {
     }
 
     fn set_volume(&self, volume: Volume) {
-        self.volume.set(volume);
+        for cb in self.set_volume_cbs.borrow().iter() {
+            cb(volume);
+        }
     }
 
     fn position(&self) -> TimeInUs {
