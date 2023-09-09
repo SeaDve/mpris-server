@@ -366,7 +366,9 @@ impl Player {
         self.server.imp().identity.borrow()
     }
 
-    pub async fn set_identity(&self, identity: String) -> Result<()> {
+    pub async fn set_identity(&self, identity: impl Into<String>) -> Result<()> {
+        let identity = identity.into();
+
         if *self.identity() == identity {
             return Ok(());
         }
@@ -379,7 +381,9 @@ impl Player {
         self.server.imp().desktop_entry.borrow()
     }
 
-    pub async fn set_desktop_entry(&self, desktop_entry: String) -> Result<()> {
+    pub async fn set_desktop_entry(&self, desktop_entry: impl Into<String>) -> Result<()> {
+        let desktop_entry = desktop_entry.into();
+
         if *self.desktop_entry() == desktop_entry {
             return Ok(());
         }
@@ -394,8 +398,13 @@ impl Player {
 
     pub async fn set_supported_uri_schemes(
         &self,
-        supported_uri_schemes: Vec<String>,
+        supported_uri_schemes: impl IntoIterator<Item = impl Into<String>>,
     ) -> Result<()> {
+        let supported_uri_schemes = supported_uri_schemes
+            .into_iter()
+            .map(|i| i.into())
+            .collect();
+
         if *self.supported_uri_schemes() == supported_uri_schemes {
             return Ok(());
         }
@@ -411,7 +420,12 @@ impl Player {
         self.server.imp().supported_mime_types.borrow()
     }
 
-    pub async fn set_supported_mime_types(&self, supported_mime_types: Vec<String>) -> Result<()> {
+    pub async fn set_supported_mime_types(
+        &self,
+        supported_mime_types: impl IntoIterator<Item = impl Into<String>>,
+    ) -> Result<()> {
+        let supported_mime_types = supported_mime_types.into_iter().map(|i| i.into()).collect();
+
         if *self.supported_mime_types() == supported_mime_types {
             return Ok(());
         }
@@ -729,23 +743,32 @@ impl PlayerBuilder {
         self
     }
 
-    pub fn identity(mut self, identity: String) -> Self {
-        self.identity = identity;
+    pub fn identity(mut self, identity: impl Into<String>) -> Self {
+        self.identity = identity.into();
         self
     }
 
-    pub fn desktop_entry(mut self, desktop_entry: String) -> Self {
-        self.desktop_entry = desktop_entry;
+    pub fn desktop_entry(mut self, desktop_entry: impl Into<String>) -> Self {
+        self.desktop_entry = desktop_entry.into();
         self
     }
 
-    pub fn supported_uri_schemes(mut self, supported_uri_schemes: Vec<String>) -> Self {
-        self.supported_uri_schemes = supported_uri_schemes;
+    pub fn supported_uri_schemes(
+        mut self,
+        supported_uri_schemes: impl IntoIterator<Item = impl Into<String>>,
+    ) -> Self {
+        self.supported_uri_schemes = supported_uri_schemes
+            .into_iter()
+            .map(|i| i.into())
+            .collect();
         self
     }
 
-    pub fn supported_mime_types(mut self, supported_mime_types: Vec<String>) -> Self {
-        self.supported_mime_types = supported_mime_types;
+    pub fn supported_mime_types(
+        mut self,
+        supported_mime_types: impl IntoIterator<Item = impl Into<String>>,
+    ) -> Self {
+        self.supported_mime_types = supported_mime_types.into_iter().map(|i| i.into()).collect();
         self
     }
 
