@@ -99,6 +99,10 @@ impl Player {
         Ok(Self { server })
     }
 
+    pub async fn run(&self) -> Result<()> {
+        self.server.run().await
+    }
+
     pub fn connect_raise(&self, cb: impl Fn() + 'static) {
         self.server.imp().raise_cbs.borrow_mut().push(Box::new(cb));
     }
