@@ -65,11 +65,15 @@ pub trait RootInterface {
     /// be unable to fulfil the request, in which case attempting to
     ///  set this property will have no effect (but should not raise
     /// an error).
-    fn fullscreen(&self) -> bool;
+    fn fullscreen(&self) -> bool {
+        false
+    }
 
-    fn set_fullscreen(&self, fullscreen: bool);
+    fn set_fullscreen(&self, _fullscreen: bool) {}
 
-    fn can_set_fullscreen(&self) -> bool;
+    fn can_set_fullscreen(&self) -> bool {
+        false
+    }
 
     fn can_raise(&self) -> bool;
 
@@ -77,7 +81,9 @@ pub trait RootInterface {
 
     fn identity(&self) -> String;
 
-    fn desktop_entry(&self) -> String;
+    fn desktop_entry(&self) -> String {
+        String::new()
+    }
 
     fn supported_uri_schemes(&self) -> Vec<String>;
 
@@ -105,17 +111,21 @@ pub trait PlayerInterface: RootInterface {
 
     fn playback_status(&self) -> PlaybackStatus;
 
-    fn loop_status(&self) -> LoopStatus;
+    fn loop_status(&self) -> LoopStatus {
+        LoopStatus::None
+    }
 
-    fn set_loop_status(&self, loop_status: LoopStatus);
+    fn set_loop_status(&self, _loop_status: LoopStatus) {}
 
     fn rate(&self) -> PlaybackRate;
 
     fn set_rate(&self, rate: PlaybackRate);
 
-    fn shuffle(&self) -> bool;
+    fn shuffle(&self) -> bool {
+        false
+    }
 
-    fn set_shuffle(&self, shuffle: bool);
+    fn set_shuffle(&self, _shuffle: bool) {}
 
     fn metadata(&self) -> Metadata;
 
