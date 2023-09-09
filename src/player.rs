@@ -58,55 +58,231 @@ struct Inner {
     can_control: Cell<bool>,
 }
 
-impl Player {
-    pub fn new(bus_name_suffix: &str) -> Result<Self> {
-        let server = Server::new(
-            bus_name_suffix,
-            Inner {
-                raise_cbs: RefCell::new(Vec::new()),
-                quit_cbs: RefCell::new(Vec::new()),
-                set_fullscreen_cbs: RefCell::new(Vec::new()),
-                can_quit: Cell::new(false),
-                fullscreen: Cell::new(false),
-                can_set_fullscreen: Cell::new(false),
-                can_raise: Cell::new(false),
-                has_track_list: Cell::new(false),
-                identity: RefCell::new(String::new()),
-                desktop_entry: RefCell::new(String::new()),
-                supported_uri_schemes: RefCell::new(Vec::new()),
-                supported_mime_types: RefCell::new(Vec::new()),
-                next_cbs: RefCell::new(Vec::new()),
-                previous_cbs: RefCell::new(Vec::new()),
-                pause_cbs: RefCell::new(Vec::new()),
-                play_pause_cbs: RefCell::new(Vec::new()),
-                stop_cbs: RefCell::new(Vec::new()),
-                play_cbs: RefCell::new(Vec::new()),
-                seek_cbs: RefCell::new(Vec::new()),
-                set_position_cbs: RefCell::new(Vec::new()),
-                open_uri_cbs: RefCell::new(Vec::new()),
-                set_loop_status_cbs: RefCell::new(Vec::new()),
-                set_rate_cbs: RefCell::new(Vec::new()),
-                set_shuffle_cbs: RefCell::new(Vec::new()),
-                set_volume_cbs: RefCell::new(Vec::new()),
-                playback_status: Cell::new(PlaybackStatus::Stopped),
-                loop_status: Cell::new(LoopStatus::None),
-                rate: Cell::new(1.0),
-                shuffle: Cell::new(false),
-                metadata: RefCell::new(Metadata::new()),
-                volume: Cell::new(1.0),
-                position: Cell::new(0),
-                minimum_rate: Cell::new(1.0),
-                maximum_rate: Cell::new(1.0),
-                can_go_next: Cell::new(false),
-                can_go_previous: Cell::new(false),
-                can_play: Cell::new(false),
-                can_pause: Cell::new(false),
-                can_seek: Cell::new(false),
-                can_control: Cell::new(false),
-            },
-        )?;
+impl RootInterface for Inner {
+    fn raise(&self) {
+        for cb in self.raise_cbs.borrow().iter() {
+            cb();
+        }
+    }
 
-        Ok(Self { server })
+    fn quit(&self) {
+        for cb in self.quit_cbs.borrow().iter() {
+            cb();
+        }
+    }
+
+    fn can_quit(&self) -> bool {
+        self.can_quit.get()
+    }
+
+    fn fullscreen(&self) -> bool {
+        self.fullscreen.get()
+    }
+
+    fn set_fullscreen(&self, fullscreen: bool) {
+        for cb in self.set_fullscreen_cbs.borrow().iter() {
+            cb(fullscreen);
+        }
+    }
+
+    fn can_set_fullscreen(&self) -> bool {
+        self.can_set_fullscreen.get()
+    }
+
+    fn can_raise(&self) -> bool {
+        self.can_raise.get()
+    }
+
+    fn has_track_list(&self) -> bool {
+        self.has_track_list.get()
+    }
+
+    fn identity(&self) -> String {
+        self.identity.borrow().clone()
+    }
+
+    fn desktop_entry(&self) -> String {
+        self.desktop_entry.borrow().clone()
+    }
+
+    fn supported_uri_schemes(&self) -> Vec<String> {
+        self.supported_uri_schemes.borrow().clone()
+    }
+
+    fn supported_mime_types(&self) -> Vec<String> {
+        self.supported_mime_types.borrow().clone()
+    }
+}
+
+impl PlayerInterface for Inner {
+    fn next(&self) {
+        for cb in self.next_cbs.borrow().iter() {
+            cb();
+        }
+    }
+
+    fn previous(&self) {
+        for cb in self.previous_cbs.borrow().iter() {
+            cb();
+        }
+    }
+
+    fn pause(&self) {
+        for cb in self.pause_cbs.borrow().iter() {
+            cb();
+        }
+    }
+
+    fn play_pause(&self) {
+        for cb in self.play_pause_cbs.borrow().iter() {
+            cb();
+        }
+    }
+
+    fn stop(&self) {
+        for cb in self.stop_cbs.borrow().iter() {
+            cb();
+        }
+    }
+
+    fn play(&self) {
+        for cb in self.play_cbs.borrow().iter() {
+            cb();
+        }
+    }
+
+    fn seek(&self, offset: TimeInUs) {
+        for cb in self.seek_cbs.borrow().iter() {
+            cb(offset);
+        }
+    }
+
+    fn set_position(&self, track_id: TrackId, position: TimeInUs) {
+        for cb in self.set_position_cbs.borrow().iter() {
+            cb(&track_id, position);
+        }
+    }
+
+    fn open_uri(&self, uri: String) {
+        for cb in self.open_uri_cbs.borrow().iter() {
+            cb(&uri);
+        }
+    }
+
+    fn playback_status(&self) -> PlaybackStatus {
+        self.playback_status.get()
+    }
+
+    fn loop_status(&self) -> LoopStatus {
+        self.loop_status.get()
+    }
+
+    fn set_loop_status(&self, loop_status: LoopStatus) {
+        for cb in self.set_loop_status_cbs.borrow().iter() {
+            cb(loop_status);
+        }
+    }
+
+    fn rate(&self) -> PlaybackRate {
+        self.rate.get()
+    }
+
+    fn set_rate(&self, rate: PlaybackRate) {
+        for cb in self.set_rate_cbs.borrow().iter() {
+            cb(rate);
+        }
+    }
+
+    fn shuffle(&self) -> bool {
+        self.shuffle.get()
+    }
+
+    fn set_shuffle(&self, shuffle: bool) {
+        for cb in self.set_shuffle_cbs.borrow().iter() {
+            cb(shuffle);
+        }
+    }
+
+    fn metadata(&self) -> Metadata {
+        self.metadata.borrow().clone()
+    }
+
+    fn volume(&self) -> Volume {
+        self.volume.get()
+    }
+
+    fn set_volume(&self, volume: Volume) {
+        for cb in self.set_volume_cbs.borrow().iter() {
+            cb(volume);
+        }
+    }
+
+    fn position(&self) -> TimeInUs {
+        self.position.get()
+    }
+
+    fn minimum_rate(&self) -> PlaybackRate {
+        self.minimum_rate.get()
+    }
+
+    fn maximum_rate(&self) -> PlaybackRate {
+        self.maximum_rate.get()
+    }
+
+    fn can_go_next(&self) -> bool {
+        self.can_go_next.get()
+    }
+
+    fn can_go_previous(&self) -> bool {
+        self.can_go_previous.get()
+    }
+
+    fn can_play(&self) -> bool {
+        self.can_play.get()
+    }
+
+    fn can_pause(&self) -> bool {
+        self.can_pause.get()
+    }
+
+    fn can_seek(&self) -> bool {
+        self.can_seek.get()
+    }
+
+    fn can_control(&self) -> bool {
+        self.can_control.get()
+    }
+}
+
+impl Player {
+    pub fn builder(bus_name_suffix: &str) -> PlayerBuilder {
+        PlayerBuilder {
+            bus_name_suffix: bus_name_suffix.to_string(),
+            can_quit: false,
+            fullscreen: false,
+            can_set_fullscreen: false,
+            can_raise: false,
+            has_track_list: false,
+            identity: String::new(),
+            desktop_entry: String::new(),
+            supported_uri_schemes: Vec::new(),
+            supported_mime_types: Vec::new(),
+            playback_status: PlaybackStatus::Stopped,
+            loop_status: LoopStatus::None,
+            rate: 1.0,
+            shuffle: false,
+            metadata: Metadata::new(),
+            volume: 1.0,
+            position: 0,
+            minimum_rate: 1.0,
+            maximum_rate: 1.0,
+            can_go_next: false,
+            can_go_previous: false,
+            can_play: false,
+            can_pause: false,
+            can_seek: false,
+            can_control: true,
+        }
     }
 
     pub async fn run(&self) -> Result<()> {
@@ -499,198 +675,201 @@ impl Player {
     }
 }
 
-impl RootInterface for Inner {
-    fn raise(&self) {
-        for cb in self.raise_cbs.borrow().iter() {
-            cb();
-        }
-    }
-
-    fn quit(&self) {
-        for cb in self.quit_cbs.borrow().iter() {
-            cb();
-        }
-    }
-
-    fn can_quit(&self) -> bool {
-        self.can_quit.get()
-    }
-
-    fn fullscreen(&self) -> bool {
-        self.fullscreen.get()
-    }
-
-    fn set_fullscreen(&self, fullscreen: bool) {
-        for cb in self.set_fullscreen_cbs.borrow().iter() {
-            cb(fullscreen);
-        }
-    }
-
-    fn can_set_fullscreen(&self) -> bool {
-        self.can_set_fullscreen.get()
-    }
-
-    fn can_raise(&self) -> bool {
-        self.can_raise.get()
-    }
-
-    fn has_track_list(&self) -> bool {
-        self.has_track_list.get()
-    }
-
-    fn identity(&self) -> String {
-        self.identity.borrow().clone()
-    }
-
-    fn desktop_entry(&self) -> String {
-        self.desktop_entry.borrow().clone()
-    }
-
-    fn supported_uri_schemes(&self) -> Vec<String> {
-        self.supported_uri_schemes.borrow().clone()
-    }
-
-    fn supported_mime_types(&self) -> Vec<String> {
-        self.supported_mime_types.borrow().clone()
-    }
+pub struct PlayerBuilder {
+    bus_name_suffix: String,
+    can_quit: bool,
+    fullscreen: bool,
+    can_set_fullscreen: bool,
+    can_raise: bool,
+    has_track_list: bool,
+    identity: String,
+    desktop_entry: String,
+    supported_uri_schemes: Vec<String>,
+    supported_mime_types: Vec<String>,
+    playback_status: PlaybackStatus,
+    loop_status: LoopStatus,
+    rate: PlaybackRate,
+    shuffle: bool,
+    metadata: Metadata,
+    volume: Volume,
+    position: TimeInUs,
+    minimum_rate: PlaybackRate,
+    maximum_rate: PlaybackRate,
+    can_go_next: bool,
+    can_go_previous: bool,
+    can_play: bool,
+    can_pause: bool,
+    can_seek: bool,
+    can_control: bool,
 }
 
-impl PlayerInterface for Inner {
-    fn next(&self) {
-        for cb in self.next_cbs.borrow().iter() {
-            cb();
-        }
+impl PlayerBuilder {
+    pub fn can_quit(mut self, can_quit: bool) -> Self {
+        self.can_quit = can_quit;
+        self
     }
 
-    fn previous(&self) {
-        for cb in self.previous_cbs.borrow().iter() {
-            cb();
-        }
+    pub fn fullscreen(mut self, fullscreen: bool) -> Self {
+        self.fullscreen = fullscreen;
+        self
     }
 
-    fn pause(&self) {
-        for cb in self.pause_cbs.borrow().iter() {
-            cb();
-        }
+    pub fn can_set_fullscreen(mut self, can_set_fullscreen: bool) -> Self {
+        self.can_set_fullscreen = can_set_fullscreen;
+        self
     }
 
-    fn play_pause(&self) {
-        for cb in self.play_pause_cbs.borrow().iter() {
-            cb();
-        }
+    pub fn can_raise(mut self, can_raise: bool) -> Self {
+        self.can_raise = can_raise;
+        self
     }
 
-    fn stop(&self) {
-        for cb in self.stop_cbs.borrow().iter() {
-            cb();
-        }
+    pub fn has_track_list(mut self, has_track_list: bool) -> Self {
+        self.has_track_list = has_track_list;
+        self
     }
 
-    fn play(&self) {
-        for cb in self.play_cbs.borrow().iter() {
-            cb();
-        }
+    pub fn identity(mut self, identity: String) -> Self {
+        self.identity = identity;
+        self
     }
 
-    fn seek(&self, offset: TimeInUs) {
-        for cb in self.seek_cbs.borrow().iter() {
-            cb(offset);
-        }
+    pub fn desktop_entry(mut self, desktop_entry: String) -> Self {
+        self.desktop_entry = desktop_entry;
+        self
     }
 
-    fn set_position(&self, track_id: TrackId, position: TimeInUs) {
-        for cb in self.set_position_cbs.borrow().iter() {
-            cb(&track_id, position);
-        }
+    pub fn supported_uri_schemes(mut self, supported_uri_schemes: Vec<String>) -> Self {
+        self.supported_uri_schemes = supported_uri_schemes;
+        self
     }
 
-    fn open_uri(&self, uri: String) {
-        for cb in self.open_uri_cbs.borrow().iter() {
-            cb(&uri);
-        }
+    pub fn supported_mime_types(mut self, supported_mime_types: Vec<String>) -> Self {
+        self.supported_mime_types = supported_mime_types;
+        self
     }
 
-    fn playback_status(&self) -> PlaybackStatus {
-        self.playback_status.get()
+    pub fn playback_status(mut self, playback_status: PlaybackStatus) -> Self {
+        self.playback_status = playback_status;
+        self
     }
 
-    fn loop_status(&self) -> LoopStatus {
-        self.loop_status.get()
+    pub fn loop_status(mut self, loop_status: LoopStatus) -> Self {
+        self.loop_status = loop_status;
+        self
     }
 
-    fn set_loop_status(&self, loop_status: LoopStatus) {
-        for cb in self.set_loop_status_cbs.borrow().iter() {
-            cb(loop_status);
-        }
+    pub fn rate(mut self, rate: PlaybackRate) -> Self {
+        self.rate = rate;
+        self
     }
 
-    fn rate(&self) -> PlaybackRate {
-        self.rate.get()
+    pub fn shuffle(mut self, shuffle: bool) -> Self {
+        self.shuffle = shuffle;
+        self
     }
 
-    fn set_rate(&self, rate: PlaybackRate) {
-        for cb in self.set_rate_cbs.borrow().iter() {
-            cb(rate);
-        }
+    pub fn metadata(mut self, metadata: Metadata) -> Self {
+        self.metadata = metadata;
+        self
     }
 
-    fn shuffle(&self) -> bool {
-        self.shuffle.get()
+    pub fn volume(mut self, volume: Volume) -> Self {
+        self.volume = volume;
+        self
     }
 
-    fn set_shuffle(&self, shuffle: bool) {
-        for cb in self.set_shuffle_cbs.borrow().iter() {
-            cb(shuffle);
-        }
+    pub fn position(mut self, position: TimeInUs) -> Self {
+        self.position = position;
+        self
     }
 
-    fn metadata(&self) -> Metadata {
-        self.metadata.borrow().clone()
+    pub fn minimum_rate(mut self, minimum_rate: PlaybackRate) -> Self {
+        self.minimum_rate = minimum_rate;
+        self
     }
 
-    fn volume(&self) -> Volume {
-        self.volume.get()
+    pub fn maximum_rate(mut self, maximum_rate: PlaybackRate) -> Self {
+        self.maximum_rate = maximum_rate;
+        self
     }
 
-    fn set_volume(&self, volume: Volume) {
-        for cb in self.set_volume_cbs.borrow().iter() {
-            cb(volume);
-        }
+    pub fn can_go_next(mut self, can_go_next: bool) -> Self {
+        self.can_go_next = can_go_next;
+        self
     }
 
-    fn position(&self) -> TimeInUs {
-        self.position.get()
+    pub fn can_go_previous(mut self, can_go_previous: bool) -> Self {
+        self.can_go_previous = can_go_previous;
+        self
     }
 
-    fn minimum_rate(&self) -> PlaybackRate {
-        self.minimum_rate.get()
+    pub fn can_play(mut self, can_play: bool) -> Self {
+        self.can_play = can_play;
+        self
     }
 
-    fn maximum_rate(&self) -> PlaybackRate {
-        self.maximum_rate.get()
+    pub fn can_pause(mut self, can_pause: bool) -> Self {
+        self.can_pause = can_pause;
+        self
     }
 
-    fn can_go_next(&self) -> bool {
-        self.can_go_next.get()
+    pub fn can_seek(mut self, can_seek: bool) -> Self {
+        self.can_seek = can_seek;
+        self
     }
 
-    fn can_go_previous(&self) -> bool {
-        self.can_go_previous.get()
+    pub fn can_control(mut self, can_control: bool) -> Self {
+        self.can_control = can_control;
+        self
     }
 
-    fn can_play(&self) -> bool {
-        self.can_play.get()
-    }
-
-    fn can_pause(&self) -> bool {
-        self.can_pause.get()
-    }
-
-    fn can_seek(&self) -> bool {
-        self.can_seek.get()
-    }
-
-    fn can_control(&self) -> bool {
-        self.can_control.get()
+    pub fn build(self) -> Result<Player> {
+        let server = Server::new(
+            &self.bus_name_suffix,
+            Inner {
+                raise_cbs: RefCell::new(Vec::new()),
+                quit_cbs: RefCell::new(Vec::new()),
+                set_fullscreen_cbs: RefCell::new(Vec::new()),
+                can_quit: Cell::new(self.can_quit),
+                fullscreen: Cell::new(self.fullscreen),
+                can_set_fullscreen: Cell::new(self.can_set_fullscreen),
+                can_raise: Cell::new(self.can_raise),
+                has_track_list: Cell::new(self.has_track_list),
+                identity: RefCell::new(self.identity),
+                desktop_entry: RefCell::new(self.desktop_entry),
+                supported_uri_schemes: RefCell::new(self.supported_uri_schemes),
+                supported_mime_types: RefCell::new(self.supported_mime_types),
+                next_cbs: RefCell::new(Vec::new()),
+                previous_cbs: RefCell::new(Vec::new()),
+                pause_cbs: RefCell::new(Vec::new()),
+                play_pause_cbs: RefCell::new(Vec::new()),
+                stop_cbs: RefCell::new(Vec::new()),
+                play_cbs: RefCell::new(Vec::new()),
+                seek_cbs: RefCell::new(Vec::new()),
+                set_position_cbs: RefCell::new(Vec::new()),
+                open_uri_cbs: RefCell::new(Vec::new()),
+                set_loop_status_cbs: RefCell::new(Vec::new()),
+                set_rate_cbs: RefCell::new(Vec::new()),
+                set_shuffle_cbs: RefCell::new(Vec::new()),
+                set_volume_cbs: RefCell::new(Vec::new()),
+                playback_status: Cell::new(self.playback_status),
+                loop_status: Cell::new(self.loop_status),
+                rate: Cell::new(self.rate),
+                shuffle: Cell::new(self.shuffle),
+                metadata: RefCell::new(self.metadata),
+                volume: Cell::new(self.volume),
+                position: Cell::new(self.position),
+                minimum_rate: Cell::new(self.minimum_rate),
+                maximum_rate: Cell::new(self.maximum_rate),
+                can_go_next: Cell::new(self.can_go_next),
+                can_go_previous: Cell::new(self.can_go_previous),
+                can_play: Cell::new(self.can_play),
+                can_pause: Cell::new(self.can_pause),
+                can_seek: Cell::new(self.can_seek),
+                can_control: Cell::new(self.can_control),
+            },
+        )?;
+        Ok(Player { server })
     }
 }

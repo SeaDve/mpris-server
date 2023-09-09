@@ -12,7 +12,7 @@ pub use crate::{
     loop_status::{LoopStatus, ParseLoopStatusError},
     metadata::{DateTime, Metadata, MetadataBuilder, Uri},
     playback_status::{ParsePlaybackStatusError, PlaybackStatus},
-    player::Player,
+    player::{Player, PlayerBuilder},
     server::Server,
 };
 
