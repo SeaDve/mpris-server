@@ -4,6 +4,8 @@ mod loop_status;
 mod metadata;
 mod playback_status;
 mod player;
+mod playlist;
+mod playlist_ordering;
 mod server;
 
 use async_trait::async_trait;
@@ -14,11 +16,13 @@ pub use crate::{
     metadata::{DateTime, Metadata, MetadataBuilder, Uri},
     playback_status::{ParsePlaybackStatusError, PlaybackStatus},
     player::{Player, PlayerBuilder},
+    playlist::{MaybePlaylist, Playlist},
+    playlist_ordering::{ParsePlaylistOrderingError, PlaylistOrdering},
     server::Server,
 };
 
 #[doc(hidden)]
-pub mod exports {
+pub mod export {
     pub use async_trait::async_trait;
 }
 
@@ -175,6 +179,25 @@ pub trait TrackListInterface: PlayerInterface {
     async fn can_edit_tracks(&self) -> bool;
 }
 
+#[async_trait(?Send)]
+pub trait PlaylistsInterface: PlayerInterface {
+    async fn activate_playlist(&self, playlist_id: PlaylistId);
+
+    async fn get_playlists(
+        &self,
+        index: u32,
+        max_count: u32,
+        order: PlaylistOrdering,
+        reverse_order: bool,
+    ) -> Vec<Playlist>;
+
+    async fn playlist_count(&self) -> u32;
+
+    async fn orderings(&self) -> Vec<PlaylistOrdering>;
+
+    async fn active_playlist(&self) -> MaybePlaylist;
+}
+
 /// Unique track identifier.
 ///
 /// If the media player implements the TrackList interface and allows
@@ -216,3 +239,15 @@ pub type Volume = f64;
 
 /// Time in microseconds.
 pub type TimeInUs = i64;
+
+/// Unique playlist identifier.
+///
+/// # Rationale
+///
+/// Multiple playlists may have the same name.
+///
+/// This is a D-Bus object id as that is the definitive way to have unique
+/// identifiers on D-Bus. It also allows for future optional expansions to
+/// the specification where tracks are exported to D-Bus with an interface
+/// similar to org.gnome.UPnP.MediaItem2.
+pub type PlaylistId = OwnedObjectPath;

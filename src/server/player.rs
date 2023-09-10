@@ -1,7 +1,6 @@
 use futures_channel::{mpsc, oneshot};
-use zbus::{
-    dbus_interface, export::futures_util::StreamExt, ConnectionBuilder, Result, SignalContext,
-};
+use futures_util::StreamExt;
+use zbus::{dbus_interface, ConnectionBuilder, Result, SignalContext};
 
 use super::{utils::iface_delegate, Action, Server, OBJECT_PATH};
 use crate::{
@@ -9,7 +8,7 @@ use crate::{
 };
 
 /// `org.mpris.MediaPlayer2` Actions
-pub enum RootAction {
+pub(super) enum RootAction {
     // Methods
     Raise,
     Quit,
@@ -117,7 +116,7 @@ impl RawRootInterface {
 }
 
 /// `org.mpris.MediaPlayer2.Player` Actions
-pub enum PlayerAction {
+pub(super) enum PlayerAction {
     // Methods
     Next,
     Previous,
@@ -352,7 +351,7 @@ where
             match action {
                 Action::Root(action) => self.handle_interface_action(action).await,
                 Action::Player(action) => self.handle_player_interface_action(action).await,
-                Action::TrackList(_) => unreachable!(),
+                Action::TrackList(_) | Action::Playlists(_) => unreachable!(),
             }
         }
 

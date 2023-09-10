@@ -1,7 +1,6 @@
 use futures_channel::{mpsc, oneshot};
-use zbus::{
-    dbus_interface, export::futures_util::StreamExt, ConnectionBuilder, Result, SignalContext,
-};
+use futures_util::StreamExt;
+use zbus::{dbus_interface, ConnectionBuilder, Result, SignalContext};
 
 use super::{
     player::{RawPlayerInterface, RawRootInterface},
@@ -11,7 +10,7 @@ use super::{
 use crate::{Metadata, TrackId, TrackListInterface, Uri};
 
 /// `org.mpris.MediaPlayer2.TrackList` Actions
-pub enum TrackListAction {
+pub(super) enum TrackListAction {
     // Methods
     GetTracksMetadata(Vec<TrackId>, oneshot::Sender<Vec<Metadata>>),
     AddTrack(Uri, TrackId, bool),
@@ -23,8 +22,8 @@ pub enum TrackListAction {
     CanEditTracks(oneshot::Sender<bool>),
 }
 
-struct RawTrackListInterface {
-    tx: mpsc::UnboundedSender<Action>,
+pub(super) struct RawTrackListInterface {
+    pub(super) tx: mpsc::UnboundedSender<Action>,
 }
 
 impl RawTrackListInterface {
@@ -117,13 +116,14 @@ where
                 Action::Root(action) => self.handle_interface_action(action).await,
                 Action::Player(action) => self.handle_player_interface_action(action).await,
                 Action::TrackList(action) => self.handle_track_list_interface_action(action).await,
+                Action::Playlists(_) => unreachable!(),
             }
         }
 
         Ok(())
     }
 
-    async fn handle_track_list_interface_action(&self, action: TrackListAction) {
+    pub(super) async fn handle_track_list_interface_action(&self, action: TrackListAction) {
         match action {
             TrackListAction::GetTracksMetadata(track_ids, sender) => sender
                 .send(self.imp.get_tracks_metadata(track_ids).await)

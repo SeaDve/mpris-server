@@ -1,16 +1,22 @@
 mod player;
+mod playlists;
 mod track_list;
 mod utils;
 
 use std::{fmt, sync::OnceLock};
 
-use zbus::{names::WellKnownName, zvariant::ObjectPath, Connection, InterfaceRef, Result};
+use futures_channel::mpsc;
+use futures_util::StreamExt;
+use zbus::{
+    names::WellKnownName, zvariant::ObjectPath, Connection, ConnectionBuilder, InterfaceRef, Result,
+};
 
 use self::{
-    player::{PlayerAction, RootAction},
-    track_list::TrackListAction,
+    player::{PlayerAction, RawPlayerInterface, RawRootInterface, RootAction},
+    playlists::{PlaylistsAction, RawPlaylistsInterface},
+    track_list::{RawTrackListInterface, TrackListAction},
 };
-use crate::PlayerInterface;
+use crate::{PlayerInterface, PlaylistsInterface, TrackListInterface};
 
 const OBJECT_PATH: ObjectPath<'static> =
     ObjectPath::from_static_str_unchecked("/org/mpris/MediaPlayer2");
@@ -19,6 +25,7 @@ enum Action {
     Root(RootAction),
     Player(PlayerAction),
     TrackList(TrackListAction),
+    Playlists(PlaylistsAction),
 }
 
 pub struct Server<T>
@@ -69,5 +76,40 @@ where
             .object_server()
             .interface::<_, I>(OBJECT_PATH)
             .await
+    }
+}
+
+impl<T> Server<T>
+where
+    T: TrackListInterface + PlaylistsInterface + 'static,
+{
+    // FIXME Improve this API. Have only one `run` method that serves interfaces, depending on T impls.
+    pub async fn run_with_all(&self) -> Result<()> {
+        let (tx, mut rx) = mpsc::unbounded::<Action>();
+
+        let connection = ConnectionBuilder::session()?
+            .name(&self.bus_name)?
+            .serve_at(OBJECT_PATH, RawRootInterface { tx: tx.clone() })?
+            .serve_at(OBJECT_PATH, RawPlayerInterface { tx: tx.clone() })?
+            .serve_at(OBJECT_PATH, RawTrackListInterface { tx: tx.clone() })?
+            .serve_at(OBJECT_PATH, RawPlaylistsInterface { tx })?
+            .build()
+            .await?;
+
+        self.connection
+            .set(connection)
+            .expect("server must only be ran once");
+
+        // FIXME Spawn tasks so we can handle calls concurrently
+        while let Some(action) = rx.next().await {
+            match action {
+                Action::Root(action) => self.handle_interface_action(action).await,
+                Action::Player(action) => self.handle_player_interface_action(action).await,
+                Action::TrackList(action) => self.handle_track_list_interface_action(action).await,
+                Action::Playlists(action) => self.handle_playlists_interface_action(action).await,
+            }
+        }
+
+        Ok(())
     }
 }
