@@ -149,16 +149,13 @@
 <a href="#149" id="149">149</a>
 <a href="#150" id="150">150</a>
 <a href="#151" id="151">151</a>
-<a href="#152" id="152">152</a>
-<a href="#153" id="153">153</a>
-<a href="#154" id="154">154</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>futures_channel::{mpsc, oneshot};
 <span class="kw">use </span>futures_util::StreamExt;
 <span class="kw">use </span>zbus::{dbus_interface, ConnectionBuilder, <span class="prelude-ty">Result</span>, SignalContext};
 
 <span class="kw">use super</span>::{
     player::{RawPlayerInterface, RawRootInterface},
-    utils::iface_delegate,
+    utils::{changed_delegate, signal_delegate},
     Action, Server, OBJECT_PATH,
 };
 <span class="kw">use crate</span>::{MaybePlaylist, Playlist, PlaylistId, PlaylistOrdering, PlaylistsInterface};
@@ -298,12 +295,9 @@
     }
 
     <span class="comment">// org.mpris.MediaPlayer2.Playlists
-    </span><span class="kw">pub async fn </span>playlist_changed(<span class="kw-2">&amp;</span><span class="self">self</span>, playlist: Playlist) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="kw">let </span>iface_ref = <span class="self">self</span>.interface_ref::&lt;RawPlaylistsInterface&gt;().<span class="kw">await</span><span class="question-mark">?</span>;
-        RawPlaylistsInterface::playlist_changed(iface_ref.signal_context(), playlist).<span class="kw">await
-    </span>}
-    <span class="macro">iface_delegate!</span>(RawPlaylistsInterface, playlist_count_changed);
-    <span class="macro">iface_delegate!</span>(RawPlaylistsInterface, orderings_changed);
-    <span class="macro">iface_delegate!</span>(RawPlaylistsInterface, active_playlist_changed);
+    </span><span class="macro">signal_delegate!</span>(RawPlaylistsInterface, playlist_changed(playlist: Playlist));
+    <span class="macro">changed_delegate!</span>(RawPlaylistsInterface, playlist_count_changed);
+    <span class="macro">changed_delegate!</span>(RawPlaylistsInterface, orderings_changed);
+    <span class="macro">changed_delegate!</span>(RawPlaylistsInterface, active_playlist_changed);
 }
 </code></pre></div></section></main></body></html>

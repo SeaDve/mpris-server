@@ -9,7 +9,17 @@
 <a href="#9" id="9">9</a>
 <a href="#10" id="10">10</a>
 <a href="#11" id="11">11</a>
-</pre></div><pre class="rust"><code><span class="macro">macro_rules! </span>iface_delegate {
+<a href="#12" id="12">12</a>
+<a href="#13" id="13">13</a>
+<a href="#14" id="14">14</a>
+<a href="#15" id="15">15</a>
+<a href="#16" id="16">16</a>
+<a href="#17" id="17">17</a>
+<a href="#18" id="18">18</a>
+<a href="#19" id="19">19</a>
+<a href="#20" id="20">20</a>
+<a href="#21" id="21">21</a>
+</pre></div><pre class="rust"><code><span class="macro">macro_rules! </span>changed_delegate {
     (<span class="macro-nonterminal">$iface</span>:ty, <span class="macro-nonterminal">$name</span>:ident) =&gt; {
         <span class="kw">pub async fn </span><span class="macro-nonterminal">$name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
             <span class="kw">let </span>iface_ref = <span class="self">self</span>.interface_ref::&lt;<span class="macro-nonterminal">$iface</span>&gt;().<span class="kw">await</span><span class="question-mark">?</span>;
@@ -19,5 +29,15 @@
     };
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span>iface_delegate;
+<span class="macro">macro_rules! </span>signal_delegate {
+    (<span class="macro-nonterminal">$iface</span>:ty, <span class="macro-nonterminal">$name</span>:ident($(<span class="macro-nonterminal">$arg_name</span>:ident: <span class="macro-nonterminal">$arg_ty</span>:ty),<span class="kw-2">*</span>)) =&gt; {
+        <span class="kw">pub async fn </span><span class="macro-nonterminal">$name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, $(<span class="macro-nonterminal">$arg_name</span>: <span class="macro-nonterminal">$arg_ty</span>),<span class="kw-2">*</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+            <span class="kw">let </span>iface_ref = <span class="self">self</span>.interface_ref::&lt;<span class="macro-nonterminal">$iface</span>&gt;().<span class="kw">await</span><span class="question-mark">?</span>;
+            &lt;<span class="macro-nonterminal">$iface</span>&gt;::<span class="macro-nonterminal">$name</span>(iface_ref.signal_context(), $(<span class="macro-nonterminal">$arg_name</span>),<span class="kw-2">*</span>).<span class="kw">await
+        </span>}
+    };
+}
+
+<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">use </span>changed_delegate;
+<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">use </span>signal_delegate;
 </code></pre></div></section></main></body></html>
