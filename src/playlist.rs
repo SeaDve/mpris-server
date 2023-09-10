@@ -52,7 +52,7 @@ mod tests {
 
     #[test]
     fn valid_signatures() {
-        assert_eq!(Playlist::signature(), "oss");
-        assert_eq!(MaybePlaylist::signature(), "b(oss)");
+        assert_eq!(Playlist::signature(), "(oss)");
+        assert_eq!(MaybePlaylist::signature(), "(b(oss))");
     }
 }
