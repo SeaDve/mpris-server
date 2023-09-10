@@ -4,6 +4,25 @@ Create MPRIS MediaPlayer2 server
 
 To implement a server, this crate provides two flavors: you can either create a custom struct that implements `RootInterface` and `PlayerInterface`, or you can use the premade mutable `Player` struct that already implements the interfaces internally.
 
+## Player Usage
+
+```rust
+#[async_std::main]
+async fn main() {
+    let player = Player::builder("com.me.Application")
+        .can_play(true)
+        .can_pause(true)
+        .build()
+        .unwrap();
+
+    player.connect_play_pause(|| {
+        println!("PlayPause");
+    });
+
+    player.run().await.unwrap();
+}
+```
+
 ## Supported Interfaces
 
 This library supports all interfaces defined in the [MPRIS2 specification](https://specifications.freedesktop.org/mpris-spec/2.2/index.html). However, the premade `Player` struct currently only supports the more commonly used `org.mpris.MediaPlayer2` and `org.mpris.MediaPlayer2.Player` interfaces.
@@ -25,7 +44,7 @@ impl PlayerInterface for MyPlayer {
 
 #[async_std::main]
 async fn main() {
-    let server = Server::new("Test.Application", MyPlayer).unwrap();
+    let server = Server::new("com.me.Application", MyPlayer).unwrap();
     server.run().await.unwrap();
 }
 ```
@@ -52,7 +71,7 @@ impl TracklistInterface for MyPlayer {
 
 #[async_std::main]
 async fn main() {
-    let server = Server::new("Test.Application", Player).unwrap();
+    let server = Server::new("com.me.Application", Player).unwrap();
     server.run_with_track_list().await.unwrap();
 }
 ```
@@ -79,7 +98,7 @@ impl PlaylistsInterface for MyPlayer {
 
 #[async_std::main]
 async fn main() {
-    let server = Server::new("Test.Application", Player).unwrap();
+    let server = Server::new("com.me.Application", Player).unwrap();
     server.run_with_playlists().await.unwrap();
 }
 ```
@@ -112,7 +131,7 @@ impl TracklistInterface for MyPlayer {
 
 #[async_std::main]
 async fn main() {
-    let server = Server::new("Test.Application", Player).unwrap();
+    let server = Server::new("com.me.Application", Player).unwrap();
     server.run_with_all().await.unwrap();
 }
 ```
