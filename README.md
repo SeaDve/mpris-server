@@ -8,7 +8,9 @@ To implement a server, this crate provides two flavors: you can either create a 
 
 If you want to create a simple player without having to implement the interfaces, you can use the premade `Player` struct that implements those interfaces internally. This struct is mutable, automatically emits properties changed signal, and allows you to connect to method calls.
 
-```rust
+```rust,ignore
+use mpris_server::Player;
+
 #[async_std::main]
 async fn main() {
     let player = Player::builder("com.me.Application")
@@ -31,7 +33,9 @@ This library supports all interfaces defined in the [MPRIS2 specification](https
 
 ### org.mpris.MediaPlayer2 and org.mpris.MediaPlayer2.Player
 
-```rust
+```rust,ignore
+use mpris_server::{export::async_trait, Server};
+
 pub struct MyPlayer;
 
 #[async_trait(?Send)]
@@ -53,7 +57,9 @@ async fn main() {
 
 ### org.mpris.MediaPlayer2.TrackList
 
-```rust
+```rust,ignore
+use mpris_server::{export::async_trait, Server};
+
 pub struct MyPlayer;
 
 #[async_trait(?Send)]
@@ -73,14 +79,16 @@ impl TracklistInterface for MyPlayer {
 
 #[async_std::main]
 async fn main() {
-    let server = Server::new("com.me.Application", Player).unwrap();
+    let server = Server::new("com.me.Application", MyPlayer).unwrap();
     server.run_with_track_list().await.unwrap();
 }
 ```
 
 ### org.mpris.MediaPlayer2.Playlists
 
-```rust
+```rust,ignore
+use mpris_server::{export::async_trait, Server};
+
 pub struct MyPlayer;
 
 #[async_trait(?Send)]
@@ -100,7 +108,7 @@ impl PlaylistsInterface for MyPlayer {
 
 #[async_std::main]
 async fn main() {
-    let server = Server::new("com.me.Application", Player).unwrap();
+    let server = Server::new("com.me.Application", MyPlayer).unwrap();
     server.run_with_playlists().await.unwrap();
 }
 ```
@@ -108,7 +116,9 @@ async fn main() {
 
 ### org.mpris.MediaPlayer2.TrackList and org.mpris.MediaPlayer2.Playlists
 
-```rust
+```rust,ignore
+use mpris_server::{export::async_trait, Server};
+
 pub struct MyPlayer;
 
 #[async_trait(?Send)]
@@ -133,13 +143,10 @@ impl TracklistInterface for MyPlayer {
 
 #[async_std::main]
 async fn main() {
-    let server = Server::new("com.me.Application", Player).unwrap();
+    let server = Server::new("com.me.Application", MyPlayer).unwrap();
     server.run_with_all().await.unwrap();
 }
 ```
-
-
-
 
 For more examples, see the [examples directory](https://github.com/SeaDve/mpris-server/tree/main/examples).
 
