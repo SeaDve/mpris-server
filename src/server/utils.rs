@@ -17,5 +17,4 @@ macro_rules! signal_delegate {
     };
 }
 
-pub(super) use changed_delegate;
-pub(super) use signal_delegate;
+pub(super) use {changed_delegate, signal_delegate};
