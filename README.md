@@ -1,3 +1,6 @@
+> **Warning**
+The API is still unstable. Expect breaking changes.
+
 # MPRIS Server
 
 Create MPRIS MediaPlayer2 server
