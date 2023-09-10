@@ -2,9 +2,11 @@
 
 Create MPRIS MediaPlayer2 server
 
-To implement a server, this crate provides two flavors: you can either create a custom struct that implements `RootInterface` and `PlayerInterface`, or you can use the premade mutable `Player` struct that already implements the interfaces internally.
+To implement a server, this crate provides two flavors: you can either create a custom struct that implements `RootInterface` and `PlayerInterface`, or you can use the premade mutable `Player` struct.
 
 ## Player Usage
+
+If you want to create a simple player without having to implement the interfaces, you can use the premade `Player` struct that implements those interfaces internally. This struct is mutable, automatically emits properties changed signal, and allows you to connect to method calls.
 
 ```rust
 #[async_std::main]
