@@ -1,0 +1,3 @@
+(function() {var implementors = {
+"mpris_server":[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.72.0/core/default/trait.Default.html\" title=\"trait core::default::Default\">Default</a> for <a class=\"struct\" href=\"mpris_server/struct.MetadataBuilder.html\" title=\"struct mpris_server::MetadataBuilder\">MetadataBuilder</a>"],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.72.0/core/default/trait.Default.html\" title=\"trait core::default::Default\">Default</a> for <a class=\"struct\" href=\"mpris_server/struct.Metadata.html\" title=\"struct mpris_server::Metadata\">Metadata</a>"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
