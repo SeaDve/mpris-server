@@ -19,7 +19,7 @@ pub type DateTime = String;
 pub type Uri = String;
 
 #[derive(Clone, PartialEq, Serialize, Type)]
-#[zvariant(signature = "dict")]
+#[zvariant(signature = "a{sv}")]
 pub struct Metadata(HashMap<String, Value<'static>>);
 
 impl fmt::Debug for Metadata {
