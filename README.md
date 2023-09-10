@@ -141,7 +141,7 @@ async fn main() {
 
 
 
-For more examples, see the [examples directory](examples).
+For more examples, see the [examples directory](https://github.com/SeaDve/mpris-server/tree/main/examples).
 
 ## TODO
 
