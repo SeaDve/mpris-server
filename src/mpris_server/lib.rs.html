@@ -251,7 +251,11 @@
 <a href="#251" id="251">251</a>
 <a href="#252" id="252">252</a>
 <a href="#253" id="253">253</a>
+<a href="#254" id="254">254</a>
+<a href="#255" id="255">255</a>
 </pre></div><pre class="rust"><code><span class="attr">#![warn(rust_2018_idioms)]
+#![deny(rustdoc::broken_intra_doc_links)]
+#![doc = <span class="macro">include_str!</span>(<span class="string">&quot;../README.md&quot;</span>)]
 
 </span><span class="kw">mod </span>loop_status;
 <span class="kw">mod </span>metadata;
