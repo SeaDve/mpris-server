@@ -7,6 +7,8 @@ name: Github Pages
 jobs:
   build-deploy:
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rs/toolchain@v1
