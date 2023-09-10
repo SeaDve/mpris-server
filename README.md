@@ -148,3 +148,5 @@ For more examples, see the [examples directory](examples).
 * Document public interface
 * Replace `TimeInUs`, `DateTime`, and `Uri` with proper types
 * Add getter on Metadata
+* Consider making Player and Server Sync + Send
+* Run server internally, instead of explicit `run` method
