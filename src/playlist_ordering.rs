@@ -8,7 +8,7 @@ use zbus::zvariant::{Type, Value};
 /// # Rationale
 ///
 /// Some media players may allow users to order playlists
-/// as they wish. This ordering allows playlists to be retreived
+/// as they wish. This ordering allows playlists to be retrieved
 /// in that order.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Type)]
 #[zvariant(signature = "s")]
