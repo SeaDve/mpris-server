@@ -119,11 +119,27 @@ where
 
     pub(super) async fn handle_playlists_interface_action(&self, action: PlaylistsAction) {
         match action {
-            PlaylistsAction::ActivatePlaylist(_) => todo!(),
-            PlaylistsAction::GetPlaylists(_, _, _, _, _) => todo!(),
-            PlaylistsAction::PlaylistCount(_) => todo!(),
-            PlaylistsAction::Orderings(_) => todo!(),
-            PlaylistsAction::ActivePlaylist(_) => todo!(),
+            PlaylistsAction::ActivatePlaylist(playlist_id) => {
+                self.imp.activate_playlist(playlist_id).await
+            }
+            PlaylistsAction::GetPlaylists(index, max_count, order, reverse_order, sender) => {
+                sender
+                    .send(
+                        self.imp
+                            .get_playlists(index, max_count, order, reverse_order)
+                            .await,
+                    )
+                    .unwrap();
+            }
+            PlaylistsAction::PlaylistCount(sender) => {
+                sender.send(self.imp.playlist_count().await).unwrap();
+            }
+            PlaylistsAction::Orderings(sender) => {
+                sender.send(self.imp.orderings().await).unwrap();
+            }
+            PlaylistsAction::ActivePlaylist(sender) => {
+                sender.send(self.imp.active_playlist().await).unwrap();
+            }
         }
     }
 
