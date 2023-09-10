@@ -5,8 +5,9 @@ license = "MPL-2.0"
 edition = "2021"
 
 [dependencies]
-zbus = "3.14"
+async-trait = "0.1"
 futures-channel = "0.3"
+zbus = "3.14"
 
 [dev-dependencies]
 async-std = { version = "1.12", features = ["attributes"] }

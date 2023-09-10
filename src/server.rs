@@ -398,10 +398,13 @@ where
             .set(connection)
             .expect("server must only be ran once");
 
+        // FIXME Spawn tasks so we can handle calls concurrently
         while let Some(action) = rx.next().await {
             match action {
-                Action::RootInterface(action) => self.handle_interface_action(action),
-                Action::PlayerInterface(action) => self.handle_player_interface_action(action),
+                Action::RootInterface(action) => self.handle_interface_action(action).await,
+                Action::PlayerInterface(action) => {
+                    self.handle_player_interface_action(action).await
+                }
             }
         }
 
@@ -417,84 +420,104 @@ where
             .await
     }
 
-    fn handle_interface_action(&self, action: RootInterfaceAction) {
+    async fn handle_interface_action(&self, action: RootInterfaceAction) {
         match action {
             // Methods
-            RootInterfaceAction::Raise => self.imp.raise(),
-            RootInterfaceAction::Quit => self.imp.quit(),
+            RootInterfaceAction::Raise => self.imp.raise().await,
+            RootInterfaceAction::Quit => self.imp.quit().await,
             // Properties
-            RootInterfaceAction::CanQuit(sender) => sender.send(self.imp.can_quit()).unwrap(),
-            RootInterfaceAction::Fullscreen(sender) => sender.send(self.imp.fullscreen()).unwrap(),
-            RootInterfaceAction::SetFullscreen(fullscreen) => self.imp.set_fullscreen(fullscreen),
+            RootInterfaceAction::CanQuit(sender) => sender.send(self.imp.can_quit().await).unwrap(),
+            RootInterfaceAction::Fullscreen(sender) => {
+                sender.send(self.imp.fullscreen().await).unwrap()
+            }
+            RootInterfaceAction::SetFullscreen(fullscreen) => {
+                self.imp.set_fullscreen(fullscreen).await
+            }
             RootInterfaceAction::CanSetFullScreen(sender) => {
-                sender.send(self.imp.can_set_fullscreen()).unwrap()
+                sender.send(self.imp.can_set_fullscreen().await).unwrap()
             }
-            RootInterfaceAction::CanRaise(sender) => sender.send(self.imp.can_raise()).unwrap(),
+            RootInterfaceAction::CanRaise(sender) => {
+                sender.send(self.imp.can_raise().await).unwrap()
+            }
             RootInterfaceAction::HasTrackList(sender) => {
-                sender.send(self.imp.has_track_list()).unwrap()
+                sender.send(self.imp.has_track_list().await).unwrap()
             }
-            RootInterfaceAction::Identity(sender) => sender.send(self.imp.identity()).unwrap(),
+            RootInterfaceAction::Identity(sender) => {
+                sender.send(self.imp.identity().await).unwrap()
+            }
             RootInterfaceAction::DesktopEntry(sender) => {
-                sender.send(self.imp.desktop_entry()).unwrap()
+                sender.send(self.imp.desktop_entry().await).unwrap()
             }
             RootInterfaceAction::SupportedUriSchemes(sender) => {
-                sender.send(self.imp.supported_uri_schemes()).unwrap()
+                sender.send(self.imp.supported_uri_schemes().await).unwrap()
             }
             RootInterfaceAction::SupportedMimeTypes(sender) => {
-                sender.send(self.imp.supported_mime_types()).unwrap()
+                sender.send(self.imp.supported_mime_types().await).unwrap()
             }
         }
     }
 
-    fn handle_player_interface_action(&self, action: PlayerInterfaceAction) {
+    async fn handle_player_interface_action(&self, action: PlayerInterfaceAction) {
         match action {
             // Methods
-            PlayerInterfaceAction::Next => self.imp.next(),
-            PlayerInterfaceAction::Previous => self.imp.previous(),
-            PlayerInterfaceAction::Pause => self.imp.pause(),
-            PlayerInterfaceAction::PlayPause => self.imp.play_pause(),
-            PlayerInterfaceAction::Stop => self.imp.stop(),
-            PlayerInterfaceAction::Play => self.imp.play(),
-            PlayerInterfaceAction::Seek(offset) => self.imp.seek(offset),
+            PlayerInterfaceAction::Next => self.imp.next().await,
+            PlayerInterfaceAction::Previous => self.imp.previous().await,
+            PlayerInterfaceAction::Pause => self.imp.pause().await,
+            PlayerInterfaceAction::PlayPause => self.imp.play_pause().await,
+            PlayerInterfaceAction::Stop => self.imp.stop().await,
+            PlayerInterfaceAction::Play => self.imp.play().await,
+            PlayerInterfaceAction::Seek(offset) => self.imp.seek(offset).await,
             PlayerInterfaceAction::SetPosition(track_id, position) => {
-                self.imp.set_position(track_id, position)
+                self.imp.set_position(track_id, position).await
             }
-            PlayerInterfaceAction::OpenUri(uri) => self.imp.open_uri(uri),
+            PlayerInterfaceAction::OpenUri(uri) => self.imp.open_uri(uri).await,
             // Properties
             PlayerInterfaceAction::PlaybackStatus(sender) => {
-                sender.send(self.imp.playback_status()).unwrap()
+                sender.send(self.imp.playback_status().await).unwrap()
             }
             PlayerInterfaceAction::LoopStatus(sender) => {
-                sender.send(self.imp.loop_status()).unwrap()
+                sender.send(self.imp.loop_status().await).unwrap()
             }
             PlayerInterfaceAction::SetLoopStatus(loop_status) => {
-                self.imp.set_loop_status(loop_status)
+                self.imp.set_loop_status(loop_status).await
             }
-            PlayerInterfaceAction::Rate(sender) => sender.send(self.imp.rate()).unwrap(),
-            PlayerInterfaceAction::SetRate(rate) => self.imp.set_rate(rate),
-            PlayerInterfaceAction::Shuffle(sender) => sender.send(self.imp.shuffle()).unwrap(),
-            PlayerInterfaceAction::SetShuffle(shuffle) => self.imp.set_shuffle(shuffle),
-            PlayerInterfaceAction::Metadata(sender) => sender.send(self.imp.metadata()).unwrap(),
-            PlayerInterfaceAction::Volume(sender) => sender.send(self.imp.volume()).unwrap(),
-            PlayerInterfaceAction::SetVolume(volume) => self.imp.set_volume(volume),
-            PlayerInterfaceAction::Position(sender) => sender.send(self.imp.position()).unwrap(),
+            PlayerInterfaceAction::Rate(sender) => sender.send(self.imp.rate().await).unwrap(),
+            PlayerInterfaceAction::SetRate(rate) => self.imp.set_rate(rate).await,
+            PlayerInterfaceAction::Shuffle(sender) => {
+                sender.send(self.imp.shuffle().await).unwrap()
+            }
+            PlayerInterfaceAction::SetShuffle(shuffle) => self.imp.set_shuffle(shuffle).await,
+            PlayerInterfaceAction::Metadata(sender) => {
+                sender.send(self.imp.metadata().await).unwrap()
+            }
+            PlayerInterfaceAction::Volume(sender) => sender.send(self.imp.volume().await).unwrap(),
+            PlayerInterfaceAction::SetVolume(volume) => self.imp.set_volume(volume).await,
+            PlayerInterfaceAction::Position(sender) => {
+                sender.send(self.imp.position().await).unwrap()
+            }
             PlayerInterfaceAction::MinimumRate(sender) => {
-                sender.send(self.imp.minimum_rate()).unwrap()
+                sender.send(self.imp.minimum_rate().await).unwrap()
             }
             PlayerInterfaceAction::MaximumRate(sender) => {
-                sender.send(self.imp.maximum_rate()).unwrap()
+                sender.send(self.imp.maximum_rate().await).unwrap()
             }
             PlayerInterfaceAction::CanGoNext(sender) => {
-                sender.send(self.imp.can_go_next()).unwrap()
+                sender.send(self.imp.can_go_next().await).unwrap()
             }
             PlayerInterfaceAction::CanGoPrevious(sender) => {
-                sender.send(self.imp.can_go_previous()).unwrap()
+                sender.send(self.imp.can_go_previous().await).unwrap()
             }
-            PlayerInterfaceAction::CanPlay(sender) => sender.send(self.imp.can_play()).unwrap(),
-            PlayerInterfaceAction::CanPause(sender) => sender.send(self.imp.can_pause()).unwrap(),
-            PlayerInterfaceAction::CanSeek(sender) => sender.send(self.imp.can_seek()).unwrap(),
+            PlayerInterfaceAction::CanPlay(sender) => {
+                sender.send(self.imp.can_play().await).unwrap()
+            }
+            PlayerInterfaceAction::CanPause(sender) => {
+                sender.send(self.imp.can_pause().await).unwrap()
+            }
+            PlayerInterfaceAction::CanSeek(sender) => {
+                sender.send(self.imp.can_seek().await).unwrap()
+            }
             PlayerInterfaceAction::CanControl(sender) => {
-                sender.send(self.imp.can_control()).unwrap()
+                sender.send(self.imp.can_control().await).unwrap()
             }
         }
     }

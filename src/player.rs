@@ -1,5 +1,6 @@
 use std::cell::{Cell, Ref, RefCell};
 
+use async_trait::async_trait;
 use zbus::Result;
 
 use crate::{
@@ -58,198 +59,200 @@ struct Inner {
     can_control: Cell<bool>,
 }
 
+#[async_trait(?Send)]
 impl RootInterface for Inner {
-    fn raise(&self) {
+    async fn raise(&self) {
         for cb in self.raise_cbs.borrow().iter() {
             cb();
         }
     }
 
-    fn quit(&self) {
+    async fn quit(&self) {
         for cb in self.quit_cbs.borrow().iter() {
             cb();
         }
     }
 
-    fn can_quit(&self) -> bool {
+    async fn can_quit(&self) -> bool {
         self.can_quit.get()
     }
 
-    fn fullscreen(&self) -> bool {
+    async fn fullscreen(&self) -> bool {
         self.fullscreen.get()
     }
 
-    fn set_fullscreen(&self, fullscreen: bool) {
+    async fn set_fullscreen(&self, fullscreen: bool) {
         for cb in self.set_fullscreen_cbs.borrow().iter() {
             cb(fullscreen);
         }
     }
 
-    fn can_set_fullscreen(&self) -> bool {
+    async fn can_set_fullscreen(&self) -> bool {
         self.can_set_fullscreen.get()
     }
 
-    fn can_raise(&self) -> bool {
+    async fn can_raise(&self) -> bool {
         self.can_raise.get()
     }
 
-    fn has_track_list(&self) -> bool {
+    async fn has_track_list(&self) -> bool {
         self.has_track_list.get()
     }
 
-    fn identity(&self) -> String {
+    async fn identity(&self) -> String {
         self.identity.borrow().clone()
     }
 
-    fn desktop_entry(&self) -> String {
+    async fn desktop_entry(&self) -> String {
         self.desktop_entry.borrow().clone()
     }
 
-    fn supported_uri_schemes(&self) -> Vec<String> {
+    async fn supported_uri_schemes(&self) -> Vec<String> {
         self.supported_uri_schemes.borrow().clone()
     }
 
-    fn supported_mime_types(&self) -> Vec<String> {
+    async fn supported_mime_types(&self) -> Vec<String> {
         self.supported_mime_types.borrow().clone()
     }
 }
 
+#[async_trait(?Send)]
 impl PlayerInterface for Inner {
-    fn next(&self) {
+    async fn next(&self) {
         for cb in self.next_cbs.borrow().iter() {
             cb();
         }
     }
 
-    fn previous(&self) {
+    async fn previous(&self) {
         for cb in self.previous_cbs.borrow().iter() {
             cb();
         }
     }
 
-    fn pause(&self) {
+    async fn pause(&self) {
         for cb in self.pause_cbs.borrow().iter() {
             cb();
         }
     }
 
-    fn play_pause(&self) {
+    async fn play_pause(&self) {
         for cb in self.play_pause_cbs.borrow().iter() {
             cb();
         }
     }
 
-    fn stop(&self) {
+    async fn stop(&self) {
         for cb in self.stop_cbs.borrow().iter() {
             cb();
         }
     }
 
-    fn play(&self) {
+    async fn play(&self) {
         for cb in self.play_cbs.borrow().iter() {
             cb();
         }
     }
 
-    fn seek(&self, offset: TimeInUs) {
+    async fn seek(&self, offset: TimeInUs) {
         for cb in self.seek_cbs.borrow().iter() {
             cb(offset);
         }
     }
 
-    fn set_position(&self, track_id: TrackId, position: TimeInUs) {
+    async fn set_position(&self, track_id: TrackId, position: TimeInUs) {
         for cb in self.set_position_cbs.borrow().iter() {
             cb(&track_id, position);
         }
     }
 
-    fn open_uri(&self, uri: String) {
+    async fn open_uri(&self, uri: String) {
         for cb in self.open_uri_cbs.borrow().iter() {
             cb(&uri);
         }
     }
 
-    fn playback_status(&self) -> PlaybackStatus {
+    async fn playback_status(&self) -> PlaybackStatus {
         self.playback_status.get()
     }
 
-    fn loop_status(&self) -> LoopStatus {
+    async fn loop_status(&self) -> LoopStatus {
         self.loop_status.get()
     }
 
-    fn set_loop_status(&self, loop_status: LoopStatus) {
+    async fn set_loop_status(&self, loop_status: LoopStatus) {
         for cb in self.set_loop_status_cbs.borrow().iter() {
             cb(loop_status);
         }
     }
 
-    fn rate(&self) -> PlaybackRate {
+    async fn rate(&self) -> PlaybackRate {
         self.rate.get()
     }
 
-    fn set_rate(&self, rate: PlaybackRate) {
+    async fn set_rate(&self, rate: PlaybackRate) {
         for cb in self.set_rate_cbs.borrow().iter() {
             cb(rate);
         }
     }
 
-    fn shuffle(&self) -> bool {
+    async fn shuffle(&self) -> bool {
         self.shuffle.get()
     }
 
-    fn set_shuffle(&self, shuffle: bool) {
+    async fn set_shuffle(&self, shuffle: bool) {
         for cb in self.set_shuffle_cbs.borrow().iter() {
             cb(shuffle);
         }
     }
 
-    fn metadata(&self) -> Metadata {
+    async fn metadata(&self) -> Metadata {
         self.metadata.borrow().clone()
     }
 
-    fn volume(&self) -> Volume {
+    async fn volume(&self) -> Volume {
         self.volume.get()
     }
 
-    fn set_volume(&self, volume: Volume) {
+    async fn set_volume(&self, volume: Volume) {
         for cb in self.set_volume_cbs.borrow().iter() {
             cb(volume);
         }
     }
 
-    fn position(&self) -> TimeInUs {
+    async fn position(&self) -> TimeInUs {
         self.position.get()
     }
 
-    fn minimum_rate(&self) -> PlaybackRate {
+    async fn minimum_rate(&self) -> PlaybackRate {
         self.minimum_rate.get()
     }
 
-    fn maximum_rate(&self) -> PlaybackRate {
+    async fn maximum_rate(&self) -> PlaybackRate {
         self.maximum_rate.get()
     }
 
-    fn can_go_next(&self) -> bool {
+    async fn can_go_next(&self) -> bool {
         self.can_go_next.get()
     }
 
-    fn can_go_previous(&self) -> bool {
+    async fn can_go_previous(&self) -> bool {
         self.can_go_previous.get()
     }
 
-    fn can_play(&self) -> bool {
+    async fn can_play(&self) -> bool {
         self.can_play.get()
     }
 
-    fn can_pause(&self) -> bool {
+    async fn can_pause(&self) -> bool {
         self.can_pause.get()
     }
 
-    fn can_seek(&self) -> bool {
+    async fn can_seek(&self) -> bool {
         self.can_seek.get()
     }
 
-    fn can_control(&self) -> bool {
+    async fn can_control(&self) -> bool {
         self.can_control.get()
     }
 }

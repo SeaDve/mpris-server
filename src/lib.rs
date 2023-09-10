@@ -6,6 +6,7 @@ mod playback_status;
 mod player;
 mod server;
 
+use async_trait::async_trait;
 use zbus::zvariant::OwnedObjectPath;
 
 pub use crate::{
@@ -16,6 +17,7 @@ pub use crate::{
     server::Server,
 };
 
+#[async_trait(?Send)]
 pub trait RootInterface {
     /// Brings the media player's user interface to the front using
     /// any appropriate mechanism available.
@@ -24,7 +26,7 @@ pub trait RootInterface {
     /// interface is displayed, or it may not have a graphical user
     /// interface at all. In this case, the `CanRaise` property is
     /// `false` and this method does nothing.
-    fn raise(&self);
+    async fn raise(&self);
 
     /// Causes the media player to stop running.
     ///
@@ -40,13 +42,13 @@ pub trait RootInterface {
     ///
     /// If the media player does not have a UI, this should be
     /// implemented.
-    fn quit(&self);
+    async fn quit(&self);
 
     /// If `false`, calling `Quit` will have no effect, and may raise a
     /// NotSupported error. If `true`, calling `Quit` will cause the media
     /// application to attempt to quit (although it may still be
     /// prevented from quitting by the user, for example).
-    fn can_quit(&self) -> bool;
+    async fn can_quit(&self) -> bool;
 
     /// Whether the media player is occupying the fullscreen.
     ///
@@ -65,91 +67,92 @@ pub trait RootInterface {
     /// be unable to fulfil the request, in which case attempting to
     ///  set this property will have no effect (but should not raise
     /// an error).
-    fn fullscreen(&self) -> bool {
+    async fn fullscreen(&self) -> bool {
         false
     }
 
-    fn set_fullscreen(&self, _fullscreen: bool) {}
+    async fn set_fullscreen(&self, _fullscreen: bool) {}
 
-    fn can_set_fullscreen(&self) -> bool {
+    async fn can_set_fullscreen(&self) -> bool {
         false
     }
 
-    fn can_raise(&self) -> bool;
+    async fn can_raise(&self) -> bool;
 
-    fn has_track_list(&self) -> bool;
+    async fn has_track_list(&self) -> bool;
 
-    fn identity(&self) -> String;
+    async fn identity(&self) -> String;
 
-    fn desktop_entry(&self) -> String {
+    async fn desktop_entry(&self) -> String {
         String::new()
     }
 
-    fn supported_uri_schemes(&self) -> Vec<String>;
+    async fn supported_uri_schemes(&self) -> Vec<String>;
 
-    fn supported_mime_types(&self) -> Vec<String>;
+    async fn supported_mime_types(&self) -> Vec<String>;
 }
 
+#[async_trait(?Send)]
 pub trait PlayerInterface: RootInterface {
-    fn next(&self);
+    async fn next(&self);
 
-    fn previous(&self);
+    async fn previous(&self);
 
-    fn pause(&self);
+    async fn pause(&self);
 
-    fn play_pause(&self);
+    async fn play_pause(&self);
 
-    fn stop(&self);
+    async fn stop(&self);
 
-    fn play(&self);
+    async fn play(&self);
 
-    fn seek(&self, offset: TimeInUs);
+    async fn seek(&self, offset: TimeInUs);
 
-    fn set_position(&self, track_id: TrackId, position: TimeInUs);
+    async fn set_position(&self, track_id: TrackId, position: TimeInUs);
 
-    fn open_uri(&self, uri: String);
+    async fn open_uri(&self, uri: String);
 
-    fn playback_status(&self) -> PlaybackStatus;
+    async fn playback_status(&self) -> PlaybackStatus;
 
-    fn loop_status(&self) -> LoopStatus {
+    async fn loop_status(&self) -> LoopStatus {
         LoopStatus::None
     }
 
-    fn set_loop_status(&self, _loop_status: LoopStatus) {}
+    async fn set_loop_status(&self, _loop_status: LoopStatus) {}
 
-    fn rate(&self) -> PlaybackRate;
+    async fn rate(&self) -> PlaybackRate;
 
-    fn set_rate(&self, rate: PlaybackRate);
+    async fn set_rate(&self, rate: PlaybackRate);
 
-    fn shuffle(&self) -> bool {
+    async fn shuffle(&self) -> bool {
         false
     }
 
-    fn set_shuffle(&self, _shuffle: bool) {}
+    async fn set_shuffle(&self, _shuffle: bool) {}
 
-    fn metadata(&self) -> Metadata;
+    async fn metadata(&self) -> Metadata;
 
-    fn volume(&self) -> Volume;
+    async fn volume(&self) -> Volume;
 
-    fn set_volume(&self, volume: Volume);
+    async fn set_volume(&self, volume: Volume);
 
-    fn position(&self) -> TimeInUs;
+    async fn position(&self) -> TimeInUs;
 
-    fn minimum_rate(&self) -> PlaybackRate;
+    async fn minimum_rate(&self) -> PlaybackRate;
 
-    fn maximum_rate(&self) -> PlaybackRate;
+    async fn maximum_rate(&self) -> PlaybackRate;
 
-    fn can_go_next(&self) -> bool;
+    async fn can_go_next(&self) -> bool;
 
-    fn can_go_previous(&self) -> bool;
+    async fn can_go_previous(&self) -> bool;
 
-    fn can_play(&self) -> bool;
+    async fn can_play(&self) -> bool;
 
-    fn can_pause(&self) -> bool;
+    async fn can_pause(&self) -> bool;
 
-    fn can_seek(&self) -> bool;
+    async fn can_seek(&self) -> bool;
 
-    fn can_control(&self) -> bool;
+    async fn can_control(&self) -> bool;
 }
 
 /// Unique track identifier.
