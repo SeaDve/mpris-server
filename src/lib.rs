@@ -17,6 +17,10 @@ pub use crate::{
     server::Server,
 };
 
+pub mod exports {
+    pub use async_trait::async_trait;
+}
+
 #[async_trait(?Send)]
 pub trait RootInterface {
     /// Brings the media player's user interface to the front using
