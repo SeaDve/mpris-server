@@ -3,6 +3,10 @@ The API is still unstable. Expect breaking changes.
 
 # MPRIS Server
 
+[![docs](https://docs.rs/mpris-server/badge.svg)](https://docs.rs/mpris-server/)
+[![crates.io](https://img.shields.io/crates/v/mpris-server)](https://crates.io/crates/mpris-server)
+[![CI](https://github.com/SeaDve/mpris-server/actions/workflows/ci.yml/badge.svg)](https://github.com/SeaDve/mpris-server/actions/workflows/ci.yml)
+
 Create MPRIS MediaPlayer2 server
 
 To implement a server, this crate provides two flavors: you can either create a custom struct that implements `RootInterface` and `PlayerInterface`, or you can use the premade mutable `Player` struct.
