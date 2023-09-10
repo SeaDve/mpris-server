@@ -4,7 +4,7 @@ use zbus::{dbus_interface, ConnectionBuilder, Result, SignalContext};
 
 use super::{
     player::{RawPlayerInterface, RawRootInterface},
-    utils::iface_delegate,
+    utils::{changed_delegate, signal_delegate},
     Action, Server, OBJECT_PATH,
 };
 use crate::{MaybePlaylist, Playlist, PlaylistId, PlaylistOrdering, PlaylistsInterface};
@@ -144,11 +144,8 @@ where
     }
 
     // org.mpris.MediaPlayer2.Playlists
-    pub async fn playlist_changed(&self, playlist: Playlist) -> Result<()> {
-        let iface_ref = self.interface_ref::<RawPlaylistsInterface>().await?;
-        RawPlaylistsInterface::playlist_changed(iface_ref.signal_context(), playlist).await
-    }
-    iface_delegate!(RawPlaylistsInterface, playlist_count_changed);
-    iface_delegate!(RawPlaylistsInterface, orderings_changed);
-    iface_delegate!(RawPlaylistsInterface, active_playlist_changed);
+    signal_delegate!(RawPlaylistsInterface, playlist_changed(playlist: Playlist));
+    changed_delegate!(RawPlaylistsInterface, playlist_count_changed);
+    changed_delegate!(RawPlaylistsInterface, orderings_changed);
+    changed_delegate!(RawPlaylistsInterface, active_playlist_changed);
 }

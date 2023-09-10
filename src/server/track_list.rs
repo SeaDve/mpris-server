@@ -4,7 +4,7 @@ use zbus::{dbus_interface, ConnectionBuilder, Result, SignalContext};
 
 use super::{
     player::{RawPlayerInterface, RawRootInterface},
-    utils::iface_delegate,
+    utils::{changed_delegate, signal_delegate},
     Action, Server, OBJECT_PATH,
 };
 use crate::{Metadata, TrackId, TrackListInterface, Uri};
@@ -141,40 +141,10 @@ where
     }
 
     // org.mpris.MediaPlayer2.TrackList
-    pub async fn track_list_replaced(
-        &self,
-        tracks: Vec<TrackId>,
-        current_track: TrackId,
-    ) -> Result<()> {
-        let iface_ref = self.interface_ref::<RawTrackListInterface>().await?;
-        RawTrackListInterface::track_list_replaced(
-            iface_ref.signal_context(),
-            tracks,
-            current_track,
-        )
-        .await
-    }
-    pub async fn track_added(&self, metadata: Metadata, after_track: TrackId) -> Result<()> {
-        let iface_ref = self.interface_ref::<RawTrackListInterface>().await?;
-        RawTrackListInterface::track_added(iface_ref.signal_context(), metadata, after_track).await
-    }
-    pub async fn track_removed(&self, track_id: TrackId) -> Result<()> {
-        let iface_ref = self.interface_ref::<RawTrackListInterface>().await?;
-        RawTrackListInterface::track_removed(iface_ref.signal_context(), track_id).await
-    }
-    pub async fn track_metadata_changed(
-        &self,
-        track_id: TrackId,
-        metadata: Metadata,
-    ) -> Result<()> {
-        let iface_ref = self.interface_ref::<RawTrackListInterface>().await?;
-        RawTrackListInterface::track_metadata_changed(
-            iface_ref.signal_context(),
-            track_id,
-            metadata,
-        )
-        .await
-    }
-    iface_delegate!(RawTrackListInterface, tracks_changed);
-    iface_delegate!(RawTrackListInterface, can_edit_tracks_changed);
+    signal_delegate!(RawTrackListInterface, track_list_replaced(tracks: Vec<TrackId>, current_track: TrackId));
+    signal_delegate!(RawTrackListInterface, track_added(metadata: Metadata, after_track: TrackId));
+    signal_delegate!(RawTrackListInterface, track_removed(track_id: TrackId));
+    signal_delegate!(RawTrackListInterface, track_metadata_changed(track_id: TrackId, metadata: Metadata));
+    changed_delegate!(RawTrackListInterface, tracks_changed);
+    changed_delegate!(RawTrackListInterface, can_edit_tracks_changed);
 }

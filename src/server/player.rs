@@ -2,7 +2,10 @@ use futures_channel::{mpsc, oneshot};
 use futures_util::StreamExt;
 use zbus::{dbus_interface, ConnectionBuilder, Result, SignalContext};
 
-use super::{utils::iface_delegate, Action, Server, OBJECT_PATH};
+use super::{
+    utils::{changed_delegate, signal_delegate},
+    Action, Server, OBJECT_PATH,
+};
 use crate::{
     LoopStatus, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, TimeInUs, TrackId, Volume,
 };
@@ -433,34 +436,31 @@ where
     }
 
     // org.mpris.MediaPlayer2
-    iface_delegate!(RawRootInterface, can_quit_changed);
-    iface_delegate!(RawRootInterface, fullscreen_changed);
-    iface_delegate!(RawRootInterface, can_set_fullscreen_changed);
-    iface_delegate!(RawRootInterface, can_raise_changed);
-    iface_delegate!(RawRootInterface, has_track_list_changed);
-    iface_delegate!(RawRootInterface, identity_changed);
-    iface_delegate!(RawRootInterface, desktop_entry_changed);
-    iface_delegate!(RawRootInterface, supported_uri_schemes_changed);
-    iface_delegate!(RawRootInterface, supported_mime_types_changed);
+    changed_delegate!(RawRootInterface, can_quit_changed);
+    changed_delegate!(RawRootInterface, fullscreen_changed);
+    changed_delegate!(RawRootInterface, can_set_fullscreen_changed);
+    changed_delegate!(RawRootInterface, can_raise_changed);
+    changed_delegate!(RawRootInterface, has_track_list_changed);
+    changed_delegate!(RawRootInterface, identity_changed);
+    changed_delegate!(RawRootInterface, desktop_entry_changed);
+    changed_delegate!(RawRootInterface, supported_uri_schemes_changed);
+    changed_delegate!(RawRootInterface, supported_mime_types_changed);
 
     // org.mpris.MediaPlayer2.Player
-    pub async fn seeked(&self, position: TimeInUs) -> Result<()> {
-        let iface_ref = self.interface_ref::<RawPlayerInterface>().await?;
-        RawPlayerInterface::seeked(iface_ref.signal_context(), position).await
-    }
-    iface_delegate!(RawPlayerInterface, playback_status_changed);
-    iface_delegate!(RawPlayerInterface, loop_status_changed);
-    iface_delegate!(RawPlayerInterface, rate_changed);
-    iface_delegate!(RawPlayerInterface, shuffle_changed);
-    iface_delegate!(RawPlayerInterface, metadata_changed);
-    iface_delegate!(RawPlayerInterface, volume_changed);
-    iface_delegate!(RawPlayerInterface, position_changed);
-    iface_delegate!(RawPlayerInterface, minimum_rate_changed);
-    iface_delegate!(RawPlayerInterface, maximum_rate_changed);
-    iface_delegate!(RawPlayerInterface, can_go_next_changed);
-    iface_delegate!(RawPlayerInterface, can_go_previous_changed);
-    iface_delegate!(RawPlayerInterface, can_play_changed);
-    iface_delegate!(RawPlayerInterface, can_pause_changed);
-    iface_delegate!(RawPlayerInterface, can_seek_changed);
-    iface_delegate!(RawPlayerInterface, can_control_changed);
+    signal_delegate!(RawPlayerInterface, seeked(position: TimeInUs));
+    changed_delegate!(RawPlayerInterface, playback_status_changed);
+    changed_delegate!(RawPlayerInterface, loop_status_changed);
+    changed_delegate!(RawPlayerInterface, rate_changed);
+    changed_delegate!(RawPlayerInterface, shuffle_changed);
+    changed_delegate!(RawPlayerInterface, metadata_changed);
+    changed_delegate!(RawPlayerInterface, volume_changed);
+    changed_delegate!(RawPlayerInterface, position_changed);
+    changed_delegate!(RawPlayerInterface, minimum_rate_changed);
+    changed_delegate!(RawPlayerInterface, maximum_rate_changed);
+    changed_delegate!(RawPlayerInterface, can_go_next_changed);
+    changed_delegate!(RawPlayerInterface, can_go_previous_changed);
+    changed_delegate!(RawPlayerInterface, can_play_changed);
+    changed_delegate!(RawPlayerInterface, can_pause_changed);
+    changed_delegate!(RawPlayerInterface, can_seek_changed);
+    changed_delegate!(RawPlayerInterface, can_control_changed);
 }
