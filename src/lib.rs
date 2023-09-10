@@ -17,6 +17,7 @@ pub use crate::{
     server::Server,
 };
 
+#[doc(hidden)]
 pub mod exports {
     pub use async_trait::async_trait;
 }
@@ -157,6 +158,21 @@ pub trait PlayerInterface: RootInterface {
     async fn can_seek(&self) -> bool;
 
     async fn can_control(&self) -> bool;
+}
+
+#[async_trait(?Send)]
+pub trait TrackListInterface: PlayerInterface {
+    async fn get_tracks_metadata(&self, track_ids: Vec<TrackId>) -> Vec<Metadata>;
+
+    async fn add_track(&self, uri: Uri, after_track: TrackId, set_as_current: bool);
+
+    async fn remove_track(&self, track_id: TrackId);
+
+    async fn go_to(&self, track_id: TrackId);
+
+    async fn tracks(&self) -> Vec<TrackId>;
+
+    async fn can_edit_tracks(&self) -> bool;
 }
 
 /// Unique track identifier.

@@ -1,5 +1,6 @@
 use std::{collections::HashMap, fmt};
 
+use serde::Serialize;
 use zbus::zvariant::{self, OwnedObjectPath, Type, Value};
 
 use crate::TimeInUs;
@@ -17,7 +18,7 @@ pub type DateTime = String;
 /// "file://" schema.
 pub type Uri = String;
 
-#[derive(Clone, PartialEq, Type)]
+#[derive(Clone, PartialEq, Serialize, Type)]
 #[zvariant(signature = "dict")]
 pub struct Metadata(HashMap<String, Value<'static>>);
 
