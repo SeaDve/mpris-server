@@ -45,12 +45,12 @@ use mpris_server::{export::async_trait, Server};
 
 pub struct MyPlayer;
 
-#[async_trait(?Send)]
+#[async_trait]
 impl RootInterface for MyPlayer {
     ...
 }
 
-#[async_trait(?Send)]
+#[async_trait]
 impl PlayerInterface for MyPlayer {
     ...
 }
@@ -69,17 +69,17 @@ use mpris_server::{export::async_trait, Server};
 
 pub struct MyPlayer;
 
-#[async_trait(?Send)]
+#[async_trait]
 impl RootInterface for MyPlayer {
     ...
 }
 
-#[async_trait(?Send)]
+#[async_trait]
 impl PlayerInterface for MyPlayer {
     ...
 }
 
-#[async_trait(?Send)]
+#[async_trait]
 impl TracklistInterface for MyPlayer {
     ...
 }
@@ -98,17 +98,17 @@ use mpris_server::{export::async_trait, Server};
 
 pub struct MyPlayer;
 
-#[async_trait(?Send)]
+#[async_trait]
 impl RootInterface for MyPlayer {
     ...
 }
 
-#[async_trait(?Send)]
+#[async_trait]
 impl PlayerInterface for MyPlayer {
     ...
 }
 
-#[async_trait(?Send)]
+#[async_trait]
 impl PlaylistsInterface for MyPlayer {
     ...
 }
@@ -128,22 +128,22 @@ use mpris_server::{export::async_trait, Server};
 
 pub struct MyPlayer;
 
-#[async_trait(?Send)]
+#[async_trait]
 impl RootInterface for MyPlayer {
     ...
 }
 
-#[async_trait(?Send)]
+#[async_trait]
 impl PlayerInterface for MyPlayer {
     ...
 }
 
-#[async_trait(?Send)]
+#[async_trait]
 impl PlaylistsInterface for MyPlayer {
     ...
 }
 
-#[async_trait(?Send)]
+#[async_trait]
 impl TracklistInterface for MyPlayer {
     ...
 }
@@ -162,5 +162,5 @@ For more examples, see the [examples directory](https://github.com/SeaDve/mpris-
 * Document public interface
 * Replace `TimeInUs`, `DateTime`, and `Uri` with proper types
 * Add getter on Metadata
-* Consider making Player and Server Sync + Send
+* Profile if inlining is worth it
 * Run server internally, instead of explicit `run` method

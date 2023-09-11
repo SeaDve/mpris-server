@@ -1,17 +1,17 @@
 use std::cell::{Cell, Ref, RefCell};
 
 use async_trait::async_trait;
-use zbus::Result;
+use zbus::{fdo, Result};
 
 use crate::{
-    LoopStatus, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, RootInterface, Server,
-    TimeInUs, TrackId, Volume,
+    LocalPlayerInterface, LocalRootInterface, LocalServer, LoopStatus, Metadata, PlaybackRate,
+    PlaybackStatus, Property, TimeInUs, TrackId, Volume,
 };
 
-/// Premade mutable object that internally implements [`RootInterface`] and [`PlayerInterface`].
+/// Premade mutable object that internally implements [`LocalRootInterface`] and [`LocalPlayerInterface`].
 #[derive(Debug)]
 pub struct Player {
-    server: Server<Inner>,
+    server: LocalServer<Inner>,
 }
 
 #[allow(clippy::type_complexity)]
@@ -60,200 +60,216 @@ struct Inner {
 }
 
 #[async_trait(?Send)]
-impl RootInterface for Inner {
-    async fn raise(&self) {
+impl LocalRootInterface for Inner {
+    async fn raise(&self) -> fdo::Result<()> {
         for cb in self.raise_cbs.borrow().iter() {
             cb();
         }
+        Ok(())
     }
 
-    async fn quit(&self) {
+    async fn quit(&self) -> fdo::Result<()> {
         for cb in self.quit_cbs.borrow().iter() {
             cb();
         }
+        Ok(())
     }
 
-    async fn can_quit(&self) -> bool {
-        self.can_quit.get()
+    async fn can_quit(&self) -> fdo::Result<bool> {
+        Ok(self.can_quit.get())
     }
 
-    async fn fullscreen(&self) -> bool {
-        self.fullscreen.get()
+    async fn fullscreen(&self) -> fdo::Result<bool> {
+        Ok(self.fullscreen.get())
     }
 
-    async fn set_fullscreen(&self, fullscreen: bool) {
+    async fn set_fullscreen(&self, fullscreen: bool) -> Result<()> {
         for cb in self.set_fullscreen_cbs.borrow().iter() {
             cb(fullscreen);
         }
+        Ok(())
     }
 
-    async fn can_set_fullscreen(&self) -> bool {
-        self.can_set_fullscreen.get()
+    async fn can_set_fullscreen(&self) -> fdo::Result<bool> {
+        Ok(self.can_set_fullscreen.get())
     }
 
-    async fn can_raise(&self) -> bool {
-        self.can_raise.get()
+    async fn can_raise(&self) -> fdo::Result<bool> {
+        Ok(self.can_raise.get())
     }
 
-    async fn has_track_list(&self) -> bool {
-        self.has_track_list.get()
+    async fn has_track_list(&self) -> fdo::Result<bool> {
+        Ok(self.has_track_list.get())
     }
 
-    async fn identity(&self) -> String {
-        self.identity.borrow().clone()
+    async fn identity(&self) -> fdo::Result<String> {
+        Ok(self.identity.borrow().clone())
     }
 
-    async fn desktop_entry(&self) -> String {
-        self.desktop_entry.borrow().clone()
+    async fn desktop_entry(&self) -> fdo::Result<String> {
+        Ok(self.desktop_entry.borrow().clone())
     }
 
-    async fn supported_uri_schemes(&self) -> Vec<String> {
-        self.supported_uri_schemes.borrow().clone()
+    async fn supported_uri_schemes(&self) -> fdo::Result<Vec<String>> {
+        Ok(self.supported_uri_schemes.borrow().clone())
     }
 
-    async fn supported_mime_types(&self) -> Vec<String> {
-        self.supported_mime_types.borrow().clone()
+    async fn supported_mime_types(&self) -> fdo::Result<Vec<String>> {
+        Ok(self.supported_mime_types.borrow().clone())
     }
 }
 
 #[async_trait(?Send)]
-impl PlayerInterface for Inner {
-    async fn next(&self) {
+impl LocalPlayerInterface for Inner {
+    async fn next(&self) -> fdo::Result<()> {
         for cb in self.next_cbs.borrow().iter() {
             cb();
         }
+        Ok(())
     }
 
-    async fn previous(&self) {
+    async fn previous(&self) -> fdo::Result<()> {
         for cb in self.previous_cbs.borrow().iter() {
             cb();
         }
+        Ok(())
     }
 
-    async fn pause(&self) {
+    async fn pause(&self) -> fdo::Result<()> {
         for cb in self.pause_cbs.borrow().iter() {
             cb();
         }
+        Ok(())
     }
 
-    async fn play_pause(&self) {
+    async fn play_pause(&self) -> fdo::Result<()> {
         for cb in self.play_pause_cbs.borrow().iter() {
             cb();
         }
+        Ok(())
     }
 
-    async fn stop(&self) {
+    async fn stop(&self) -> fdo::Result<()> {
         for cb in self.stop_cbs.borrow().iter() {
             cb();
         }
+        Ok(())
     }
 
-    async fn play(&self) {
+    async fn play(&self) -> fdo::Result<()> {
         for cb in self.play_cbs.borrow().iter() {
             cb();
         }
+        Ok(())
     }
 
-    async fn seek(&self, offset: TimeInUs) {
+    async fn seek(&self, offset: TimeInUs) -> fdo::Result<()> {
         for cb in self.seek_cbs.borrow().iter() {
             cb(offset);
         }
+        Ok(())
     }
 
-    async fn set_position(&self, track_id: TrackId, position: TimeInUs) {
+    async fn set_position(&self, track_id: TrackId, position: TimeInUs) -> fdo::Result<()> {
         for cb in self.set_position_cbs.borrow().iter() {
             cb(&track_id, position);
         }
+        Ok(())
     }
 
-    async fn open_uri(&self, uri: String) {
+    async fn open_uri(&self, uri: String) -> fdo::Result<()> {
         for cb in self.open_uri_cbs.borrow().iter() {
             cb(&uri);
         }
+        Ok(())
     }
 
-    async fn playback_status(&self) -> PlaybackStatus {
-        self.playback_status.get()
+    async fn playback_status(&self) -> fdo::Result<PlaybackStatus> {
+        Ok(self.playback_status.get())
     }
 
-    async fn loop_status(&self) -> LoopStatus {
-        self.loop_status.get()
+    async fn loop_status(&self) -> fdo::Result<LoopStatus> {
+        Ok(self.loop_status.get())
     }
 
-    async fn set_loop_status(&self, loop_status: LoopStatus) {
+    async fn set_loop_status(&self, loop_status: LoopStatus) -> Result<()> {
         for cb in self.set_loop_status_cbs.borrow().iter() {
             cb(loop_status);
         }
+        Ok(())
     }
 
-    async fn rate(&self) -> PlaybackRate {
-        self.rate.get()
+    async fn rate(&self) -> fdo::Result<PlaybackRate> {
+        Ok(self.rate.get())
     }
 
-    async fn set_rate(&self, rate: PlaybackRate) {
+    async fn set_rate(&self, rate: PlaybackRate) -> Result<()> {
         for cb in self.set_rate_cbs.borrow().iter() {
             cb(rate);
         }
+        Ok(())
     }
 
-    async fn shuffle(&self) -> bool {
-        self.shuffle.get()
+    async fn shuffle(&self) -> fdo::Result<bool> {
+        Ok(self.shuffle.get())
     }
 
-    async fn set_shuffle(&self, shuffle: bool) {
+    async fn set_shuffle(&self, shuffle: bool) -> Result<()> {
         for cb in self.set_shuffle_cbs.borrow().iter() {
             cb(shuffle);
         }
+        Ok(())
     }
 
-    async fn metadata(&self) -> Metadata {
-        self.metadata.borrow().clone()
+    async fn metadata(&self) -> fdo::Result<Metadata> {
+        Ok(self.metadata.borrow().clone())
     }
 
-    async fn volume(&self) -> Volume {
-        self.volume.get()
+    async fn volume(&self) -> fdo::Result<Volume> {
+        Ok(self.volume.get())
     }
 
-    async fn set_volume(&self, volume: Volume) {
+    async fn set_volume(&self, volume: Volume) -> Result<()> {
         for cb in self.set_volume_cbs.borrow().iter() {
             cb(volume);
         }
+        Ok(())
     }
 
-    async fn position(&self) -> TimeInUs {
-        self.position.get()
+    async fn position(&self) -> fdo::Result<TimeInUs> {
+        Ok(self.position.get())
     }
 
-    async fn minimum_rate(&self) -> PlaybackRate {
-        self.minimum_rate.get()
+    async fn minimum_rate(&self) -> fdo::Result<PlaybackRate> {
+        Ok(self.minimum_rate.get())
     }
 
-    async fn maximum_rate(&self) -> PlaybackRate {
-        self.maximum_rate.get()
+    async fn maximum_rate(&self) -> fdo::Result<PlaybackRate> {
+        Ok(self.maximum_rate.get())
     }
 
-    async fn can_go_next(&self) -> bool {
-        self.can_go_next.get()
+    async fn can_go_next(&self) -> fdo::Result<bool> {
+        Ok(self.can_go_next.get())
     }
 
-    async fn can_go_previous(&self) -> bool {
-        self.can_go_previous.get()
+    async fn can_go_previous(&self) -> fdo::Result<bool> {
+        Ok(self.can_go_previous.get())
     }
 
-    async fn can_play(&self) -> bool {
-        self.can_play.get()
+    async fn can_play(&self) -> fdo::Result<bool> {
+        Ok(self.can_play.get())
     }
 
-    async fn can_pause(&self) -> bool {
-        self.can_pause.get()
+    async fn can_pause(&self) -> fdo::Result<bool> {
+        Ok(self.can_pause.get())
     }
 
-    async fn can_seek(&self) -> bool {
-        self.can_seek.get()
+    async fn can_seek(&self) -> fdo::Result<bool> {
+        Ok(self.can_seek.get())
     }
 
-    async fn can_control(&self) -> bool {
-        self.can_control.get()
+    async fn can_control(&self) -> fdo::Result<bool> {
+        Ok(self.can_control.get())
     }
 }
 
@@ -288,7 +304,7 @@ impl Player {
         }
     }
 
-    pub async fn run(&self) -> Result<()> {
+    pub async fn run(&self) {
         self.server.run().await
     }
 
@@ -298,6 +314,14 @@ impl Player {
 
     pub fn connect_quit(&self, cb: impl Fn() + 'static) {
         self.server.imp().quit_cbs.borrow_mut().push(Box::new(cb));
+    }
+
+    pub fn connect_set_fullscreen(&self, cb: impl Fn(bool) + 'static) {
+        self.server
+            .imp()
+            .set_fullscreen_cbs
+            .borrow_mut()
+            .push(Box::new(cb));
     }
 
     pub fn can_quit(&self) -> bool {
@@ -310,7 +334,7 @@ impl Player {
         }
 
         self.server.imp().can_quit.set(can_quit);
-        self.server.can_quit_changed().await
+        self.server.properties_changed(Property::CanQuit).await
     }
 
     pub fn fullscreen(&self) -> bool {
@@ -323,7 +347,7 @@ impl Player {
         }
 
         self.server.imp().fullscreen.set(fullscreen);
-        self.server.fullscreen_changed().await
+        self.server.properties_changed(Property::Fullscreen).await
     }
 
     pub fn can_set_fullscreen(&self) -> bool {
@@ -336,7 +360,9 @@ impl Player {
         }
 
         self.server.imp().can_set_fullscreen.set(can_set_fullscreen);
-        self.server.can_set_fullscreen_changed().await
+        self.server
+            .properties_changed(Property::CanSetFullscreen)
+            .await
     }
 
     pub fn can_raise(&self) -> bool {
@@ -349,7 +375,7 @@ impl Player {
         }
 
         self.server.imp().can_raise.set(can_raise);
-        self.server.can_raise_changed().await
+        self.server.properties_changed(Property::CanRaise).await
     }
 
     pub fn has_track_list(&self) -> bool {
@@ -362,7 +388,7 @@ impl Player {
         }
 
         self.server.imp().has_track_list.set(has_track_list);
-        self.server.has_track_list_changed().await
+        self.server.properties_changed(Property::HasTrackList).await
     }
 
     pub fn identity(&self) -> Ref<'_, String> {
@@ -377,7 +403,7 @@ impl Player {
         }
 
         self.server.imp().identity.replace(identity);
-        self.server.identity_changed().await
+        self.server.properties_changed(Property::Identity).await
     }
 
     pub fn desktop_entry(&self) -> Ref<'_, String> {
@@ -392,7 +418,7 @@ impl Player {
         }
 
         self.server.imp().desktop_entry.replace(desktop_entry);
-        self.server.desktop_entry_changed().await
+        self.server.properties_changed(Property::DesktopEntry).await
     }
 
     pub fn supported_uri_schemes(&self) -> Ref<'_, Vec<String>> {
@@ -416,7 +442,9 @@ impl Player {
             .imp()
             .supported_uri_schemes
             .replace(supported_uri_schemes);
-        self.server.supported_uri_schemes_changed().await
+        self.server
+            .properties_changed(Property::SupportedUriSchemes)
+            .await
     }
 
     pub fn supported_mime_types(&self) -> Ref<'_, Vec<String>> {
@@ -437,7 +465,9 @@ impl Player {
             .imp()
             .supported_mime_types
             .replace(supported_mime_types);
-        self.server.supported_mime_types_changed().await
+        self.server
+            .properties_changed(Property::SupportedMimeTypes)
+            .await
     }
 
     pub fn connect_next(&self, cb: impl Fn() + 'static) {
@@ -492,6 +522,38 @@ impl Player {
             .push(Box::new(cb));
     }
 
+    pub fn connect_set_loop_status(&self, cb: impl Fn(LoopStatus) + 'static) {
+        self.server
+            .imp()
+            .set_loop_status_cbs
+            .borrow_mut()
+            .push(Box::new(cb));
+    }
+
+    pub fn connect_set_rate(&self, cb: impl Fn(PlaybackRate) + 'static) {
+        self.server
+            .imp()
+            .set_rate_cbs
+            .borrow_mut()
+            .push(Box::new(cb));
+    }
+
+    pub fn connect_set_shuffle(&self, cb: impl Fn(bool) + 'static) {
+        self.server
+            .imp()
+            .set_shuffle_cbs
+            .borrow_mut()
+            .push(Box::new(cb));
+    }
+
+    pub fn connect_set_volume(&self, cb: impl Fn(Volume) + 'static) {
+        self.server
+            .imp()
+            .set_volume_cbs
+            .borrow_mut()
+            .push(Box::new(cb));
+    }
+
     pub async fn emit_seeked(&self, position: TimeInUs) -> Result<()> {
         self.server.seeked(position).await
     }
@@ -506,7 +568,9 @@ impl Player {
         }
 
         self.server.imp().playback_status.set(playback_status);
-        self.server.playback_status_changed().await
+        self.server
+            .properties_changed(Property::PlaybackStatus)
+            .await
     }
 
     pub fn loop_status(&self) -> LoopStatus {
@@ -519,7 +583,7 @@ impl Player {
         }
 
         self.server.imp().loop_status.set(loop_status);
-        self.server.loop_status_changed().await
+        self.server.properties_changed(Property::LoopStatus).await
     }
 
     pub fn rate(&self) -> PlaybackRate {
@@ -532,7 +596,7 @@ impl Player {
         }
 
         self.server.imp().rate.set(rate);
-        self.server.rate_changed().await
+        self.server.properties_changed(Property::Rate).await
     }
 
     pub fn shuffle(&self) -> bool {
@@ -545,7 +609,7 @@ impl Player {
         }
 
         self.server.imp().shuffle.set(shuffle);
-        self.server.shuffle_changed().await
+        self.server.properties_changed(Property::Shuffle).await
     }
 
     pub fn metadata(&self) -> Ref<'_, Metadata> {
@@ -558,7 +622,7 @@ impl Player {
         }
 
         self.server.imp().metadata.replace(metadata);
-        self.server.metadata_changed().await
+        self.server.properties_changed(Property::Metadata).await
     }
 
     pub fn volume(&self) -> Volume {
@@ -571,7 +635,7 @@ impl Player {
         }
 
         self.server.imp().volume.set(volume);
-        self.server.volume_changed().await
+        self.server.properties_changed(Property::Volume).await
     }
 
     pub fn position(&self) -> TimeInUs {
@@ -584,7 +648,7 @@ impl Player {
         }
 
         self.server.imp().position.set(position);
-        self.server.position_changed().await
+        self.server.properties_changed(Property::Position).await
     }
 
     pub fn minimum_rate(&self) -> PlaybackRate {
@@ -597,7 +661,7 @@ impl Player {
         }
 
         self.server.imp().minimum_rate.set(minimum_rate);
-        self.server.minimum_rate_changed().await
+        self.server.properties_changed(Property::MinimumRate).await
     }
 
     pub fn maximum_rate(&self) -> PlaybackRate {
@@ -610,7 +674,7 @@ impl Player {
         }
 
         self.server.imp().maximum_rate.set(maximum_rate);
-        self.server.maximum_rate_changed().await
+        self.server.properties_changed(Property::MaximumRate).await
     }
 
     pub fn can_go_next(&self) -> bool {
@@ -623,7 +687,7 @@ impl Player {
         }
 
         self.server.imp().can_go_next.set(can_go_next);
-        self.server.can_go_next_changed().await
+        self.server.properties_changed(Property::CanGoNext).await
     }
 
     pub fn can_go_previous(&self) -> bool {
@@ -636,7 +700,9 @@ impl Player {
         }
 
         self.server.imp().can_go_previous.set(can_go_previous);
-        self.server.can_go_previous_changed().await
+        self.server
+            .properties_changed(Property::CanGoPrevious)
+            .await
     }
 
     pub fn can_play(&self) -> bool {
@@ -649,7 +715,7 @@ impl Player {
         }
 
         self.server.imp().can_play.set(can_play);
-        self.server.can_play_changed().await
+        self.server.properties_changed(Property::CanPlay).await
     }
 
     pub fn can_pause(&self) -> bool {
@@ -662,7 +728,7 @@ impl Player {
         }
 
         self.server.imp().can_pause.set(can_pause);
-        self.server.can_pause_changed().await
+        self.server.properties_changed(Property::CanPause).await
     }
 
     pub fn can_seek(&self) -> bool {
@@ -675,7 +741,7 @@ impl Player {
         }
 
         self.server.imp().can_seek.set(can_seek);
-        self.server.can_seek_changed().await
+        self.server.properties_changed(Property::CanSeek).await
     }
 
     pub fn can_control(&self) -> bool {
@@ -688,7 +754,7 @@ impl Player {
         }
 
         self.server.imp().can_control.set(can_control);
-        self.server.can_control_changed().await
+        self.server.properties_changed(Property::CanControl).await
     }
 }
 
@@ -850,8 +916,8 @@ impl PlayerBuilder {
         self
     }
 
-    pub fn build(self) -> Result<Player> {
-        let server = Server::new(
+    pub async fn build(self) -> Result<Player> {
+        let server = LocalServer::new(
             &self.bus_name_suffix,
             Inner {
                 raise_cbs: RefCell::new(Vec::new()),
@@ -895,7 +961,8 @@ impl PlayerBuilder {
                 can_seek: Cell::new(self.can_seek),
                 can_control: Cell::new(self.can_control),
             },
-        )?;
+        )
+        .await?;
         Ok(Player { server })
     }
 }

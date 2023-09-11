@@ -8,6 +8,7 @@ async fn main() {
         .can_go_previous(true)
         .can_go_next(true)
         .build()
+        .await
         .unwrap();
 
     player.connect_play_pause(|| {
@@ -22,5 +23,5 @@ async fn main() {
         println!("Next");
     });
 
-    player.run().await.unwrap();
+    player.run().await;
 }
