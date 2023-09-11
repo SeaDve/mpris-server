@@ -306,6 +306,30 @@
 <a href="#306" id="306">306</a>
 <a href="#307" id="307">307</a>
 <a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
+<a href="#323" id="323">323</a>
+<a href="#324" id="324">324</a>
+<a href="#325" id="325">325</a>
+<a href="#326" id="326">326</a>
+<a href="#327" id="327">327</a>
+<a href="#328" id="328">328</a>
+<a href="#329" id="329">329</a>
+<a href="#330" id="330">330</a>
+<a href="#331" id="331">331</a>
+<a href="#332" id="332">332</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{collections::HashMap, fmt};
 
 <span class="kw">use </span>serde::Serialize;
@@ -373,8 +397,8 @@
 
     <span class="doccomment">/// A unique identity for this track within the context of an
     /// MPRIS object (eg: tracklist).
-    </span><span class="kw">pub fn </span>set_trackid(<span class="kw-2">&amp;mut </span><span class="self">self</span>, trackid: OwnedObjectPath) {
-        <span class="self">self</span>.insert(<span class="string">&quot;mpris:trackid&quot;</span>, trackid);
+    </span><span class="kw">pub fn </span>set_trackid(<span class="kw-2">&amp;mut </span><span class="self">self</span>, trackid: <span class="kw">impl </span>Into&lt;OwnedObjectPath&gt;) {
+        <span class="self">self</span>.insert(<span class="string">&quot;mpris:trackid&quot;</span>, trackid.into());
     }
 
     <span class="doccomment">/// The duration of the track in microseconds.
@@ -385,28 +409,37 @@
     <span class="doccomment">/// The location of an image representing the track or album.
     /// Clients should not assume this will continue to exist when
     /// the media player stops giving out the URL.
-    </span><span class="kw">pub fn </span>set_art_url(<span class="kw-2">&amp;mut </span><span class="self">self</span>, art_url: Uri) {
-        <span class="self">self</span>.insert(<span class="string">&quot;mpris:artUrl&quot;</span>, art_url);
+    </span><span class="kw">pub fn </span>set_art_url(<span class="kw-2">&amp;mut </span><span class="self">self</span>, art_url: <span class="kw">impl </span>Into&lt;Uri&gt;) {
+        <span class="self">self</span>.insert(<span class="string">&quot;mpris:artUrl&quot;</span>, art_url.into());
     }
 
     <span class="doccomment">/// The album name.
-    </span><span class="kw">pub fn </span>set_album(<span class="kw-2">&amp;mut </span><span class="self">self</span>, album: String) {
-        <span class="self">self</span>.insert(<span class="string">&quot;xesam:album&quot;</span>, album);
+    </span><span class="kw">pub fn </span>set_album(<span class="kw-2">&amp;mut </span><span class="self">self</span>, album: <span class="kw">impl </span>Into&lt;String&gt;) {
+        <span class="self">self</span>.insert(<span class="string">&quot;xesam:album&quot;</span>, album.into());
     }
 
     <span class="doccomment">/// The album artist(s).
-    </span><span class="kw">pub fn </span>set_album_artist(<span class="kw-2">&amp;mut </span><span class="self">self</span>, album_artist: Vec&lt;String&gt;) {
-        <span class="self">self</span>.insert(<span class="string">&quot;xesam:albumArtist&quot;</span>, album_artist);
+    </span><span class="kw">pub fn </span>set_album_artist(<span class="kw-2">&amp;mut </span><span class="self">self</span>, album_artist: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;String&gt;&gt;) {
+        <span class="self">self</span>.insert(
+            <span class="string">&quot;xesam:albumArtist&quot;</span>,
+            album_artist
+                .into_iter()
+                .map(|i| i.into())
+                .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
+        );
     }
 
     <span class="doccomment">/// The track artist(s).
-    </span><span class="kw">pub fn </span>set_artist(<span class="kw-2">&amp;mut </span><span class="self">self</span>, artist: Vec&lt;String&gt;) {
-        <span class="self">self</span>.insert(<span class="string">&quot;xesam:artist&quot;</span>, artist);
+    </span><span class="kw">pub fn </span>set_artist(<span class="kw-2">&amp;mut </span><span class="self">self</span>, artist: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;String&gt;&gt;) {
+        <span class="self">self</span>.insert(
+            <span class="string">&quot;xesam:artist&quot;</span>,
+            artist.into_iter().map(|i| i.into()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
+        );
     }
 
     <span class="doccomment">/// The track lyrics.
-    </span><span class="kw">pub fn </span>set_lyrics(<span class="kw-2">&amp;mut </span><span class="self">self</span>, lyrics: String) {
-        <span class="self">self</span>.insert(<span class="string">&quot;xesam:asText&quot;</span>, lyrics);
+    </span><span class="kw">pub fn </span>set_lyrics(<span class="kw-2">&amp;mut </span><span class="self">self</span>, lyrics: <span class="kw">impl </span>Into&lt;String&gt;) {
+        <span class="self">self</span>.insert(<span class="string">&quot;xesam:asText&quot;</span>, lyrics.into());
     }
 
     <span class="doccomment">/// The speed of the music, in beats per minute.
@@ -422,19 +455,25 @@
     }
 
     <span class="doccomment">/// A (list of) freeform comment(s).
-    </span><span class="kw">pub fn </span>set_comment(<span class="kw-2">&amp;mut </span><span class="self">self</span>, comment: Vec&lt;String&gt;) {
-        <span class="self">self</span>.insert(<span class="string">&quot;xesam:comment&quot;</span>, comment);
+    </span><span class="kw">pub fn </span>set_comment(<span class="kw-2">&amp;mut </span><span class="self">self</span>, comment: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;String&gt;&gt;) {
+        <span class="self">self</span>.insert(
+            <span class="string">&quot;xesam:comment&quot;</span>,
+            comment.into_iter().map(|i| i.into()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
+        );
     }
 
     <span class="doccomment">/// The composer(s) of the track.
-    </span><span class="kw">pub fn </span>set_composer(<span class="kw-2">&amp;mut </span><span class="self">self</span>, composer: Vec&lt;String&gt;) {
-        <span class="self">self</span>.insert(<span class="string">&quot;xesam:composer&quot;</span>, composer);
+    </span><span class="kw">pub fn </span>set_composer(<span class="kw-2">&amp;mut </span><span class="self">self</span>, composer: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;String&gt;&gt;) {
+        <span class="self">self</span>.insert(
+            <span class="string">&quot;xesam:composer&quot;</span>,
+            composer.into_iter().map(|i| i.into()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
+        );
     }
 
     <span class="doccomment">/// When the track was created. Usually only the year component
     /// will be useful.
-    </span><span class="kw">pub fn </span>set_content_created(<span class="kw-2">&amp;mut </span><span class="self">self</span>, content_created: DateTime) {
-        <span class="self">self</span>.insert(<span class="string">&quot;xesam:contentCreated&quot;</span>, content_created);
+    </span><span class="kw">pub fn </span>set_content_created(<span class="kw-2">&amp;mut </span><span class="self">self</span>, content_created: <span class="kw">impl </span>Into&lt;DateTime&gt;) {
+        <span class="self">self</span>.insert(<span class="string">&quot;xesam:contentCreated&quot;</span>, content_created.into());
     }
 
     <span class="doccomment">/// The disc number on the album that this track is from.
@@ -443,28 +482,34 @@
     }
 
     <span class="doccomment">/// When the track was first played.
-    </span><span class="kw">pub fn </span>set_first_used(<span class="kw-2">&amp;mut </span><span class="self">self</span>, first_used: DateTime) {
-        <span class="self">self</span>.insert(<span class="string">&quot;xesam:firstUsed&quot;</span>, first_used);
+    </span><span class="kw">pub fn </span>set_first_used(<span class="kw-2">&amp;mut </span><span class="self">self</span>, first_used: <span class="kw">impl </span>Into&lt;DateTime&gt;) {
+        <span class="self">self</span>.insert(<span class="string">&quot;xesam:firstUsed&quot;</span>, first_used.into());
     }
 
     <span class="doccomment">/// The genre(s) of the track.
-    </span><span class="kw">pub fn </span>set_genre(<span class="kw-2">&amp;mut </span><span class="self">self</span>, genre: Vec&lt;String&gt;) {
-        <span class="self">self</span>.insert(<span class="string">&quot;xesam:genre&quot;</span>, genre);
+    </span><span class="kw">pub fn </span>set_genre(<span class="kw-2">&amp;mut </span><span class="self">self</span>, genre: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;String&gt;&gt;) {
+        <span class="self">self</span>.insert(
+            <span class="string">&quot;xesam:genre&quot;</span>,
+            genre.into_iter().map(|i| i.into()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
+        );
     }
 
     <span class="doccomment">/// When the track was last played.
-    </span><span class="kw">pub fn </span>set_last_used(<span class="kw-2">&amp;mut </span><span class="self">self</span>, last_used: DateTime) {
-        <span class="self">self</span>.insert(<span class="string">&quot;xesam:lastUsed&quot;</span>, last_used);
+    </span><span class="kw">pub fn </span>set_last_used(<span class="kw-2">&amp;mut </span><span class="self">self</span>, last_used: <span class="kw">impl </span>Into&lt;DateTime&gt;) {
+        <span class="self">self</span>.insert(<span class="string">&quot;xesam:lastUsed&quot;</span>, last_used.into());
     }
 
     <span class="doccomment">/// The lyricist(s) of the track.
-    </span><span class="kw">pub fn </span>set_lyricist(<span class="kw-2">&amp;mut </span><span class="self">self</span>, lyricist: Vec&lt;String&gt;) {
-        <span class="self">self</span>.insert(<span class="string">&quot;xesam:lyricist&quot;</span>, lyricist);
+    </span><span class="kw">pub fn </span>set_lyricist(<span class="kw-2">&amp;mut </span><span class="self">self</span>, lyricist: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;String&gt;&gt;) {
+        <span class="self">self</span>.insert(
+            <span class="string">&quot;xesam:lyricist&quot;</span>,
+            lyricist.into_iter().map(|i| i.into()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
+        );
     }
 
     <span class="doccomment">/// The track title.
-    </span><span class="kw">pub fn </span>set_title(<span class="kw-2">&amp;mut </span><span class="self">self</span>, title: String) {
-        <span class="self">self</span>.insert(<span class="string">&quot;xesam:title&quot;</span>, title);
+    </span><span class="kw">pub fn </span>set_title(<span class="kw-2">&amp;mut </span><span class="self">self</span>, title: <span class="kw">impl </span>Into&lt;String&gt;) {
+        <span class="self">self</span>.insert(<span class="string">&quot;xesam:title&quot;</span>, title.into());
     }
 
     <span class="doccomment">/// The track number on the album disc.
@@ -473,8 +518,8 @@
     }
 
     <span class="doccomment">/// The location of the media file.
-    </span><span class="kw">pub fn </span>set_url(<span class="kw-2">&amp;mut </span><span class="self">self</span>, url: Uri) {
-        <span class="self">self</span>.insert(<span class="string">&quot;xesam:url&quot;</span>, url);
+    </span><span class="kw">pub fn </span>set_url(<span class="kw-2">&amp;mut </span><span class="self">self</span>, url: <span class="kw">impl </span>Into&lt;Uri&gt;) {
+        <span class="self">self</span>.insert(<span class="string">&quot;xesam:url&quot;</span>, url.into());
     }
 
     <span class="doccomment">/// The number of times the track has been played.
@@ -494,7 +539,7 @@
 }
 
 <span class="kw">impl </span>MetadataBuilder {
-    <span class="kw">pub fn </span>trackid(<span class="kw-2">mut </span><span class="self">self</span>, trackid: OwnedObjectPath) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>trackid(<span class="kw-2">mut </span><span class="self">self</span>, trackid: <span class="kw">impl </span>Into&lt;OwnedObjectPath&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.m.set_trackid(trackid);
         <span class="self">self
     </span>}
@@ -504,27 +549,30 @@
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>art_url(<span class="kw-2">mut </span><span class="self">self</span>, art_url: Uri) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>art_url(<span class="kw-2">mut </span><span class="self">self</span>, art_url: <span class="kw">impl </span>Into&lt;Uri&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.m.set_art_url(art_url);
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>album(<span class="kw-2">mut </span><span class="self">self</span>, album: String) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>album(<span class="kw-2">mut </span><span class="self">self</span>, album: <span class="kw">impl </span>Into&lt;String&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.m.set_album(album);
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>album_artist(<span class="kw-2">mut </span><span class="self">self</span>, album_artist: Vec&lt;String&gt;) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>album_artist(
+        <span class="kw-2">mut </span><span class="self">self</span>,
+        album_artist: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;String&gt;&gt;,
+    ) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.m.set_album_artist(album_artist);
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>artist(<span class="kw-2">mut </span><span class="self">self</span>, artist: Vec&lt;String&gt;) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>artist(<span class="kw-2">mut </span><span class="self">self</span>, artist: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;String&gt;&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.m.set_artist(artist);
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>lyrics(<span class="kw-2">mut </span><span class="self">self</span>, lyrics: String) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>lyrics(<span class="kw-2">mut </span><span class="self">self</span>, lyrics: <span class="kw">impl </span>Into&lt;String&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.m.set_lyrics(lyrics);
         <span class="self">self
     </span>}
@@ -539,17 +587,17 @@
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>comment(<span class="kw-2">mut </span><span class="self">self</span>, comment: Vec&lt;String&gt;) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>comment(<span class="kw-2">mut </span><span class="self">self</span>, comment: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;String&gt;&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.m.set_comment(comment);
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>composer(<span class="kw-2">mut </span><span class="self">self</span>, composer: Vec&lt;String&gt;) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>composer(<span class="kw-2">mut </span><span class="self">self</span>, composer: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;String&gt;&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.m.set_composer(composer);
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>content_created(<span class="kw-2">mut </span><span class="self">self</span>, content_created: DateTime) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>content_created(<span class="kw-2">mut </span><span class="self">self</span>, content_created: <span class="kw">impl </span>Into&lt;DateTime&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.m.set_content_created(content_created);
         <span class="self">self
     </span>}
@@ -559,28 +607,28 @@
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>first_used(<span class="kw-2">mut </span><span class="self">self</span>, first_used: DateTime) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>first_used(<span class="kw-2">mut </span><span class="self">self</span>, first_used: <span class="kw">impl </span>Into&lt;DateTime&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.m.set_first_used(first_used);
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>genre(<span class="kw-2">mut </span><span class="self">self</span>, genre: Vec&lt;String&gt;) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>genre(<span class="kw-2">mut </span><span class="self">self</span>, genre: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;String&gt;&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.m.set_genre(genre);
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>last_used(<span class="kw-2">mut </span><span class="self">self</span>, last_used: DateTime) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>last_used(<span class="kw-2">mut </span><span class="self">self</span>, last_used: <span class="kw">impl </span>Into&lt;DateTime&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.m.set_last_used(last_used);
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>lyricist(<span class="kw-2">mut </span><span class="self">self</span>, lyricist: Vec&lt;String&gt;) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>lyricist(<span class="kw-2">mut </span><span class="self">self</span>, lyricist: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;String&gt;&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.m.set_lyricist(lyricist);
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>title(<span class="kw-2">mut </span><span class="self">self</span>, title: String) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.m.set_title(title);
+    <span class="kw">pub fn </span>title(<span class="kw-2">mut </span><span class="self">self</span>, title: <span class="kw">impl </span>Into&lt;String&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.m.set_title(title.into());
         <span class="self">self
     </span>}
 
@@ -589,8 +637,8 @@
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>url(<span class="kw-2">mut </span><span class="self">self</span>, url: Uri) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.m.set_url(url);
+    <span class="kw">pub fn </span>url(<span class="kw-2">mut </span><span class="self">self</span>, url: <span class="kw">impl </span>Into&lt;Uri&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.m.set_url(url.into());
         <span class="self">self
     </span>}
 
