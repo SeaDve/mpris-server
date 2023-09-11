@@ -65,8 +65,8 @@ impl Metadata {
 
     /// A unique identity for this track within the context of an
     /// MPRIS object (eg: tracklist).
-    pub fn set_trackid(&mut self, trackid: OwnedObjectPath) {
-        self.insert("mpris:trackid", trackid);
+    pub fn set_trackid(&mut self, trackid: impl Into<OwnedObjectPath>) {
+        self.insert("mpris:trackid", trackid.into());
     }
 
     /// The duration of the track in microseconds.
@@ -77,28 +77,37 @@ impl Metadata {
     /// The location of an image representing the track or album.
     /// Clients should not assume this will continue to exist when
     /// the media player stops giving out the URL.
-    pub fn set_art_url(&mut self, art_url: Uri) {
-        self.insert("mpris:artUrl", art_url);
+    pub fn set_art_url(&mut self, art_url: impl Into<Uri>) {
+        self.insert("mpris:artUrl", art_url.into());
     }
 
     /// The album name.
-    pub fn set_album(&mut self, album: String) {
-        self.insert("xesam:album", album);
+    pub fn set_album(&mut self, album: impl Into<String>) {
+        self.insert("xesam:album", album.into());
     }
 
     /// The album artist(s).
-    pub fn set_album_artist(&mut self, album_artist: Vec<String>) {
-        self.insert("xesam:albumArtist", album_artist);
+    pub fn set_album_artist(&mut self, album_artist: impl IntoIterator<Item = impl Into<String>>) {
+        self.insert(
+            "xesam:albumArtist",
+            album_artist
+                .into_iter()
+                .map(|i| i.into())
+                .collect::<Vec<_>>(),
+        );
     }
 
     /// The track artist(s).
-    pub fn set_artist(&mut self, artist: Vec<String>) {
-        self.insert("xesam:artist", artist);
+    pub fn set_artist(&mut self, artist: impl IntoIterator<Item = impl Into<String>>) {
+        self.insert(
+            "xesam:artist",
+            artist.into_iter().map(|i| i.into()).collect::<Vec<_>>(),
+        );
     }
 
     /// The track lyrics.
-    pub fn set_lyrics(&mut self, lyrics: String) {
-        self.insert("xesam:asText", lyrics);
+    pub fn set_lyrics(&mut self, lyrics: impl Into<String>) {
+        self.insert("xesam:asText", lyrics.into());
     }
 
     /// The speed of the music, in beats per minute.
@@ -114,19 +123,25 @@ impl Metadata {
     }
 
     /// A (list of) freeform comment(s).
-    pub fn set_comment(&mut self, comment: Vec<String>) {
-        self.insert("xesam:comment", comment);
+    pub fn set_comment(&mut self, comment: impl IntoIterator<Item = impl Into<String>>) {
+        self.insert(
+            "xesam:comment",
+            comment.into_iter().map(|i| i.into()).collect::<Vec<_>>(),
+        );
     }
 
     /// The composer(s) of the track.
-    pub fn set_composer(&mut self, composer: Vec<String>) {
-        self.insert("xesam:composer", composer);
+    pub fn set_composer(&mut self, composer: impl IntoIterator<Item = impl Into<String>>) {
+        self.insert(
+            "xesam:composer",
+            composer.into_iter().map(|i| i.into()).collect::<Vec<_>>(),
+        );
     }
 
     /// When the track was created. Usually only the year component
     /// will be useful.
-    pub fn set_content_created(&mut self, content_created: DateTime) {
-        self.insert("xesam:contentCreated", content_created);
+    pub fn set_content_created(&mut self, content_created: impl Into<DateTime>) {
+        self.insert("xesam:contentCreated", content_created.into());
     }
 
     /// The disc number on the album that this track is from.
@@ -135,28 +150,34 @@ impl Metadata {
     }
 
     /// When the track was first played.
-    pub fn set_first_used(&mut self, first_used: DateTime) {
-        self.insert("xesam:firstUsed", first_used);
+    pub fn set_first_used(&mut self, first_used: impl Into<DateTime>) {
+        self.insert("xesam:firstUsed", first_used.into());
     }
 
     /// The genre(s) of the track.
-    pub fn set_genre(&mut self, genre: Vec<String>) {
-        self.insert("xesam:genre", genre);
+    pub fn set_genre(&mut self, genre: impl IntoIterator<Item = impl Into<String>>) {
+        self.insert(
+            "xesam:genre",
+            genre.into_iter().map(|i| i.into()).collect::<Vec<_>>(),
+        );
     }
 
     /// When the track was last played.
-    pub fn set_last_used(&mut self, last_used: DateTime) {
-        self.insert("xesam:lastUsed", last_used);
+    pub fn set_last_used(&mut self, last_used: impl Into<DateTime>) {
+        self.insert("xesam:lastUsed", last_used.into());
     }
 
     /// The lyricist(s) of the track.
-    pub fn set_lyricist(&mut self, lyricist: Vec<String>) {
-        self.insert("xesam:lyricist", lyricist);
+    pub fn set_lyricist(&mut self, lyricist: impl IntoIterator<Item = impl Into<String>>) {
+        self.insert(
+            "xesam:lyricist",
+            lyricist.into_iter().map(|i| i.into()).collect::<Vec<_>>(),
+        );
     }
 
     /// The track title.
-    pub fn set_title(&mut self, title: String) {
-        self.insert("xesam:title", title);
+    pub fn set_title(&mut self, title: impl Into<String>) {
+        self.insert("xesam:title", title.into());
     }
 
     /// The track number on the album disc.
@@ -165,8 +186,8 @@ impl Metadata {
     }
 
     /// The location of the media file.
-    pub fn set_url(&mut self, url: Uri) {
-        self.insert("xesam:url", url);
+    pub fn set_url(&mut self, url: impl Into<Uri>) {
+        self.insert("xesam:url", url.into());
     }
 
     /// The number of times the track has been played.
@@ -186,7 +207,7 @@ pub struct MetadataBuilder {
 }
 
 impl MetadataBuilder {
-    pub fn trackid(mut self, trackid: OwnedObjectPath) -> Self {
+    pub fn trackid(mut self, trackid: impl Into<OwnedObjectPath>) -> Self {
         self.m.set_trackid(trackid);
         self
     }
@@ -196,27 +217,30 @@ impl MetadataBuilder {
         self
     }
 
-    pub fn art_url(mut self, art_url: Uri) -> Self {
+    pub fn art_url(mut self, art_url: impl Into<Uri>) -> Self {
         self.m.set_art_url(art_url);
         self
     }
 
-    pub fn album(mut self, album: String) -> Self {
+    pub fn album(mut self, album: impl Into<String>) -> Self {
         self.m.set_album(album);
         self
     }
 
-    pub fn album_artist(mut self, album_artist: Vec<String>) -> Self {
+    pub fn album_artist(
+        mut self,
+        album_artist: impl IntoIterator<Item = impl Into<String>>,
+    ) -> Self {
         self.m.set_album_artist(album_artist);
         self
     }
 
-    pub fn artist(mut self, artist: Vec<String>) -> Self {
+    pub fn artist(mut self, artist: impl IntoIterator<Item = impl Into<String>>) -> Self {
         self.m.set_artist(artist);
         self
     }
 
-    pub fn lyrics(mut self, lyrics: String) -> Self {
+    pub fn lyrics(mut self, lyrics: impl Into<String>) -> Self {
         self.m.set_lyrics(lyrics);
         self
     }
@@ -231,17 +255,17 @@ impl MetadataBuilder {
         self
     }
 
-    pub fn comment(mut self, comment: Vec<String>) -> Self {
+    pub fn comment(mut self, comment: impl IntoIterator<Item = impl Into<String>>) -> Self {
         self.m.set_comment(comment);
         self
     }
 
-    pub fn composer(mut self, composer: Vec<String>) -> Self {
+    pub fn composer(mut self, composer: impl IntoIterator<Item = impl Into<String>>) -> Self {
         self.m.set_composer(composer);
         self
     }
 
-    pub fn content_created(mut self, content_created: DateTime) -> Self {
+    pub fn content_created(mut self, content_created: impl Into<DateTime>) -> Self {
         self.m.set_content_created(content_created);
         self
     }
@@ -251,28 +275,28 @@ impl MetadataBuilder {
         self
     }
 
-    pub fn first_used(mut self, first_used: DateTime) -> Self {
+    pub fn first_used(mut self, first_used: impl Into<DateTime>) -> Self {
         self.m.set_first_used(first_used);
         self
     }
 
-    pub fn genre(mut self, genre: Vec<String>) -> Self {
+    pub fn genre(mut self, genre: impl IntoIterator<Item = impl Into<String>>) -> Self {
         self.m.set_genre(genre);
         self
     }
 
-    pub fn last_used(mut self, last_used: DateTime) -> Self {
+    pub fn last_used(mut self, last_used: impl Into<DateTime>) -> Self {
         self.m.set_last_used(last_used);
         self
     }
 
-    pub fn lyricist(mut self, lyricist: Vec<String>) -> Self {
+    pub fn lyricist(mut self, lyricist: impl IntoIterator<Item = impl Into<String>>) -> Self {
         self.m.set_lyricist(lyricist);
         self
     }
 
-    pub fn title(mut self, title: String) -> Self {
-        self.m.set_title(title);
+    pub fn title(mut self, title: impl Into<String>) -> Self {
+        self.m.set_title(title.into());
         self
     }
 
@@ -281,8 +305,8 @@ impl MetadataBuilder {
         self
     }
 
-    pub fn url(mut self, url: Uri) -> Self {
-        self.m.set_url(url);
+    pub fn url(mut self, url: impl Into<Uri>) -> Self {
+        self.m.set_url(url.into());
         self
     }
 
