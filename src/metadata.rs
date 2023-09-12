@@ -6,17 +6,30 @@ use zbus::zvariant::{self, OwnedObjectPath, Type, Value};
 use crate::{TimeInUs, Uri};
 
 /// Date/time fields should be sent as strings in ISO 8601 extended
-/// format. If the timezone is known (eg: for xesam:lastPlayed), the
-/// internet profile format of ISO 8601, as specified in RFC 3339,
-///  should be used.
+/// format (eg: 2007-04-29T14:35:51). If the timezone is known (eg: for
+/// xesam:lastPlayed), the internet profile format of ISO 8601, as specified in
+/// RFC 3339, should be used (eg: 2007-04-29T14:35:51+02:00).
 ///
 /// For example: "2007-04-29T13:56+01:00" for 29th April 2007, four
 /// minutes to 2pm, in a time zone 1 hour ahead of UTC.
 pub type DateTime = String;
 
 /// A mapping from metadata attribute names to values.
+///
+/// The [`mpris:trackid`] attribute must always be present.
+///
+/// If the length of the track is known, it should be provided in the metadata
+/// property with the [`mpris:length`] key.
+///
+/// If there is an image associated with the track, a URL for it may be provided
+/// using the [`mpris:artUrl`] key.
+///
+/// [`mpris:trackid`]: Metadata::set_trackid
+/// [`mpris:length`]: Metadata::set_length
+/// [`mpris:artUrl`]: Metadata::set_art_url
 #[derive(Clone, PartialEq, Serialize, Type)]
 #[zvariant(signature = "a{sv}")]
+#[doc(alias = "Metadata_Map")]
 pub struct Metadata(HashMap<String, Value<'static>>);
 
 impl fmt::Debug for Metadata {
@@ -70,6 +83,11 @@ impl Metadata {
 
     /// A unique identity for this track within the context of an
     /// MPRIS object (eg: tracklist).
+    ///
+    /// This contains a D-Bus path that uniquely identifies the track
+    /// within the scope of the playlist. There may or may not be an actual
+    /// D-Bus object at that path; this specification says nothing about
+    /// what interfaces such an object may implement.
     pub fn set_trackid(&mut self, trackid: impl Into<OwnedObjectPath>) {
         self.insert("mpris:trackid", trackid.into());
     }
@@ -80,6 +98,7 @@ impl Metadata {
     }
 
     /// The location of an image representing the track or album.
+    ///
     /// Clients should not assume this will continue to exist when
     /// the media player stops giving out the URL.
     pub fn set_art_url(&mut self, art_url: impl Into<Uri>) {

@@ -5,6 +5,7 @@ use zbus::zvariant::{Type, Value};
 /// A playback state.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Type)]
 #[zvariant(signature = "s")]
+#[doc(alias = "Playback_Status")]
 pub enum PlaybackStatus {
     /// A track is currently playing.
     Playing,

@@ -344,8 +344,8 @@ where
 /// sub-interfaces.
 ///
 /// When implementing using [`Server`], it is important to note that properties
-/// changed signals are NOT emitted automatically; they must be emitted manually
-/// using [`Server::properties_changed`],
+/// changed signals are *not* emitted automatically; they must be emitted
+/// manually using [`Server::properties_changed`],
 /// [`Server::track_list_properties_changed`], or
 /// [`Server::playlists_properties_changed`].
 pub struct Server<T>
@@ -391,10 +391,27 @@ impl<T> Server<T>
 where
     T: PlayerInterface + Send + Sync + 'static,
 {
+    /// Creates a new [`Server`] with the given bus name suffix and
+    /// implementation, which must implement [`RootInterface`] and
+    /// [`PlayerInterface`].
+    ///
+    /// The resulting bus name will be
+    /// `org.mpris.MediaPlayer2.<bus_name_suffix>`, where
+    /// `<bus_name_suffix>`must be a unique identifier, such as one based on a
+    /// UNIX process id. For example, this could be:
+    ///
+    /// * org.mpris.MediaPlayer2.vlc.instance7389
+    ///
+    /// Note: According to the [`D-Bus specification`], the unique identifier
+    /// "must only contain  the ASCII characters `[A-Z][a-z][0-9]_-`" and
+    /// "must not begin with a digit".
+    ///
+    /// [`D-Bus specification`]: dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus
     pub async fn new(bus_name_suffix: &str, imp: T) -> Result<Self> {
         Self::new_inner(bus_name_suffix, imp, |builder, _| Ok(builder)).await
     }
 
+    /// Returns a reference to the underlying implementation.
     pub fn imp(&self) -> &T {
         &self.imp
     }
@@ -516,6 +533,11 @@ impl<T> Server<T>
 where
     T: TrackListInterface + Send + Sync + 'static,
 {
+    /// Creates a new [`Server`] with the given bus name suffix and
+    /// implementation, which must implement [`TrackListInterface`] in addition
+    /// to [`RootInterface`] and [`PlayerInterface`].
+    ///
+    /// See also [`Server::new`].
     pub async fn new_with_track_list(bus_name_suffix: &str, imp: T) -> Result<Self> {
         Self::new_inner(bus_name_suffix, imp, |builder, imp| {
             builder.serve_at(
@@ -560,6 +582,11 @@ impl<T> Server<T>
 where
     T: PlaylistsInterface + Send + Sync + 'static,
 {
+    /// Creates a new [`Server`] with the given bus name suffix and
+    /// implementation, which must implement [`PlaylistsInterface`] in addition
+    /// to [`RootInterface`] and [`PlayerInterface`].
+    ///
+    /// See also [`Server::new`].
     pub async fn new_with_playlists(bus_name_suffix: &str, imp: T) -> Result<Self> {
         Self::new_inner(bus_name_suffix, imp, |builder, imp| {
             builder.serve_at(
@@ -602,6 +629,12 @@ impl<T> Server<T>
 where
     T: TrackListInterface + PlaylistsInterface + Send + Sync + 'static,
 {
+    /// Creates a new [`Server`] with the given bus name suffix and
+    /// implementation, which must implement [`TrackListInterface`] and
+    /// [`PlaylistsInterface`] in addition to [`RootInterface`] and
+    /// [`PlayerInterface`].
+    ///
+    /// See also [`Server::new`].
     pub async fn new_with_all(bus_name_suffix: &str, imp: T) -> Result<Self> {
         Self::new_inner(bus_name_suffix, imp, |builder, imp| {
             builder
