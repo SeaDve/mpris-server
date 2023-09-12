@@ -758,6 +758,7 @@ impl Player {
     }
 }
 
+/// A builder used to create [`Player`].
 pub struct PlayerBuilder {
     bus_name_suffix: String,
     can_quit: bool,
