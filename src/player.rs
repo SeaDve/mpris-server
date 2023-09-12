@@ -8,7 +8,7 @@ use crate::{
     PlaybackStatus, Property, TimeInUs, TrackId, Volume,
 };
 
-/// Premade mutable object that internally implements [`LocalRootInterface`] and [`LocalPlayerInterface`].
+/// Ready-made mutable object that internally implements [`LocalRootInterface`] and [`LocalPlayerInterface`].
 #[derive(Debug)]
 pub struct Player {
     server: LocalServer<Inner>,

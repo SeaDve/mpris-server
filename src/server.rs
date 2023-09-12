@@ -338,7 +338,9 @@ where
     }
 }
 
-/// Thin wrapper around [`zbus::Connection`] that serves the MPRIS interfaces.
+/// Thin wrapper around [`zbus::Connection`] that calls to `T`'s implementation of [`RootInterface`],
+/// [`PlayerInterface`], [`TrackListInterface`], and [`PlaylistsInterface`] to implement
+/// `org.mpris.MediaPlayer2` and its sub-interfaces.
 pub struct Server<T>
 where
     T: PlayerInterface + Send + Sync + 'static,
@@ -524,6 +526,7 @@ where
     signal_delegate!(RawTrackListInterface<T>, track_removed(track_id: TrackId));
     signal_delegate!(RawTrackListInterface<T>, track_metadata_changed(track_id: TrackId, metadata: Metadata));
 
+    /// Emits the `PropertiesChanged` signal for the given properties.
     pub async fn track_list_properties_changed(
         &self,
         properties: impl Into<BitFlags<TrackListProperty>>,
@@ -564,6 +567,7 @@ where
 
     signal_delegate!(RawPlaylistsInterface<T>, playlist_changed(playlist: Playlist));
 
+    /// Emits the `PropertiesChanged` signal for the given properties.
     pub async fn playlists_properties_changed(
         &self,
         properties: impl Into<BitFlags<PlaylistsProperty>>,
