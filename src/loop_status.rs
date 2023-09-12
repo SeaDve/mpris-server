@@ -8,7 +8,8 @@ use zbus::zvariant::{self, Type, Value};
 pub enum LoopStatus {
     /// The playback will stop when there are no more tracks to play.
     None,
-    /// The current track will start again from the beginning once it has finished playing.
+    /// The current track will start again from the beginning once it has
+    /// finished playing.
     Track,
     /// The playback loops through a list of tracks.
     Playlist,

@@ -11,6 +11,7 @@ mod playlist;
 mod playlist_ordering;
 mod property;
 mod server;
+mod track_id;
 
 use async_trait::async_trait;
 use zbus::{fdo, zvariant::OwnedObjectPath, Result};
@@ -18,13 +19,14 @@ use zbus::{fdo, zvariant::OwnedObjectPath, Result};
 pub use crate::{
     local_server::LocalServer,
     loop_status::LoopStatus,
-    metadata::{DateTime, Metadata, Uri},
+    metadata::{DateTime, Metadata},
     playback_status::PlaybackStatus,
     player::Player,
     playlist::{MaybePlaylist, Playlist},
     playlist_ordering::PlaylistOrdering,
     property::{PlaylistsProperty, Property, TrackListProperty},
     server::Server,
+    track_id::TrackId,
 };
 
 pub mod export {
@@ -91,7 +93,7 @@ macro_rules! define_iface {
             /// property should have no effect, and may raise an error.
             /// However, even if it is true, the media player may still
             /// be unable to fulfil the request, in which case attempting to
-            ///  set this property will have no effect (but should not raise
+            /// set this property will have no effect (but should not raise
             /// an error).
             async fn fullscreen(&self) -> fdo::Result<bool>;
 
@@ -234,29 +236,6 @@ define_iface!(
     LocalPlaylistsInterface
 );
 
-/// Unique track identifier.
-///
-/// If the media player implements the TrackList interface and allows
-/// the same track to appear multiple times in the tracklist, this
-/// must be unique within the scope of the tracklist.
-///
-/// Note that this should be a valid D-Bus object id, although clients
-/// should not assume that any object is actually exported with any
-/// interfaces at that path.
-///
-/// Media players may not use any paths starting with /org/mpris unless
-/// explicitly allowed by this specification. Such paths are intended to
-/// have special meaning, such as /org/mpris/MediaPlayer2/TrackList/NoTrack
-/// to indicate "no track".
-///
-/// ### Rationale
-///
-/// This is a D-Bus object id as that is the definitive way to have unique
-/// identifiers on D-Bus. It also allows for future optional expansions
-/// to the specification where tracks are exported to D-Bus with an
-/// interface similar to org.gnome.UPnP.MediaItem2.
-pub type TrackId = OwnedObjectPath;
-
 /// A playback rate.
 ///
 /// This is a multiplier, so a value of 0.5 indicates that playback
@@ -287,3 +266,9 @@ pub type TimeInUs = i64;
 /// the specification where tracks are exported to D-Bus with an interface
 /// similar to org.gnome.UPnP.MediaItem2.
 pub type PlaylistId = OwnedObjectPath;
+
+/// A unique resource identifier.
+///
+/// URIs should be sent as (UTF-8) strings. Local files should use the
+/// "file://" schema.
+pub type Uri = String;

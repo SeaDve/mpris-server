@@ -484,7 +484,10 @@ macro_rules! signal_delegate {
     };
 }
 
-/// Like [`Server`], but doesn't require `T` to be `Send` and `Sync`.
+/// Local version of [`Server`] that doesn't require `T` to be `Send` and
+/// `Sync`.
+///
+/// For more information, see [`Server`] documentations.
 pub struct LocalServer<T>
 where
     T: LocalPlayerInterface + 'static,

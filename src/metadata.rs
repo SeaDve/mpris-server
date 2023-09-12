@@ -3,7 +3,7 @@ use std::{collections::HashMap, fmt};
 use serde::Serialize;
 use zbus::zvariant::{self, OwnedObjectPath, Type, Value};
 
-use crate::TimeInUs;
+use crate::{TimeInUs, Uri};
 
 /// Date/time fields should be sent as strings in ISO 8601 extended
 /// format. If the timezone is known (eg: for xesam:lastPlayed), the
@@ -13,10 +13,6 @@ use crate::TimeInUs;
 /// For example: "2007-04-29T13:56+01:00" for 29th April 2007, four
 /// minutes to 2pm, in a time zone 1 hour ahead of UTC.
 pub type DateTime = String;
-
-/// URIs should be sent as (UTF-8) strings. Local files should use the
-/// "file://" schema.
-pub type Uri = String;
 
 /// A mapping from metadata attribute names to values.
 #[derive(Clone, PartialEq, Serialize, Type)]
@@ -36,14 +32,20 @@ impl Default for Metadata {
 }
 
 impl Metadata {
+    /// Create an empty [`Metadata`].
     pub fn new() -> Self {
         Self(HashMap::new())
     }
 
+    /// Creates a new builder-pattern struct instance to construct [`Metadata`].
     pub fn builder() -> MetadataBuilder {
         MetadataBuilder { m: Metadata::new() }
     }
 
+    /// Insert a new key-value pair into the metadata.
+    ///
+    /// This will overwrite any existing value for the given key and will return
+    /// the old value, if any.
     pub fn insert(
         &mut self,
         key: impl Into<String>,
@@ -52,6 +54,7 @@ impl Metadata {
         self.0.insert(key.into(), value.into())
     }
 
+    /// Get the value of the given key and convert it to `V`, if it exists.
     pub fn get<'v, V>(&'v self, key: &str) -> Option<zvariant::Result<&'v V>>
     where
         &'v V: TryFrom<&'v Value<'v>>,
@@ -60,6 +63,7 @@ impl Metadata {
             .map(|v| v.downcast_ref().ok_or(zvariant::Error::IncorrectType))
     }
 
+    /// Get the value of the given key, if it exists.
     pub fn get_value(&self, key: &str) -> Option<&Value<'_>> {
         self.0.get(key)
     }
