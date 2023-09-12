@@ -510,7 +510,7 @@ impl<T> LocalServer<T>
 where
     T: LocalPlayerInterface + 'static,
 {
-    pub async fn new(bus_name_suffix: &str, imp: T) -> Result<Self> {
+    pub fn new(bus_name_suffix: &str, imp: T) -> Result<Self> {
         let (tx, mut rx) = mpsc::unbounded::<Action>();
 
         let inner = Server::new(
@@ -519,8 +519,7 @@ where
                 tx,
                 imp_ty: PhantomData,
             },
-        )
-        .await?;
+        )?;
 
         let imp = Rc::new(imp);
 
@@ -546,12 +545,14 @@ where
         &self.imp
     }
 
-    pub async fn run(&self) {
+    pub async fn run(&self) -> Result<()> {
+        self.inner.init().await?;
         let runner = self
             .runner
             .take()
             .expect("LocalServer must not be ran twice");
         runner.await;
+        Ok(())
     }
 
     // org.mpris.MediaPlayer2.Player
@@ -743,7 +744,7 @@ impl<T> LocalServer<T>
 where
     T: LocalTrackListInterface + 'static,
 {
-    pub async fn new_with_track_list(bus_name_suffix: &str, imp: T) -> Result<Self> {
+    pub fn new_with_track_list(bus_name_suffix: &str, imp: T) -> Result<Self> {
         let (tx, mut rx) = mpsc::unbounded::<Action>();
 
         let inner = Server::new_with_track_list(
@@ -752,8 +753,7 @@ where
                 tx,
                 imp_ty: PhantomData,
             },
-        )
-        .await?;
+        )?;
 
         let imp = Rc::new(imp);
 
@@ -826,7 +826,7 @@ impl<T> LocalServer<T>
 where
     T: LocalPlaylistsInterface + 'static,
 {
-    pub async fn new_with_playlists(bus_name_suffix: &str, imp: T) -> Result<Self> {
+    pub fn new_with_playlists(bus_name_suffix: &str, imp: T) -> Result<Self> {
         let (tx, mut rx) = mpsc::unbounded::<Action>();
 
         let inner = Server::new_with_playlists(
@@ -835,8 +835,7 @@ where
                 tx,
                 imp_ty: PhantomData,
             },
-        )
-        .await?;
+        )?;
 
         let imp = Rc::new(imp);
 
@@ -902,7 +901,7 @@ impl<T> LocalServer<T>
 where
     T: LocalTrackListInterface + LocalPlaylistsInterface + 'static,
 {
-    pub async fn new_with_all(bus_name_suffix: &str, imp: T) -> Result<Self> {
+    pub fn new_with_all(bus_name_suffix: &str, imp: T) -> Result<Self> {
         let (tx, mut rx) = mpsc::unbounded::<Action>();
 
         let inner = Server::new_with_all(
@@ -911,8 +910,7 @@ where
                 tx,
                 imp_ty: PhantomData,
             },
-        )
-        .await?;
+        )?;
 
         let imp = Rc::new(imp);
 
