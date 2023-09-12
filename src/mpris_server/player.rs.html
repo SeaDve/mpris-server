@@ -899,20 +899,89 @@
 <a href="#899" id="899">899</a>
 <a href="#900" id="900">900</a>
 <a href="#901" id="901">901</a>
+<a href="#902" id="902">902</a>
+<a href="#903" id="903">903</a>
+<a href="#904" id="904">904</a>
+<a href="#905" id="905">905</a>
+<a href="#906" id="906">906</a>
+<a href="#907" id="907">907</a>
+<a href="#908" id="908">908</a>
+<a href="#909" id="909">909</a>
+<a href="#910" id="910">910</a>
+<a href="#911" id="911">911</a>
+<a href="#912" id="912">912</a>
+<a href="#913" id="913">913</a>
+<a href="#914" id="914">914</a>
+<a href="#915" id="915">915</a>
+<a href="#916" id="916">916</a>
+<a href="#917" id="917">917</a>
+<a href="#918" id="918">918</a>
+<a href="#919" id="919">919</a>
+<a href="#920" id="920">920</a>
+<a href="#921" id="921">921</a>
+<a href="#922" id="922">922</a>
+<a href="#923" id="923">923</a>
+<a href="#924" id="924">924</a>
+<a href="#925" id="925">925</a>
+<a href="#926" id="926">926</a>
+<a href="#927" id="927">927</a>
+<a href="#928" id="928">928</a>
+<a href="#929" id="929">929</a>
+<a href="#930" id="930">930</a>
+<a href="#931" id="931">931</a>
+<a href="#932" id="932">932</a>
+<a href="#933" id="933">933</a>
+<a href="#934" id="934">934</a>
+<a href="#935" id="935">935</a>
+<a href="#936" id="936">936</a>
+<a href="#937" id="937">937</a>
+<a href="#938" id="938">938</a>
+<a href="#939" id="939">939</a>
+<a href="#940" id="940">940</a>
+<a href="#941" id="941">941</a>
+<a href="#942" id="942">942</a>
+<a href="#943" id="943">943</a>
+<a href="#944" id="944">944</a>
+<a href="#945" id="945">945</a>
+<a href="#946" id="946">946</a>
+<a href="#947" id="947">947</a>
+<a href="#948" id="948">948</a>
+<a href="#949" id="949">949</a>
+<a href="#950" id="950">950</a>
+<a href="#951" id="951">951</a>
+<a href="#952" id="952">952</a>
+<a href="#953" id="953">953</a>
+<a href="#954" id="954">954</a>
+<a href="#955" id="955">955</a>
+<a href="#956" id="956">956</a>
+<a href="#957" id="957">957</a>
+<a href="#958" id="958">958</a>
+<a href="#959" id="959">959</a>
+<a href="#960" id="960">960</a>
+<a href="#961" id="961">961</a>
+<a href="#962" id="962">962</a>
+<a href="#963" id="963">963</a>
+<a href="#964" id="964">964</a>
+<a href="#965" id="965">965</a>
+<a href="#966" id="966">966</a>
+<a href="#967" id="967">967</a>
+<a href="#968" id="968">968</a>
+<a href="#969" id="969">969</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::cell::{Cell, Ref, RefCell};
 
 <span class="kw">use </span>async_trait::async_trait;
-<span class="kw">use </span>zbus::Result;
+<span class="kw">use </span>zbus::{fdo, <span class="prelude-ty">Result</span>};
 
 <span class="kw">use crate</span>::{
-    LoopStatus, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, RootInterface, Server,
-    TimeInUs, TrackId, Volume,
+    LocalPlayerInterface, LocalRootInterface, LocalServer, LoopStatus, Metadata, PlaybackRate,
+    PlaybackStatus, Property, TimeInUs, TrackId, Volume,
 };
 
-<span class="doccomment">/// Premade mutable object that internally implements [`RootInterface`] and [`PlayerInterface`].
+<span class="doccomment">/// Ready-made mutable object that internally implements [`LocalRootInterface`]
+/// and [`LocalPlayerInterface`].
 </span><span class="attr">#[derive(Debug)]
 </span><span class="kw">pub struct </span>Player {
-    server: Server&lt;Inner&gt;,
+    server: LocalServer&lt;Inner&gt;,
 }
 
 <span class="attr">#[allow(clippy::type_complexity)]
@@ -961,200 +1030,216 @@
 }
 
 <span class="attr">#[async_trait(<span class="question-mark">?</span>Send)]
-</span><span class="kw">impl </span>RootInterface <span class="kw">for </span>Inner {
-    <span class="kw">async fn </span>raise(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+</span><span class="kw">impl </span>LocalRootInterface <span class="kw">for </span>Inner {
+    <span class="kw">async fn </span>raise(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.raise_cbs.borrow().iter() {
             cb();
         }
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>quit(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+    <span class="kw">async fn </span>quit(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.quit_cbs.borrow().iter() {
             cb();
         }
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>can_quit(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.can_quit.get()
+    <span class="kw">async fn </span>can_quit(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.can_quit.get())
     }
 
-    <span class="kw">async fn </span>fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.fullscreen.get()
+    <span class="kw">async fn </span>fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.fullscreen.get())
     }
 
-    <span class="kw">async fn </span>set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>, fullscreen: bool) {
+    <span class="kw">async fn </span>set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>, fullscreen: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.set_fullscreen_cbs.borrow().iter() {
             cb(fullscreen);
         }
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>can_set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.can_set_fullscreen.get()
+    <span class="kw">async fn </span>can_set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.can_set_fullscreen.get())
     }
 
-    <span class="kw">async fn </span>can_raise(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.can_raise.get()
+    <span class="kw">async fn </span>can_raise(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.can_raise.get())
     }
 
-    <span class="kw">async fn </span>has_track_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.has_track_list.get()
+    <span class="kw">async fn </span>has_track_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.has_track_list.get())
     }
 
-    <span class="kw">async fn </span>identity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; String {
-        <span class="self">self</span>.identity.borrow().clone()
+    <span class="kw">async fn </span>identity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;String&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.identity.borrow().clone())
     }
 
-    <span class="kw">async fn </span>desktop_entry(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; String {
-        <span class="self">self</span>.desktop_entry.borrow().clone()
+    <span class="kw">async fn </span>desktop_entry(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;String&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.desktop_entry.borrow().clone())
     }
 
-    <span class="kw">async fn </span>supported_uri_schemes(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;String&gt; {
-        <span class="self">self</span>.supported_uri_schemes.borrow().clone()
+    <span class="kw">async fn </span>supported_uri_schemes(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;String&gt;&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.supported_uri_schemes.borrow().clone())
     }
 
-    <span class="kw">async fn </span>supported_mime_types(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;String&gt; {
-        <span class="self">self</span>.supported_mime_types.borrow().clone()
+    <span class="kw">async fn </span>supported_mime_types(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;String&gt;&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.supported_mime_types.borrow().clone())
     }
 }
 
 <span class="attr">#[async_trait(<span class="question-mark">?</span>Send)]
-</span><span class="kw">impl </span>PlayerInterface <span class="kw">for </span>Inner {
-    <span class="kw">async fn </span>next(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+</span><span class="kw">impl </span>LocalPlayerInterface <span class="kw">for </span>Inner {
+    <span class="kw">async fn </span>next(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.next_cbs.borrow().iter() {
             cb();
         }
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>previous(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+    <span class="kw">async fn </span>previous(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.previous_cbs.borrow().iter() {
             cb();
         }
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>pause(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+    <span class="kw">async fn </span>pause(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.pause_cbs.borrow().iter() {
             cb();
         }
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>play_pause(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+    <span class="kw">async fn </span>play_pause(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.play_pause_cbs.borrow().iter() {
             cb();
         }
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>stop(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+    <span class="kw">async fn </span>stop(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.stop_cbs.borrow().iter() {
             cb();
         }
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>play(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+    <span class="kw">async fn </span>play(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.play_cbs.borrow().iter() {
             cb();
         }
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>seek(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: TimeInUs) {
+    <span class="kw">async fn </span>seek(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: TimeInUs) -&gt; fdo::Result&lt;()&gt; {
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.seek_cbs.borrow().iter() {
             cb(offset);
         }
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId, position: TimeInUs) {
+    <span class="kw">async fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId, position: TimeInUs) -&gt; fdo::Result&lt;()&gt; {
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.set_position_cbs.borrow().iter() {
             cb(<span class="kw-2">&amp;</span>track_id, position);
         }
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>open_uri(<span class="kw-2">&amp;</span><span class="self">self</span>, uri: String) {
+    <span class="kw">async fn </span>open_uri(<span class="kw-2">&amp;</span><span class="self">self</span>, uri: String) -&gt; fdo::Result&lt;()&gt; {
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.open_uri_cbs.borrow().iter() {
             cb(<span class="kw-2">&amp;</span>uri);
         }
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>playback_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PlaybackStatus {
-        <span class="self">self</span>.playback_status.get()
+    <span class="kw">async fn </span>playback_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackStatus&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.playback_status.get())
     }
 
-    <span class="kw">async fn </span>loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; LoopStatus {
-        <span class="self">self</span>.loop_status.get()
+    <span class="kw">async fn </span>loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;LoopStatus&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.loop_status.get())
     }
 
-    <span class="kw">async fn </span>set_loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>, loop_status: LoopStatus) {
+    <span class="kw">async fn </span>set_loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>, loop_status: LoopStatus) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.set_loop_status_cbs.borrow().iter() {
             cb(loop_status);
         }
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PlaybackRate {
-        <span class="self">self</span>.rate.get()
+    <span class="kw">async fn </span>rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackRate&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.rate.get())
     }
 
-    <span class="kw">async fn </span>set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, rate: PlaybackRate) {
+    <span class="kw">async fn </span>set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, rate: PlaybackRate) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.set_rate_cbs.borrow().iter() {
             cb(rate);
         }
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.shuffle.get()
+    <span class="kw">async fn </span>shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.shuffle.get())
     }
 
-    <span class="kw">async fn </span>set_shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>, shuffle: bool) {
+    <span class="kw">async fn </span>set_shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>, shuffle: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.set_shuffle_cbs.borrow().iter() {
             cb(shuffle);
         }
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>metadata(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Metadata {
-        <span class="self">self</span>.metadata.borrow().clone()
+    <span class="kw">async fn </span>metadata(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Metadata&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.metadata.borrow().clone())
     }
 
-    <span class="kw">async fn </span>volume(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Volume {
-        <span class="self">self</span>.volume.get()
+    <span class="kw">async fn </span>volume(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Volume&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.volume.get())
     }
 
-    <span class="kw">async fn </span>set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, volume: Volume) {
+    <span class="kw">async fn </span>set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, volume: Volume) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.set_volume_cbs.borrow().iter() {
             cb(volume);
         }
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TimeInUs {
-        <span class="self">self</span>.position.get()
+    <span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;TimeInUs&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.position.get())
     }
 
-    <span class="kw">async fn </span>minimum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PlaybackRate {
-        <span class="self">self</span>.minimum_rate.get()
+    <span class="kw">async fn </span>minimum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackRate&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.minimum_rate.get())
     }
 
-    <span class="kw">async fn </span>maximum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PlaybackRate {
-        <span class="self">self</span>.maximum_rate.get()
+    <span class="kw">async fn </span>maximum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackRate&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.maximum_rate.get())
     }
 
-    <span class="kw">async fn </span>can_go_next(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.can_go_next.get()
+    <span class="kw">async fn </span>can_go_next(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.can_go_next.get())
     }
 
-    <span class="kw">async fn </span>can_go_previous(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.can_go_previous.get()
+    <span class="kw">async fn </span>can_go_previous(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.can_go_previous.get())
     }
 
-    <span class="kw">async fn </span>can_play(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.can_play.get()
+    <span class="kw">async fn </span>can_play(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.can_play.get())
     }
 
-    <span class="kw">async fn </span>can_pause(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.can_pause.get()
+    <span class="kw">async fn </span>can_pause(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.can_pause.get())
     }
 
-    <span class="kw">async fn </span>can_seek(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.can_seek.get()
+    <span class="kw">async fn </span>can_seek(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.can_seek.get())
     }
 
-    <span class="kw">async fn </span>can_control(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.can_control.get()
+    <span class="kw">async fn </span>can_control(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.can_control.get())
     }
 }
 
@@ -1201,6 +1286,14 @@
         <span class="self">self</span>.server.imp().quit_cbs.borrow_mut().push(Box::new(cb));
     }
 
+    <span class="kw">pub fn </span>connect_set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(bool) + <span class="lifetime">&#39;static</span>) {
+        <span class="self">self</span>.server
+            .imp()
+            .set_fullscreen_cbs
+            .borrow_mut()
+            .push(Box::new(cb));
+    }
+
     <span class="kw">pub fn </span>can_quit(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="self">self</span>.server.imp().can_quit.get()
     }
@@ -1211,7 +1304,7 @@
         }
 
         <span class="self">self</span>.server.imp().can_quit.set(can_quit);
-        <span class="self">self</span>.server.can_quit_changed().<span class="kw">await
+        <span class="self">self</span>.server.properties_changed(Property::CanQuit).<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
@@ -1224,7 +1317,7 @@
         }
 
         <span class="self">self</span>.server.imp().fullscreen.set(fullscreen);
-        <span class="self">self</span>.server.fullscreen_changed().<span class="kw">await
+        <span class="self">self</span>.server.properties_changed(Property::Fullscreen).<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>can_set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
@@ -1237,7 +1330,9 @@
         }
 
         <span class="self">self</span>.server.imp().can_set_fullscreen.set(can_set_fullscreen);
-        <span class="self">self</span>.server.can_set_fullscreen_changed().<span class="kw">await
+        <span class="self">self</span>.server
+            .properties_changed(Property::CanSetFullscreen)
+            .<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>can_raise(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
@@ -1250,7 +1345,7 @@
         }
 
         <span class="self">self</span>.server.imp().can_raise.set(can_raise);
-        <span class="self">self</span>.server.can_raise_changed().<span class="kw">await
+        <span class="self">self</span>.server.properties_changed(Property::CanRaise).<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>has_track_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
@@ -1263,7 +1358,7 @@
         }
 
         <span class="self">self</span>.server.imp().has_track_list.set(has_track_list);
-        <span class="self">self</span>.server.has_track_list_changed().<span class="kw">await
+        <span class="self">self</span>.server.properties_changed(Property::HasTrackList).<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>identity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Ref&lt;<span class="lifetime">&#39;_</span>, String&gt; {
@@ -1278,7 +1373,7 @@
         }
 
         <span class="self">self</span>.server.imp().identity.replace(identity);
-        <span class="self">self</span>.server.identity_changed().<span class="kw">await
+        <span class="self">self</span>.server.properties_changed(Property::Identity).<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>desktop_entry(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Ref&lt;<span class="lifetime">&#39;_</span>, String&gt; {
@@ -1293,7 +1388,7 @@
         }
 
         <span class="self">self</span>.server.imp().desktop_entry.replace(desktop_entry);
-        <span class="self">self</span>.server.desktop_entry_changed().<span class="kw">await
+        <span class="self">self</span>.server.properties_changed(Property::DesktopEntry).<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>supported_uri_schemes(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Ref&lt;<span class="lifetime">&#39;_</span>, Vec&lt;String&gt;&gt; {
@@ -1317,7 +1412,9 @@
             .imp()
             .supported_uri_schemes
             .replace(supported_uri_schemes);
-        <span class="self">self</span>.server.supported_uri_schemes_changed().<span class="kw">await
+        <span class="self">self</span>.server
+            .properties_changed(Property::SupportedUriSchemes)
+            .<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>supported_mime_types(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Ref&lt;<span class="lifetime">&#39;_</span>, Vec&lt;String&gt;&gt; {
@@ -1338,7 +1435,9 @@
             .imp()
             .supported_mime_types
             .replace(supported_mime_types);
-        <span class="self">self</span>.server.supported_mime_types_changed().<span class="kw">await
+        <span class="self">self</span>.server
+            .properties_changed(Property::SupportedMimeTypes)
+            .<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>connect_next(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn() + <span class="lifetime">&#39;static</span>) {
@@ -1393,6 +1492,38 @@
             .push(Box::new(cb));
     }
 
+    <span class="kw">pub fn </span>connect_set_loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(LoopStatus) + <span class="lifetime">&#39;static</span>) {
+        <span class="self">self</span>.server
+            .imp()
+            .set_loop_status_cbs
+            .borrow_mut()
+            .push(Box::new(cb));
+    }
+
+    <span class="kw">pub fn </span>connect_set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(PlaybackRate) + <span class="lifetime">&#39;static</span>) {
+        <span class="self">self</span>.server
+            .imp()
+            .set_rate_cbs
+            .borrow_mut()
+            .push(Box::new(cb));
+    }
+
+    <span class="kw">pub fn </span>connect_set_shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(bool) + <span class="lifetime">&#39;static</span>) {
+        <span class="self">self</span>.server
+            .imp()
+            .set_shuffle_cbs
+            .borrow_mut()
+            .push(Box::new(cb));
+    }
+
+    <span class="kw">pub fn </span>connect_set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(Volume) + <span class="lifetime">&#39;static</span>) {
+        <span class="self">self</span>.server
+            .imp()
+            .set_volume_cbs
+            .borrow_mut()
+            .push(Box::new(cb));
+    }
+
     <span class="kw">pub async fn </span>emit_seeked(<span class="kw-2">&amp;</span><span class="self">self</span>, position: TimeInUs) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.server.seeked(position).<span class="kw">await
     </span>}
@@ -1407,7 +1538,9 @@
         }
 
         <span class="self">self</span>.server.imp().playback_status.set(playback_status);
-        <span class="self">self</span>.server.playback_status_changed().<span class="kw">await
+        <span class="self">self</span>.server
+            .properties_changed(Property::PlaybackStatus)
+            .<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; LoopStatus {
@@ -1420,7 +1553,7 @@
         }
 
         <span class="self">self</span>.server.imp().loop_status.set(loop_status);
-        <span class="self">self</span>.server.loop_status_changed().<span class="kw">await
+        <span class="self">self</span>.server.properties_changed(Property::LoopStatus).<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PlaybackRate {
@@ -1433,7 +1566,7 @@
         }
 
         <span class="self">self</span>.server.imp().rate.set(rate);
-        <span class="self">self</span>.server.rate_changed().<span class="kw">await
+        <span class="self">self</span>.server.properties_changed(Property::Rate).<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
@@ -1446,7 +1579,7 @@
         }
 
         <span class="self">self</span>.server.imp().shuffle.set(shuffle);
-        <span class="self">self</span>.server.shuffle_changed().<span class="kw">await
+        <span class="self">self</span>.server.properties_changed(Property::Shuffle).<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>metadata(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Ref&lt;<span class="lifetime">&#39;_</span>, Metadata&gt; {
@@ -1459,7 +1592,7 @@
         }
 
         <span class="self">self</span>.server.imp().metadata.replace(metadata);
-        <span class="self">self</span>.server.metadata_changed().<span class="kw">await
+        <span class="self">self</span>.server.properties_changed(Property::Metadata).<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>volume(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Volume {
@@ -1472,7 +1605,7 @@
         }
 
         <span class="self">self</span>.server.imp().volume.set(volume);
-        <span class="self">self</span>.server.volume_changed().<span class="kw">await
+        <span class="self">self</span>.server.properties_changed(Property::Volume).<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TimeInUs {
@@ -1485,7 +1618,7 @@
         }
 
         <span class="self">self</span>.server.imp().position.set(position);
-        <span class="self">self</span>.server.position_changed().<span class="kw">await
+        <span class="self">self</span>.server.properties_changed(Property::Position).<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>minimum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PlaybackRate {
@@ -1498,7 +1631,7 @@
         }
 
         <span class="self">self</span>.server.imp().minimum_rate.set(minimum_rate);
-        <span class="self">self</span>.server.minimum_rate_changed().<span class="kw">await
+        <span class="self">self</span>.server.properties_changed(Property::MinimumRate).<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>maximum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PlaybackRate {
@@ -1511,7 +1644,7 @@
         }
 
         <span class="self">self</span>.server.imp().maximum_rate.set(maximum_rate);
-        <span class="self">self</span>.server.maximum_rate_changed().<span class="kw">await
+        <span class="self">self</span>.server.properties_changed(Property::MaximumRate).<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>can_go_next(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
@@ -1524,7 +1657,7 @@
         }
 
         <span class="self">self</span>.server.imp().can_go_next.set(can_go_next);
-        <span class="self">self</span>.server.can_go_next_changed().<span class="kw">await
+        <span class="self">self</span>.server.properties_changed(Property::CanGoNext).<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>can_go_previous(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
@@ -1537,7 +1670,9 @@
         }
 
         <span class="self">self</span>.server.imp().can_go_previous.set(can_go_previous);
-        <span class="self">self</span>.server.can_go_previous_changed().<span class="kw">await
+        <span class="self">self</span>.server
+            .properties_changed(Property::CanGoPrevious)
+            .<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>can_play(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
@@ -1550,7 +1685,7 @@
         }
 
         <span class="self">self</span>.server.imp().can_play.set(can_play);
-        <span class="self">self</span>.server.can_play_changed().<span class="kw">await
+        <span class="self">self</span>.server.properties_changed(Property::CanPlay).<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>can_pause(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
@@ -1563,7 +1698,7 @@
         }
 
         <span class="self">self</span>.server.imp().can_pause.set(can_pause);
-        <span class="self">self</span>.server.can_pause_changed().<span class="kw">await
+        <span class="self">self</span>.server.properties_changed(Property::CanPause).<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>can_seek(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
@@ -1576,7 +1711,7 @@
         }
 
         <span class="self">self</span>.server.imp().can_seek.set(can_seek);
-        <span class="self">self</span>.server.can_seek_changed().<span class="kw">await
+        <span class="self">self</span>.server.properties_changed(Property::CanSeek).<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>can_control(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
@@ -1589,11 +1724,12 @@
         }
 
         <span class="self">self</span>.server.imp().can_control.set(can_control);
-        <span class="self">self</span>.server.can_control_changed().<span class="kw">await
+        <span class="self">self</span>.server.properties_changed(Property::CanControl).<span class="kw">await
     </span>}
 }
 
-<span class="kw">pub struct </span>PlayerBuilder {
+<span class="doccomment">/// A builder used to create [`Player`].
+</span><span class="kw">pub struct </span>PlayerBuilder {
     bus_name_suffix: String,
     can_quit: bool,
     fullscreen: bool,
@@ -1752,7 +1888,7 @@
     </span>}
 
     <span class="kw">pub fn </span>build(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Player&gt; {
-        <span class="kw">let </span>server = Server::new(
+        <span class="kw">let </span>server = LocalServer::new(
             <span class="kw-2">&amp;</span><span class="self">self</span>.bus_name_suffix,
             Inner {
                 raise_cbs: RefCell::new(Vec::new()),

@@ -56,16 +56,63 @@
 <a href="#56" id="56">56</a>
 <a href="#57" id="57">57</a>
 <a href="#58" id="58">58</a>
+<a href="#59" id="59">59</a>
+<a href="#60" id="60">60</a>
+<a href="#61" id="61">61</a>
+<a href="#62" id="62">62</a>
+<a href="#63" id="63">63</a>
+<a href="#64" id="64">64</a>
+<a href="#65" id="65">65</a>
+<a href="#66" id="66">66</a>
+<a href="#67" id="67">67</a>
+<a href="#68" id="68">68</a>
+<a href="#69" id="69">69</a>
+<a href="#70" id="70">70</a>
+<a href="#71" id="71">71</a>
+<a href="#72" id="72">72</a>
+<a href="#73" id="73">73</a>
+<a href="#74" id="74">74</a>
+<a href="#75" id="75">75</a>
+<a href="#76" id="76">76</a>
+<a href="#77" id="77">77</a>
+<a href="#78" id="78">78</a>
+<a href="#79" id="79">79</a>
+<a href="#80" id="80">80</a>
+<a href="#81" id="81">81</a>
+<a href="#82" id="82">82</a>
+<a href="#83" id="83">83</a>
+<a href="#84" id="84">84</a>
+<a href="#85" id="85">85</a>
+<a href="#86" id="86">86</a>
+<a href="#87" id="87">87</a>
+<a href="#88" id="88">88</a>
+<a href="#89" id="89">89</a>
+<a href="#90" id="90">90</a>
+<a href="#91" id="91">91</a>
+<a href="#92" id="92">92</a>
+<a href="#93" id="93">93</a>
+<a href="#94" id="94">94</a>
+<a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a>
+<a href="#99" id="99">99</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>serde::Serialize;
-<span class="kw">use </span>zbus::zvariant::{Type, Value};
+<span class="kw">use </span>zbus::zvariant::{ObjectPath, Type, Value};
 
 <span class="kw">use crate</span>::{PlaylistId, Uri};
 
-<span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Serialize, Type)]
+<span class="doccomment">/// A data structure describing a playlist.
+</span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Serialize, Type)]
 </span><span class="kw">pub struct </span>Playlist {
-    <span class="kw">pub </span>id: PlaylistId,
-    <span class="kw">pub </span>name: String,
-    <span class="kw">pub </span>icon: Uri,
+    <span class="doccomment">/// A unique identifier for the playlist.
+    ///
+    /// This should remain the same if the playlist is renamed.
+    </span><span class="kw">pub </span>id: PlaylistId,
+    <span class="doccomment">/// The name of the playlist, typically given by the user.
+    </span><span class="kw">pub </span>name: String,
+    <span class="doccomment">/// The URI of an (optional) icon.
+    </span><span class="kw">pub </span>icon: Uri,
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; From&lt;Playlist&gt; <span class="kw">for </span>Value&lt;<span class="lifetime">&#39;a</span>&gt; {
@@ -74,33 +121,68 @@
     }
 }
 
-<span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Serialize, Type)]
+<span class="doccomment">/// A data structure describing a playlist, or nothing.
+///
+/// ## Rationale
+///
+/// D-Bus does not (at the time of writing) support a MAYBE type, so we are
+/// forced to invent our own.
+</span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Serialize, Type)]
+#[doc(alias = <span class="string">&quot;Maybe_Playlist&quot;</span>)]
 </span><span class="kw">pub struct </span>MaybePlaylist {
-    <span class="kw">pub </span>valid: bool,
-    <span class="kw">pub </span>playlist: Playlist,
+    <span class="doccomment">/// Whether this structure refers to a valid playlist.
+    </span>valid: bool,
+    <span class="doccomment">/// The playlist, providing `valid` is true, otherwise undefined.
+    ///
+    /// When constructing this type, it should be noted that the playlist ID
+    /// must be a valid object path, or D-Bus implementations may reject it.
+    /// This is true even when Valid is false. It is suggested that &quot;/&quot; is
+    /// used as the playlist ID in this case.
+    </span>playlist: Playlist,
+}
+
+<span class="kw">impl </span>MaybePlaylist {
+    <span class="doccomment">/// Construct a valid `MaybePlaylist` from the given playlist.
+    </span><span class="kw">pub fn </span>some(playlist: Playlist) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            valid: <span class="bool-val">true</span>,
+            playlist,
+        }
+    }
+
+    <span class="doccomment">/// Construct a `MaybePlaylist` that contains invalid/no playlist.
+    ///
+    /// The playlist ID will be set to &quot;/&quot;, and the name and icon will be empty.
+    </span><span class="kw">pub fn </span>none() -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            valid: <span class="bool-val">false</span>,
+            playlist: Playlist {
+                id: ObjectPath::from_static_str_unchecked(<span class="string">&quot;/&quot;</span>).into(),
+                name: String::new(),
+                icon: Uri::new(),
+            },
+        }
+    }
+}
+
+<span class="kw">impl </span>From&lt;Playlist&gt; <span class="kw">for </span>MaybePlaylist {
+    <span class="kw">fn </span>from(playlist: Playlist) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::some(playlist)
+    }
+}
+
+<span class="kw">impl </span>From&lt;<span class="prelude-ty">Option</span>&lt;Playlist&gt;&gt; <span class="kw">for </span>MaybePlaylist {
+    <span class="kw">fn </span>from(opt: <span class="prelude-ty">Option</span>&lt;Playlist&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>opt {
+            <span class="prelude-val">Some</span>(playlist) =&gt; <span class="self">Self</span>::some(playlist),
+            <span class="prelude-val">None </span>=&gt; <span class="self">Self</span>::none(),
+        }
+    }
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; From&lt;MaybePlaylist&gt; <span class="kw">for </span>Value&lt;<span class="lifetime">&#39;a</span>&gt; {
     <span class="kw">fn </span>from(mp: MaybePlaylist) -&gt; <span class="self">Self </span>{
         Value::from((mp.valid, mp.playlist))
-    }
-}
-
-<span class="kw">impl </span>MaybePlaylist {
-    <span class="kw">pub fn </span>as_playlist(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Playlist&gt; {
-        <span class="kw">if </span><span class="self">self</span>.valid {
-            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.playlist)
-        } <span class="kw">else </span>{
-            <span class="prelude-val">None
-        </span>}
-    }
-
-    <span class="kw">pub fn </span>into_playlist(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Playlist&gt; {
-        <span class="kw">if </span><span class="self">self</span>.valid {
-            <span class="prelude-val">Some</span>(<span class="self">self</span>.playlist)
-        } <span class="kw">else </span>{
-            <span class="prelude-val">None
-        </span>}
     }
 }
 

@@ -1,4 +1,4 @@
 var sourcesIndex = JSON.parse('{\
-"mpris_server":["",[["server",[],["mod.rs","player.rs","playlists.rs","track_list.rs","utils.rs"]]],["lib.rs","loop_status.rs","metadata.rs","playback_status.rs","player.rs","playlist.rs","playlist_ordering.rs"]]\
+"mpris_server":["",[],["lib.rs","local_server.rs","loop_status.rs","metadata.rs","playback_status.rs","player.rs","playlist.rs","playlist_ordering.rs","property.rs","server.rs","track_id.rs"]]\
 }');
 createSourceSidebar();
