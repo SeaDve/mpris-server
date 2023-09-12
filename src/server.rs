@@ -1,6 +1,11 @@
-use std::{collections::HashMap, fmt, sync::Arc};
+use std::{
+    collections::HashMap,
+    fmt,
+    sync::{Arc, OnceLock},
+};
 
 use enumflags2::BitFlags;
+use futures_util::lock::Mutex;
 use zbus::{
     dbus_interface, fdo,
     names::WellKnownName,
@@ -352,7 +357,10 @@ pub struct Server<T>
 where
     T: PlayerInterface + Send + Sync + 'static,
 {
-    connection: Connection,
+    connection: OnceLock<Connection>,
+    #[allow(clippy::type_complexity)]
+    connection_init:
+        Mutex<Option<Box<dyn FnOnce() -> Result<ConnectionBuilder<'static>> + Send + Sync>>>,
     imp: Arc<T>,
 }
 
@@ -407,8 +415,14 @@ where
     /// "must not begin with a digit".
     ///
     /// [`D-Bus specification`]: dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus
-    pub async fn new(bus_name_suffix: &str, imp: T) -> Result<Self> {
-        Self::new_inner(bus_name_suffix, imp, |builder, _| Ok(builder)).await
+    pub fn new(bus_name_suffix: &str, imp: T) -> Result<Self> {
+        Self::new_inner(bus_name_suffix, imp, |builder, _| Ok(builder))
+    }
+
+    pub async fn init(&self) -> Result<()> {
+        // Ensure the connection is initialized.
+        self.get_or_init_connection().await?;
+        Ok(())
     }
 
     /// Returns a reference to the underlying implementation.
@@ -468,38 +482,63 @@ where
         Ok(())
     }
 
-    async fn new_inner(
+    fn new_inner(
         bus_name_suffix: &str,
         imp: T,
-        builder_ext_func: impl FnOnce(ConnectionBuilder<'_>, Arc<T>) -> Result<ConnectionBuilder<'_>>,
+        builder_ext_func: impl FnOnce(ConnectionBuilder<'_>, Arc<T>) -> Result<ConnectionBuilder<'_>>
+            + Send
+            + Sync
+            + 'static,
     ) -> Result<Self> {
         let bus_name =
             WellKnownName::try_from(format!("org.mpris.MediaPlayer2.{}", bus_name_suffix))?;
         let imp = Arc::new(imp);
 
-        let connection_builder = ConnectionBuilder::session()?
-            .name(bus_name)?
-            .serve_at(
-                OBJECT_PATH,
-                RawRootInterface {
-                    imp: Arc::clone(&imp),
-                },
-            )?
-            .serve_at(
-                OBJECT_PATH,
-                RawPlayerInterface {
-                    imp: Arc::clone(&imp),
-                },
-            )?;
-        let connection = builder_ext_func(connection_builder, Arc::clone(&imp))?
-            .build()
-            .await?;
+        let imp_clone = Arc::clone(&imp);
+        let connection_init = || {
+            let builder = ConnectionBuilder::session()?
+                .name(bus_name)?
+                .serve_at(
+                    OBJECT_PATH,
+                    RawRootInterface {
+                        imp: Arc::clone(&imp_clone),
+                    },
+                )?
+                .serve_at(
+                    OBJECT_PATH,
+                    RawPlayerInterface {
+                        imp: Arc::clone(&imp_clone),
+                    },
+                )?;
+            builder_ext_func(builder, imp_clone)
+        };
 
-        Ok(Self { connection, imp })
+        Ok(Self {
+            connection: OnceLock::new(),
+            connection_init: Mutex::new(Some(Box::new(connection_init))),
+            imp,
+        })
+    }
+
+    async fn get_or_init_connection(&self) -> Result<&Connection> {
+        // Lock before checking if the connection is already initialized to
+        // prevent reading while it is being initialized.
+        let mut connection_init = self.connection_init.lock().await;
+
+        if let Some(connection) = self.connection.get() {
+            return Ok(connection);
+        }
+
+        let init_fn = connection_init.take().unwrap();
+        let connection = init_fn()?.build().await?;
+        self.connection.set(connection).unwrap();
+
+        Ok(self.connection.get().unwrap())
     }
 
     async fn interface_ref<I: zbus::Interface>(&self) -> Result<InterfaceRef<I>> {
-        self.connection
+        self.get_or_init_connection()
+            .await?
             .object_server()
             .interface::<_, I>(OBJECT_PATH)
             .await
@@ -538,7 +577,7 @@ where
     /// to [`RootInterface`] and [`PlayerInterface`].
     ///
     /// See also [`Server::new`].
-    pub async fn new_with_track_list(bus_name_suffix: &str, imp: T) -> Result<Self> {
+    pub fn new_with_track_list(bus_name_suffix: &str, imp: T) -> Result<Self> {
         Self::new_inner(bus_name_suffix, imp, |builder, imp| {
             builder.serve_at(
                 OBJECT_PATH,
@@ -547,7 +586,6 @@ where
                 },
             )
         })
-        .await
     }
 
     signal_delegate!(RawTrackListInterface<T>, track_list_replaced(tracks: Vec<TrackId>, current_track: TrackId));
@@ -587,7 +625,7 @@ where
     /// to [`RootInterface`] and [`PlayerInterface`].
     ///
     /// See also [`Server::new`].
-    pub async fn new_with_playlists(bus_name_suffix: &str, imp: T) -> Result<Self> {
+    pub fn new_with_playlists(bus_name_suffix: &str, imp: T) -> Result<Self> {
         Self::new_inner(bus_name_suffix, imp, |builder, imp| {
             builder.serve_at(
                 OBJECT_PATH,
@@ -596,7 +634,6 @@ where
                 },
             )
         })
-        .await
     }
 
     signal_delegate!(RawPlaylistsInterface<T>, playlist_changed(playlist: Playlist));
@@ -635,7 +672,7 @@ where
     /// [`PlayerInterface`].
     ///
     /// See also [`Server::new`].
-    pub async fn new_with_all(bus_name_suffix: &str, imp: T) -> Result<Self> {
+    pub fn new_with_all(bus_name_suffix: &str, imp: T) -> Result<Self> {
         Self::new_inner(bus_name_suffix, imp, |builder, imp| {
             builder
                 .serve_at(
@@ -651,7 +688,6 @@ where
                     },
                 )
         })
-        .await
     }
 }
 

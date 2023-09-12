@@ -293,6 +293,6 @@ impl LocalPlaylistsInterface for Player {
 
 #[async_std::main]
 async fn main() {
-    let server = LocalServer::new("Test.Application", Player).await.unwrap();
-    server.run().await;
+    let server = LocalServer::new_with_all("Test.Application", Player).unwrap();
+    server.run().await.unwrap();
 }

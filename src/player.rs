@@ -305,7 +305,7 @@ impl Player {
         }
     }
 
-    pub async fn run(&self) {
+    pub async fn run(&self) -> Result<()> {
         self.server.run().await
     }
 
@@ -918,7 +918,7 @@ impl PlayerBuilder {
         self
     }
 
-    pub async fn build(self) -> Result<Player> {
+    pub fn build(self) -> Result<Player> {
         let server = LocalServer::new(
             &self.bus_name_suffix,
             Inner {
@@ -963,8 +963,7 @@ impl PlayerBuilder {
                 can_seek: Cell::new(self.can_seek),
                 can_control: Cell::new(self.can_control),
             },
-        )
-        .await?;
+        )?;
         Ok(Player { server })
     }
 }
