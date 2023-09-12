@@ -1,5 +1,9 @@
 use enumflags2::bitflags;
 
+/// Used for emitting `PropertiesChanged` signals on [`Server<T>`] via [`Server::properties_changed`].
+///
+/// [`Server<T>`]: crate::Server
+/// [`Server::properties_changed`]: crate::Server::properties_changed
 #[bitflags]
 #[repr(u32)]
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
@@ -30,6 +34,12 @@ pub enum Property {
     CanControl,
 }
 
+/// Used for emitting `PropertiesChanged` signals on [`Server<T>`] via [`Server::properties_changed`],
+/// if `T` implements [`TrackListInterface`]
+///
+/// [`Server<T>`]: crate::Server
+/// [`Server::properties_changed`]: crate::Server::properties_changed
+/// [`TrackListInterface`]: crate::TrackListInterface
 #[bitflags]
 #[repr(u32)]
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
@@ -38,6 +48,12 @@ pub enum TrackListProperty {
     CanEditTracks,
 }
 
+/// Used for emitting `PropertiesChanged` signals on [`Server<T>`] via [`Server::properties_changed`],
+/// if `T` implements [`PlaylistsInterface`]
+///
+/// [`Server<T>`]: crate::Server
+/// [`Server::properties_changed`]: crate::Server::properties_changed
+/// [`PlaylistsInterface`]: crate::PlaylistsInterface
 #[bitflags]
 #[repr(u32)]
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
