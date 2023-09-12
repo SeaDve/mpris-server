@@ -21,3 +21,4 @@ zbus = "3.14"
 
 [dev-dependencies]
 async-std = { version = "1.12", features = ["attributes"] }
+static_assertions = "1.1"

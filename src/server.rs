@@ -610,3 +610,245 @@ where
         .await
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use async_trait::async_trait;
+    use static_assertions::assert_impl_all;
+
+    use super::*;
+
+    struct TestPlayer;
+
+    #[async_trait]
+    impl RootInterface for TestPlayer {
+        async fn raise(&self) -> fdo::Result<()> {
+            unreachable!()
+        }
+
+        async fn quit(&self) -> fdo::Result<()> {
+            unreachable!()
+        }
+
+        async fn can_quit(&self) -> fdo::Result<bool> {
+            unreachable!()
+        }
+
+        async fn fullscreen(&self) -> fdo::Result<bool> {
+            unreachable!()
+        }
+
+        async fn set_fullscreen(&self, _fullscreen: bool) -> Result<()> {
+            unreachable!()
+        }
+
+        async fn can_set_fullscreen(&self) -> fdo::Result<bool> {
+            unreachable!()
+        }
+
+        async fn can_raise(&self) -> fdo::Result<bool> {
+            unreachable!()
+        }
+
+        async fn has_track_list(&self) -> fdo::Result<bool> {
+            unreachable!()
+        }
+
+        async fn identity(&self) -> fdo::Result<String> {
+            unreachable!()
+        }
+
+        async fn desktop_entry(&self) -> fdo::Result<String> {
+            unreachable!()
+        }
+
+        async fn supported_uri_schemes(&self) -> fdo::Result<Vec<String>> {
+            unreachable!()
+        }
+
+        async fn supported_mime_types(&self) -> fdo::Result<Vec<String>> {
+            unreachable!()
+        }
+    }
+
+    #[async_trait]
+    impl PlayerInterface for TestPlayer {
+        async fn next(&self) -> fdo::Result<()> {
+            unreachable!()
+        }
+
+        async fn previous(&self) -> fdo::Result<()> {
+            unreachable!()
+        }
+
+        async fn pause(&self) -> fdo::Result<()> {
+            unreachable!()
+        }
+
+        async fn play_pause(&self) -> fdo::Result<()> {
+            unreachable!()
+        }
+
+        async fn stop(&self) -> fdo::Result<()> {
+            unreachable!()
+        }
+
+        async fn play(&self) -> fdo::Result<()> {
+            unreachable!()
+        }
+
+        async fn seek(&self, _offset: TimeInUs) -> fdo::Result<()> {
+            unreachable!()
+        }
+
+        async fn set_position(&self, _track_id: TrackId, _position: TimeInUs) -> fdo::Result<()> {
+            unreachable!()
+        }
+
+        async fn open_uri(&self, _uri: String) -> fdo::Result<()> {
+            unreachable!()
+        }
+
+        async fn playback_status(&self) -> fdo::Result<PlaybackStatus> {
+            unreachable!()
+        }
+
+        async fn loop_status(&self) -> fdo::Result<LoopStatus> {
+            unreachable!()
+        }
+
+        async fn set_loop_status(&self, _loop_status: LoopStatus) -> Result<()> {
+            unreachable!()
+        }
+
+        async fn rate(&self) -> fdo::Result<PlaybackRate> {
+            unreachable!()
+        }
+
+        async fn set_rate(&self, _rate: PlaybackRate) -> Result<()> {
+            unreachable!()
+        }
+
+        async fn shuffle(&self) -> fdo::Result<bool> {
+            unreachable!()
+        }
+
+        async fn set_shuffle(&self, _shuffle: bool) -> Result<()> {
+            unreachable!()
+        }
+
+        async fn metadata(&self) -> fdo::Result<Metadata> {
+            unreachable!()
+        }
+
+        async fn volume(&self) -> fdo::Result<Volume> {
+            unreachable!()
+        }
+
+        async fn set_volume(&self, _volume: Volume) -> Result<()> {
+            unreachable!()
+        }
+
+        async fn position(&self) -> fdo::Result<TimeInUs> {
+            unreachable!()
+        }
+
+        async fn minimum_rate(&self) -> fdo::Result<PlaybackRate> {
+            unreachable!()
+        }
+
+        async fn maximum_rate(&self) -> fdo::Result<PlaybackRate> {
+            unreachable!()
+        }
+
+        async fn can_go_next(&self) -> fdo::Result<bool> {
+            unreachable!()
+        }
+
+        async fn can_go_previous(&self) -> fdo::Result<bool> {
+            unreachable!()
+        }
+
+        async fn can_play(&self) -> fdo::Result<bool> {
+            unreachable!()
+        }
+
+        async fn can_pause(&self) -> fdo::Result<bool> {
+            unreachable!()
+        }
+
+        async fn can_seek(&self) -> fdo::Result<bool> {
+            unreachable!()
+        }
+
+        async fn can_control(&self) -> fdo::Result<bool> {
+            unreachable!()
+        }
+    }
+
+    #[async_trait]
+    impl TrackListInterface for TestPlayer {
+        async fn get_tracks_metadata(
+            &self,
+            _track_ids: Vec<TrackId>,
+        ) -> fdo::Result<Vec<Metadata>> {
+            unreachable!()
+        }
+
+        async fn add_track(
+            &self,
+            _uri: Uri,
+            _after_track: TrackId,
+            _set_as_current: bool,
+        ) -> fdo::Result<()> {
+            unreachable!()
+        }
+
+        async fn remove_track(&self, _track_id: TrackId) -> fdo::Result<()> {
+            unreachable!()
+        }
+
+        async fn go_to(&self, _track_id: TrackId) -> fdo::Result<()> {
+            unreachable!()
+        }
+
+        async fn tracks(&self) -> fdo::Result<Vec<TrackId>> {
+            unreachable!()
+        }
+
+        async fn can_edit_tracks(&self) -> fdo::Result<bool> {
+            unreachable!()
+        }
+    }
+
+    #[async_trait]
+    impl PlaylistsInterface for TestPlayer {
+        async fn activate_playlist(&self, _playlist_id: PlaylistId) -> fdo::Result<()> {
+            unreachable!()
+        }
+
+        async fn get_playlists(
+            &self,
+            _index: u32,
+            _max_count: u32,
+            _order: PlaylistOrdering,
+            _reverse_order: bool,
+        ) -> fdo::Result<Vec<Playlist>> {
+            unreachable!()
+        }
+
+        async fn playlist_count(&self) -> fdo::Result<u32> {
+            unreachable!()
+        }
+
+        async fn orderings(&self) -> fdo::Result<Vec<PlaylistOrdering>> {
+            unreachable!()
+        }
+
+        async fn active_playlist(&self) -> fdo::Result<MaybePlaylist> {
+            unreachable!()
+        }
+    }
+
+    assert_impl_all!(Server<TestPlayer>: Send, Sync, Unpin);
+}
