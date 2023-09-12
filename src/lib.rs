@@ -42,6 +42,7 @@ macro_rules! define_iface {
         $player_iface_ident:ident,
         $track_list_iface_ident:ident,
         $playlists_iface_ident:ident) => {
+        /// Used to implement `org.mpris.MediaPlayer2` interface.
         #[$attr]
         pub trait $root_iface_ident {
             /// Brings the media player's user interface to the front using
@@ -111,6 +112,7 @@ macro_rules! define_iface {
             async fn supported_mime_types(&self) -> fdo::Result<Vec<String>>;
         }
 
+        /// Used to implement `org.mpris.MediaPlayer2.Player` interface.
         #[$attr]
         pub trait $player_iface_ident: $root_iface_ident {
             async fn next(&self) -> fdo::Result<()>;
@@ -170,6 +172,7 @@ macro_rules! define_iface {
             async fn can_control(&self) -> fdo::Result<bool>;
         }
 
+        /// Used to implement `org.mpris.MediaPlayer2.TrackList` interface.
         #[$attr]
         pub trait $track_list_iface_ident: $player_iface_ident {
             async fn get_tracks_metadata(
@@ -193,6 +196,7 @@ macro_rules! define_iface {
             async fn can_edit_tracks(&self) -> fdo::Result<bool>;
         }
 
+        /// Used to implement `org.mpris.MediaPlayer2.Playlists` interface.
         #[$attr]
         pub trait $playlists_iface_ident: $player_iface_ident {
             async fn activate_playlist(&self, playlist_id: PlaylistId) -> fdo::Result<()>;
