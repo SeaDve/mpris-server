@@ -502,7 +502,7 @@ pub trait TrackListInterface: PlayerInterface {
     /// An array which contains the identifier of each track in the tracklist,
     /// in order.
     ///
-    /// The `org.freedesktop.DBus.Properties.PropertiesChanged` signal is emited
+    /// The `org.freedesktop.DBus.Properties.PropertiesChanged` signal is emitted
     /// every time this property changes, but the signal message does not
     /// contain the new value. Client implementations should rather rely on the
     /// [`TrackAdded`], [`TrackRemoved`] and [`TrackListReplaced`] signals to
