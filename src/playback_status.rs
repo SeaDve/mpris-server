@@ -1,4 +1,4 @@
-use std::{error, fmt, str::FromStr};
+use std::fmt;
 
 use zbus::zvariant::{Type, Value};
 
@@ -27,30 +27,6 @@ impl PlaybackStatus {
 impl fmt::Display for PlaybackStatus {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
-    }
-}
-
-#[derive(Debug, PartialEq, Eq)]
-pub struct ParsePlaybackStatusError;
-
-impl fmt::Display for ParsePlaybackStatusError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_str("invalid playback status")
-    }
-}
-
-impl error::Error for ParsePlaybackStatusError {}
-
-impl FromStr for PlaybackStatus {
-    type Err = ParsePlaybackStatusError;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "Playing" => Ok(Self::Playing),
-            "Paused" => Ok(Self::Paused),
-            "Stopped" => Ok(Self::Stopped),
-            _ => Err(ParsePlaybackStatusError),
-        }
     }
 }
 

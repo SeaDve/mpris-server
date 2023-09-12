@@ -17,12 +17,12 @@ use zbus::{fdo, zvariant::OwnedObjectPath, Result};
 
 pub use crate::{
     local_server::LocalServer,
-    loop_status::{LoopStatus, ParseLoopStatusError},
-    metadata::{DateTime, Metadata, MetadataBuilder, Uri},
-    playback_status::{ParsePlaybackStatusError, PlaybackStatus},
-    player::{Player, PlayerBuilder},
+    loop_status::LoopStatus,
+    metadata::{DateTime, Metadata, Uri},
+    playback_status::PlaybackStatus,
+    player::Player,
     playlist::{MaybePlaylist, Playlist},
-    playlist_ordering::{ParsePlaylistOrderingError, PlaylistOrdering},
+    playlist_ordering::PlaylistOrdering,
     property::{PlaylistsProperty, Property, TrackListProperty},
     server::Server,
 };
@@ -30,6 +30,10 @@ pub use crate::{
 pub mod export {
     pub use async_trait;
     pub use zbus;
+}
+
+pub mod builder {
+    pub use crate::{metadata::MetadataBuilder, player::PlayerBuilder};
 }
 
 macro_rules! define_iface {
@@ -249,14 +253,14 @@ define_iface!(
 /// interface similar to org.gnome.UPnP.MediaItem2.
 pub type TrackId = OwnedObjectPath;
 
-/// A playback rate
+/// A playback rate.
 ///
 /// This is a multiplier, so a value of 0.5 indicates that playback
 /// is happening at half speed, while 1.5 means that 1.5 seconds of
 /// "track time" is consumed every second.
 pub type PlaybackRate = f64;
 
-/// Audio volume level
+/// Audio volume level.
 ///
 /// * 0.0 means mute.
 /// * 1.0 is a sensible maximum volume level (ex: 0dB).
