@@ -5,6 +5,7 @@ use zbus::zvariant::{self, Type, Value};
 /// A repeat / loop status
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Type)]
 #[zvariant(signature = "s")]
+#[doc(alias = "Loop_Status")]
 pub enum LoopStatus {
     /// The playback will stop when there are no more tracks to play.
     None,

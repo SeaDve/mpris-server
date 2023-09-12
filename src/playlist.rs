@@ -23,7 +23,13 @@ impl<'a> From<Playlist> for Value<'a> {
 }
 
 /// A data structure describing a playlist, or nothing.
+///
+/// ## Rationale
+///
+/// D-Bus does not (at the time of writing) support a MAYBE type, so we are
+/// forced to invent our own.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Type)]
+#[doc(alias = "Maybe_Playlist")]
 pub struct MaybePlaylist {
     /// Whether this structure refers to a valid playlist.
     valid: bool,
