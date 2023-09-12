@@ -338,9 +338,16 @@ where
     }
 }
 
-/// Thin wrapper around [`zbus::Connection`] that calls to `T`'s implementation of [`RootInterface`],
-/// [`PlayerInterface`], [`TrackListInterface`], and [`PlaylistsInterface`] to implement
-/// `org.mpris.MediaPlayer2` and its sub-interfaces.
+/// Thin wrapper around [`zbus::Connection`] that calls to `T`'s implementation
+/// of [`RootInterface`], [`PlayerInterface`], [`TrackListInterface`], and
+/// [`PlaylistsInterface`] to implement `org.mpris.MediaPlayer2` and its
+/// sub-interfaces.
+///
+/// When implementing using [`Server`], it is important to note that properties
+/// changed signals are NOT emitted automatically; they must be emitted manually
+/// using [`Server::properties_changed`],
+/// [`Server::track_list_properties_changed`], or
+/// [`Server::playlists_properties_changed`].
 pub struct Server<T>
 where
     T: PlayerInterface + Send + Sync + 'static,

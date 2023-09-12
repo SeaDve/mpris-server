@@ -46,6 +46,8 @@ impl MaybePlaylist {
     }
 
     /// Construct a `MaybePlaylist` that contains invalid/no playlist.
+    ///
+    /// The playlist ID will be set to "/", and the name and icon will be empty.
     pub fn none() -> Self {
         Self {
             valid: false,

@@ -1,6 +1,7 @@
 use enumflags2::bitflags;
 
-/// Used for emitting `PropertiesChanged` signals on [`Server<T>`] via [`Server::properties_changed`].
+/// Used for emitting `PropertiesChanged` signals on [`Server<T>`] via
+/// [`Server::properties_changed`].
 ///
 /// [`Server<T>`]: crate::Server
 /// [`Server::properties_changed`]: crate::Server::properties_changed
@@ -34,8 +35,9 @@ pub enum Property {
     CanControl,
 }
 
-/// Used for emitting `PropertiesChanged` signals on [`Server<T>`] via [`Server::track_list_properties_changed`],
-/// if `T` implements [`TrackListInterface`].
+/// Used for emitting `PropertiesChanged` signals on [`Server<T>`] via
+/// [`Server::track_list_properties_changed`], if `T` implements
+/// [`TrackListInterface`].
 ///
 /// [`Server<T>`]: crate::Server
 /// [`Server::track_list_properties_changed`]: crate::Server::track_list_properties_changed
@@ -48,8 +50,9 @@ pub enum TrackListProperty {
     CanEditTracks,
 }
 
-/// Used for emitting `PropertiesChanged` signals on [`Server<T>`] via [`Server::playlists_properties_changed`],
-/// if `T` implements [`PlaylistsInterface`].
+/// Used for emitting `PropertiesChanged` signals on [`Server<T>`] via
+/// [`Server::playlists_properties_changed`], if `T` implements
+/// [`PlaylistsInterface`].
 ///
 /// [`Server<T>`]: crate::Server
 /// [`Server::playlists_properties_changed`]: crate::Server::playlists_properties_changed
