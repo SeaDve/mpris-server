@@ -35,7 +35,7 @@ pub enum Property {
 }
 
 /// Used for emitting `PropertiesChanged` signals on [`Server<T>`] via [`Server::properties_changed`],
-/// if `T` implements [`TrackListInterface`]
+/// if `T` implements [`TrackListInterface`].
 ///
 /// [`Server<T>`]: crate::Server
 /// [`Server::properties_changed`]: crate::Server::properties_changed
@@ -49,7 +49,7 @@ pub enum TrackListProperty {
 }
 
 /// Used for emitting `PropertiesChanged` signals on [`Server<T>`] via [`Server::properties_changed`],
-/// if `T` implements [`PlaylistsInterface`]
+/// if `T` implements [`PlaylistsInterface`].
 ///
 /// [`Server<T>`]: crate::Server
 /// [`Server::properties_changed`]: crate::Server::properties_changed

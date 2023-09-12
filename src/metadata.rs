@@ -202,6 +202,7 @@ impl Metadata {
     }
 }
 
+/// A builder used to create [`Metadata`].
 #[derive(Debug, Default, Clone)]
 pub struct MetadataBuilder {
     m: Metadata,
