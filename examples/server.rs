@@ -287,14 +287,7 @@ impl LocalPlaylistsInterface for Player {
 
     async fn active_playlist(&self) -> fdo::Result<MaybePlaylist> {
         println!("ActivePlaylist");
-        Ok(MaybePlaylist {
-            valid: false,
-            playlist: Playlist {
-                id: "/".try_into().unwrap(),
-                name: "Test".into(),
-                icon: "file:///home/test.png".into(),
-            },
-        })
+        Ok(None.into())
     }
 }
 

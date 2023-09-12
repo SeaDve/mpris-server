@@ -1,5 +1,5 @@
 use serde::Serialize;
-use zbus::zvariant::{Type, Value};
+use zbus::zvariant::{ObjectPath, Type, Value};
 
 use crate::{PlaylistId, Uri};
 
@@ -18,31 +18,48 @@ impl<'a> From<Playlist> for Value<'a> {
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Type)]
 pub struct MaybePlaylist {
-    pub valid: bool,
-    pub playlist: Playlist,
+    valid: bool,
+    playlist: Playlist,
+}
+
+impl MaybePlaylist {
+    pub fn some(playlist: Playlist) -> Self {
+        Self {
+            valid: true,
+            playlist,
+        }
+    }
+
+    pub fn none() -> Self {
+        Self {
+            valid: false,
+            playlist: Playlist {
+                id: ObjectPath::from_static_str_unchecked("/").into(),
+                name: String::new(),
+                icon: Uri::new(),
+            },
+        }
+    }
+}
+
+impl From<Playlist> for MaybePlaylist {
+    fn from(playlist: Playlist) -> Self {
+        Self::some(playlist)
+    }
+}
+
+impl From<Option<Playlist>> for MaybePlaylist {
+    fn from(opt: Option<Playlist>) -> Self {
+        match opt {
+            Some(playlist) => Self::some(playlist),
+            None => Self::none(),
+        }
+    }
 }
 
 impl<'a> From<MaybePlaylist> for Value<'a> {
     fn from(mp: MaybePlaylist) -> Self {
         Value::from((mp.valid, mp.playlist))
-    }
-}
-
-impl MaybePlaylist {
-    pub fn as_playlist(&self) -> Option<&Playlist> {
-        if self.valid {
-            Some(&self.playlist)
-        } else {
-            None
-        }
-    }
-
-    pub fn into_playlist(self) -> Option<Playlist> {
-        if self.valid {
-            Some(self.playlist)
-        } else {
-            None
-        }
     }
 }
 
