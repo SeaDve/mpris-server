@@ -163,4 +163,3 @@ For more examples, see the [examples directory](https://github.com/SeaDve/mpris-
 * Replace `TimeInUs`, `DateTime`, and `Uri` with proper types
 * Add getter on Metadata
 * Profile if inlining is worth it
-* Run server internally, instead of explicit `run` method
