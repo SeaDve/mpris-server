@@ -1,4 +1,4 @@
-use std::{error, fmt, str::FromStr};
+use std::fmt;
 
 use zbus::zvariant::{self, Type, Value};
 
@@ -32,11 +32,18 @@ impl fmt::Display for LoopStatus {
 
 impl<'a> TryFrom<Value<'a>> for LoopStatus {
     type Error = zvariant::Error;
+
     fn try_from(value: Value<'a>) -> Result<Self, Self::Error> {
         match value {
-            Value::Str(s) => s
-                .parse::<Self>()
-                .map_err(|err| zvariant::Error::Message(err.to_string())),
+            Value::Str(s) => match s.as_str() {
+                "None" => Ok(Self::None),
+                "Track" => Ok(Self::Track),
+                "Playlist" => Ok(Self::Playlist),
+                _ => Err(zvariant::Error::Message(format!(
+                    "invalid loop status: {}",
+                    s
+                ))),
+            },
             _ => Err(zvariant::Error::IncorrectType),
         }
     }
@@ -45,33 +52,5 @@ impl<'a> TryFrom<Value<'a>> for LoopStatus {
 impl<'a> From<LoopStatus> for Value<'a> {
     fn from(status: LoopStatus) -> Self {
         Value::new(status.as_str())
-    }
-}
-
-#[derive(Debug, PartialEq, Eq)]
-pub struct ParseLoopStatusError {
-    invalid: String,
-}
-
-impl fmt::Display for ParseLoopStatusError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "invalid loop status: {}", self.invalid)
-    }
-}
-
-impl error::Error for ParseLoopStatusError {}
-
-impl FromStr for LoopStatus {
-    type Err = ParseLoopStatusError;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "None" => Ok(Self::None),
-            "Track" => Ok(Self::Track),
-            "Playlist" => Ok(Self::Playlist),
-            _ => Err(ParseLoopStatusError {
-                invalid: s.to_string(),
-            }),
-        }
     }
 }

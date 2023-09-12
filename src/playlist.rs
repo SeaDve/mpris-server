@@ -37,6 +37,7 @@ pub struct MaybePlaylist {
 }
 
 impl MaybePlaylist {
+    /// Construct a valid `MaybePlaylist` from the given playlist.
     pub fn some(playlist: Playlist) -> Self {
         Self {
             valid: true,
@@ -44,6 +45,7 @@ impl MaybePlaylist {
         }
     }
 
+    /// Construct a `MaybePlaylist` that contains invalid/no playlist.
     pub fn none() -> Self {
         Self {
             valid: false,

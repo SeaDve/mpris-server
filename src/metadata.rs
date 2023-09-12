@@ -18,6 +18,7 @@ pub type DateTime = String;
 /// "file://" schema.
 pub type Uri = String;
 
+/// A mapping from metadata attribute names to values.
 #[derive(Clone, PartialEq, Serialize, Type)]
 #[zvariant(signature = "a{sv}")]
 pub struct Metadata(HashMap<String, Value<'static>>);

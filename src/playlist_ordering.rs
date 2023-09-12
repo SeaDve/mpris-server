@@ -1,4 +1,4 @@
-use std::{error, fmt, str::FromStr};
+use std::fmt;
 
 use serde::Deserialize;
 use zbus::zvariant::{Type, Value};
@@ -40,32 +40,6 @@ impl PlaylistOrdering {
 impl fmt::Display for PlaylistOrdering {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
-    }
-}
-
-#[derive(Debug, PartialEq, Eq)]
-pub struct ParsePlaylistOrderingError;
-
-impl fmt::Display for ParsePlaylistOrderingError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_str("invalid playlist ordering")
-    }
-}
-
-impl error::Error for ParsePlaylistOrderingError {}
-
-impl FromStr for PlaylistOrdering {
-    type Err = ParsePlaylistOrderingError;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "Alphabetical" => Ok(Self::Alphabetical),
-            "Created" => Ok(Self::CreationDate),
-            "Modified" => Ok(Self::ModifiedDate),
-            "Played" => Ok(Self::LastPlayDate),
-            "User" => Ok(Self::UserDefined),
-            _ => Err(ParsePlaylistOrderingError),
-        }
     }
 }
 
