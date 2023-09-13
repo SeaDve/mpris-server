@@ -1,19 +1,17 @@
-use std::future;
-
 use mpris_server::{
     export::{
         async_trait::async_trait,
         zbus::{fdo, Result},
     },
-    LoopStatus, MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, Playlist,
-    PlaylistId, PlaylistOrdering, PlaylistsInterface, RootInterface, Server, Time, TrackId,
-    TrackListInterface, Uri, Volume,
+    LocalPlayerInterface, LocalPlaylistsInterface, LocalRootInterface, LocalServer,
+    LocalTrackListInterface, LoopStatus, MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus,
+    Playlist, PlaylistId, PlaylistOrdering, Property, Time, TrackId, Uri, Volume,
 };
 
 pub struct Player;
 
-#[async_trait]
-impl RootInterface for Player {
+#[async_trait(?Send)]
+impl LocalRootInterface for Player {
     async fn raise(&self) -> fdo::Result<()> {
         println!("Raise");
         Ok(())
@@ -75,8 +73,8 @@ impl RootInterface for Player {
     }
 }
 
-#[async_trait]
-impl PlayerInterface for Player {
+#[async_trait(?Send)]
+impl LocalPlayerInterface for Player {
     async fn next(&self) -> fdo::Result<()> {
         println!("Next");
         Ok(())
@@ -218,8 +216,8 @@ impl PlayerInterface for Player {
     }
 }
 
-#[async_trait]
-impl TrackListInterface for Player {
+#[async_trait(?Send)]
+impl LocalTrackListInterface for Player {
     async fn get_tracks_metadata(&self, track_ids: Vec<TrackId>) -> fdo::Result<Vec<Metadata>> {
         println!("GetTracksMetadata({:?})", track_ids);
         Ok(vec![])
@@ -256,8 +254,8 @@ impl TrackListInterface for Player {
     }
 }
 
-#[async_trait]
-impl PlaylistsInterface for Player {
+#[async_trait(?Send)]
+impl LocalPlaylistsInterface for Player {
     async fn activate_playlist(&self, playlist_id: PlaylistId) -> fdo::Result<()> {
         println!("ActivatePlaylist({})", playlist_id);
         Ok(())
@@ -295,28 +293,18 @@ impl PlaylistsInterface for Player {
 
 #[async_std::main]
 async fn main() {
-    // Create a server that exports `org.mpris.MediaPlayer2` and
-    // `org.mpris.MediaPlayer2.Player` interfaces.
-    let server = Server::new("Test.Application", Player).unwrap();
+    let server = LocalServer::new_with_all("Test.Application", Player).unwrap();
 
-    // Unlike in `LocalServer`, we only just need to call `init` here as
-    // the server is ran in the background.
-    server.init().await.unwrap();
+    // Unlike in `Server`, we have to call `run` here to handle incoming requests in
+    // the local thread.
+    server.run().await.unwrap();
 
-    // Create a server that exports `org.mpris.MediaPlayer2.TrackList`
-    // interface, in addition to the previous interfaces.
-    let server = Server::new_with_track_list("Test.ApplicationWithTrackList", Player).unwrap();
-    server.init().await.unwrap();
+    // Emit `PropertiesChanged` signal for `Position` and `Metadata` properties
+    server
+        .properties_changed(Property::Position | Property::Metadata)
+        .await
+        .unwrap();
 
-    // Create a server that exports `org.mpris.MediaPlayer2.Playlists`
-    // interface, in addition to the previous interfaces.
-    let server = Server::new_with_playlists("Test.ApplicationWithPlaylists", Player).unwrap();
-    server.init().await.unwrap();
-
-    // Create a server that exports all interfaces.
-    let server = Server::new_with_all("Test.ApplicationWithTrackListAndPlaylists", Player).unwrap();
-    server.init().await.unwrap();
-
-    // Prevent the program from exiting.
-    future::pending::<()>().await;
+    // Emit `Seeked` signal
+    server.seeked(Time::from_micros(124)).await.unwrap();
 }
