@@ -1,11 +1,11 @@
 use std::{
     collections::HashMap,
     fmt,
-    sync::{Arc, OnceLock},
+    sync::{Arc, Mutex},
 };
 
+use async_lock::OnceCell;
 use enumflags2::BitFlags;
-use futures_util::lock::Mutex;
 use zbus::{
     dbus_interface, fdo,
     names::WellKnownName,
@@ -357,7 +357,7 @@ pub struct Server<T>
 where
     T: PlayerInterface + Send + Sync + 'static,
 {
-    connection: OnceLock<Connection>,
+    connection: OnceCell<Connection>,
     #[allow(clippy::type_complexity)]
     connection_init:
         Mutex<Option<Box<dyn FnOnce() -> Result<ConnectionBuilder<'static>> + Send + Sync>>>,
@@ -514,26 +514,20 @@ where
         };
 
         Ok(Self {
-            connection: OnceLock::new(),
+            connection: OnceCell::new(),
             connection_init: Mutex::new(Some(Box::new(connection_init))),
             imp,
         })
     }
 
     async fn get_or_init_connection(&self) -> Result<&Connection> {
-        // Lock before checking if the connection is already initialized to
-        // prevent reading while it is being initialized.
-        let mut connection_init = self.connection_init.lock().await;
-
-        if let Some(connection) = self.connection.get() {
-            return Ok(connection);
-        }
-
-        let init_fn = connection_init.take().unwrap();
-        let connection = init_fn()?.build().await?;
-        self.connection.set(connection).unwrap();
-
-        Ok(self.connection.get().unwrap())
+        self.connection
+            .get_or_try_init(|| async {
+                let connection_init = self.connection_init.lock().unwrap().take().unwrap();
+                let connection = connection_init()?.build().await?;
+                Ok(connection)
+            })
+            .await
     }
 
     async fn interface_ref<I: zbus::Interface>(&self) -> Result<InterfaceRef<I>> {
