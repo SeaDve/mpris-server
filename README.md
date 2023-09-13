@@ -160,6 +160,6 @@ For more examples, see the [examples directory](https://github.com/SeaDve/mpris-
 ## TODO
 
 * Document public interface
-* Replace `TimeInUs`, `DateTime`, and `Uri` with proper types
+* Replace `DateTime`, and `Uri` with proper types
 * Add getter on Metadata
 * Profile if inlining is worth it

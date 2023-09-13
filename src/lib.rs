@@ -11,6 +11,7 @@ mod playlist;
 mod playlist_ordering;
 mod property;
 mod server;
+mod time;
 mod track_id;
 
 use async_trait::async_trait;
@@ -26,6 +27,7 @@ pub use crate::{
     playlist_ordering::PlaylistOrdering,
     property::{PlaylistsProperty, Property, TrackListProperty},
     server::Server,
+    time::Time,
     track_id::TrackId,
 };
 
@@ -129,9 +131,9 @@ macro_rules! define_iface {
 
             async fn play(&self) -> fdo::Result<()>;
 
-            async fn seek(&self, offset: TimeInUs) -> fdo::Result<()>;
+            async fn seek(&self, offset: Time) -> fdo::Result<()>;
 
-            async fn set_position(&self, track_id: TrackId, position: TimeInUs) -> fdo::Result<()>;
+            async fn set_position(&self, track_id: TrackId, position: Time) -> fdo::Result<()>;
 
             async fn open_uri(&self, uri: String) -> fdo::Result<()>;
 
@@ -155,7 +157,7 @@ macro_rules! define_iface {
 
             async fn set_volume(&self, volume: Volume) -> Result<()>;
 
-            async fn position(&self) -> fdo::Result<TimeInUs>;
+            async fn position(&self) -> fdo::Result<Time>;
 
             async fn minimum_rate(&self) -> fdo::Result<PlaybackRate>;
 
@@ -307,10 +309,10 @@ pub trait PlayerInterface: RootInterface {
     async fn play(&self) -> fdo::Result<()>;
 
     #[doc(alias = "Seek")]
-    async fn seek(&self, offset: TimeInUs) -> fdo::Result<()>;
+    async fn seek(&self, offset: Time) -> fdo::Result<()>;
 
     #[doc(alias = "SetPosition")]
-    async fn set_position(&self, track_id: TrackId, position: TimeInUs) -> fdo::Result<()>;
+    async fn set_position(&self, track_id: TrackId, position: Time) -> fdo::Result<()>;
 
     #[doc(alias = "OpenUri")]
     async fn open_uri(&self, uri: String) -> fdo::Result<()>;
@@ -346,7 +348,7 @@ pub trait PlayerInterface: RootInterface {
     async fn set_volume(&self, volume: Volume) -> Result<()>;
 
     #[doc(alias = "Position")]
-    async fn position(&self) -> fdo::Result<TimeInUs>;
+    async fn position(&self) -> fdo::Result<Time>;
 
     #[doc(alias = "MinimumRate")]
     async fn minimum_rate(&self) -> fdo::Result<PlaybackRate>;
@@ -627,10 +629,6 @@ pub type PlaybackRate = f64;
 /// Note that the volume may be higher than 1.0, although generally
 /// clients should not attempt to set it above 1.0.
 pub type Volume = f64;
-
-/// Time in microseconds.
-#[doc(alias = "Time_In_Us")]
-pub type TimeInUs = i64;
 
 /// Unique playlist identifier.
 ///

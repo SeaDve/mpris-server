@@ -16,7 +16,7 @@ use zbus::{
 use crate::{
     LoopStatus, MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, Playlist,
     PlaylistId, PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, Property, RootInterface,
-    TimeInUs, TrackId, TrackListInterface, TrackListProperty, Uri, Volume,
+    Time, TrackId, TrackListInterface, TrackListProperty, Uri, Volume,
 };
 
 const OBJECT_PATH: ObjectPath<'static> =
@@ -123,11 +123,11 @@ where
         self.imp.play().await
     }
 
-    async fn seek(&self, offset: TimeInUs) -> fdo::Result<()> {
+    async fn seek(&self, offset: Time) -> fdo::Result<()> {
         self.imp.seek(offset).await
     }
 
-    async fn set_position(&self, track_id: TrackId, position: TimeInUs) -> fdo::Result<()> {
+    async fn set_position(&self, track_id: TrackId, position: Time) -> fdo::Result<()> {
         self.imp.set_position(track_id, position).await
     }
 
@@ -136,7 +136,7 @@ where
     }
 
     #[dbus_interface(signal)]
-    async fn seeked(ctxt: &SignalContext<'_>, position: TimeInUs) -> Result<()>;
+    async fn seeked(ctxt: &SignalContext<'_>, position: Time) -> Result<()>;
 
     #[dbus_interface(property)]
     async fn playback_status(&self) -> fdo::Result<PlaybackStatus> {
@@ -189,7 +189,7 @@ where
     }
 
     #[dbus_interface(property)]
-    async fn position(&self) -> fdo::Result<TimeInUs> {
+    async fn position(&self) -> fdo::Result<Time> {
         self.imp.position().await
     }
 
@@ -437,7 +437,7 @@ where
         &self.imp
     }
 
-    signal_delegate!(RawPlayerInterface<T>, seeked(position: TimeInUs));
+    signal_delegate!(RawPlayerInterface<T>, seeked(position: Time));
 
     /// Emits the `PropertiesChanged` signal for the given properties.
     pub async fn properties_changed(
@@ -778,11 +778,11 @@ mod tests {
             unreachable!()
         }
 
-        async fn seek(&self, _offset: TimeInUs) -> fdo::Result<()> {
+        async fn seek(&self, _offset: Time) -> fdo::Result<()> {
             unreachable!()
         }
 
-        async fn set_position(&self, _track_id: TrackId, _position: TimeInUs) -> fdo::Result<()> {
+        async fn set_position(&self, _track_id: TrackId, _position: Time) -> fdo::Result<()> {
             unreachable!()
         }
 
@@ -830,7 +830,7 @@ mod tests {
             unreachable!()
         }
 
-        async fn position(&self) -> fdo::Result<TimeInUs> {
+        async fn position(&self) -> fdo::Result<Time> {
             unreachable!()
         }
 

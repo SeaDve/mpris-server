@@ -25,6 +25,7 @@ use zbus::zvariant::{Error, ObjectPath, Result, Type, Value};
 /// to the specification where tracks are exported to D-Bus with an
 /// interface similar to org.gnome.UPnP.MediaItem2.
 #[derive(Debug, Default, Clone, PartialEq, Eq, Hash, Serialize, Type)]
+#[serde(transparent)]
 #[doc(alias = "Track_Id")]
 pub struct TrackId(ObjectPath<'static>);
 

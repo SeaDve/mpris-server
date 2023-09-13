@@ -3,9 +3,11 @@ use std::{collections::HashMap, fmt};
 use serde::Serialize;
 use zbus::zvariant::{self, OwnedObjectPath, Type, Value};
 
-use crate::{TimeInUs, Uri};
+use crate::{Time, Uri};
 
-/// Date/time fields should be sent as strings in ISO 8601 extended
+/// Combined date and time.
+///
+/// This should be sent as strings in ISO 8601 extended
 /// format (eg: 2007-04-29T14:35:51). If the timezone is known (eg: for
 /// xesam:lastPlayed), the internet profile format of ISO 8601, as specified in
 /// RFC 3339, should be used (eg: 2007-04-29T14:35:51+02:00).
@@ -28,6 +30,7 @@ pub type DateTime = String;
 /// [`mpris:length`]: Metadata::set_length
 /// [`mpris:artUrl`]: Metadata::set_art_url
 #[derive(Clone, PartialEq, Serialize, Type)]
+#[serde(transparent)]
 #[zvariant(signature = "a{sv}")]
 #[doc(alias = "Metadata_Map")]
 pub struct Metadata(HashMap<String, Value<'static>>);
@@ -93,7 +96,7 @@ impl Metadata {
     }
 
     /// The duration of the track in microseconds.
-    pub fn set_length(&mut self, length: TimeInUs) {
+    pub fn set_length(&mut self, length: Time) {
         self.insert("mpris:length", length);
     }
 
@@ -243,7 +246,7 @@ impl MetadataBuilder {
         self
     }
 
-    pub fn length(mut self, length: TimeInUs) -> Self {
+    pub fn length(mut self, length: Time) -> Self {
         self.m.set_length(length);
         self
     }

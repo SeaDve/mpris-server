@@ -5,7 +5,7 @@ use zbus::{fdo, Result};
 
 use crate::{
     LocalPlayerInterface, LocalRootInterface, LocalServer, LoopStatus, Metadata, PlaybackRate,
-    PlaybackStatus, Property, TimeInUs, TrackId, Volume,
+    PlaybackStatus, Property, Time, TrackId, Volume,
 };
 
 /// Ready-made mutable object that internally implements [`LocalRootInterface`]
@@ -36,8 +36,8 @@ struct Inner {
     play_pause_cbs: RefCell<Vec<Box<dyn Fn()>>>,
     stop_cbs: RefCell<Vec<Box<dyn Fn()>>>,
     play_cbs: RefCell<Vec<Box<dyn Fn()>>>,
-    seek_cbs: RefCell<Vec<Box<dyn Fn(TimeInUs)>>>,
-    set_position_cbs: RefCell<Vec<Box<dyn Fn(&TrackId, TimeInUs)>>>,
+    seek_cbs: RefCell<Vec<Box<dyn Fn(Time)>>>,
+    set_position_cbs: RefCell<Vec<Box<dyn Fn(&TrackId, Time)>>>,
     open_uri_cbs: RefCell<Vec<Box<dyn Fn(&str)>>>,
     set_loop_status_cbs: RefCell<Vec<Box<dyn Fn(LoopStatus)>>>, // Property
     set_rate_cbs: RefCell<Vec<Box<dyn Fn(PlaybackRate)>>>,      // Property
@@ -49,7 +49,7 @@ struct Inner {
     shuffle: Cell<bool>,
     metadata: RefCell<Metadata>,
     volume: Cell<Volume>,
-    position: Cell<TimeInUs>,
+    position: Cell<Time>,
     minimum_rate: Cell<PlaybackRate>,
     maximum_rate: Cell<PlaybackRate>,
     can_go_next: Cell<bool>,
@@ -164,14 +164,14 @@ impl LocalPlayerInterface for Inner {
         Ok(())
     }
 
-    async fn seek(&self, offset: TimeInUs) -> fdo::Result<()> {
+    async fn seek(&self, offset: Time) -> fdo::Result<()> {
         for cb in self.seek_cbs.borrow().iter() {
             cb(offset);
         }
         Ok(())
     }
 
-    async fn set_position(&self, track_id: TrackId, position: TimeInUs) -> fdo::Result<()> {
+    async fn set_position(&self, track_id: TrackId, position: Time) -> fdo::Result<()> {
         for cb in self.set_position_cbs.borrow().iter() {
             cb(&track_id, position);
         }
@@ -237,7 +237,7 @@ impl LocalPlayerInterface for Inner {
         Ok(())
     }
 
-    async fn position(&self) -> fdo::Result<TimeInUs> {
+    async fn position(&self) -> fdo::Result<Time> {
         Ok(self.position.get())
     }
 
@@ -293,7 +293,7 @@ impl Player {
             shuffle: false,
             metadata: Metadata::new(),
             volume: 1.0,
-            position: 0,
+            position: Time::ZERO,
             minimum_rate: 1.0,
             maximum_rate: 1.0,
             can_go_next: false,
@@ -503,11 +503,11 @@ impl Player {
         self.server.imp().play_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    pub fn connect_seek(&self, cb: impl Fn(TimeInUs) + 'static) {
+    pub fn connect_seek(&self, cb: impl Fn(Time) + 'static) {
         self.server.imp().seek_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    pub fn connect_set_position(&self, cb: impl Fn(&TrackId, TimeInUs) + 'static) {
+    pub fn connect_set_position(&self, cb: impl Fn(&TrackId, Time) + 'static) {
         self.server
             .imp()
             .set_position_cbs
@@ -555,7 +555,7 @@ impl Player {
             .push(Box::new(cb));
     }
 
-    pub async fn emit_seeked(&self, position: TimeInUs) -> Result<()> {
+    pub async fn emit_seeked(&self, position: Time) -> Result<()> {
         self.server.seeked(position).await
     }
 
@@ -639,11 +639,11 @@ impl Player {
         self.server.properties_changed(Property::Volume).await
     }
 
-    pub fn position(&self) -> TimeInUs {
+    pub fn position(&self) -> Time {
         self.server.imp().position.get()
     }
 
-    pub async fn set_position(&self, position: TimeInUs) -> Result<()> {
+    pub async fn set_position(&self, position: Time) -> Result<()> {
         if self.position() == position {
             return Ok(());
         }
@@ -777,7 +777,7 @@ pub struct PlayerBuilder {
     shuffle: bool,
     metadata: Metadata,
     volume: Volume,
-    position: TimeInUs,
+    position: Time,
     minimum_rate: PlaybackRate,
     maximum_rate: PlaybackRate,
     can_go_next: bool,
@@ -873,7 +873,7 @@ impl PlayerBuilder {
         self
     }
 
-    pub fn position(mut self, position: TimeInUs) -> Self {
+    pub fn position(mut self, position: Time) -> Self {
         self.position = position;
         self
     }

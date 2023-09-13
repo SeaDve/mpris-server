@@ -9,8 +9,8 @@ use zbus::{fdo, Result};
 use crate::{
     LocalPlayerInterface, LocalPlaylistsInterface, LocalTrackListInterface, LoopStatus,
     MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, Playlist, PlaylistId,
-    PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, Property, RootInterface, Server,
-    TimeInUs, TrackId, TrackListInterface, TrackListProperty, Uri, Volume,
+    PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, Property, RootInterface, Server, Time,
+    TrackId, TrackListInterface, TrackListProperty, Uri, Volume,
 };
 
 enum RootAction {
@@ -39,8 +39,8 @@ enum PlayerAction {
     PlayPause(oneshot::Sender<fdo::Result<()>>),
     Stop(oneshot::Sender<fdo::Result<()>>),
     Play(oneshot::Sender<fdo::Result<()>>),
-    Seek(TimeInUs, oneshot::Sender<fdo::Result<()>>),
-    SetPosition(TrackId, TimeInUs, oneshot::Sender<fdo::Result<()>>),
+    Seek(Time, oneshot::Sender<fdo::Result<()>>),
+    SetPosition(TrackId, Time, oneshot::Sender<fdo::Result<()>>),
     OpenUri(String, oneshot::Sender<fdo::Result<()>>),
 
     // Properties
@@ -54,7 +54,7 @@ enum PlayerAction {
     Metadata(oneshot::Sender<fdo::Result<Metadata>>),
     Volume(oneshot::Sender<fdo::Result<Volume>>),
     SetVolume(Volume, oneshot::Sender<Result<()>>),
-    Position(oneshot::Sender<fdo::Result<TimeInUs>>),
+    Position(oneshot::Sender<fdo::Result<Time>>),
     MinimumRate(oneshot::Sender<fdo::Result<PlaybackRate>>),
     MaximumRate(oneshot::Sender<fdo::Result<PlaybackRate>>),
     CanGoNext(oneshot::Sender<fdo::Result<bool>>),
@@ -243,13 +243,13 @@ impl<T> PlayerInterface for InnerImp<T> {
         rx.await.unwrap()
     }
 
-    async fn seek(&self, offset: TimeInUs) -> fdo::Result<()> {
+    async fn seek(&self, offset: Time) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
         self.send_player(PlayerAction::Seek(offset, tx));
         rx.await.unwrap()
     }
 
-    async fn set_position(&self, track_id: TrackId, position: TimeInUs) -> fdo::Result<()> {
+    async fn set_position(&self, track_id: TrackId, position: Time) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
         self.send_player(PlayerAction::SetPosition(track_id, position, tx));
         rx.await.unwrap()
@@ -321,7 +321,7 @@ impl<T> PlayerInterface for InnerImp<T> {
         rx.await.unwrap()
     }
 
-    async fn position(&self) -> fdo::Result<TimeInUs> {
+    async fn position(&self) -> fdo::Result<Time> {
         let (tx, rx) = oneshot::channel();
         self.send_player(PlayerAction::Position(tx));
         rx.await.unwrap()
@@ -556,7 +556,7 @@ where
     }
 
     // org.mpris.MediaPlayer2.Player
-    signal_delegate!(seeked(position: TimeInUs));
+    signal_delegate!(seeked(position: Time));
 
     pub async fn properties_changed(
         &self,

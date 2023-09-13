@@ -5,7 +5,7 @@ use mpris_server::{
     },
     LocalPlayerInterface, LocalPlaylistsInterface, LocalRootInterface, LocalServer,
     LocalTrackListInterface, LoopStatus, MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus,
-    Playlist, PlaylistId, PlaylistOrdering, TimeInUs, TrackId, Uri, Volume,
+    Playlist, PlaylistId, PlaylistOrdering, Time, TrackId, Uri, Volume,
 };
 
 pub struct Player;
@@ -105,13 +105,13 @@ impl LocalPlayerInterface for Player {
         Ok(())
     }
 
-    async fn seek(&self, offset: TimeInUs) -> fdo::Result<()> {
-        println!("Seek({})", offset);
+    async fn seek(&self, offset: Time) -> fdo::Result<()> {
+        println!("Seek({:?})", offset);
         Ok(())
     }
 
-    async fn set_position(&self, track_id: TrackId, position: TimeInUs) -> fdo::Result<()> {
-        println!("SetPosition({}, {})", track_id, position);
+    async fn set_position(&self, track_id: TrackId, position: Time) -> fdo::Result<()> {
+        println!("SetPosition({}, {:?})", track_id, position);
         Ok(())
     }
 
@@ -170,9 +170,9 @@ impl LocalPlayerInterface for Player {
         Ok(())
     }
 
-    async fn position(&self) -> fdo::Result<TimeInUs> {
+    async fn position(&self) -> fdo::Result<Time> {
         println!("Position");
-        Ok(TimeInUs::default())
+        Ok(Time::ZERO)
     }
 
     async fn minimum_rate(&self) -> fdo::Result<PlaybackRate> {
