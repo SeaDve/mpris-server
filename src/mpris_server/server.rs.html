@@ -918,28 +918,14 @@
 <a href="#918" id="918">918</a>
 <a href="#919" id="919">919</a>
 <a href="#920" id="920">920</a>
-<a href="#921" id="921">921</a>
-<a href="#922" id="922">922</a>
-<a href="#923" id="923">923</a>
-<a href="#924" id="924">924</a>
-<a href="#925" id="925">925</a>
-<a href="#926" id="926">926</a>
-<a href="#927" id="927">927</a>
-<a href="#928" id="928">928</a>
-<a href="#929" id="929">929</a>
-<a href="#930" id="930">930</a>
-<a href="#931" id="931">931</a>
-<a href="#932" id="932">932</a>
-<a href="#933" id="933">933</a>
-<a href="#934" id="934">934</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{
     collections::HashMap,
     fmt,
-    sync::{Arc, OnceLock},
+    sync::{Arc, Mutex},
 };
 
+<span class="kw">use </span>async_lock::OnceCell;
 <span class="kw">use </span>enumflags2::BitFlags;
-<span class="kw">use </span>futures_util::lock::Mutex;
 <span class="kw">use </span>zbus::{
     dbus_interface, fdo,
     names::WellKnownName,
@@ -950,7 +936,7 @@
 <span class="kw">use crate</span>::{
     LoopStatus, MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, Playlist,
     PlaylistId, PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, Property, RootInterface,
-    TimeInUs, TrackId, TrackListInterface, TrackListProperty, Uri, Volume,
+    Time, TrackId, TrackListInterface, TrackListProperty, Uri, Volume,
 };
 
 <span class="kw">const </span>OBJECT_PATH: ObjectPath&lt;<span class="lifetime">&#39;static</span>&gt; =
@@ -963,7 +949,7 @@
 <span class="attr">#[dbus_interface(name = <span class="string">&quot;org.mpris.MediaPlayer2&quot;</span>)]
 </span><span class="kw">impl</span>&lt;T&gt; RawRootInterface&lt;T&gt;
 <span class="kw">where
-    </span>T: Send + Sync + RootInterface + <span class="lifetime">&#39;static</span>,
+    </span>T: RootInterface + <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">async fn </span>raise(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
         <span class="self">self</span>.imp.raise().<span class="kw">await
@@ -1031,7 +1017,7 @@
 <span class="attr">#[dbus_interface(name = <span class="string">&quot;org.mpris.MediaPlayer2.Player&quot;</span>)]
 </span><span class="kw">impl</span>&lt;T&gt; RawPlayerInterface&lt;T&gt;
 <span class="kw">where
-    </span>T: Send + Sync + PlayerInterface + <span class="lifetime">&#39;static</span>,
+    </span>T: PlayerInterface + <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">async fn </span>next(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
         <span class="self">self</span>.imp.next().<span class="kw">await
@@ -1057,11 +1043,11 @@
         <span class="self">self</span>.imp.play().<span class="kw">await
     </span>}
 
-    <span class="kw">async fn </span>seek(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: TimeInUs) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>seek(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: Time) -&gt; fdo::Result&lt;()&gt; {
         <span class="self">self</span>.imp.seek(offset).<span class="kw">await
     </span>}
 
-    <span class="kw">async fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId, position: TimeInUs) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId, position: Time) -&gt; fdo::Result&lt;()&gt; {
         <span class="self">self</span>.imp.set_position(track_id, position).<span class="kw">await
     </span>}
 
@@ -1070,7 +1056,7 @@
     </span>}
 
     <span class="attr">#[dbus_interface(signal)]
-    </span><span class="kw">async fn </span>seeked(ctxt: <span class="kw-2">&amp;</span>SignalContext&lt;<span class="lifetime">&#39;_</span>&gt;, position: TimeInUs) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
+    </span><span class="kw">async fn </span>seeked(ctxt: <span class="kw-2">&amp;</span>SignalContext&lt;<span class="lifetime">&#39;_</span>&gt;, position: Time) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
 
     <span class="attr">#[dbus_interface(property)]
     </span><span class="kw">async fn </span>playback_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackStatus&gt; {
@@ -1123,7 +1109,7 @@
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;TimeInUs&gt; {
+    </span><span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Time&gt; {
         <span class="self">self</span>.imp.position().<span class="kw">await
     </span>}
 
@@ -1175,7 +1161,7 @@
 <span class="attr">#[dbus_interface(name = <span class="string">&quot;org.mpris.MediaPlayer2.TrackList&quot;</span>)]
 </span><span class="kw">impl</span>&lt;T&gt; RawTrackListInterface&lt;T&gt;
 <span class="kw">where
-    </span>T: TrackListInterface + Send + Sync + <span class="lifetime">&#39;static</span>,
+    </span>T: TrackListInterface + <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">async fn </span>get_tracks_metadata(<span class="kw-2">&amp;</span><span class="self">self</span>, track_ids: Vec&lt;TrackId&gt;) -&gt; fdo::Result&lt;Vec&lt;Metadata&gt;&gt; {
         <span class="self">self</span>.imp.get_tracks_metadata(track_ids).<span class="kw">await
@@ -1240,7 +1226,7 @@
 <span class="attr">#[dbus_interface(name = <span class="string">&quot;org.mpris.MediaPlayer2.Playlists&quot;</span>)]
 </span><span class="kw">impl</span>&lt;T&gt; RawPlaylistsInterface&lt;T&gt;
 <span class="kw">where
-    </span>T: PlaylistsInterface + Send + Sync + <span class="lifetime">&#39;static</span>,
+    </span>T: PlaylistsInterface + <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">async fn </span>activate_playlist(<span class="kw-2">&amp;</span><span class="self">self</span>, playlist_id: PlaylistId) -&gt; fdo::Result&lt;()&gt; {
         <span class="self">self</span>.imp.activate_playlist(playlist_id).<span class="kw">await
@@ -1289,9 +1275,9 @@
 /// [`Server::playlists_properties_changed`].
 </span><span class="kw">pub struct </span>Server&lt;T&gt;
 <span class="kw">where
-    </span>T: PlayerInterface + Send + Sync + <span class="lifetime">&#39;static</span>,
+    </span>T: PlayerInterface + <span class="lifetime">&#39;static</span>,
 {
-    connection: OnceLock&lt;Connection&gt;,
+    connection: OnceCell&lt;Connection&gt;,
     <span class="attr">#[allow(clippy::type_complexity)]
     </span>connection_init:
         Mutex&lt;<span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>FnOnce() -&gt; <span class="prelude-ty">Result</span>&lt;ConnectionBuilder&lt;<span class="lifetime">&#39;static</span>&gt;&gt; + Send + Sync&gt;&gt;&gt;,
@@ -1300,7 +1286,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; fmt::Debug <span class="kw">for </span>Server&lt;T&gt;
 <span class="kw">where
-    </span>T: PlayerInterface + Send + Sync + <span class="lifetime">&#39;static</span>,
+    </span>T: PlayerInterface + <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
         f.debug_struct(<span class="string">&quot;Server&quot;</span>).finish()
@@ -1316,9 +1302,9 @@
     };
 }
 
-<span class="macro">macro_rules! </span>handle_property {
-    (<span class="macro-nonterminal">$property_ident</span>:ident, <span class="macro-nonterminal">$property_type</span>:ident, <span class="macro-nonterminal">$source</span>:ident =&gt; $(<span class="macro-nonterminal">$map</span>:ident, <span class="macro-nonterminal">$property</span>:ident, <span class="macro-nonterminal">$getter</span>:ident);<span class="kw-2">*</span>) =&gt; {
-        <span class="kw">match </span><span class="macro-nonterminal">$property_ident </span>{
+<span class="macro">macro_rules! </span>insert_property {
+    (<span class="macro-nonterminal">$item</span>:ident, <span class="macro-nonterminal">$property_type</span>:ident, <span class="macro-nonterminal">$source</span>:ident =&gt; $(<span class="macro-nonterminal">$map</span>:ident, <span class="macro-nonterminal">$property</span>:ident, <span class="macro-nonterminal">$getter</span>:ident);<span class="kw-2">*</span>) =&gt; {
+        <span class="kw">match </span><span class="macro-nonterminal">$item </span>{
             $(
                 <span class="macro-nonterminal">$property_type</span>::<span class="macro-nonterminal">$property </span>=&gt; {
                     <span class="kw">let </span>value = Value::new(<span class="macro-nonterminal">$source</span>.imp.<span class="macro-nonterminal">$getter</span>().<span class="kw">await</span><span class="question-mark">?</span>);
@@ -1331,11 +1317,13 @@
 
 <span class="kw">impl</span>&lt;T&gt; Server&lt;T&gt;
 <span class="kw">where
-    </span>T: PlayerInterface + Send + Sync + <span class="lifetime">&#39;static</span>,
+    </span>T: PlayerInterface + <span class="lifetime">&#39;static</span>,
 {
     <span class="doccomment">/// Creates a new [`Server`] with the given bus name suffix and
     /// implementation, which must implement [`RootInterface`] and
     /// [`PlayerInterface`].
+    ///
+    /// To start the connection, [`Server::init`] must be called.
     ///
     /// The resulting bus name will be
     /// `org.mpris.MediaPlayer2.&lt;bus_name_suffix&gt;`, where
@@ -1353,9 +1341,14 @@
         <span class="self">Self</span>::new_inner(bus_name_suffix, imp, |builder, <span class="kw">_</span>| <span class="prelude-val">Ok</span>(builder))
     }
 
-    <span class="kw">pub async fn </span>init(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="comment">// Ensure the connection is initialized.
-        </span><span class="self">self</span>.get_or_init_connection().<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="doccomment">/// Initializes the connection.
+    ///
+    /// This is a no-op if the connection has already been initialized.
+    ///
+    /// This is also called automatically when emitting signals and properties
+    /// changed.
+    </span><span class="kw">pub async fn </span>init(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="self">self</span>.get_or_init_connection().<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
 
@@ -1364,7 +1357,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>.imp
     }
 
-    <span class="macro">signal_delegate!</span>(RawPlayerInterface&lt;T&gt;, seeked(position: TimeInUs));
+    <span class="macro">signal_delegate!</span>(RawPlayerInterface&lt;T&gt;, seeked(position: Time));
 
     <span class="doccomment">/// Emits the `PropertiesChanged` signal for the given properties.
     </span><span class="kw">pub async fn </span>properties_changed(
@@ -1374,7 +1367,7 @@
         <span class="kw">let </span><span class="kw-2">mut </span>root_changed = HashMap::new();
         <span class="kw">let </span><span class="kw-2">mut </span>player_changed = HashMap::new();
         <span class="kw">for </span>property <span class="kw">in </span>properties.into().iter() {
-            <span class="macro">handle_property!</span>(
+            <span class="macro">insert_property!</span>(
                 property, Property, <span class="self">self </span>=&gt;
                 root_changed, CanQuit, can_quit;
                 root_changed, Fullscreen, fullscreen;
@@ -1448,27 +1441,21 @@
         };
 
         <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
-            connection: OnceLock::new(),
+            connection: OnceCell::new(),
             connection_init: Mutex::new(<span class="prelude-val">Some</span>(Box::new(connection_init))),
             imp,
         })
     }
 
     <span class="kw">async fn </span>get_or_init_connection(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span>Connection&gt; {
-        <span class="comment">// Lock before checking if the connection is already initialized to
-        // prevent reading while it is being initialized.
-        </span><span class="kw">let </span><span class="kw-2">mut </span>connection_init = <span class="self">self</span>.connection_init.lock().<span class="kw">await</span>;
-
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(connection) = <span class="self">self</span>.connection.get() {
-            <span class="kw">return </span><span class="prelude-val">Ok</span>(connection);
-        }
-
-        <span class="kw">let </span>init_fn = connection_init.take().unwrap();
-        <span class="kw">let </span>connection = init_fn()<span class="question-mark">?</span>.build().<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="self">self</span>.connection.set(connection).unwrap();
-
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.connection.get().unwrap())
-    }
+        <span class="self">self</span>.connection
+            .get_or_try_init(|| <span class="kw">async </span>{
+                <span class="kw">let </span>connection_init = <span class="self">self</span>.connection_init.lock().unwrap().take().unwrap();
+                <span class="kw">let </span>connection = connection_init()<span class="question-mark">?</span>.build().<span class="kw">await</span><span class="question-mark">?</span>;
+                <span class="prelude-val">Ok</span>(connection)
+            })
+            .<span class="kw">await
+    </span>}
 
     <span class="kw">async fn </span>interface_ref&lt;I: zbus::Interface&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;InterfaceRef&lt;I&gt;&gt; {
         <span class="self">self</span>.get_or_init_connection()
@@ -1504,7 +1491,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; Server&lt;T&gt;
 <span class="kw">where
-    </span>T: TrackListInterface + Send + Sync + <span class="lifetime">&#39;static</span>,
+    </span>T: TrackListInterface + <span class="lifetime">&#39;static</span>,
 {
     <span class="doccomment">/// Creates a new [`Server`] with the given bus name suffix and
     /// implementation, which must implement [`TrackListInterface`] in addition
@@ -1513,12 +1500,7 @@
     /// See also [`Server::new`].
     </span><span class="kw">pub fn </span>new_with_track_list(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="self">Self</span>::new_inner(bus_name_suffix, imp, |builder, imp| {
-            builder.serve_at(
-                OBJECT_PATH,
-                RawTrackListInterface {
-                    imp: Arc::clone(<span class="kw-2">&amp;</span>imp),
-                },
-            )
+            builder.serve_at(OBJECT_PATH, RawTrackListInterface { imp })
         })
     }
 
@@ -1534,7 +1516,7 @@
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>changed = HashMap::new();
         <span class="kw">for </span>property <span class="kw">in </span>properties.into().iter() {
-            <span class="macro">handle_property!</span>(
+            <span class="macro">insert_property!</span>(
                 property, TrackListProperty, <span class="self">self </span>=&gt;
                 changed, Tracks, tracks;
                 changed, CanEditTracks, can_edit_tracks
@@ -1552,7 +1534,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; Server&lt;T&gt;
 <span class="kw">where
-    </span>T: PlaylistsInterface + Send + Sync + <span class="lifetime">&#39;static</span>,
+    </span>T: PlaylistsInterface + <span class="lifetime">&#39;static</span>,
 {
     <span class="doccomment">/// Creates a new [`Server`] with the given bus name suffix and
     /// implementation, which must implement [`PlaylistsInterface`] in addition
@@ -1561,12 +1543,7 @@
     /// See also [`Server::new`].
     </span><span class="kw">pub fn </span>new_with_playlists(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="self">Self</span>::new_inner(bus_name_suffix, imp, |builder, imp| {
-            builder.serve_at(
-                OBJECT_PATH,
-                RawPlaylistsInterface {
-                    imp: Arc::clone(<span class="kw-2">&amp;</span>imp),
-                },
-            )
+            builder.serve_at(OBJECT_PATH, RawPlaylistsInterface { imp })
         })
     }
 
@@ -1579,7 +1556,7 @@
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>changed = HashMap::new();
         <span class="kw">for </span>property <span class="kw">in </span>properties.into().iter() {
-            <span class="macro">handle_property!</span>(
+            <span class="macro">insert_property!</span>(
                 property, PlaylistsProperty, <span class="self">self </span>=&gt;
                 changed, PlaylistCount, playlist_count;
                 changed, Orderings, orderings;
@@ -1598,7 +1575,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; Server&lt;T&gt;
 <span class="kw">where
-    </span>T: TrackListInterface + PlaylistsInterface + Send + Sync + <span class="lifetime">&#39;static</span>,
+    </span>T: TrackListInterface + PlaylistsInterface + <span class="lifetime">&#39;static</span>,
 {
     <span class="doccomment">/// Creates a new [`Server`] with the given bus name suffix and
     /// implementation, which must implement [`TrackListInterface`] and
@@ -1615,12 +1592,7 @@
                         imp: Arc::clone(<span class="kw-2">&amp;</span>imp),
                     },
                 )<span class="question-mark">?
-                </span>.serve_at(
-                    OBJECT_PATH,
-                    RawPlaylistsInterface {
-                        imp: Arc::clone(<span class="kw-2">&amp;</span>imp),
-                    },
-                )
+                </span>.serve_at(OBJECT_PATH, RawPlaylistsInterface { imp })
         })
     }
 }
@@ -1711,11 +1683,11 @@
             <span class="macro">unreachable!</span>()
         }
 
-        <span class="kw">async fn </span>seek(<span class="kw-2">&amp;</span><span class="self">self</span>, _offset: TimeInUs) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">async fn </span>seek(<span class="kw-2">&amp;</span><span class="self">self</span>, _offset: Time) -&gt; fdo::Result&lt;()&gt; {
             <span class="macro">unreachable!</span>()
         }
 
-        <span class="kw">async fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, _track_id: TrackId, _position: TimeInUs) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">async fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, _track_id: TrackId, _position: Time) -&gt; fdo::Result&lt;()&gt; {
             <span class="macro">unreachable!</span>()
         }
 
@@ -1763,7 +1735,7 @@
             <span class="macro">unreachable!</span>()
         }
 
-        <span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;TimeInUs&gt; {
+        <span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Time&gt; {
             <span class="macro">unreachable!</span>()
         }
 

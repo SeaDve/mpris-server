@@ -967,6 +967,9 @@
 <a href="#967" id="967">967</a>
 <a href="#968" id="968">968</a>
 <a href="#969" id="969">969</a>
+<a href="#970" id="970">970</a>
+<a href="#971" id="971">971</a>
+<a href="#972" id="972">972</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::cell::{Cell, Ref, RefCell};
 
 <span class="kw">use </span>async_trait::async_trait;
@@ -974,11 +977,14 @@
 
 <span class="kw">use crate</span>::{
     LocalPlayerInterface, LocalRootInterface, LocalServer, LoopStatus, Metadata, PlaybackRate,
-    PlaybackStatus, Property, TimeInUs, TrackId, Volume,
+    PlaybackStatus, Property, Time, TrackId, Volume,
 };
 
-<span class="doccomment">/// Ready-made mutable object that internally implements [`LocalRootInterface`]
-/// and [`LocalPlayerInterface`].
+<span class="doccomment">/// Ready-to-use mutable object that internally implements
+/// [`LocalRootInterface`] and [`LocalPlayerInterface`].
+///
+/// This automatically emits properties changed signal and allows you to connect
+/// to method and property setter calls.
 </span><span class="attr">#[derive(Debug)]
 </span><span class="kw">pub struct </span>Player {
     server: LocalServer&lt;Inner&gt;,
@@ -1005,8 +1011,8 @@
     play_pause_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn()&gt;&gt;&gt;,
     stop_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn()&gt;&gt;&gt;,
     play_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn()&gt;&gt;&gt;,
-    seek_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(TimeInUs)&gt;&gt;&gt;,
-    set_position_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>TrackId, TimeInUs)&gt;&gt;&gt;,
+    seek_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(Time)&gt;&gt;&gt;,
+    set_position_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>TrackId, Time)&gt;&gt;&gt;,
     open_uri_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>str)&gt;&gt;&gt;,
     set_loop_status_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(LoopStatus)&gt;&gt;&gt;, <span class="comment">// Property
     </span>set_rate_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(PlaybackRate)&gt;&gt;&gt;,      <span class="comment">// Property
@@ -1018,7 +1024,7 @@
     shuffle: Cell&lt;bool&gt;,
     metadata: RefCell&lt;Metadata&gt;,
     volume: Cell&lt;Volume&gt;,
-    position: Cell&lt;TimeInUs&gt;,
+    position: Cell&lt;Time&gt;,
     minimum_rate: Cell&lt;PlaybackRate&gt;,
     maximum_rate: Cell&lt;PlaybackRate&gt;,
     can_go_next: Cell&lt;bool&gt;,
@@ -1133,14 +1139,14 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>seek(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: TimeInUs) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>seek(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: Time) -&gt; fdo::Result&lt;()&gt; {
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.seek_cbs.borrow().iter() {
             cb(offset);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId, position: TimeInUs) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId, position: Time) -&gt; fdo::Result&lt;()&gt; {
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.set_position_cbs.borrow().iter() {
             cb(<span class="kw-2">&amp;</span>track_id, position);
         }
@@ -1206,7 +1212,7 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;TimeInUs&gt; {
+    <span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Time&gt; {
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.position.get())
     }
 
@@ -1262,7 +1268,7 @@
             shuffle: <span class="bool-val">false</span>,
             metadata: Metadata::new(),
             volume: <span class="number">1.0</span>,
-            position: <span class="number">0</span>,
+            position: Time::ZERO,
             minimum_rate: <span class="number">1.0</span>,
             maximum_rate: <span class="number">1.0</span>,
             can_go_next: <span class="bool-val">false</span>,
@@ -1472,11 +1478,11 @@
         <span class="self">self</span>.server.imp().play_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_seek(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(TimeInUs) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_seek(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(Time) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server.imp().seek_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>TrackId, TimeInUs) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>TrackId, Time) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server
             .imp()
             .set_position_cbs
@@ -1524,7 +1530,7 @@
             .push(Box::new(cb));
     }
 
-    <span class="kw">pub async fn </span>emit_seeked(<span class="kw-2">&amp;</span><span class="self">self</span>, position: TimeInUs) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>emit_seeked(<span class="kw-2">&amp;</span><span class="self">self</span>, position: Time) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.server.seeked(position).<span class="kw">await
     </span>}
 
@@ -1608,11 +1614,11 @@
         <span class="self">self</span>.server.properties_changed(Property::Volume).<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TimeInUs {
+    <span class="kw">pub fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Time {
         <span class="self">self</span>.server.imp().position.get()
     }
 
-    <span class="kw">pub async fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, position: TimeInUs) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, position: Time) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.position() == position {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1746,7 +1752,7 @@
     shuffle: bool,
     metadata: Metadata,
     volume: Volume,
-    position: TimeInUs,
+    position: Time,
     minimum_rate: PlaybackRate,
     maximum_rate: PlaybackRate,
     can_go_next: bool,
@@ -1842,7 +1848,7 @@
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>position(<span class="kw-2">mut </span><span class="self">self</span>, position: TimeInUs) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>position(<span class="kw-2">mut </span><span class="self">self</span>, position: Time) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.position = position;
         <span class="self">self
     </span>}

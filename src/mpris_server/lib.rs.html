@@ -649,9 +649,25 @@
 <a href="#649" id="649">649</a>
 <a href="#650" id="650">650</a>
 <a href="#651" id="651">651</a>
+<a href="#652" id="652">652</a>
+<a href="#653" id="653">653</a>
+<a href="#654" id="654">654</a>
+<a href="#655" id="655">655</a>
+<a href="#656" id="656">656</a>
+<a href="#657" id="657">657</a>
+<a href="#658" id="658">658</a>
+<a href="#659" id="659">659</a>
+<a href="#660" id="660">660</a>
+<a href="#661" id="661">661</a>
 </pre></div><pre class="rust"><code><span class="attr">#![warn(rust_2018_idioms)]
 #![deny(rustdoc::broken_intra_doc_links)]
 #![doc = <span class="macro">include_str!</span>(<span class="string">&quot;../README.md&quot;</span>)]
+
+</span><span class="comment">// TODO:
+// * Document public interface
+// * Replace `DateTime`, and `Uri` with proper types
+// * Add getter on Metadata
+// * Profile if inlining is worth it
 
 </span><span class="kw">mod </span>local_server;
 <span class="kw">mod </span>loop_status;
@@ -662,6 +678,7 @@
 <span class="kw">mod </span>playlist_ordering;
 <span class="kw">mod </span>property;
 <span class="kw">mod </span>server;
+<span class="kw">mod </span>time;
 <span class="kw">mod </span>track_id;
 
 <span class="kw">use </span>async_trait::async_trait;
@@ -677,15 +694,21 @@
     playlist_ordering::PlaylistOrdering,
     property::{PlaylistsProperty, Property, TrackListProperty},
     server::Server,
+    time::Time,
     track_id::TrackId,
 };
 
-<span class="kw">pub mod </span>export {
+<span class="doccomment">/// This contains libraries that are used alongside with this crate.
+</span><span class="kw">pub mod </span>export {
     <span class="kw">pub use </span>async_trait;
     <span class="kw">pub use </span>zbus;
 }
 
-<span class="kw">pub mod </span>builder {
+<span class="doccomment">/// This contains the definitions of builder-pattern structs.
+///
+/// The `builder` methods on the objects must be used instead to construct
+/// these builder-pattern structs.
+</span><span class="kw">pub mod </span>builder {
     <span class="kw">pub use crate</span>::{metadata::MetadataBuilder, player::PlayerBuilder};
 }
 
@@ -780,9 +803,9 @@
 
             <span class="kw">async fn </span>play(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt;;
 
-            <span class="kw">async fn </span>seek(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: TimeInUs) -&gt; fdo::Result&lt;()&gt;;
+            <span class="kw">async fn </span>seek(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: Time) -&gt; fdo::Result&lt;()&gt;;
 
-            <span class="kw">async fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId, position: TimeInUs) -&gt; fdo::Result&lt;()&gt;;
+            <span class="kw">async fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId, position: Time) -&gt; fdo::Result&lt;()&gt;;
 
             <span class="kw">async fn </span>open_uri(<span class="kw-2">&amp;</span><span class="self">self</span>, uri: String) -&gt; fdo::Result&lt;()&gt;;
 
@@ -806,7 +829,7 @@
 
             <span class="kw">async fn </span>set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, volume: Volume) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
 
-            <span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;TimeInUs&gt;;
+            <span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Time&gt;;
 
             <span class="kw">async fn </span>minimum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackRate&gt;;
 
@@ -881,7 +904,7 @@
 
 </span><span class="doccomment">/// Used to implement `org.mpris.MediaPlayer2` interface.
 </span><span class="attr">#[async_trait]
-</span><span class="kw">pub trait </span>RootInterface {
+</span><span class="kw">pub trait </span>RootInterface: Send + Sync {
     <span class="doccomment">/// Brings the media player&#39;s user interface to the front using any
     /// appropriate mechanism available.
     ///
@@ -958,10 +981,10 @@
     </span><span class="kw">async fn </span>play(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt;;
 
     <span class="attr">#[doc(alias = <span class="string">&quot;Seek&quot;</span>)]
-    </span><span class="kw">async fn </span>seek(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: TimeInUs) -&gt; fdo::Result&lt;()&gt;;
+    </span><span class="kw">async fn </span>seek(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: Time) -&gt; fdo::Result&lt;()&gt;;
 
     <span class="attr">#[doc(alias = <span class="string">&quot;SetPosition&quot;</span>)]
-    </span><span class="kw">async fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId, position: TimeInUs) -&gt; fdo::Result&lt;()&gt;;
+    </span><span class="kw">async fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId, position: Time) -&gt; fdo::Result&lt;()&gt;;
 
     <span class="attr">#[doc(alias = <span class="string">&quot;OpenUri&quot;</span>)]
     </span><span class="kw">async fn </span>open_uri(<span class="kw-2">&amp;</span><span class="self">self</span>, uri: String) -&gt; fdo::Result&lt;()&gt;;
@@ -997,7 +1020,7 @@
     </span><span class="kw">async fn </span>set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, volume: Volume) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
 
     <span class="attr">#[doc(alias = <span class="string">&quot;Position&quot;</span>)]
-    </span><span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;TimeInUs&gt;;
+    </span><span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Time&gt;;
 
     <span class="attr">#[doc(alias = <span class="string">&quot;MinimumRate&quot;</span>)]
     </span><span class="kw">async fn </span>minimum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackRate&gt;;
@@ -1122,8 +1145,8 @@
     /// If the [`CanEditTracks`] property is false, this has no effect.
     ///
     /// Note: Clients should not assume that the track has been removed at the
-    /// time when this method returns. They should wait for a [`TrackRemoved`] (or
-    /// TrackListReplaced) signal.
+    /// time when this method returns. They should wait for a [`TrackRemoved`]
+    /// (or TrackListReplaced) signal.
     ///
     /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`]: TrackId::NO_TRACK
     /// [`CanEditTracks`]: Self::can_edit_tracks
@@ -1153,11 +1176,12 @@
     <span class="doccomment">/// An array which contains the identifier of each track in the tracklist,
     /// in order.
     ///
-    /// The `org.freedesktop.DBus.Properties.PropertiesChanged` signal is emitted
-    /// every time this property changes, but the signal message does not
-    /// contain the new value. Client implementations should rather rely on the
-    /// [`TrackAdded`], [`TrackRemoved`] and [`TrackListReplaced`] signals to
-    /// keep their representation of the tracklist up to date.
+    /// The `org.freedesktop.DBus.Properties.PropertiesChanged` signal is
+    /// emitted every time this property changes, but the signal message
+    /// does not contain the new value. Client implementations should rather
+    /// rely on the [`TrackAdded`], [`TrackRemoved`] and
+    /// [`TrackListReplaced`] signals to keep their representation of the
+    /// tracklist up to date.
     ///
     /// [`TrackAdded`]: Server::track_added
     /// [`TrackRemoved`]: Server::track_removed
@@ -1244,9 +1268,9 @@
     /// will be false, and the Playlist details are undefined.
     ///
     /// Note that this may not have a value even after [`ActivatePlaylist`] is
-    /// called with a valid playlist id as [`ActivatePlaylist`] implementations have
-    /// the option of simply inserting the contents of the playlist into the
-    /// current tracklist.
+    /// called with a valid playlist id as [`ActivatePlaylist`] implementations
+    /// have the option of simply inserting the contents of the playlist
+    /// into the current tracklist.
     ///
     /// [`ActivatePlaylist`]: Self::activate_playlist
     </span><span class="attr">#[doc(alias = <span class="string">&quot;ActivePlaylist&quot;</span>)]
@@ -1277,10 +1301,6 @@
 /// Note that the volume may be higher than 1.0, although generally
 /// clients should not attempt to set it above 1.0.
 </span><span class="kw">pub type </span>Volume = f64;
-
-<span class="doccomment">/// Time in microseconds.
-</span><span class="attr">#[doc(alias = <span class="string">&quot;Time_In_Us&quot;</span>)]
-</span><span class="kw">pub type </span>TimeInUs = i64;
 
 <span class="doccomment">/// Unique playlist identifier.
 ///

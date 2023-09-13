@@ -102,7 +102,8 @@
 <a href="#102" id="102">102</a>
 <a href="#103" id="103">103</a>
 <a href="#104" id="104">104</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>std::fmt;
+<a href="#105" id="105">105</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>std::{fmt, ops};
 
 <span class="kw">use </span>serde::{de, Deserialize, Deserializer, Serialize};
 <span class="kw">use </span>zbus::zvariant::{Error, ObjectPath, <span class="prelude-ty">Result</span>, Type, Value};
@@ -129,6 +130,7 @@
 /// to the specification where tracks are exported to D-Bus with an
 /// interface similar to org.gnome.UPnP.MediaItem2.
 </span><span class="attr">#[derive(Debug, Default, Clone, PartialEq, Eq, Hash, Serialize, Type)]
+#[serde(transparent)]
 #[doc(alias = <span class="string">&quot;Track_Id&quot;</span>)]
 </span><span class="kw">pub struct </span>TrackId(ObjectPath&lt;<span class="lifetime">&#39;static</span>&gt;);
 
@@ -142,7 +144,7 @@
     </span>}
 }
 
-<span class="kw">impl </span>std::ops::Deref <span class="kw">for </span>TrackId {
+<span class="kw">impl </span>ops::Deref <span class="kw">for </span>TrackId {
     <span class="kw">type </span>Target = ObjectPath&lt;<span class="lifetime">&#39;static</span>&gt;;
 
     <span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Target {
@@ -150,13 +152,13 @@
     </span>}
 }
 
-<span class="kw">impl </span>std::convert::From&lt;TrackId&gt; <span class="kw">for </span>ObjectPath&lt;<span class="lifetime">&#39;static</span>&gt; {
+<span class="kw">impl </span>From&lt;TrackId&gt; <span class="kw">for </span>ObjectPath&lt;<span class="lifetime">&#39;static</span>&gt; {
     <span class="kw">fn </span>from(o: TrackId) -&gt; <span class="self">Self </span>{
         o.into_inner()
     }
 }
 
-<span class="kw">impl </span>std::convert::From&lt;TrackId&gt; <span class="kw">for </span>Value&lt;<span class="lifetime">&#39;static</span>&gt; {
+<span class="kw">impl </span>From&lt;TrackId&gt; <span class="kw">for </span>Value&lt;<span class="lifetime">&#39;static</span>&gt; {
     <span class="kw">fn </span>from(o: TrackId) -&gt; <span class="self">Self </span>{
         o.into_inner().into()
     }
@@ -168,7 +170,7 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; std::convert::From&lt;ObjectPath&lt;<span class="lifetime">&#39;a</span>&gt;&gt; <span class="kw">for </span>TrackId {
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; From&lt;ObjectPath&lt;<span class="lifetime">&#39;a</span>&gt;&gt; <span class="kw">for </span>TrackId {
     <span class="kw">fn </span>from(o: ObjectPath&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; <span class="self">Self </span>{
         TrackId(o.into_owned())
     }
@@ -201,8 +203,8 @@
     }
 }
 
-<span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>TrackId {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+<span class="kw">impl </span>fmt::Display <span class="kw">for </span>TrackId {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
         fmt::Display::fmt(<span class="kw-2">&amp;</span><span class="self">self</span>.as_str(), f)
     }
 }

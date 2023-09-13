@@ -936,7 +936,6 @@
 <a href="#936" id="936">936</a>
 <a href="#937" id="937">937</a>
 <a href="#938" id="938">938</a>
-<a href="#939" id="939">939</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{cell::RefCell, fmt, future::Future, marker::PhantomData, pin::Pin, rc::Rc};
 
 <span class="kw">use </span>async_trait::async_trait;
@@ -948,8 +947,8 @@
 <span class="kw">use crate</span>::{
     LocalPlayerInterface, LocalPlaylistsInterface, LocalTrackListInterface, LoopStatus,
     MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, Playlist, PlaylistId,
-    PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, Property, RootInterface, Server,
-    TimeInUs, TrackId, TrackListInterface, TrackListProperty, Uri, Volume,
+    PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, Property, RootInterface, Server, Time,
+    TrackId, TrackListInterface, TrackListProperty, Uri, Volume,
 };
 
 <span class="kw">enum </span>RootAction {
@@ -978,8 +977,8 @@
     PlayPause(oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
     Stop(oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
     Play(oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
-    Seek(TimeInUs, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
-    SetPosition(TrackId, TimeInUs, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
+    Seek(Time, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
+    SetPosition(TrackId, Time, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
     OpenUri(String, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
 
     <span class="comment">// Properties
@@ -993,7 +992,7 @@
     Metadata(oneshot::Sender&lt;fdo::Result&lt;Metadata&gt;&gt;),
     Volume(oneshot::Sender&lt;fdo::Result&lt;Volume&gt;&gt;),
     SetVolume(Volume, oneshot::Sender&lt;<span class="prelude-ty">Result</span>&lt;()&gt;&gt;),
-    Position(oneshot::Sender&lt;fdo::Result&lt;TimeInUs&gt;&gt;),
+    Position(oneshot::Sender&lt;fdo::Result&lt;Time&gt;&gt;),
     MinimumRate(oneshot::Sender&lt;fdo::Result&lt;PlaybackRate&gt;&gt;),
     MaximumRate(oneshot::Sender&lt;fdo::Result&lt;PlaybackRate&gt;&gt;),
     CanGoNext(oneshot::Sender&lt;fdo::Result&lt;bool&gt;&gt;),
@@ -1182,13 +1181,13 @@
         rx.<span class="kw">await</span>.unwrap()
     }
 
-    <span class="kw">async fn </span>seek(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: TimeInUs) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>seek(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: Time) -&gt; fdo::Result&lt;()&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
         <span class="self">self</span>.send_player(PlayerAction::Seek(offset, tx));
         rx.<span class="kw">await</span>.unwrap()
     }
 
-    <span class="kw">async fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId, position: TimeInUs) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId, position: Time) -&gt; fdo::Result&lt;()&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
         <span class="self">self</span>.send_player(PlayerAction::SetPosition(track_id, position, tx));
         rx.<span class="kw">await</span>.unwrap()
@@ -1260,7 +1259,7 @@
         rx.<span class="kw">await</span>.unwrap()
     }
 
-    <span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;TimeInUs&gt; {
+    <span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Time&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
         <span class="self">self</span>.send_player(PlayerAction::Position(tx));
         rx.<span class="kw">await</span>.unwrap()
@@ -1417,8 +1416,18 @@
 
 <span class="macro">macro_rules! </span>signal_delegate {
     (<span class="macro-nonterminal">$name</span>:ident($(<span class="macro-nonterminal">$arg_name</span>:ident: <span class="macro-nonterminal">$arg_ty</span>:ty),<span class="kw-2">*</span>)) =&gt; {
-        <span class="kw">pub async fn </span><span class="macro-nonterminal">$name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, $(<span class="macro-nonterminal">$arg_name</span>: <span class="macro-nonterminal">$arg_ty</span>),<span class="kw-2">*</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="attr">#[inline]
+        </span><span class="kw">pub async fn </span><span class="macro-nonterminal">$name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, $(<span class="macro-nonterminal">$arg_name</span>: <span class="macro-nonterminal">$arg_ty</span>),<span class="kw-2">*</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
             <span class="self">self</span>.inner.<span class="macro-nonterminal">$name</span>($(<span class="macro-nonterminal">$arg_name</span>),<span class="kw-2">*</span>).<span class="kw">await
+        </span>}
+    };
+}
+
+<span class="macro">macro_rules! </span>properties_changed_delegate {
+    (<span class="macro-nonterminal">$name</span>:ident, <span class="macro-nonterminal">$property_ty</span>:ty) =&gt; {
+        <span class="attr">#[inline]
+        </span><span class="kw">pub async fn </span><span class="macro-nonterminal">$name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, properties: <span class="kw">impl </span>Into&lt;BitFlags&lt;<span class="macro-nonterminal">$property_ty</span>&gt;&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+            <span class="self">self</span>.inner.<span class="macro-nonterminal">$name</span>(properties).<span class="kw">await
         </span>}
     };
 }
@@ -1480,29 +1489,28 @@
         })
     }
 
-    <span class="kw">pub fn </span>imp(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>T {
+    <span class="doccomment">/// Returns a reference to the inner implementation.
+    </span><span class="kw">pub fn </span>imp(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>T {
         <span class="kw-2">&amp;</span><span class="self">self</span>.imp
     }
 
-    <span class="kw">pub async fn </span>run(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="self">self</span>.inner.init().<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">let </span>runner = <span class="self">self
-            </span>.runner
-            .take()
-            .expect(<span class="string">&quot;LocalServer must not be ran twice&quot;</span>);
-        runner.<span class="kw">await</span>;
+    <span class="doccomment">/// Run the server. This method will continually run until the server is
+    /// dropped.
+    ///
+    /// This is no-op and returns [Ok] immediately if the server is already
+    /// running.
+    </span><span class="kw">pub async fn </span>run(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(runner) = <span class="self">self</span>.runner.take() {
+            <span class="self">self</span>.inner.init().<span class="kw">await</span><span class="question-mark">?</span>;
+            runner.<span class="kw">await</span>;
+        }
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="comment">// org.mpris.MediaPlayer2.Player
-    </span><span class="macro">signal_delegate!</span>(seeked(position: TimeInUs));
+    </span><span class="macro">signal_delegate!</span>(seeked(position: Time));
 
-    <span class="kw">pub async fn </span>properties_changed(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        properties: <span class="kw">impl </span>Into&lt;BitFlags&lt;Property&gt;&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="self">self</span>.inner.properties_changed(properties).<span class="kw">await
-    </span>}
+    <span class="macro">properties_changed_delegate!</span>(properties_changed, Property);
 
     <span class="kw">async fn </span>handle_root_action(imp: <span class="kw-2">&amp;</span>T, action: RootAction) {
         <span class="kw">match </span>action {
@@ -1722,12 +1730,7 @@
     <span class="macro">signal_delegate!</span>(track_removed(track_id: TrackId));
     <span class="macro">signal_delegate!</span>(track_metadata_changed(track_id: TrackId, metadata: Metadata));
 
-    <span class="kw">pub async fn </span>track_list_properties_changed(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        properties: <span class="kw">impl </span>Into&lt;BitFlags&lt;TrackListProperty&gt;&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="self">self</span>.inner.track_list_properties_changed(properties).<span class="kw">await
-    </span>}
+    <span class="macro">properties_changed_delegate!</span>(track_list_properties_changed, TrackListProperty);
 
     <span class="kw">async fn </span>handle_track_list_action(imp: <span class="kw-2">&amp;</span>T, action: TrackListAction) {
         <span class="kw">match </span>action {
@@ -1801,12 +1804,7 @@
 
     <span class="macro">signal_delegate!</span>(playlist_changed(playlist: Playlist));
 
-    <span class="kw">pub async fn </span>playlists_properties_changed(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        properties: <span class="kw">impl </span>Into&lt;BitFlags&lt;PlaylistsProperty&gt;&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="self">self</span>.inner.playlists_properties_changed(properties).<span class="kw">await
-    </span>}
+    <span class="macro">properties_changed_delegate!</span>(playlists_properties_changed, PlaylistsProperty);
 
     <span class="kw">async fn </span>handle_playlists_actions(imp: <span class="kw-2">&amp;</span>T, action: PlaylistsAction) {
         <span class="kw">match </span>action {
