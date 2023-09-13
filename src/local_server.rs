@@ -478,8 +478,18 @@ where
 
 macro_rules! signal_delegate {
     ($name:ident($($arg_name:ident: $arg_ty:ty),*)) => {
+        #[inline]
         pub async fn $name(&self, $($arg_name: $arg_ty),*) -> Result<()> {
             self.inner.$name($($arg_name),*).await
+        }
+    };
+}
+
+macro_rules! properties_changed_delegate {
+    ($name:ident, $property_ty:ty) => {
+        #[inline]
+        pub async fn $name(&self, properties: impl Into<BitFlags<$property_ty>>) -> Result<()> {
+            self.inner.$name(properties).await
         }
     };
 }
@@ -558,12 +568,7 @@ where
     // org.mpris.MediaPlayer2.Player
     signal_delegate!(seeked(position: Time));
 
-    pub async fn properties_changed(
-        &self,
-        properties: impl Into<BitFlags<Property>>,
-    ) -> Result<()> {
-        self.inner.properties_changed(properties).await
-    }
+    properties_changed_delegate!(properties_changed, Property);
 
     async fn handle_root_action(imp: &T, action: RootAction) {
         match action {
@@ -783,12 +788,7 @@ where
     signal_delegate!(track_removed(track_id: TrackId));
     signal_delegate!(track_metadata_changed(track_id: TrackId, metadata: Metadata));
 
-    pub async fn track_list_properties_changed(
-        &self,
-        properties: impl Into<BitFlags<TrackListProperty>>,
-    ) -> Result<()> {
-        self.inner.track_list_properties_changed(properties).await
-    }
+    properties_changed_delegate!(track_list_properties_changed, TrackListProperty);
 
     async fn handle_track_list_action(imp: &T, action: TrackListAction) {
         match action {
@@ -862,12 +862,7 @@ where
 
     signal_delegate!(playlist_changed(playlist: Playlist));
 
-    pub async fn playlists_properties_changed(
-        &self,
-        properties: impl Into<BitFlags<PlaylistsProperty>>,
-    ) -> Result<()> {
-        self.inner.playlists_properties_changed(properties).await
-    }
+    properties_changed_delegate!(playlists_properties_changed, PlaylistsProperty);
 
     async fn handle_playlists_actions(imp: &T, action: PlaylistsAction) {
         match action {
