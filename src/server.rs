@@ -29,7 +29,7 @@ struct RawRootInterface<T> {
 #[dbus_interface(name = "org.mpris.MediaPlayer2")]
 impl<T> RawRootInterface<T>
 where
-    T: Send + Sync + RootInterface + 'static,
+    T: RootInterface + 'static,
 {
     async fn raise(&self) -> fdo::Result<()> {
         self.imp.raise().await
@@ -97,7 +97,7 @@ struct RawPlayerInterface<T> {
 #[dbus_interface(name = "org.mpris.MediaPlayer2.Player")]
 impl<T> RawPlayerInterface<T>
 where
-    T: Send + Sync + PlayerInterface + 'static,
+    T: PlayerInterface + 'static,
 {
     async fn next(&self) -> fdo::Result<()> {
         self.imp.next().await
@@ -241,7 +241,7 @@ struct RawTrackListInterface<T> {
 #[dbus_interface(name = "org.mpris.MediaPlayer2.TrackList")]
 impl<T> RawTrackListInterface<T>
 where
-    T: TrackListInterface + Send + Sync + 'static,
+    T: TrackListInterface + 'static,
 {
     async fn get_tracks_metadata(&self, track_ids: Vec<TrackId>) -> fdo::Result<Vec<Metadata>> {
         self.imp.get_tracks_metadata(track_ids).await
@@ -306,7 +306,7 @@ struct RawPlaylistsInterface<T> {
 #[dbus_interface(name = "org.mpris.MediaPlayer2.Playlists")]
 impl<T> RawPlaylistsInterface<T>
 where
-    T: PlaylistsInterface + Send + Sync + 'static,
+    T: PlaylistsInterface + 'static,
 {
     async fn activate_playlist(&self, playlist_id: PlaylistId) -> fdo::Result<()> {
         self.imp.activate_playlist(playlist_id).await
@@ -355,7 +355,7 @@ where
 /// [`Server::playlists_properties_changed`].
 pub struct Server<T>
 where
-    T: PlayerInterface + Send + Sync + 'static,
+    T: PlayerInterface + 'static,
 {
     connection: OnceCell<Connection>,
     #[allow(clippy::type_complexity)]
@@ -366,7 +366,7 @@ where
 
 impl<T> fmt::Debug for Server<T>
 where
-    T: PlayerInterface + Send + Sync + 'static,
+    T: PlayerInterface + 'static,
 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("Server").finish()
@@ -397,7 +397,7 @@ macro_rules! handle_property {
 
 impl<T> Server<T>
 where
-    T: PlayerInterface + Send + Sync + 'static,
+    T: PlayerInterface + 'static,
 {
     /// Creates a new [`Server`] with the given bus name suffix and
     /// implementation, which must implement [`RootInterface`] and
@@ -571,7 +571,7 @@ where
 
 impl<T> Server<T>
 where
-    T: TrackListInterface + Send + Sync + 'static,
+    T: TrackListInterface + 'static,
 {
     /// Creates a new [`Server`] with the given bus name suffix and
     /// implementation, which must implement [`TrackListInterface`] in addition
@@ -619,7 +619,7 @@ where
 
 impl<T> Server<T>
 where
-    T: PlaylistsInterface + Send + Sync + 'static,
+    T: PlaylistsInterface + 'static,
 {
     /// Creates a new [`Server`] with the given bus name suffix and
     /// implementation, which must implement [`PlaylistsInterface`] in addition
@@ -665,7 +665,7 @@ where
 
 impl<T> Server<T>
 where
-    T: TrackListInterface + PlaylistsInterface + Send + Sync + 'static,
+    T: TrackListInterface + PlaylistsInterface + 'static,
 {
     /// Creates a new [`Server`] with the given bus name suffix and
     /// implementation, which must implement [`TrackListInterface`] and

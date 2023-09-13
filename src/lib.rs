@@ -230,7 +230,7 @@ macro_rules! define_iface {
 
 /// Used to implement `org.mpris.MediaPlayer2` interface.
 #[async_trait]
-pub trait RootInterface {
+pub trait RootInterface: Send + Sync {
     /// Brings the media player's user interface to the front using any
     /// appropriate mechanism available.
     ///
