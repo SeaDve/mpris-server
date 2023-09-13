@@ -25,8 +25,11 @@ For more detailed examples, see also the [examples directory](https://github.com
 
 ```rust,ignore
 use mpris_server::{
-    export::{async_trait::async_trait, zbus::fdo},
-    Metadata, PlayerInterface, Property, RootInterface, Server, Time, TrackId,
+    export::{
+        async_trait::async_trait,
+        zbus::{fdo, Result},
+    },
+    Metadata, PlayerInterface, Property, RootInterface, Server, Time, Volume,
 };
 
 pub struct MyPlayer;
@@ -34,23 +37,30 @@ pub struct MyPlayer;
 #[async_trait]
 impl RootInterface for MyPlayer {
     async fn identity(&self) -> fdo::Result<String> {
-        unimplemented!()
+        Ok("MyPlayer".into())
     }
 
-    ...
+    // Other methods...
 }
 
 #[async_trait]
 impl PlayerInterface for MyPlayer {
-    async fn set_position(&self, track_id: TrackId, position: Time) -> fdo::Result<()> {
-        unimplemented!()
+    async fn set_volume(&self, volume: Volume) -> Result<()> {
+        self.volume.set(volume);
+        Ok(())
     }
 
     async fn metadata(&self) -> fdo::Result<Metadata> {
-        unimplemented!()
+        let metadata = Metadata::builder()
+            .title("My Song")
+            .artist(["My Artist"])
+            .album("My Album")
+            .length(Time::from_micros(123))
+            .build();
+        Ok(metadata)
     }
 
-    ...
+    // Other methods...
 }
 
 #[async_std::main]
