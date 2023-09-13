@@ -16,8 +16,11 @@
 <p>For more detailed examples, see also the <a href="https://github.com/SeaDve/mpris-server/tree/main/examples">examples directory</a>.</p>
 <h4 id="manual-implementation-via-server-or-localserver"><a href="#manual-implementation-via-server-or-localserver">Manual Implementation (via <code>Server</code> or <code>LocalServer</code>)</a></h4>
 <div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">use </span>mpris_server::{
-    export::{async_trait::async_trait, zbus::fdo},
-    Metadata, PlayerInterface, Property, RootInterface, Server, Time, TrackId,
+    export::{
+        async_trait::async_trait,
+        zbus::{fdo, <span class="prelude-ty">Result</span>},
+    },
+    Metadata, PlayerInterface, Property, RootInterface, Server, Time, Volume,
 };
 
 <span class="kw">pub struct </span>MyPlayer;
@@ -25,28 +28,35 @@
 <span class="attr">#[async_trait]
 </span><span class="kw">impl </span>RootInterface <span class="kw">for </span>MyPlayer {
     <span class="kw">async fn </span>identity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;String&gt; {
-        <span class="macro">unimplemented!</span>()
+        <span class="prelude-val">Ok</span>(<span class="string">&quot;MyPlayer&quot;</span>.into())
     }
 
-    ...
-}
+    <span class="comment">// Other methods...
+</span>}
 
 <span class="attr">#[async_trait]
 </span><span class="kw">impl </span>PlayerInterface <span class="kw">for </span>MyPlayer {
-    <span class="kw">async fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId, position: Time) -&gt; fdo::Result&lt;()&gt; {
-        <span class="macro">unimplemented!</span>()
+    <span class="kw">async fn </span>set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, volume: Volume) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="self">self</span>.volume.set(volume);
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="kw">async fn </span>metadata(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Metadata&gt; {
-        <span class="macro">unimplemented!</span>()
+        <span class="kw">let </span>metadata = Metadata::builder()
+            .title(<span class="string">&quot;My Song&quot;</span>)
+            .artist([<span class="string">&quot;My Artist&quot;</span>])
+            .album(<span class="string">&quot;My Album&quot;</span>)
+            .length(Time::from_micros(<span class="number">123</span>))
+            .build();
+        <span class="prelude-val">Ok</span>(metadata)
     }
 
-    ...
-}
+    <span class="comment">// Other methods...
+</span>}
 
 <span class="attr">#[async_std::main]
 </span><span class="kw">async fn </span>main() {
-    <span class="kw">let </span>server = Server::new(<span class="string">&quot;com.me.Application&quot;</span>, MyPlayer).unwrap();
+    <span class="kw">let </span>server = Server::new(<span class="string">&quot;com.my.Application&quot;</span>, MyPlayer).unwrap();
 
     <span class="comment">// Initialize server&#39;s connection to the session bus
     </span>server.init().<span class="kw">await</span>.unwrap();
@@ -61,11 +71,11 @@
 <p>If you want to create a simple player without having to implement the interfaces, you can use the ready-to-use <code>Player</code> struct that implements those interfaces internally. This struct is mutable, automatically emits properties changed signal, and allows you to connect to method and property setter calls.</p>
 <p>However, <code>Player</code> currently only supports the more commonly used <code>org.mpris.MediaPlayer2</code> and <code>org.mpris.MediaPlayer2.Player</code> interfaces.</p>
 
-<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">use </span>mpris_server::Player;
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">use </span>mpris_server::{Player, Time};
 
 <span class="attr">#[async_std::main]
 </span><span class="kw">async fn </span>main() {
-    <span class="kw">let </span>player = Player::builder(<span class="string">&quot;com.me.Application&quot;</span>)
+    <span class="kw">let </span>player = Player::builder(<span class="string">&quot;com.my.Application&quot;</span>)
         .can_play(<span class="bool-val">true</span>)
         .can_pause(<span class="bool-val">true</span>)
         .build()
@@ -74,6 +84,9 @@
     player.connect_play_pause(|| {
         <span class="macro">println!</span>(<span class="string">&quot;PlayPause&quot;</span>);
     });
+
+    player.set_can_play(<span class="bool-val">false</span>).<span class="kw">await</span>.unwrap();
+    player.emit_seeked(Time::from_millis(<span class="number">1000</span>)).<span class="kw">await</span>.unwrap();
 
     player.run().<span class="kw">await</span>.unwrap();
 }</code></pre></div>
