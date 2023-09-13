@@ -580,12 +580,7 @@ where
     /// See also [`Server::new`].
     pub fn new_with_track_list(bus_name_suffix: &str, imp: T) -> Result<Self> {
         Self::new_inner(bus_name_suffix, imp, |builder, imp| {
-            builder.serve_at(
-                OBJECT_PATH,
-                RawTrackListInterface {
-                    imp: Arc::clone(&imp),
-                },
-            )
+            builder.serve_at(OBJECT_PATH, RawTrackListInterface { imp })
         })
     }
 
@@ -628,12 +623,7 @@ where
     /// See also [`Server::new`].
     pub fn new_with_playlists(bus_name_suffix: &str, imp: T) -> Result<Self> {
         Self::new_inner(bus_name_suffix, imp, |builder, imp| {
-            builder.serve_at(
-                OBJECT_PATH,
-                RawPlaylistsInterface {
-                    imp: Arc::clone(&imp),
-                },
-            )
+            builder.serve_at(OBJECT_PATH, RawPlaylistsInterface { imp })
         })
     }
 
@@ -682,12 +672,7 @@ where
                         imp: Arc::clone(&imp),
                     },
                 )?
-                .serve_at(
-                    OBJECT_PATH,
-                    RawPlaylistsInterface {
-                        imp: Arc::clone(&imp),
-                    },
-                )
+                .serve_at(OBJECT_PATH, RawPlaylistsInterface { imp })
         })
     }
 }
