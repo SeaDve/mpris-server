@@ -3,16 +3,18 @@
 <a href="https://crates.io/crates/mpris-server"><img src="https://img.shields.io/crates/v/mpris-server" alt="crates.io" /></a>
 <a href="https://github.com/SeaDve/mpris-server/actions/workflows/ci.yml"><img src="https://github.com/SeaDve/mpris-server/actions/workflows/ci.yml/badge.svg" alt="CI" /></a></p>
 <p>Implement MPRIS D-Bus interface in your application.</p>
-<p>By implementing the MPRIS D-Bus interface, your application can be controlled by other applications that support MPRIS, such as GNOME Shell, KDE Plasma, and other media controllers.</p>
-<p>This library supports all the following interfaces as defined in the <a href="https://specifications.freedesktop.org/mpris-spec/2.2/index.html">MPRIS D-Bus Interface Specification v2</a>:</p>
+<p>This library provides the essential functionalities for implementing the <a href="https://specifications.freedesktop.org/mpris-spec/2.2/">MPRIS D-Bus interface</a>. This enables your application to become discoverable and controllable by other MPRIS-compatible media controllers, including but not limited to GNOME Shell, KDE Plasma, and other libraries such as <a href="https://github.com/Mange/mpris-rs"><code>mpris</code></a>.</p>
+<p>This library supports all the following interfaces as defined in the specification:</p>
 <ul>
 <li><a href="https://specifications.freedesktop.org/mpris-spec/2.2/Media_Player.html">org.mpris.MediaPlayer2</a></li>
 <li><a href="https://specifications.freedesktop.org/mpris-spec/2.2/Player_Interface.html">org.mpris.MediaPlayer2.Player</a></li>
 <li><a href="https://specifications.freedesktop.org/mpris-spec/2.2/Track_List_Interface.html">org.mpris.MediaPlayer2.TrackList</a></li>
 <li><a href="https://specifications.freedesktop.org/mpris-spec/2.2/Playlists_Interface.html">org.mpris.MediaPlayer2.Playlists</a></li>
 </ul>
-<p>To implement the MPRIS D-Bus Interface, this crate provides two flavors: you can either create a custom struct that implements <code>RootInterface</code> and <code>PlayerInterface</code>, or you can use the ready-to-use mutable <code>Player</code> struct.</p>
-<h3 id="examples"><a href="#examples">Examples</a></h3><h4 id="manual-implementation-via-server-or-localserver"><a href="#manual-implementation-via-server-or-localserver">Manual Implementation (via <code>Server</code> or <code>LocalServer</code>)</a></h4>
+<p>To implement these interfaces, this crate offers two flavors: you can either create your own struct and implement <code>RootInterface</code> and <code>PlayerInterface</code> (or with optional <code>TrackListInterface</code> and <code>PlaylistsInterface</code>), or you can use the ready-to-use mutable <code>Player</code> struct.</p>
+<h3 id="examples"><a href="#examples">Examples</a></h3>
+<p>For more detailed examples, see also the <a href="https://github.com/SeaDve/mpris-server/tree/main/examples">examples directory</a>.</p>
+<h4 id="manual-implementation-via-server-or-localserver"><a href="#manual-implementation-via-server-or-localserver">Manual Implementation (via <code>Server</code> or <code>LocalServer</code>)</a></h4>
 <div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">use </span>mpris_server::{
     export::{async_trait::async_trait, zbus::fdo},
     Metadata, PlayerInterface, Property, RootInterface, Server, Time, TrackId,
@@ -45,11 +47,16 @@
 <span class="attr">#[async_std::main]
 </span><span class="kw">async fn </span>main() {
     <span class="kw">let </span>server = Server::new(<span class="string">&quot;com.me.Application&quot;</span>, MyPlayer).unwrap();
-    server.init().<span class="kw">await</span>.unwrap();
-    server.properties_changed(Property::Position | Property::Metadata).<span class="kw">await</span>.unwrap();
-    server.seeked(Time::from_micros(<span class="number">124</span>)).<span class="kw">await</span>.unwrap();
+
+    <span class="comment">// Initialize server&#39;s connection to the session bus
+    </span>server.init().<span class="kw">await</span>.unwrap();
+
+    <span class="comment">// Emit `PropertiesChanged` signal for `Position` and `Metadata` properties
+    </span>server.properties_changed(Property::Position | Property::Metadata).<span class="kw">await</span>.unwrap();
+
+    <span class="comment">// Emit `Seeked` signal
+    </span>server.seeked(Time::from_micros(<span class="number">124</span>)).<span class="kw">await</span>.unwrap();
 }</code></pre></div>
-<p>For more examples, see the <a href="https://github.com/SeaDve/mpris-server/tree/main/examples">examples directory</a>.</p>
 <h4 id="ready-to-use-implementation-via-player"><a href="#ready-to-use-implementation-via-player">Ready-to-use Implementation (via <code>Player</code>)</a></h4>
 <p>If you want to create a simple player without having to implement the interfaces, you can use the ready-to-use <code>Player</code> struct that implements those interfaces internally. This struct is mutable, automatically emits properties changed signal, and allows you to connect to method and property setter calls.</p>
 <p>However, <code>Player</code> currently only supports the more commonly used <code>org.mpris.MediaPlayer2</code> and <code>org.mpris.MediaPlayer2.Player</code> interfaces.</p>
