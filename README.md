@@ -19,6 +19,8 @@ To implement these interfaces, this crate offers two flavors: you can either cre
 
 ## Examples
 
+For more detailed examples, see also the [examples directory](https://github.com/SeaDve/mpris-server/tree/main/examples).
+
 ### Manual Implementation (via `Server` or `LocalServer`)
 
 ```rust,ignore
@@ -65,8 +67,6 @@ async fn main() {
     server.seeked(Time::from_micros(124)).await.unwrap();
 }
 ```
-
-For more examples, see the [examples directory](https://github.com/SeaDve/mpris-server/tree/main/examples).
 
 ### Ready-to-use Implementation (via `Player`)
 
