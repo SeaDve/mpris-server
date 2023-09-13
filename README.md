@@ -54,8 +54,14 @@ impl PlayerInterface for MyPlayer {
 #[async_std::main]
 async fn main() {
     let server = Server::new("com.me.Application", MyPlayer).unwrap();
+
+    // Initialize server's connection to the session bus
     server.init().await.unwrap();
+
+    // Emit `PropertiesChanged` signal for `Position` and `Metadata` properties
     server.properties_changed(Property::Position | Property::Metadata).await.unwrap();
+
+    // Emit `Seeked` signal
     server.seeked(Time::from_micros(124)).await.unwrap();
 }
 ```

@@ -294,5 +294,7 @@ impl LocalPlaylistsInterface for Player {
 #[async_std::main]
 async fn main() {
     let server = LocalServer::new_with_all("Test.Application", Player).unwrap();
+
+    // Run the server indefinitely. This will init the connection to the session bus
     server.run().await.unwrap();
 }
