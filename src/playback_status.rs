@@ -16,6 +16,7 @@ pub enum PlaybackStatus {
 }
 
 impl PlaybackStatus {
+    /// Returns the string representation of this playback status.
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::Playing => "Playing",

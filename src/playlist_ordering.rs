@@ -27,6 +27,7 @@ pub enum PlaylistOrdering {
 }
 
 impl PlaylistOrdering {
+    /// Returns the string representation of this playlist ordering.
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::Alphabetical => "Alphabetical",

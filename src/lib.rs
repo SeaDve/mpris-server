@@ -2,6 +2,12 @@
 #![deny(rustdoc::broken_intra_doc_links)]
 #![doc = include_str!("../README.md")]
 
+// TODO:
+// * Document public interface
+// * Replace `DateTime`, and `Uri` with proper types
+// * Add getter on Metadata
+// * Profile if inlining is worth it
+
 mod local_server;
 mod loop_status;
 mod metadata;
@@ -31,11 +37,16 @@ pub use crate::{
     track_id::TrackId,
 };
 
+/// This contains libraries that are used alongside with this crate.
 pub mod export {
     pub use async_trait;
     pub use zbus;
 }
 
+/// This contains the definitions of builder-pattern structs.
+///
+/// The `builder` methods on the objects must be used instead to construct
+/// these builder-pattern structs.
 pub mod builder {
     pub use crate::{metadata::MetadataBuilder, player::PlayerBuilder};
 }

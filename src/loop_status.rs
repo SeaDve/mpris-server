@@ -17,6 +17,7 @@ pub enum LoopStatus {
 }
 
 impl LoopStatus {
+    /// Returns the string representation of this loop status.
     pub fn as_str(&self) -> &'static str {
         match self {
             Self::None => "None",

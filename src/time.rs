@@ -153,7 +153,10 @@ impl Time {
     /// ```
     /// use mpris_server::Time;
     ///
-    /// assert_eq!(Time::from_micros(1).checked_add(Time::from_micros(1)), Some(Time::from_micros(2)));
+    /// assert_eq!(
+    ///     Time::from_micros(1).checked_add(Time::from_micros(1)),
+    ///     Some(Time::from_micros(2))
+    /// );
     /// assert_eq!(Time::MAX.checked_add(Time::from_micros(1)), None);
     /// ```
     #[inline]
@@ -171,7 +174,10 @@ impl Time {
     /// ```
     /// use mpris_server::Time;
     ///
-    /// assert_eq!(Time::from_micros(2).checked_sub(Time::from_micros(1)), Some(Time::from_micros(1)));
+    /// assert_eq!(
+    ///     Time::from_micros(2).checked_sub(Time::from_micros(1)),
+    ///     Some(Time::from_micros(1))
+    /// );
     /// assert_eq!(Time::MIN.checked_sub(Time::from_micros(1)), None);
     /// ```
     #[inline]
@@ -182,14 +188,17 @@ impl Time {
         }
     }
 
-    /// Saturating `Time` addition. Computes `self + other`, returning [`Time::MAX`]
-    /// if overflow occurred.
+    /// Saturating `Time` addition. Computes `self + other`, returning
+    /// [`Time::MAX`] if overflow occurred.
     ///
     /// # Examples
     /// ```
     /// use mpris_server::Time;
     ///
-    /// assert_eq!(Time::from_micros(1).saturating_add(Time::from_micros(1)), Time::from_micros(2));
+    /// assert_eq!(
+    ///     Time::from_micros(1).saturating_add(Time::from_micros(1)),
+    ///     Time::from_micros(2)
+    /// );
     /// assert_eq!(Time::MAX.saturating_add(Time::from_micros(1)), Time::MAX);
     /// ```
     #[inline]
@@ -200,14 +209,17 @@ impl Time {
         }
     }
 
-    /// Saturating `Time` subtraction. Computes `self - other`, returning [`Time::MIN`]
-    /// if overflow occurred.
+    /// Saturating `Time` subtraction. Computes `self - other`, returning
+    /// [`Time::MIN`] if overflow occurred.
     ///
     /// # Examples
     /// ```
     /// use mpris_server::Time;
     ///
-    /// assert_eq!(Time::from_micros(2).saturating_sub(Time::from_micros(1)), Time::from_micros(1));
+    /// assert_eq!(
+    ///     Time::from_micros(2).saturating_sub(Time::from_micros(1)),
+    ///     Time::from_micros(1)
+    /// );
     /// assert_eq!(Time::MIN.saturating_sub(Time::from_micros(1)), Time::MIN);
     /// ```
     #[inline]

@@ -551,6 +551,7 @@ where
         })
     }
 
+    /// Returns a reference to the inner implementation.
     pub fn imp(&self) -> &T {
         &self.imp
     }
@@ -558,7 +559,8 @@ where
     /// Run the server. This method will continually run until the server is
     /// dropped.
     ///
-    /// This is no-op and returns [Ok] immediately if the server is already running.
+    /// This is no-op and returns [Ok] immediately if the server is already
+    /// running.
     pub async fn run(&self) -> Result<()> {
         if let Some(runner) = self.runner.take() {
             self.inner.init().await?;
