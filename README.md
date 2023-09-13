@@ -65,7 +65,7 @@ impl PlayerInterface for MyPlayer {
 
 #[async_std::main]
 async fn main() {
-    let server = Server::new("com.me.Application", MyPlayer).unwrap();
+    let server = Server::new("com.my.Application", MyPlayer).unwrap();
 
     // Initialize server's connection to the session bus
     server.init().await.unwrap();
@@ -85,11 +85,11 @@ If you want to create a simple player without having to implement the interfaces
 However, `Player` currently only supports the more commonly used `org.mpris.MediaPlayer2` and `org.mpris.MediaPlayer2.Player` interfaces.
 
 ```rust,ignore
-use mpris_server::Player;
+use mpris_server::{Player, Time};
 
 #[async_std::main]
 async fn main() {
-    let player = Player::builder("com.me.Application")
+    let player = Player::builder("com.my.Application")
         .can_play(true)
         .can_pause(true)
         .build()
@@ -98,6 +98,9 @@ async fn main() {
     player.connect_play_pause(|| {
         println!("PlayPause");
     });
+
+    player.set_can_play(false).await.unwrap();
+    player.emit_seeked(Time::from_millis(1000)).await.unwrap();
 
     player.run().await.unwrap();
 }

@@ -1,4 +1,4 @@
-use mpris_server::Player;
+use mpris_server::{Player, Time};
 
 #[async_std::main]
 async fn main() {
@@ -21,6 +21,9 @@ async fn main() {
     player.connect_next(|| {
         println!("Next");
     });
+
+    player.set_can_play(false).await.unwrap();
+    player.emit_seeked(Time::from_millis(1000)).await.unwrap();
 
     player.run().await.unwrap();
 }
