@@ -67,10 +67,10 @@
 <a href="#67" id="67">67</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>enumflags2::bitflags;
 
-<span class="doccomment">/// Used for emitting `PropertiesChanged` signals on [`Server&lt;T&gt;`] via
+<span class="doccomment">/// Used for emitting `PropertiesChanged` signals on [`Server`] via
 /// [`Server::properties_changed`].
 ///
-/// [`Server&lt;T&gt;`]: crate::Server
+/// [`Server`]: crate::Server
 /// [`Server::properties_changed`]: crate::Server::properties_changed
 </span><span class="attr">#[bitflags]
 #[repr(u32)]
@@ -102,11 +102,11 @@
     CanControl,
 }
 
-<span class="doccomment">/// Used for emitting `PropertiesChanged` signals on [`Server&lt;T&gt;`] via
+<span class="doccomment">/// Used for emitting `PropertiesChanged` signals on [`Server`] via
 /// [`Server::track_list_properties_changed`], if `T` implements
 /// [`TrackListInterface`].
 ///
-/// [`Server&lt;T&gt;`]: crate::Server
+/// [`Server`]: crate::Server
 /// [`Server::track_list_properties_changed`]: crate::Server::track_list_properties_changed
 /// [`TrackListInterface`]: crate::TrackListInterface
 </span><span class="attr">#[bitflags]
@@ -117,11 +117,11 @@
     CanEditTracks,
 }
 
-<span class="doccomment">/// Used for emitting `PropertiesChanged` signals on [`Server&lt;T&gt;`] via
+<span class="doccomment">/// Used for emitting `PropertiesChanged` signals on [`Server`] via
 /// [`Server::playlists_properties_changed`], if `T` implements
 /// [`PlaylistsInterface`].
 ///
-/// [`Server&lt;T&gt;`]: crate::Server
+/// [`Server`]: crate::Server
 /// [`Server::playlists_properties_changed`]: crate::Server::playlists_properties_changed
 /// [`PlaylistsInterface`]: crate::PlaylistsInterface
 </span><span class="attr">#[bitflags]
