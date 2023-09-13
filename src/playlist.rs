@@ -44,7 +44,7 @@ pub struct MaybePlaylist {
 
 impl MaybePlaylist {
     /// Construct a valid `MaybePlaylist` from the given playlist.
-    pub fn some(playlist: Playlist) -> Self {
+    pub fn just(playlist: Playlist) -> Self {
         Self {
             valid: true,
             playlist,
@@ -54,7 +54,7 @@ impl MaybePlaylist {
     /// Construct a `MaybePlaylist` that contains invalid/no playlist.
     ///
     /// The playlist ID will be set to "/", and the name and icon will be empty.
-    pub fn none() -> Self {
+    pub fn nothing() -> Self {
         Self {
             valid: false,
             playlist: Playlist {
@@ -68,15 +68,15 @@ impl MaybePlaylist {
 
 impl From<Playlist> for MaybePlaylist {
     fn from(playlist: Playlist) -> Self {
-        Self::some(playlist)
+        Self::just(playlist)
     }
 }
 
 impl From<Option<Playlist>> for MaybePlaylist {
     fn from(opt: Option<Playlist>) -> Self {
         match opt {
-            Some(playlist) => Self::some(playlist),
-            None => Self::none(),
+            Some(playlist) => Self::just(playlist),
+            None => Self::nothing(),
         }
     }
 }
