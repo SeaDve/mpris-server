@@ -403,6 +403,8 @@ where
     /// implementation, which must implement [`RootInterface`] and
     /// [`PlayerInterface`].
     ///
+    /// To start the connection, [`Server::init`] must be called.
+    ///
     /// The resulting bus name will be
     /// `org.mpris.MediaPlayer2.<bus_name_suffix>`, where
     /// `<bus_name_suffix>`must be a unique identifier, such as one based on a
@@ -419,8 +421,13 @@ where
         Self::new_inner(bus_name_suffix, imp, |builder, _| Ok(builder))
     }
 
+    /// Initializes the connection.
+    ///
+    /// This is a no-op if the connection has already been initialized.
+    ///
+    /// This is also called automatically when emitting signals and properties
+    /// changed.
     pub async fn init(&self) -> Result<()> {
-        // Ensure the connection is initialized.
         self.get_or_init_connection().await?;
         Ok(())
     }

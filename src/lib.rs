@@ -471,8 +471,8 @@ pub trait TrackListInterface: PlayerInterface {
     /// If the [`CanEditTracks`] property is false, this has no effect.
     ///
     /// Note: Clients should not assume that the track has been removed at the
-    /// time when this method returns. They should wait for a [`TrackRemoved`] (or
-    /// TrackListReplaced) signal.
+    /// time when this method returns. They should wait for a [`TrackRemoved`]
+    /// (or TrackListReplaced) signal.
     ///
     /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`]: TrackId::NO_TRACK
     /// [`CanEditTracks`]: Self::can_edit_tracks
@@ -502,11 +502,12 @@ pub trait TrackListInterface: PlayerInterface {
     /// An array which contains the identifier of each track in the tracklist,
     /// in order.
     ///
-    /// The `org.freedesktop.DBus.Properties.PropertiesChanged` signal is emitted
-    /// every time this property changes, but the signal message does not
-    /// contain the new value. Client implementations should rather rely on the
-    /// [`TrackAdded`], [`TrackRemoved`] and [`TrackListReplaced`] signals to
-    /// keep their representation of the tracklist up to date.
+    /// The `org.freedesktop.DBus.Properties.PropertiesChanged` signal is
+    /// emitted every time this property changes, but the signal message
+    /// does not contain the new value. Client implementations should rather
+    /// rely on the [`TrackAdded`], [`TrackRemoved`] and
+    /// [`TrackListReplaced`] signals to keep their representation of the
+    /// tracklist up to date.
     ///
     /// [`TrackAdded`]: Server::track_added
     /// [`TrackRemoved`]: Server::track_removed
@@ -593,9 +594,9 @@ pub trait PlaylistsInterface: PlayerInterface {
     /// will be false, and the Playlist details are undefined.
     ///
     /// Note that this may not have a value even after [`ActivatePlaylist`] is
-    /// called with a valid playlist id as [`ActivatePlaylist`] implementations have
-    /// the option of simply inserting the contents of the playlist into the
-    /// current tracklist.
+    /// called with a valid playlist id as [`ActivatePlaylist`] implementations
+    /// have the option of simply inserting the contents of the playlist
+    /// into the current tracklist.
     ///
     /// [`ActivatePlaylist`]: Self::activate_playlist
     #[doc(alias = "ActivePlaylist")]
