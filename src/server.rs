@@ -382,9 +382,9 @@ macro_rules! signal_delegate {
     };
 }
 
-macro_rules! handle_property {
-    ($property_ident:ident, $property_type:ident, $source:ident => $($map:ident, $property:ident, $getter:ident);*) => {
-        match $property_ident {
+macro_rules! insert_property {
+    ($item:ident, $property_type:ident, $source:ident => $($map:ident, $property:ident, $getter:ident);*) => {
+        match $item {
             $(
                 $property_type::$property => {
                     let value = Value::new($source.imp.$getter().await?);
@@ -447,7 +447,7 @@ where
         let mut root_changed = HashMap::new();
         let mut player_changed = HashMap::new();
         for property in properties.into().iter() {
-            handle_property!(
+            insert_property!(
                 property, Property, self =>
                 root_changed, CanQuit, can_quit;
                 root_changed, Fullscreen, fullscreen;
@@ -601,7 +601,7 @@ where
     ) -> Result<()> {
         let mut changed = HashMap::new();
         for property in properties.into().iter() {
-            handle_property!(
+            insert_property!(
                 property, TrackListProperty, self =>
                 changed, Tracks, tracks;
                 changed, CanEditTracks, can_edit_tracks
@@ -646,7 +646,7 @@ where
     ) -> Result<()> {
         let mut changed = HashMap::new();
         for property in properties.into().iter() {
-            handle_property!(
+            insert_property!(
                 property, PlaylistsProperty, self =>
                 changed, PlaylistCount, playlist_count;
                 changed, Orderings, orderings;
