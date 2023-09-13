@@ -232,6 +232,12 @@ pub struct MetadataBuilder {
 }
 
 impl MetadataBuilder {
+    /// Insert a new key-value pair into the metadata.
+    pub fn other(mut self, key: impl Into<String>, value: impl Into<Value<'static>>) -> Self {
+        self.m.insert(key, value);
+        self
+    }
+
     pub fn trackid(mut self, trackid: impl Into<OwnedObjectPath>) -> Self {
         self.m.set_trackid(trackid);
         self
