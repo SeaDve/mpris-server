@@ -16,6 +16,16 @@ pub struct Playlist {
     pub icon: Uri,
 }
 
+impl From<MaybePlaylist> for Option<Playlist> {
+    fn from(mp: MaybePlaylist) -> Self {
+        if mp.valid {
+            Some(mp.playlist)
+        } else {
+            None
+        }
+    }
+}
+
 impl<'a> From<Playlist> for Value<'a> {
     fn from(p: Playlist) -> Self {
         Value::from((p.id, p.name, p.icon))
@@ -62,6 +72,16 @@ impl MaybePlaylist {
                 name: String::new(),
                 icon: Uri::new(),
             },
+        }
+    }
+
+    /// Returns [Some] if this structure contains a valid playlist, otherwise
+    /// [None].
+    pub fn get(&self) -> Option<&Playlist> {
+        if self.valid {
+            Some(&self.playlist)
+        } else {
+            None
         }
     }
 }
