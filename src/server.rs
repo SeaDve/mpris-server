@@ -440,6 +440,9 @@ where
     signal_delegate!(RawPlayerInterface<T>, seeked(position: Time));
 
     /// Emits the `PropertiesChanged` signal for the given properties.
+    ///
+    /// [`Server::track_list_properties_changed`] or [`Server::playlists_properties_changed`] are used
+    /// to emit `PropertiesChanged` for the `TrackList` or `Playlists` interfaces respectively.
     pub async fn properties_changed(
         &self,
         properties: impl Into<BitFlags<Property>>,
