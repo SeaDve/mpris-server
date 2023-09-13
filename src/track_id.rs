@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{fmt, ops};
 
 use serde::{de, Deserialize, Deserializer, Serialize};
 use zbus::zvariant::{Error, ObjectPath, Result, Type, Value};
@@ -38,7 +38,7 @@ impl TrackId {
     }
 }
 
-impl std::ops::Deref for TrackId {
+impl ops::Deref for TrackId {
     type Target = ObjectPath<'static>;
 
     fn deref(&self) -> &Self::Target {
@@ -46,13 +46,13 @@ impl std::ops::Deref for TrackId {
     }
 }
 
-impl std::convert::From<TrackId> for ObjectPath<'static> {
+impl From<TrackId> for ObjectPath<'static> {
     fn from(o: TrackId) -> Self {
         o.into_inner()
     }
 }
 
-impl std::convert::From<TrackId> for Value<'static> {
+impl From<TrackId> for Value<'static> {
     fn from(o: TrackId) -> Self {
         o.into_inner().into()
     }
@@ -64,7 +64,7 @@ impl<'unowned, 'owned: 'unowned> From<&'owned TrackId> for ObjectPath<'unowned> 
     }
 }
 
-impl<'a> std::convert::From<ObjectPath<'a>> for TrackId {
+impl<'a> From<ObjectPath<'a>> for TrackId {
     fn from(o: ObjectPath<'a>) -> Self {
         TrackId(o.into_owned())
     }
@@ -97,8 +97,8 @@ impl<'de> Deserialize<'de> for TrackId {
     }
 }
 
-impl std::fmt::Display for TrackId {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl fmt::Display for TrackId {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         fmt::Display::fmt(&self.as_str(), f)
     }
 }
