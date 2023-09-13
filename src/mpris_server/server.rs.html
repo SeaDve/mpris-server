@@ -918,6 +918,9 @@
 <a href="#918" id="918">918</a>
 <a href="#919" id="919">919</a>
 <a href="#920" id="920">920</a>
+<a href="#921" id="921">921</a>
+<a href="#922" id="922">922</a>
+<a href="#923" id="923">923</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{
     collections::HashMap,
     fmt,
@@ -1360,6 +1363,9 @@
     <span class="macro">signal_delegate!</span>(RawPlayerInterface&lt;T&gt;, seeked(position: Time));
 
     <span class="doccomment">/// Emits the `PropertiesChanged` signal for the given properties.
+    ///
+    /// [`Server::track_list_properties_changed`] or [`Server::playlists_properties_changed`] are used
+    /// to emit `PropertiesChanged` for the `TrackList` or `Playlists` interfaces respectively.
     </span><span class="kw">pub async fn </span>properties_changed(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         properties: <span class="kw">impl </span>Into&lt;BitFlags&lt;Property&gt;&gt;,
