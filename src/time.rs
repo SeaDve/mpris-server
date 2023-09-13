@@ -40,48 +40,110 @@ impl Time {
     pub const MAX: Self = Self::from_micros(i64::MAX);
 
     /// Creates a new `Time` from the specified number of whole seconds.
+    ///
+    /// # Examples
+    ///  ```
+    /// use mpris_server::Time;
+    ///
+    /// assert_eq!(Time::from_secs(5).as_nanos(), 5_000_000_000);
+    /// ```
     #[inline]
     pub const fn from_secs(secs: i64) -> Self {
         Self::from_micros(secs * 1_000_000)
     }
 
     /// Creates a new `Time` from the specified number of whole milliseconds.
+    ///
+    /// # Examples
+    ///  ```
+    /// use mpris_server::Time;
+    ///
+    /// assert_eq!(Time::from_millis(5).as_nanos(), 5_000_000);
+    /// ```
     #[inline]
     pub const fn from_millis(millis: i64) -> Self {
         Self::from_micros(millis * 1000)
     }
 
     /// Creates a new `Time` from the specified number of whole microseconds.
+    ///
+    /// # Examples
+    ///  ```
+    /// use mpris_server::Time;
+    ///
+    /// assert_eq!(Time::from_micros(5).as_nanos(), 5_000);
+    /// ```
     #[inline]
     pub const fn from_micros(micros: i64) -> Self {
         Self(micros)
     }
 
     /// Creates a new `Time` from the specified number of whole nanoseconds.
+    ///
+    /// Note: This will round of the nanoseconds to microseconds level of precision.
+    ///
+    /// # Examples
+    ///  ```
+    /// use mpris_server::Time;
+    ///
+    /// assert_eq!(Time::from_nanos(5).as_nanos(), 0);
+    /// assert_eq!(Time::from_nanos(5342).as_nanos(), 5000);
+    /// ```
     #[inline]
     pub const fn from_nanos(nanos: i64) -> Self {
         Self::from_micros(nanos / 1000)
     }
 
     /// Returns the number of *whole* seconds contained by this `Time`.
+    ///
+    /// # Examples
+    /// ```
+    /// use mpris_server::Time;
+    ///
+    /// assert_eq!(Time::from_micros(5_000_000).as_secs(), 5);
+    /// assert_eq!(Time::from_micros(3).as_secs(), 0);
+    /// ```
     #[inline]
     pub const fn as_secs(&self) -> i64 {
         self.as_micros() / 1_000_000
     }
 
     /// Returns the number of *whole* milliseconds contained by this `Time`.
+    ///
+    /// # Examples
+    /// ```
+    /// use mpris_server::Time;
+    ///
+    /// assert_eq!(Time::from_micros(5_000_000).as_millis(), 5_000);
+    /// assert_eq!(Time::from_micros(3).as_millis(), 0);
+    /// ```
     #[inline]
     pub const fn as_millis(&self) -> i64 {
         self.as_micros() / 1000
     }
 
     /// Returns the number of *whole* microseconds contained by this `Time`.
+    ///
+    /// # Examples
+    /// ```
+    /// use mpris_server::Time;
+    ///
+    /// assert_eq!(Time::from_micros(5_000_000).as_micros(), 5_000_000);
+    /// assert_eq!(Time::from_micros(3).as_micros(), 3);
+    /// ```
     #[inline]
     pub const fn as_micros(&self) -> i64 {
         self.0
     }
 
     /// Returns the number of *whole* nanoseconds contained by this `Time`.
+    ///
+    /// # Examples
+    /// ```
+    /// use mpris_server::Time;
+    ///
+    /// assert_eq!(Time::from_micros(5_000_000).as_nanos(), 5_000_000_000);
+    /// assert_eq!(Time::from_micros(3).as_nanos(), 3_000);
     #[inline]
     pub const fn as_nanos(&self) -> i64 {
         self.as_micros() * 1000
