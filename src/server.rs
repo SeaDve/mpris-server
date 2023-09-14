@@ -448,8 +448,8 @@ where
 
     /// Emits the `PropertiesChanged` signal for the given properties.
     ///
-    /// This categorizes the property in the `changed` or `invalidated` properties
-    /// as defined by the spec.
+    /// This categorizes the property in the `changed` or `invalidated`
+    /// properties as defined by the spec.
     ///
     /// [`Server::track_list_properties_changed`] or
     /// [`Server::playlists_properties_changed`] are used
@@ -605,8 +605,8 @@ where
 
     /// Emits the `PropertiesChanged` signal for the given properties.
     ///
-    /// This categorizes the property in the `changed` or `invalidated` properties
-    /// as defined by the spec.
+    /// This categorizes the property in the `changed` or `invalidated`
+    /// properties as defined by the spec.
     pub async fn track_list_properties_changed(
         &self,
         properties: impl Into<BitFlags<TrackListProperty>>,
@@ -655,8 +655,8 @@ where
 
     /// Emits the `PropertiesChanged` signal for the given properties.
     ///
-    /// This categorizes the property in the `changed` or `invalidated` properties
-    /// as defined by the spec.
+    /// This categorizes the property in the `changed` or `invalidated`
+    /// properties as defined by the spec.
     pub async fn playlists_properties_changed(
         &self,
         properties: impl Into<BitFlags<PlaylistsProperty>>,

@@ -260,7 +260,7 @@ pub trait RootInterface: Send + Sync {
     ///
     /// If [`CanSetFullscreen`] is **true**, clients may set this property to
     /// **true** to tell the media player to enter fullscreen mode, or to
-    /// false to return to windowed mode.
+    /// **false** to return to windowed mode.
     ///
     /// If [`CanSetFullscreen`] is **false**, then attempting to set this
     /// property should have no effect, and may raise an error. However,
@@ -334,13 +334,13 @@ pub trait RootInterface: Send + Sync {
     async fn can_raise(&self) -> fdo::Result<bool>;
 
     /// Indicates whether the `/org/mpris/MediaPlayer2` object implements the
-    /// [`org.mpris.MediaPlayer2.TrackList`] interface.
+    /// [`TrackList interface`].
     ///
     /// When this property changes, the
     /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
     /// [`properties_changed`] must be emitted with the new value.
     ///
-    /// [`org.mpris.MediaPlayer2.TrackList`]: TrackListInterface
+    /// [`TrackList interface`]: TrackListInterface
     /// [`properties_changed`]: Server::properties_changed
     #[doc(alias = "HasTrackList")]
     async fn has_track_list(&self) -> fdo::Result<bool>;
@@ -391,9 +391,10 @@ pub trait RootInterface: Send + Sync {
     /// ## Rationale
     ///
     /// This is important for clients to know when using the editing
-    /// capabilities of the Playlist interface, for example.
+    /// capabilities of the [`Playlists interface`], for example.
     ///
     /// [`properties_changed`]: Server::properties_changed
+    /// [`Playlists interface`]: PlaylistsInterface
     #[doc(alias = "SupportedUriSchemes")]
     async fn supported_uri_schemes(&self) -> fdo::Result<Vec<String>>;
 
@@ -409,9 +410,10 @@ pub trait RootInterface: Send + Sync {
     /// ## Rationale
     ///
     /// This is important for clients to know when using the editing
-    /// capabilities of the Playlist interface, for example.
+    /// capabilities of the [`Playlists interface`], for example.
     ///
     /// [`properties_changed`]: Server::properties_changed
+    /// [`Playlists interface`]: PlaylistsInterface
     #[doc(alias = "SupportedMimeTypes")]
     async fn supported_mime_types(&self) -> fdo::Result<Vec<String>>;
 }
@@ -575,18 +577,17 @@ pub trait PlayerInterface: RootInterface {
     /// method returns. They should wait until the [`mpris:trackid`] field in
     /// the [`Metadata`] property changes.
     ///
-    /// If the media player implements the [`org.mpris.MediaPlayer2.TrackList`]
-    /// interface, then the opened track should be made part of the
-    /// tracklist, the [`TrackAdded`] or
-    /// [`TrackListReplaced`] signal should be
-    /// fired, as well as the org.freedesktop.DBus.Properties.PropertiesChanged
-    /// signal on the tracklist interface.
+    /// If the media player implements the [`TrackList interface`], then the
+    /// opened track should be made part of the tracklist, the [`TrackAdded`] or
+    /// [`TrackListReplaced`] signal should be fired, as well as the
+    /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal on the
+    /// [`TrackList interface`].
     ///
     /// [`SupportedUriSchemes`]: RootInterface::supported_uri_schemes
     /// [`SupportedMimeTypes`]: RootInterface::supported_mime_types
     /// [`mpris:trackid`]: Metadata::set_trackid
     /// [`Metadata`]: Self::metadata
-    /// [`org.mpris.MediaPlayer2.TrackList`]: TrackListInterface
+    /// [`TrackList interface`]: TrackListInterface
     /// [`TrackAdded`]: Server::track_added
     /// [`TrackListReplaced`]: Server::track_list_replaced
     #[doc(alias = "OpenUri")]
@@ -979,13 +980,15 @@ pub trait PlayerInterface: RootInterface {
 /// requirements is valid, as clients should not make any assumptions about the
 /// value of the track id beyond the fact that it is a unique identifier.
 ///
-/// Note that the (memory and processing) burden of implementing the TrackList
-/// interface and maintaining unique track ids for the playlist can be mitigated
-/// by only exposing a subset of the playlist when it is very long (the 20 or so
-/// tracks around the currently playing track, for example). This is a
-/// recommended practice as the tracklist interface is not designed to enable
-/// browsing through a large list of tracks, but rather to provide clients with
-/// context about the currently playing track.
+/// Note that the (memory and processing) burden of implementing the [`TrackList
+/// interface`] and maintaining unique track ids for the playlist can be
+/// mitigated by only exposing a subset of the playlist when it is very long
+/// (the 20 or so tracks around the currently playing track, for example). This
+/// is a recommended practice as the tracklist interface is not designed to
+/// enable browsing through a large list of tracks, but rather to provide
+/// clients with context about the currently playing track.
+///
+/// [`TrackList interface`]: TrackListInterface
 #[async_trait]
 #[doc(alias = "org.mpris.MediaPlayer2.TrackList")]
 pub trait TrackListInterface: PlayerInterface {
@@ -1007,7 +1010,7 @@ pub trait TrackListInterface: PlayerInterface {
     #[doc(alias = "GetTracksMetadata")]
     async fn get_tracks_metadata(&self, track_ids: Vec<TrackId>) -> fdo::Result<Vec<Metadata>>;
 
-    /// Adds a URI in the TrackList.
+    /// Adds a URI in the tracklist.
     ///
     /// ## Parameters
     ///
@@ -1020,10 +1023,10 @@ pub trait TrackListInterface: PlayerInterface {
     ///   [`/org/mpris/MediaPlayer2/TrackList/NoTrack`] indicates that the track
     ///   should be inserted at the start of the track list.
     /// * `set_as_current` - Whether the newly inserted track should be
-    ///   considered as the current track. Setting this to true has the same
+    ///   considered as the current track. Setting this to **true** has the same
     ///   effect as calling [`GoTo`] afterwards.
     ///
-    /// If the [`CanEditTracks`] property is false, this has no effect.
+    /// If the [`CanEditTracks`] property is **false**, this has no effect.
     ///
     /// **Note:** Clients should not assume that the track has been added at the
     /// time when this method returns. They should wait for a [`TrackAdded`] (or
@@ -1044,7 +1047,7 @@ pub trait TrackListInterface: PlayerInterface {
         set_as_current: bool,
     ) -> fdo::Result<()>;
 
-    /// Removes an item from the TrackList.
+    /// Removes an item from the tracklist.
     ///
     /// ## Parameters
     ///
@@ -1054,15 +1057,16 @@ pub trait TrackListInterface: PlayerInterface {
     ///
     /// If the track is not part of this tracklist, this has no effect.
     ///
-    /// If the [`CanEditTracks`] property is false, this has no effect.
+    /// If the [`CanEditTracks`] property is **false**, this has no effect.
     ///
     /// **Note:** Clients should not assume that the track has been removed at
     /// the time when this method returns. They should wait for a
-    /// [`TrackRemoved`] (or TrackListReplaced) signal.
+    /// [`TrackRemoved`] (or [`TrackListReplaced`]) signal.
     ///
     /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`]: TrackId::NO_TRACK
     /// [`CanEditTracks`]: Self::can_edit_tracks
     /// [`TrackRemoved`]: Server::track_removed
+    /// [`TrackListReplaced`]: Server::track_list_replaced
     #[doc(alias = "RemoveTrack")]
     async fn remove_track(&self, track_id: TrackId) -> fdo::Result<()>;
 
@@ -1076,8 +1080,8 @@ pub trait TrackListInterface: PlayerInterface {
     ///
     /// If the track is not part of this tracklist, this has no effect.
     ///
-    /// If this object is not `/org/mpris/MediaPlayer2`, the current TrackList's
-    /// tracks should be replaced with the contents of this TrackList, and the
+    /// If this object is not `/org/mpris/MediaPlayer2`, the current tracklist's
+    /// tracks should be replaced with the contents of this tracklist, and the
     /// [`TrackListReplaced`] signal should be fired from
     /// `/org/mpris/MediaPlayer2`.
     ///
@@ -1088,6 +1092,10 @@ pub trait TrackListInterface: PlayerInterface {
     /// An array which contains the identifier of each track in the tracklist,
     /// in order.
     ///
+    /// When this property changes, the
+    /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
+    /// [`properties_changed`] must be emitted *without* the new value.
+    ///
     /// The `org.freedesktop.DBus.Properties.PropertiesChanged` signal is
     /// emitted every time this property changes, but the signal message
     /// does not contain the new value. Client implementations should rather
@@ -1095,15 +1103,23 @@ pub trait TrackListInterface: PlayerInterface {
     /// [`TrackListReplaced`] signals to keep their representation of the
     /// tracklist up to date.
     ///
+    /// [`properties_changed`]: Server::properties_changed
     /// [`TrackAdded`]: Server::track_added
     /// [`TrackRemoved`]: Server::track_removed
     /// [`TrackListReplaced`]: Server::track_list_replaced
     #[doc(alias = "Tracks")]
     async fn tracks(&self) -> fdo::Result<Vec<TrackId>>;
 
-    /// If false, calling [`AddTrack`] or [`RemoveTrack`] will have no effect,
-    /// and may raise a `NotSupported` error.
+    /// Whether tracks can be added to and removed from the tracklist.
     ///
+    /// When this property changes, the
+    /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
+    /// [`properties_changed`] must be emitted with the new value.
+    ///
+    /// If **false**, calling [`AddTrack`] or [`RemoveTrack`] will have no
+    /// effect, and may raise a `NotSupported` error.
+    ///
+    /// [`properties_changed`]: Server::properties_changed
     /// [`AddTrack`]: Self::add_track
     /// [`RemoveTrack`]: Self::remove_track
     #[doc(alias = "CanEditTracks")]
@@ -1150,13 +1166,6 @@ pub trait PlaylistsInterface: PlayerInterface {
     /// ## Returns
     ///
     /// * `playlists` - A list of (at most `max_count`) playlists.
-    ///
-    /// ## Rationale
-    ///
-    /// Media players may not have access to all the data required for some
-    /// orderings. For example, creation times are not available on UNIX
-    /// filesystems (don't let the ctime fool you!). On the other hand, clients
-    /// should have some way to get the "most recent" playlists.
     #[doc(alias = "GetPlaylists")]
     async fn get_playlists(
         &self,
@@ -1167,23 +1176,47 @@ pub trait PlaylistsInterface: PlayerInterface {
     ) -> fdo::Result<Vec<Playlist>>;
 
     /// The number of playlists available.
+    ///
+    /// When this property changes, the
+    /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
+    /// [`properties_changed`] must be emitted with the new value.
+    ///
+    /// [`properties_changed`]: Server::properties_changed
     #[doc(alias = "PlaylistCount")]
     async fn playlist_count(&self) -> fdo::Result<u32>;
 
     /// The available orderings. At least one must be offered.
+    ///
+    /// When this property changes, the
+    /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
+    /// [`properties_changed`] must be emitted with the new value.
+    ///
+    /// ## Rationale
+    ///
+    /// Media players may not have access to all the data required for some
+    /// orderings. For example, creation times are not available on UNIX
+    /// filesystems (don't let the ctime fool you!). On the other hand, clients
+    /// should have some way to get the "most recent" playlists.
+    ///
+    /// [`properties_changed`]: Server::properties_changed
     #[doc(alias = "Orderings")]
     async fn orderings(&self) -> fdo::Result<Vec<PlaylistOrdering>>;
 
     /// The currently-active playlist.
     ///
+    /// When this property changes, the
+    /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
+    /// [`properties_changed`] must be emitted with the new value.
+    ///
     /// If there is no currently-active playlist, the structure's Valid field
-    /// will be false, and the Playlist details are undefined.
+    /// will be **false**, and the playlist details are undefined.
     ///
     /// Note that this may not have a value even after [`ActivatePlaylist`] is
     /// called with a valid playlist id as [`ActivatePlaylist`] implementations
     /// have the option of simply inserting the contents of the playlist
     /// into the current tracklist.
     ///
+    /// [`properties_changed`]: Server::properties_changed
     /// [`ActivatePlaylist`]: Self::activate_playlist
     #[doc(alias = "ActivePlaylist")]
     async fn active_playlist(&self) -> fdo::Result<MaybePlaylist>;
