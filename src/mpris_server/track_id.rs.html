@@ -103,6 +103,8 @@
 <a href="#103" id="103">103</a>
 <a href="#104" id="104">104</a>
 <a href="#105" id="105">105</a>
+<a href="#106" id="106">106</a>
+<a href="#107" id="107">107</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{fmt, ops};
 
 <span class="kw">use </span>serde::{de, Deserialize, Deserializer, Serialize};
@@ -136,7 +138,9 @@
 
 <span class="kw">impl </span>TrackId {
     <span class="doccomment">/// A special track ID to indicate &quot;no track&quot;.
-    </span><span class="kw">pub const </span>NO_TRACK: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str = <span class="string">&quot;/org/mpris/MediaPlayer2/TrackList/NoTrack&quot;</span>;
+    </span><span class="kw">pub const </span>NO_TRACK: TrackId = TrackId(ObjectPath::from_static_str_unchecked(
+        <span class="string">&quot;/org/mpris/MediaPlayer2/TrackList/NoTrack&quot;</span>,
+    ));
 
     <span class="doccomment">/// Returns the track ID as an [`ObjectPath`].
     </span><span class="kw">pub fn </span>into_inner(<span class="self">self</span>) -&gt; ObjectPath&lt;<span class="lifetime">&#39;static</span>&gt; {
