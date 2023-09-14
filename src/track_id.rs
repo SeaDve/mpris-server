@@ -31,7 +31,9 @@ pub struct TrackId(ObjectPath<'static>);
 
 impl TrackId {
     /// A special track ID to indicate "no track".
-    pub const NO_TRACK: &'static str = "/org/mpris/MediaPlayer2/TrackList/NoTrack";
+    pub const NO_TRACK: TrackId = TrackId(ObjectPath::from_static_str_unchecked(
+        "/org/mpris/MediaPlayer2/TrackList/NoTrack",
+    ));
 
     /// Returns the track ID as an [`ObjectPath`].
     pub fn into_inner(self) -> ObjectPath<'static> {
