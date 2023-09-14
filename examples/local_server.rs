@@ -295,8 +295,8 @@ impl LocalPlaylistsInterface for Player {
 async fn main() {
     let server = LocalServer::new_with_all("Test.Application", Player).unwrap();
 
-    // Unlike in `Server`, we have to call `init_and_run` here to handle incoming requests in
-    // the local thread.
+    // Unlike in `Server`, we have to call `init_and_run` here to handle incoming
+    // requests in the local thread.
     server.init_and_run().await.unwrap();
 
     // Emit `PropertiesChanged` signal for `Position` and `Metadata` properties

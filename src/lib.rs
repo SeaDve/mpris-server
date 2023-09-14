@@ -57,57 +57,14 @@ macro_rules! define_iface {
         $player_iface_ident:ident,
         $track_list_iface_ident:ident,
         $playlists_iface_ident:ident) => {
-        /// Used to implement `org.mpris.MediaPlayer2` interface.
         #[$attr]
         pub trait $root_iface_ident {
-            /// Brings the media player's user interface to the front using
-            /// any appropriate mechanism available.
-            ///
-            /// The media player may be unable to control how its user
-            /// interface is displayed, or it may not have a graphical user
-            /// interface at all. In this case, the `CanRaise` property is
-            /// `false` and this method does nothing.
             async fn raise(&self) -> fdo::Result<()>;
 
-            /// Causes the media player to stop running.
-            ///
-            /// The media player may refuse to allow clients to shut it
-            /// down. In this case, the `CanQuit` property is `false` and
-            /// this method does nothing.
-            ///
-            /// Note: Media players which can be D-Bus activated, or for
-            ///  which there is no sensibly easy way to terminate a running
-            /// instance (via the main interface or a notification area icon
-            /// for example) should allow clients to use this method.
-            /// Otherwise, it should not be needed.
-            ///
-            /// If the media player does not have a UI, this should be
-            /// implemented.
             async fn quit(&self) -> fdo::Result<()>;
 
-            /// If `false`, calling `Quit` will have no effect, and may raise a
-            /// NotSupported error. If `true`, calling `Quit` will cause the media
-            /// application to attempt to quit (although it may still be
-            /// prevented from quitting by the user, for example).
             async fn can_quit(&self) -> fdo::Result<bool>;
 
-            /// Whether the media player is occupying the fullscreen.
-            ///
-            /// This is typically used for videos. A value of true indicates
-            /// that the media player is taking up the full screen.
-            ///
-            /// Media centre software may well have this value fixed to true
-            ///
-            /// If CanSetFullscreen is true, clients may set this property
-            /// to true to tell the media player to enter fullscreen mode,
-            /// or to false to return to windowed mode.
-            ///
-            /// If CanSetFullscreen is false, then attempting to set this
-            /// property should have no effect, and may raise an error.
-            /// However, even if it is true, the media player may still
-            /// be unable to fulfil the request, in which case attempting to
-            /// set this property will have no effect (but should not raise
-            /// an error).
             async fn fullscreen(&self) -> fdo::Result<bool>;
 
             async fn set_fullscreen(&self, fullscreen: bool) -> Result<()>;
@@ -249,14 +206,18 @@ pub trait RootInterface: Send + Sync {
     ///
     /// The media player may be unable to control how its user interface is
     /// displayed, or it may not have a graphical user interface at all. In this
-    /// case, the `CanRaise` property is `false` and this method does nothing.
+    /// case, the [`CanRaise`] property is **false** and this method does
+    /// nothing.
+    ///
+    /// [`CanRaise`]: Self::can_raise
     #[doc(alias = "Raise")]
     async fn raise(&self) -> fdo::Result<()>;
 
     /// Causes the media player to stop running.
     ///
     /// The media player may refuse to allow clients to shut it down. In this
-    /// case, the `CanQuit` property is `false` and this method does nothing.
+    /// case, the [`CanQuit`] property is **false** and this method does
+    /// nothing.
     ///
     /// Note: Media players which can be D-Bus activated, or for which there is
     /// no sensibly easy way to terminate a running instance (via the main
@@ -264,36 +225,194 @@ pub trait RootInterface: Send + Sync {
     /// to use this method. Otherwise, it should not be needed.
     ///
     /// If the media player does not have a UI, this should be implemented.
+    ///
+    /// [`CanQuit`]: Self::can_quit
     #[doc(alias = "Quit")]
     async fn quit(&self) -> fdo::Result<()>;
 
+    /// Whether the player may be asked to quit.
+    ///
+    /// When this property changes, the
+    /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
+    /// [`properties_changed`] must be emitted with the new value.
+    ///
+    /// If **false**, calling [`Quit`] will have no effect, and may raise a
+    /// `NotSupported` error. If **true**, calling [`Quit`] will cause the media
+    /// application to attempt to quit (although it may still be prevented from
+    /// quitting by the user, for example).
+    ///
+    /// [`properties_changed`]: Server::properties_changed
+    /// [`Quit`]: Self::quit
     #[doc(alias = "CanQuit")]
     async fn can_quit(&self) -> fdo::Result<bool>;
 
+    /// Whether the media player is occupying the fullscreen.
+    ///
+    /// This property is *optional*. Clients should handle its absence
+    /// gracefully.
+    ///
+    /// When this property changes, the
+    /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
+    /// [`properties_changed`] must be emitted with the new value.
+    ///
+    /// This is typically used for videos. A value of **true** indicates that
+    /// the media player is taking up the full screen.
+    ///
+    /// Media centre software may well have this value fixed to **true**
+    ///
+    /// If [`CanSetFullscreen`] is **true**, clients may set this property to
+    /// **true** to tell the media player to enter fullscreen mode, or to
+    /// false to return to windowed mode.
+    ///
+    /// If [`CanSetFullscreen`] is **false**, then attempting to set this
+    /// property should have no effect, and may raise an error. However,
+    /// even if it is **true**, the media player may still be unable to
+    /// fulfil the request, in which case attempting to set this property
+    /// will have no effect (but should not raise an error).
+    ///
+    /// ## Rationale
+    ///
+    /// This allows remote control interfaces, such as LIRC or mobile devices
+    /// like phones, to control whether a video is shown in fullscreen.
+    ///
+    /// [`properties_changed`]: Server::properties_changed
+    /// [`CanSetFullscreen`]: Self::can_set_fullscreen
     #[doc(alias = "Fullscreen")]
     async fn fullscreen(&self) -> fdo::Result<bool>;
 
+    /// Set whether the media player is occupying the fullscreen.
+    ///
+    /// See [`Fullscreen`] for more details.
+    ///
+    /// [`Fullscreen`]: Self::fullscreen
     #[doc(alias = "Fullscreen")]
     async fn set_fullscreen(&self, fullscreen: bool) -> Result<()>;
 
+    /// Whether the player may be asked to enter or leave fullscreen.
+    ///
+    /// This property is *optional*. Clients should handle its absence
+    /// gracefully.
+    ///
+    /// When this property changes, the
+    /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
+    /// [`properties_changed`] must be emitted with the new value.
+    ///
+    /// If **false**, attempting to set [`Fullscreen`] will have no effect, and
+    /// may raise an error. If **true**, attempting to set [`Fullscreen`]
+    /// will not raise an error, and (if it is different from the current
+    /// value) will cause the media player to attempt to enter or exit
+    /// fullscreen mode.
+    ///
+    /// Note that the media player may be unable to fulfil the request. In this
+    /// case, the value will not change. If the media player knows in advance
+    /// that it will not be able to fulfil the request, however, this property
+    /// should be **false**.
+    ///
+    /// ## Rationale
+    ///
+    /// This allows clients to choose whether to display controls for entering
+    /// or exiting fullscreen mode.
+    ///
+    /// [`properties_changed`]: Server::properties_changed
+    /// [`Fullscreen`]: Self::fullscreen
     #[doc(alias = "CanSetFullscreen")]
     async fn can_set_fullscreen(&self) -> fdo::Result<bool>;
 
+    /// Whether the media player may be asked to be raised.
+    ///
+    /// When this property changes, the
+    /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
+    /// [`properties_changed`] must be emitted with the new value.
+    ///
+    /// If **false**, calling [`Raise`] will have no effect, and may raise a
+    /// NotSupported error. If **true**, calling [`Raise`] will cause the media
+    /// application to attempt to bring its user interface to the front,
+    /// although it may be prevented from doing so (by the window manager, for
+    /// example).
+    ///
+    /// [`properties_changed`]: Server::properties_changed
+    /// [`Raise`]: Self::raise
     #[doc(alias = "CanRaise")]
     async fn can_raise(&self) -> fdo::Result<bool>;
 
+    /// Indicates whether the `/org/mpris/MediaPlayer2` object implements the
+    /// `org.mpris.MediaPlayer2.TrackList` interface.
+    ///
+    /// When this property changes, the
+    /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
+    /// [`properties_changed`] must be emitted with the new value.
+    ///
+    /// [`properties_changed`]: Server::properties_changed
     #[doc(alias = "HasTrackList")]
     async fn has_track_list(&self) -> fdo::Result<bool>;
 
+    /// A friendly name to identify the media player to users (eg: "VLC media
+    /// player").
+    ///
+    /// When this property changes, the
+    /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
+    /// [`properties_changed`] must be emitted with the new value.
+    ///
+    /// This should usually match the name found in .desktop files
+    ///
+    /// [`properties_changed`]: Server::properties_changed
     #[doc(alias = "Identity")]
     async fn identity(&self) -> fdo::Result<String>;
 
+    /// The basename of an installed .desktop file which complies with the
+    /// [Desktop entry specification], with the ".desktop" extension stripped.
+    ///
+    /// When this property changes, the
+    /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
+    /// [`properties_changed`] must be emitted with the new value.
+    ///
+    /// This property is *optional*. Clients should handle its absence
+    /// gracefully.
+    ///
+    /// Example: The desktop entry file is
+    /// "/usr/share/applications/vlc.desktop", and this property contains "vlc"
+    ///
+    /// [`Desktop entry specification`]: https://specifications.freedesktop.org/desktop-entry-spec/latest/
+    /// [`properties_changed`]: Server::properties_changed
     #[doc(alias = "DesktopEntry")]
     async fn desktop_entry(&self) -> fdo::Result<String>;
 
+    /// The URI schemes supported by the media player.
+    ///
+    /// When this property changes, the
+    /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
+    /// [`properties_changed`] must be emitted with the new value.
+    ///
+    /// This can be viewed as protocols supported by the player in almost all
+    /// cases. Almost every media player will include support for the "file"
+    /// scheme. Other common schemes are "http" and "rtsp".
+    ///
+    /// Note that URI schemes should be lower-case.
+    ///
+    /// ## Rationale
+    ///
+    /// This is important for clients to know when using the editing
+    /// capabilities of the Playlist interface, for example.
+    ///
+    /// [`properties_changed`]: Server::properties_changed
     #[doc(alias = "SupportedUriSchemes")]
     async fn supported_uri_schemes(&self) -> fdo::Result<Vec<String>>;
 
+    /// The mime-types supported by the media player.
+    ///
+    /// When this property changes, the
+    /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
+    /// [`properties_changed`] must be emitted with the new value.
+    ///
+    /// Mime-types should be in the standard format (eg: audio/mpeg or
+    /// application/ogg).
+    ///
+    /// ## Rationale
+    ///
+    /// This is important for clients to know when using the editing
+    /// capabilities of the Playlist interface, for example.
+    ///
+    /// [`properties_changed`]: Server::properties_changed
     #[doc(alias = "SupportedMimeTypes")]
     async fn supported_mime_types(&self) -> fdo::Result<Vec<String>>;
 }
@@ -414,7 +533,6 @@ pub trait PlayerInterface: RootInterface {
 /// recommended practice as the tracklist interface is not designed to enable
 /// browsing through a large list of tracks, but rather to provide clients with
 /// context about the currently playing track.
-
 #[async_trait]
 #[doc(alias = "org.mpris.MediaPlayer2.TrackList")]
 pub trait TrackListInterface: PlayerInterface {

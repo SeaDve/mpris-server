@@ -400,7 +400,7 @@ where
     T: PlayerInterface + 'static,
 {
     /// Creates a new [`Server`] with the given bus name suffix and
-    /// implementation, which must implement [`RootInterface`] and
+    /// implementation, `imp`, which must implement [`RootInterface`] and
     /// [`PlayerInterface`].
     ///
     /// To start the connection, [`Server::init`] must be called.
