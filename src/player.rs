@@ -744,6 +744,7 @@ impl Player {
         self.server.properties_changed(Property::CanSeek).await
     }
 
+    /// This can only be set on construct.
     pub fn can_control(&self) -> bool {
         self.server.imp().can_control.get()
     }
