@@ -1,7 +1,8 @@
 # MPRIS Server
 
-[![docs](https://docs.rs/mpris-server/badge.svg)](https://docs.rs/mpris-server/)
+[![github](https://img.shields.io/badge/github-seadve/mpris-server)](https://github.com/SeaDve/mpris-server)
 [![crates.io](https://img.shields.io/crates/v/mpris-server)](https://crates.io/crates/mpris-server)
+[![docs](https://docs.rs/mpris-server/badge.svg)](https://docs.rs/mpris-server/)
 [![CI](https://github.com/SeaDve/mpris-server/actions/workflows/ci.yml/badge.svg)](https://github.com/SeaDve/mpris-server/actions/workflows/ci.yml)
 
 Implement MPRIS D-Bus interface in your application.
