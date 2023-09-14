@@ -1100,7 +1100,8 @@ pub trait TrackListInterface: PlayerInterface {
     ///
     /// When this property changes, the
     /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
-    /// [`track_list_properties_changed`] must be emitted *without* the new value.
+    /// [`track_list_properties_changed`] must be emitted *without* the new
+    /// value.
     ///
     /// The `org.freedesktop.DBus.Properties.PropertiesChanged` signal is
     /// emitted every time this property changes, but the signal message
