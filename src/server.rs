@@ -448,6 +448,9 @@ where
 
     /// Emits the `PropertiesChanged` signal for the given properties.
     ///
+    /// This categorizes the property in the `changed` or `invalidated` properties
+    /// as defined by the spec.
+    ///
     /// [`Server::track_list_properties_changed`] or
     /// [`Server::playlists_properties_changed`] are used
     /// to emit `PropertiesChanged` for the `TrackList` or `Playlists`
@@ -601,6 +604,9 @@ where
     signal_delegate!(RawTrackListInterface<T>, track_metadata_changed(track_id: TrackId, metadata: Metadata));
 
     /// Emits the `PropertiesChanged` signal for the given properties.
+    ///
+    /// This categorizes the property in the `changed` or `invalidated` properties
+    /// as defined by the spec.
     pub async fn track_list_properties_changed(
         &self,
         properties: impl Into<BitFlags<TrackListProperty>>,
@@ -648,6 +654,9 @@ where
     signal_delegate!(RawPlaylistsInterface<T>, playlist_changed(playlist: Playlist));
 
     /// Emits the `PropertiesChanged` signal for the given properties.
+    ///
+    /// This categorizes the property in the `changed` or `invalidated` properties
+    /// as defined by the spec.
     pub async fn playlists_properties_changed(
         &self,
         properties: impl Into<BitFlags<PlaylistsProperty>>,
