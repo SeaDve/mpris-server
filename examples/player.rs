@@ -25,11 +25,11 @@ async fn main() {
         println!("Next");
     });
 
+    player.init_and_run().await.unwrap();
+
     // Update `CanPlay` property and emit `PropertiesChanged` signal for it
     player.set_can_play(false).await.unwrap();
 
     // Emit `Seeked` signal
     player.emit_seeked(Time::from_millis(1000)).await.unwrap();
-
-    player.init_and_run().await.unwrap();
 }
