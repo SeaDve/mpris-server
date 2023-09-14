@@ -1,6 +1,6 @@
 [package]
 name = "mpris-server"
-version = "0.1.0"
+version = "0.2.0"
 description = "Implement MPRIS D-Bus interface in your application"
 homepage = "https://github.com/SeaDve/mpris-server"
 repository = "https://github.com/SeaDve/mpris-server"
