@@ -15,6 +15,8 @@
 <h3 id="examples"><a href="#examples">Examples</a></h3>
 <p>For more detailed examples, see also the <a href="https://github.com/SeaDve/mpris-server/tree/main/examples">examples directory</a>.</p>
 <h4 id="manual-implementation-via-server-or-localserver"><a href="#manual-implementation-via-server-or-localserver">Manual Implementation (via <code>Server</code> or <code>LocalServer</code>)</a></h4>
+<p>It is recommended to manually create your own implementation of the interfaces if you want to have more control. You can do this by creating your own struct and implementing the required interfaces, then passing your struct as implementation in <code>Server</code>. You can also use <code>LocalServer</code> and the local version of the interfaces if your struct can’t be sent and shared across threads.</p>
+
 <div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">use </span>std::future;
 
 <span class="kw">use </span>mpris_server::{
