@@ -54,10 +54,12 @@ pub mod builder {
 
 macro_rules! define_iface {
     (#[$attr:meta],
-        $root_iface_ident:ident$(: $bound:tt $(+ $other_bounds:tt)* )?,
-        $player_iface_ident:ident,
-        $track_list_iface_ident:ident,
-        $playlists_iface_ident:ident) => {
+        $root_iface_ident:ident$(: $bound:tt $(+ $other_bounds:tt)* )? extra_docs $extra_root_docs:literal,
+        $player_iface_ident:ident extra_docs $extra_player_docs:literal,
+        $track_list_iface_ident:ident extra_docs $extra_track_list_docs:literal,
+        $playlists_iface_ident:ident extra_docs $extra_playlists_docs:literal) => {
+        #[doc = $extra_root_docs]
+        #[doc = ""]
         /// Used to implement [org.mpris.MediaPlayer2] interface.
         ///
         /// [org.mpris.MediaPlayer2]: https://specifications.freedesktop.org/mpris-spec/2.2/Media_Player.html
@@ -282,6 +284,8 @@ macro_rules! define_iface {
             async fn supported_mime_types(&self) -> fdo::Result<Vec<String>>;
         }
 
+        #[doc = $extra_player_docs]
+        #[doc = ""]
         /// Used to implement [org.mpris.MediaPlayer2.Player] interface, which
         /// implements the methods for querying and providing basic control over what is
         /// currently playing.
@@ -825,6 +829,8 @@ macro_rules! define_iface {
             async fn can_control(&self) -> fdo::Result<bool>;
         }
 
+        #[doc = $extra_track_list_docs]
+        #[doc = ""]
         /// Used to implement [org.mpris.MediaPlayer2.TrackList] interface, which
         /// provides access to a short list of tracks which were recently played or will
         /// be played shortly. This is intended to provide context to the
@@ -998,6 +1004,8 @@ macro_rules! define_iface {
             async fn can_edit_tracks(&self) -> fdo::Result<bool>;
         }
 
+        #[doc = $extra_playlists_docs]
+        #[doc = ""]
         /// Used to implement [org.mpris.MediaPlayer2.Playlists] interface, which
         /// provides access to the media player's playlists.
         ///
@@ -1100,18 +1108,18 @@ macro_rules! define_iface {
 
 define_iface!(
     #[async_trait],
-    RootInterface: Send + Sync,
-    PlayerInterface,
-    TrackListInterface,
-    PlaylistsInterface
+    RootInterface: Send + Sync extra_docs "",
+    PlayerInterface extra_docs "",
+    TrackListInterface extra_docs "",
+    PlaylistsInterface extra_docs ""
 );
 
 define_iface!(
     #[async_trait(?Send)],
-    LocalRootInterface,
-    LocalPlayerInterface,
-    LocalTrackListInterface,
-    LocalPlaylistsInterface
+    LocalRootInterface extra_docs "This is the local version of [`RootInterface`] to be used with [`LocalServer`].",
+    LocalPlayerInterface extra_docs "This is the local version of [`PlayerInterface`] to be used with [`LocalServer`].",
+    LocalTrackListInterface extra_docs "This is the local version of [`TrackListInterface`] to be used with [`LocalServer`].",
+    LocalPlaylistsInterface  extra_docs "This is the local version of [`PlaylistsInterface`] to be used with [`LocalServer`]."
 );
 
 /// A playback rate.
