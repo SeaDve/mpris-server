@@ -487,12 +487,12 @@ where
         }
 
         if !root_changed.is_empty() {
-            self.properties_changed_inner::<RawRootInterface<T>>(root_changed)
+            self.properties_changed_inner::<RawRootInterface<T>>(root_changed, &[])
                 .await?;
         }
 
         if !player_changed.is_empty() {
-            self.properties_changed_inner::<RawPlayerInterface<T>>(player_changed)
+            self.properties_changed_inner::<RawPlayerInterface<T>>(player_changed, &[])
                 .await?;
         }
 
@@ -558,6 +558,7 @@ where
     async fn properties_changed_inner<I>(
         &self,
         changed_properties: HashMap<&str, Value<'_>>,
+        invalidated_properties: &[&str],
     ) -> Result<()>
     where
         I: Interface,
@@ -571,7 +572,7 @@ where
                 ctxt.path(),
                 fdo::Properties::name(),
                 "PropertiesChanged",
-                &(I::name(), changed_properties, &[] as &[&str]),
+                &(I::name(), changed_properties, invalidated_properties),
             )
             .await?;
 
@@ -605,16 +606,23 @@ where
         properties: impl Into<BitFlags<TrackListProperty>>,
     ) -> Result<()> {
         let mut changed = HashMap::new();
+        let mut invalidated = Vec::new();
+
         for property in properties.into().iter() {
-            insert_property!(
-                property, TrackListProperty, self =>
-                changed, Tracks, tracks;
-                changed, CanEditTracks, can_edit_tracks
-            );
+            match property {
+                TrackListProperty::Tracks => {
+                    // The new value must not be sent according to the spec.
+                    invalidated.push("Tracks");
+                }
+                TrackListProperty::CanEditTracks => {
+                    let value = Value::new(self.imp.can_edit_tracks().await?);
+                    changed.insert("CanEditTracks", value);
+                }
+            }
         }
 
-        if !changed.is_empty() {
-            self.properties_changed_inner::<RawTrackListInterface<T>>(changed)
+        if !changed.is_empty() || !invalidated.is_empty() {
+            self.properties_changed_inner::<RawTrackListInterface<T>>(changed, &invalidated)
                 .await?;
         }
 
@@ -655,7 +663,7 @@ where
         }
 
         if !changed.is_empty() {
-            self.properties_changed_inner::<RawPlaylistsInterface<T>>(changed)
+            self.properties_changed_inner::<RawPlaylistsInterface<T>>(changed, &[])
                 .await?;
         }
 
