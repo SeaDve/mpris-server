@@ -72,8 +72,8 @@ async fn main() {
     // Initialize server's connection to the session bus
     server.init().await.unwrap();
 
-    // Emit `PropertiesChanged` signal for `Position` and `Metadata` properties
-    server.properties_changed(Property::Position | Property::Metadata).await.unwrap();
+    // Emit `PropertiesChanged` signal for `CanSeek` and `Metadata` properties
+    server.properties_changed(Property::CanSeek | Property::Metadata).await.unwrap();
 
     // Emit `Seeked` signal
     server.seeked(Time::from_micros(124)).await.unwrap();

@@ -646,13 +646,9 @@ impl Player {
         self.server.imp().position.get()
     }
 
-    pub async fn set_position(&self, position: Time) -> Result<()> {
-        if self.position() == position {
-            return Ok(());
-        }
-
+    /// This does not emit `PropertiesChanged` signal.
+    pub fn set_position(&self, position: Time) {
         self.server.imp().position.set(position);
-        self.server.properties_changed(Property::Position).await
     }
 
     pub fn minimum_rate(&self) -> PlaybackRate {
@@ -750,15 +746,6 @@ impl Player {
 
     pub fn can_control(&self) -> bool {
         self.server.imp().can_control.get()
-    }
-
-    pub async fn set_can_control(&self, can_control: bool) -> Result<()> {
-        if self.can_control() == can_control {
-            return Ok(());
-        }
-
-        self.server.imp().can_control.set(can_control);
-        self.server.properties_changed(Property::CanControl).await
     }
 }
 

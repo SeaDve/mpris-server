@@ -469,15 +469,13 @@ where
                 player_changed, Shuffle, shuffle;
                 player_changed, Metadata, metadata;
                 player_changed, Volume, volume;
-                player_changed, Position, position;
                 player_changed, MinimumRate, minimum_rate;
                 player_changed, MaximumRate, maximum_rate;
                 player_changed, CanGoNext, can_go_next;
                 player_changed, CanGoPrevious, can_go_previous;
                 player_changed, CanPlay, can_play;
                 player_changed, CanPause, can_pause;
-                player_changed, CanSeek, can_seek;
-                player_changed, CanControl, can_control
+                player_changed, CanSeek, can_seek
             );
         }
 

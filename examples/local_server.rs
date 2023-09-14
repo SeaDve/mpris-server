@@ -299,9 +299,9 @@ async fn main() {
     // requests in the local thread.
     server.init_and_run().await.unwrap();
 
-    // Emit `PropertiesChanged` signal for `Position` and `Metadata` properties
+    // Emit `PropertiesChanged` signal for `CanSeek` and `Metadata` properties
     server
-        .properties_changed(Property::Position | Property::Metadata)
+        .properties_changed(Property::CanSeek | Property::Metadata)
         .await
         .unwrap();
 

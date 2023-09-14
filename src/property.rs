@@ -24,7 +24,7 @@ pub enum Property {
     Shuffle,
     Metadata,
     Volume,
-    Position,
+    // Position (must use `Rate` property together with `Seeked` signal instead)
     MinimumRate,
     MaximumRate,
     CanGoNext,
@@ -32,7 +32,7 @@ pub enum Property {
     CanPlay,
     CanPause,
     CanSeek,
-    CanControl,
+    // CanControl (not expected to change)
 }
 
 /// Used for emitting `PropertiesChanged` signals on [`Server`] via
