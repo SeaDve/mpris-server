@@ -437,6 +437,11 @@ where
         &self.imp
     }
 
+    /// Returns a reference to the inner [`Connection`].
+    pub async fn connection(&self) -> Result<&Connection> {
+        self.get_or_init_connection().await
+    }
+
     signal_delegate!(RawPlayerInterface<T>, seeked(position: Time));
 
     /// Emits the `PropertiesChanged` signal for the given properties.

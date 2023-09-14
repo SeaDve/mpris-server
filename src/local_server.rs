@@ -4,7 +4,7 @@ use async_trait::async_trait;
 use enumflags2::BitFlags;
 use futures_channel::{mpsc, oneshot};
 use futures_util::StreamExt;
-use zbus::{fdo, Result};
+use zbus::{fdo, Connection, Result};
 
 use crate::{
     LocalPlayerInterface, LocalPlaylistsInterface, LocalTrackListInterface, LoopStatus,
@@ -551,9 +551,14 @@ where
         })
     }
 
-    /// Returns a reference to the inner implementation.
+    /// Returns a reference to the underlying implementation.
     pub fn imp(&self) -> &T {
         &self.imp
+    }
+
+    /// Returns a reference to the inner [`Connection`].
+    pub async fn connection(&self) -> Result<&Connection> {
+        self.inner.connection().await
     }
 
     /// Initialize the connection and run the server. This method will
