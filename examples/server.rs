@@ -299,8 +299,8 @@ async fn main() {
     // `org.mpris.MediaPlayer2.Player` interfaces.
     let server = Server::new("Test.Application", Player).unwrap();
 
-    // Unlike in `LocalServer`, we only just need to call `init` here as
-    // the server is ran in the background.
+    // We only just need to call `init` here as the server is ran in the background,
+    // unlike in `LocalServer`.
     server.init().await.unwrap();
 
     // Create a server that exports `org.mpris.MediaPlayer2.TrackList`

@@ -24,6 +24,8 @@ For more detailed examples, see also the [examples directory](https://github.com
 ### Manual Implementation (via `Server` or `LocalServer`)
 
 ```rust,ignore
+use std::future;
+
 use mpris_server::{
     export::{
         async_trait::async_trait,
@@ -75,6 +77,9 @@ async fn main() {
 
     // Emit `Seeked` signal
     server.seeked(Time::from_micros(124)).await.unwrap();
+
+    // Prevent the program from exiting.
+    future::pending::<()>().await;
 }
 ```
 
@@ -95,11 +100,15 @@ async fn main() {
         .build()
         .unwrap();
 
+    // Handle `PlayPause` method call
     player.connect_play_pause(|| {
         println!("PlayPause");
     });
 
+    // Update `CanPlay` property and emit `PropertiesChanged` signal for it
     player.set_can_play(false).await.unwrap();
+
+    // Emit `Seeked` signal
     player.emit_seeked(Time::from_millis(1000)).await.unwrap();
 
     player.run().await.unwrap();
