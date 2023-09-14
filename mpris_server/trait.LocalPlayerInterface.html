@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `LocalPlayerInterface` trait in crate `mpris_server`."><title>LocalPlayerInterface in mpris_server - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-9bb858ba049f1f21.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="mpris_server" data-themes="" data-resource-suffix="" data-rustdoc-version="1.72.0 (5680fa18f 2023-08-23)" data-channel="1.72.0" data-search-js="search-f6292fe389d70017.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ><script src="../static.files/storage-59fd9b8ccb335783.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc trait"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../mpris_server/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../mpris_server/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2 class="location"><a href="#">LocalPlayerInterface</a></h2><div class="sidebar-elems"><section><h3><a href="#required-methods">Required Methods</a></h3><ul class="block"><li><a href="#tymethod.can_control">can_control</a></li><li><a href="#tymethod.can_go_next">can_go_next</a></li><li><a href="#tymethod.can_go_previous">can_go_previous</a></li><li><a href="#tymethod.can_pause">can_pause</a></li><li><a href="#tymethod.can_play">can_play</a></li><li><a href="#tymethod.can_seek">can_seek</a></li><li><a href="#tymethod.loop_status">loop_status</a></li><li><a href="#tymethod.maximum_rate">maximum_rate</a></li><li><a href="#tymethod.metadata">metadata</a></li><li><a href="#tymethod.minimum_rate">minimum_rate</a></li><li><a href="#tymethod.next">next</a></li><li><a href="#tymethod.open_uri">open_uri</a></li><li><a href="#tymethod.pause">pause</a></li><li><a href="#tymethod.play">play</a></li><li><a href="#tymethod.play_pause">play_pause</a></li><li><a href="#tymethod.playback_status">playback_status</a></li><li><a href="#tymethod.position">position</a></li><li><a href="#tymethod.previous">previous</a></li><li><a href="#tymethod.rate">rate</a></li><li><a href="#tymethod.seek">seek</a></li><li><a href="#tymethod.set_loop_status">set_loop_status</a></li><li><a href="#tymethod.set_position">set_position</a></li><li><a href="#tymethod.set_rate">set_rate</a></li><li><a href="#tymethod.set_shuffle">set_shuffle</a></li><li><a href="#tymethod.set_volume">set_volume</a></li><li><a href="#tymethod.shuffle">shuffle</a></li><li><a href="#tymethod.stop">stop</a></li><li><a href="#tymethod.volume">volume</a></li></ul><h3><a href="#implementors">Implementors</a></h3></section><h2><a href="index.html">In mpris_server</a></h2></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Trait <a href="index.html">mpris_server</a>::<wbr><a class="trait" href="#">LocalPlayerInterface</a><button id="copy-path" title="Copy item path to clipboard"><img src="../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="srclink" href="../src/mpris_server/lib.rs.html#1225-1231">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><pre class="rust item-decl"><code>pub trait LocalPlayerInterface: <a class="trait" href="trait.LocalRootInterface.html" title="trait mpris_server::LocalRootInterface">LocalRootInterface</a> {
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="This is the local version of `PlayerInterface` to be used with `LocalServer`."><title>LocalPlayerInterface in mpris_server - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-9bb858ba049f1f21.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="mpris_server" data-themes="" data-resource-suffix="" data-rustdoc-version="1.72.0 (5680fa18f 2023-08-23)" data-channel="1.72.0" data-search-js="search-f6292fe389d70017.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ><script src="../static.files/storage-59fd9b8ccb335783.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc trait"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../mpris_server/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../mpris_server/index.html"><img class="rust-logo" src="../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2 class="location"><a href="#">LocalPlayerInterface</a></h2><div class="sidebar-elems"><section><h3><a href="#required-methods">Required Methods</a></h3><ul class="block"><li><a href="#tymethod.can_control">can_control</a></li><li><a href="#tymethod.can_go_next">can_go_next</a></li><li><a href="#tymethod.can_go_previous">can_go_previous</a></li><li><a href="#tymethod.can_pause">can_pause</a></li><li><a href="#tymethod.can_play">can_play</a></li><li><a href="#tymethod.can_seek">can_seek</a></li><li><a href="#tymethod.loop_status">loop_status</a></li><li><a href="#tymethod.maximum_rate">maximum_rate</a></li><li><a href="#tymethod.metadata">metadata</a></li><li><a href="#tymethod.minimum_rate">minimum_rate</a></li><li><a href="#tymethod.next">next</a></li><li><a href="#tymethod.open_uri">open_uri</a></li><li><a href="#tymethod.pause">pause</a></li><li><a href="#tymethod.play">play</a></li><li><a href="#tymethod.play_pause">play_pause</a></li><li><a href="#tymethod.playback_status">playback_status</a></li><li><a href="#tymethod.position">position</a></li><li><a href="#tymethod.previous">previous</a></li><li><a href="#tymethod.rate">rate</a></li><li><a href="#tymethod.seek">seek</a></li><li><a href="#tymethod.set_loop_status">set_loop_status</a></li><li><a href="#tymethod.set_position">set_position</a></li><li><a href="#tymethod.set_rate">set_rate</a></li><li><a href="#tymethod.set_shuffle">set_shuffle</a></li><li><a href="#tymethod.set_volume">set_volume</a></li><li><a href="#tymethod.shuffle">shuffle</a></li><li><a href="#tymethod.stop">stop</a></li><li><a href="#tymethod.volume">volume</a></li></ul><h3><a href="#implementors">Implementors</a></h3></section><h2><a href="index.html">In mpris_server</a></h2></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Trait <a href="index.html">mpris_server</a>::<wbr><a class="trait" href="#">LocalPlayerInterface</a><button id="copy-path" title="Copy item path to clipboard"><img src="../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="srclink" href="../src/mpris_server/lib.rs.html#1121-1127">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><pre class="rust item-decl"><code>pub trait LocalPlayerInterface: <a class="trait" href="trait.LocalRootInterface.html" title="trait mpris_server::LocalRootInterface">LocalRootInterface</a> {
 <details class="toggle type-contents-toggle"><summary class="hideme"><span>Show 28 methods</span></summary>    // Required methods
     fn <a href="#tymethod.next" class="fn">next</a>&lt;'life0, 'async_trait&gt;(
         &amp;'life0 self
@@ -148,124 +148,386 @@
     ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.bool.html">bool</a>&gt;&gt; + 'async_trait&gt;&gt;
        <span class="where">where Self: 'async_trait,
              'life0: 'async_trait</span>;
-</details>}</code></pre><h2 id="required-methods" class="small-section-header">Required Methods<a href="#required-methods" class="anchor">§</a></h2><div class="methods"><section id="tymethod.next" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.next" class="fn">next</a>&lt;'life0, 'async_trait&gt;(
+</details>}</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>This is the local version of <a href="trait.PlayerInterface.html" title="trait mpris_server::PlayerInterface"><code>PlayerInterface</code></a> to be used with <a href="struct.LocalServer.html" title="struct mpris_server::LocalServer"><code>LocalServer</code></a>.</p>
+<p>Used to implement <a href="https://specifications.freedesktop.org/mpris-spec/2.2/Player_Interface.html">org.mpris.MediaPlayer2.Player</a> interface, which
+implements the methods for querying and providing basic control over what is
+currently playing.</p>
+</div></details><h2 id="required-methods" class="small-section-header">Required Methods<a href="#required-methods" class="anchor">§</a></h2><div class="methods"><details class="toggle method-toggle" open><summary><section id="tymethod.next" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.next" class="fn">next</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.unit.html">()</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.previous" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.previous" class="fn">previous</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Skips to the next track in the tracklist.</p>
+<p>If there is no next track (and endless playback and track repeat are
+both off), stop playback.</p>
+<p>If playback is paused or stopped, it remains that way.</p>
+<p>If <a href="trait.LocalPlayerInterface.html#tymethod.can_go_next"><code>CanGoNext</code></a> is <strong>false</strong>, attempting to call this method should
+have no effect.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.previous" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.previous" class="fn">previous</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.unit.html">()</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.pause" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.pause" class="fn">pause</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Skips to the previous track in the tracklist.</p>
+<p>If there is no previous track (and endless playback and track repeat are
+both off), stop playback.</p>
+<p>If playback is paused or stopped, it remains that way.</p>
+<p>If <a href="trait.LocalPlayerInterface.html#tymethod.can_go_previous"><code>CanGoPrevious</code></a> is <strong>false</strong>, attempting to call this method should
+have no effect.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.pause" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.pause" class="fn">pause</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.unit.html">()</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.play_pause" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.play_pause" class="fn">play_pause</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Pauses playback.</p>
+<p>If playback is already paused, this has no effect.</p>
+<p>Calling <a href="trait.LocalPlayerInterface.html#tymethod.play"><code>Play</code></a> after this should cause playback to start again from
+the same position.</p>
+<p>If <a href="trait.LocalPlayerInterface.html#tymethod.can_pause"><code>CanPause</code></a> is <strong>false</strong>, attempting to call this method should have
+no effect.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.play_pause" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.play_pause" class="fn">play_pause</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.unit.html">()</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.stop" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.stop" class="fn">stop</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Pauses playback.</p>
+<p>If playback is already paused, resumes playback.</p>
+<p>If playback is stopped, starts playback.</p>
+<p>If <a href="trait.LocalPlayerInterface.html#tymethod.can_pause"><code>CanPause</code></a> is <strong>false</strong>, attempting to call this method should have
+no effect and raise an error.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.stop" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.stop" class="fn">stop</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.unit.html">()</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.play" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.play" class="fn">play</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Stops playback.</p>
+<p>If playback is already stopped, this has no effect.</p>
+<p>Calling Play after this should cause playback to start again from the
+beginning of the track.</p>
+<p>If <a href="trait.LocalPlayerInterface.html#tymethod.can_control"><code>CanControl</code></a> is <strong>false</strong>, attempting to call this method should
+have no effect and raise an error.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.play" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.play" class="fn">play</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.unit.html">()</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.seek" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.seek" class="fn">seek</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Starts or resumes playback.</p>
+<p>If already playing, this has no effect.</p>
+<p>If paused, playback resumes from the current position.</p>
+<p>If there is no track to play, this has no effect.</p>
+<p>If <a href="trait.LocalPlayerInterface.html#tymethod.can_play"><code>CanPlay</code></a> is <strong>false</strong>, attempting to call this method should have
+no effect.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.seek" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.seek" class="fn">seek</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self,
     offset: <a class="struct" href="struct.Time.html" title="struct mpris_server::Time">Time</a>
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.unit.html">()</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.set_position" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.set_position" class="fn">set_position</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Seeks forward in the current track by the specified number of
+microseconds.</p>
+<h6 id="parameters"><a href="#parameters">Parameters</a></h6>
+<ul>
+<li><code>offset</code> - The number of microseconds to seek forward.</li>
+</ul>
+<p>A negative value seeks back. If this would mean seeking back further
+than the start of the track, the position is set to 0.</p>
+<p>If the value passed in would mean seeking beyond the end of the track,
+acts like a call to Next.</p>
+<p>If the <a href="trait.LocalPlayerInterface.html#tymethod.can_seek"><code>CanSeek</code></a> property is <strong>false</strong>, this has no effect.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.set_position" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.set_position" class="fn">set_position</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self,
     track_id: <a class="struct" href="struct.TrackId.html" title="struct mpris_server::TrackId">TrackId</a>,
     position: <a class="struct" href="struct.Time.html" title="struct mpris_server::Time">Time</a>
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.unit.html">()</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.open_uri" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.open_uri" class="fn">open_uri</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Sets the current track position in microseconds.</p>
+<h6 id="parameters-1"><a href="#parameters-1">Parameters</a></h6>
+<ul>
+<li><code>track_id</code> - The currently playing track’s identifier. If this does
+not match the id of the currently-playing track, the call is ignored
+as “stale”. <a href="struct.TrackId.html#associatedconstant.NO_TRACK" title="associated constant mpris_server::TrackId::NO_TRACK"><code>/org/mpris/MediaPlayer2/TrackList/NoTrack</code></a> is not a
+valid value for this argument.</li>
+<li><code>position</code> - The position in microseconds. This must be between 0 and
+&lt;track_length&gt;.</li>
+</ul>
+<p>If the Position argument is less than 0, do nothing.</p>
+<p>If the Position argument is greater than the track length, do nothing.</p>
+<p>If the <a href="trait.LocalPlayerInterface.html#tymethod.can_seek"><code>CanSeek</code></a> property is <strong>false</strong>, this has no effect.</p>
+<h6 id="rationale"><a href="#rationale">Rationale</a></h6>
+<p>The reason for having this method, rather than making <a href="trait.LocalPlayerInterface.html#tymethod.position"><code>Position</code></a>
+writable, is to include the <code>track_id</code> argument to avoid race
+conditions where a client tries to seek to a position when the track
+has already changed.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.open_uri" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.open_uri" class="fn">open_uri</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self,
     uri: <a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.unit.html">()</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.playback_status" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.playback_status" class="fn">playback_status</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Opens the <code>uri</code> given as an argument</p>
+<h6 id="parameters-2"><a href="#parameters-2">Parameters</a></h6>
+<ul>
+<li><code>uri</code> - Uri of the track to load. Its uri scheme should be an element
+of the <a href="trait.RootInterface.html#tymethod.supported_uri_schemes" title="method mpris_server::RootInterface::supported_uri_schemes"><code>SupportedUriSchemes</code></a> property and the mime-type should match
+one of the elements of the <a href="trait.RootInterface.html#tymethod.supported_mime_types" title="method mpris_server::RootInterface::supported_mime_types"><code>SupportedMimeTypes</code></a>.</li>
+</ul>
+<p>If the playback is stopped, starts playing</p>
+<p>If the uri scheme or the mime-type of the uri to open is not supported,
+this method does nothing and may raise an error. In particular, if the
+list of available uri schemes is empty, this method may not be
+implemented.</p>
+<p>Clients should not assume that the <code>uri</code> has been opened as soon as this
+method returns. They should wait until the <a href="struct.Metadata.html#method.set_trackid" title="method mpris_server::Metadata::set_trackid"><code>mpris:trackid</code></a> field in
+the <a href="trait.LocalPlayerInterface.html#tymethod.metadata"><code>Metadata</code></a> property changes.</p>
+<p>If the media player implements the <a href="trait.TrackListInterface.html" title="trait mpris_server::TrackListInterface"><code>TrackList interface</code></a>, then the
+opened track should be made part of the tracklist, the <a href="struct.Server.html#method.track_added" title="method mpris_server::Server::track_added"><code>TrackAdded</code></a> or
+<a href="struct.Server.html#method.track_list_replaced" title="method mpris_server::Server::track_list_replaced"><code>TrackListReplaced</code></a> signal should be fired, as well as the
+<code>org.freedesktop.DBus.Properties.PropertiesChanged</code> signal on the
+<a href="trait.TrackListInterface.html" title="trait mpris_server::TrackListInterface"><code>TrackList interface</code></a>.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.playback_status" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.playback_status" class="fn">playback_status</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="enum" href="enum.PlaybackStatus.html" title="enum mpris_server::PlaybackStatus">PlaybackStatus</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.loop_status" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.loop_status" class="fn">loop_status</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>The current playback status.</p>
+<p>When this property changes, the
+<code>org.freedesktop.DBus.Properties.PropertiesChanged</code> signal via
+<a href="struct.Server.html#method.properties_changed" title="method mpris_server::Server::properties_changed"><code>properties_changed</code></a> must be emitted with the new value.</p>
+<p>May be <a href="enum.PlaybackStatus.html#variant.Playing" title="variant mpris_server::PlaybackStatus::Playing"><code>Playing</code></a>, <a href="enum.PlaybackStatus.html#variant.Paused" title="variant mpris_server::PlaybackStatus::Paused"><code>Paused</code></a> or <a href="enum.PlaybackStatus.html#variant.Stopped" title="variant mpris_server::PlaybackStatus::Stopped"><code>Stopped</code></a>.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.loop_status" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.loop_status" class="fn">loop_status</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="enum" href="enum.LoopStatus.html" title="enum mpris_server::LoopStatus">LoopStatus</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.set_loop_status" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.set_loop_status" class="fn">set_loop_status</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>The current loop / repeat status</p>
+<p>This property is <em>optional</em>. Clients should handle its absence
+gracefully.</p>
+<p>When this property changes, the
+<code>org.freedesktop.DBus.Properties.PropertiesChanged</code> signal via
+<a href="struct.Server.html#method.properties_changed" title="method mpris_server::Server::properties_changed"><code>properties_changed</code></a> must be emitted with the new value.</p>
+<p>May be:</p>
+<ul>
+<li><a href="enum.LoopStatus.html#variant.None" title="variant mpris_server::LoopStatus::None"><code>None</code></a> if the playback will stop when there are no more tracks to
+play</li>
+<li><a href="enum.LoopStatus.html#variant.Track" title="variant mpris_server::LoopStatus::Track"><code>Track</code></a> if the current track will start again from the beginning
+once it has finished playing</li>
+<li><a href="enum.LoopStatus.html#variant.Playlist" title="variant mpris_server::LoopStatus::Playlist"><code>Playlist</code></a> if the playback loops through a list of tracks</li>
+</ul>
+<p>If <a href="trait.LocalPlayerInterface.html#tymethod.can_control"><code>CanControl</code></a> is <strong>false</strong>, attempting to set this property should
+have no effect and raise an error.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.set_loop_status" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.set_loop_status" class="fn">set_loop_status</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self,
     loop_status: <a class="enum" href="enum.LoopStatus.html" title="enum mpris_server::LoopStatus">LoopStatus</a>
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.unit.html">()</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.rate" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.rate" class="fn">rate</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Sets the current loop / repeat status</p>
+<p>See <a href="trait.LocalPlayerInterface.html#tymethod.loop_status"><code>LoopStatus</code></a> for more details.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.rate" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.rate" class="fn">rate</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="type" href="type.PlaybackRate.html" title="type mpris_server::PlaybackRate">PlaybackRate</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.set_rate" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.set_rate" class="fn">set_rate</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>The current playback rate.</p>
+<p>When this property changes, the
+<code>org.freedesktop.DBus.Properties.PropertiesChanged</code> signal via
+<a href="struct.Server.html#method.properties_changed" title="method mpris_server::Server::properties_changed"><code>properties_changed</code></a> must be emitted with the new value.</p>
+<p>The value must fall in the range described by <a href="trait.LocalPlayerInterface.html#tymethod.minimum_rate"><code>MinimumRate</code></a> and
+<a href="trait.LocalPlayerInterface.html#tymethod.maximum_rate"><code>MaximumRate</code></a>, and must not be 0.0. If playback is paused, the
+<a href="trait.LocalPlayerInterface.html#tymethod.playback_status"><code>PlaybackStatus</code></a> property should be used to indicate this. A value of
+0.0 should not be set by the client. If it is, the media player
+should act as though <a href="trait.LocalPlayerInterface.html#tymethod.pause"><code>Pause</code></a> was called.</p>
+<p>If the media player has no ability to play at speeds other than the
+normal playback rate, this must still be implemented, and must return
+1.0. The <a href="trait.LocalPlayerInterface.html#tymethod.minimum_rate"><code>MinimumRate</code></a> and <a href="trait.LocalPlayerInterface.html#tymethod.maximum_rate"><code>MaximumRate</code></a> properties must also be set
+to 1.0.</p>
+<p>Not all values may be accepted by the media player. It is left to media
+player implementations to decide how to deal with values they cannot
+use; they may either ignore them or pick a “best fit” value. Clients are
+recommended to only use sensible fractions or multiples of 1 (eg: 0.5,
+0.25, 1.5, 2.0, etc).</p>
+<h6 id="rationale-1"><a href="#rationale-1">Rationale</a></h6>
+<p>This allows clients to display (reasonably) accurate progress bars
+without having to regularly query the media player for the current
+position.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.set_rate" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.set_rate" class="fn">set_rate</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self,
     rate: <a class="type" href="type.PlaybackRate.html" title="type mpris_server::PlaybackRate">PlaybackRate</a>
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.unit.html">()</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.shuffle" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.shuffle" class="fn">shuffle</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Sets the current playback rate.</p>
+<p>See <a href="trait.LocalPlayerInterface.html#tymethod.rate"><code>Rate</code></a> for more details.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.shuffle" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.shuffle" class="fn">shuffle</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.bool.html">bool</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.set_shuffle" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.set_shuffle" class="fn">set_shuffle</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Whether playback is shuffled.</p>
+<p>This property is <em>optional</em>. Clients should handle its absence
+gracefully.</p>
+<p>When this property changes, the
+<code>org.freedesktop.DBus.Properties.PropertiesChanged</code> signal via
+<a href="struct.Server.html#method.properties_changed" title="method mpris_server::Server::properties_changed"><code>properties_changed</code></a> must be emitted with the new value.</p>
+<p>A value of <strong>false</strong> indicates that playback is progressing linearly
+through a playlist, while <strong>true</strong> means playback is progressing through
+a playlist in some other order.</p>
+<p>If <a href="trait.LocalPlayerInterface.html#tymethod.can_control"><code>CanControl</code></a> is <strong>false</strong>, attempting to set this property should
+have no effect and raise an error.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.set_shuffle" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.set_shuffle" class="fn">set_shuffle</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self,
     shuffle: <a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.bool.html">bool</a>
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.unit.html">()</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.metadata" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.metadata" class="fn">metadata</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Sets whether playback is shuffled.</p>
+<p>See <a href="trait.LocalPlayerInterface.html#tymethod.shuffle"><code>Shuffle</code></a> for more details.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.metadata" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.metadata" class="fn">metadata</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="struct" href="struct.Metadata.html" title="struct mpris_server::Metadata">Metadata</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.volume" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.volume" class="fn">volume</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>The metadata of the current element.</p>
+<p>When this property changes, the
+<code>org.freedesktop.DBus.Properties.PropertiesChanged</code> signal via
+<a href="struct.Server.html#method.properties_changed" title="method mpris_server::Server::properties_changed"><code>properties_changed</code></a> must be emitted with the new value.</p>
+<p>If there is a current track, this must have a <a href="struct.Metadata.html#method.set_trackid" title="method mpris_server::Metadata::set_trackid"><code>mpris:trackid</code></a> entry at
+the very least, which contains a D-Bus path that uniquely identifies
+this track.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.volume" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.volume" class="fn">volume</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="type" href="type.Volume.html" title="type mpris_server::Volume">Volume</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.set_volume" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.set_volume" class="fn">set_volume</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>The volume level.</p>
+<p>When this property changes, the
+<code>org.freedesktop.DBus.Properties.PropertiesChanged</code> signal via
+<a href="struct.Server.html#method.properties_changed" title="method mpris_server::Server::properties_changed"><code>properties_changed</code></a> must be emitted with the new value.</p>
+<p>When setting, if a negative value is passed, the volume should be set to
+0.0.</p>
+<p>If <a href="trait.LocalPlayerInterface.html#tymethod.can_control"><code>CanControl</code></a> is <strong>false</strong>, attempting to set this property should
+have no effect and raise an error.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.set_volume" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.set_volume" class="fn">set_volume</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self,
     volume: <a class="type" href="type.Volume.html" title="type mpris_server::Volume">Volume</a>
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.unit.html">()</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.position" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.position" class="fn">position</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Sets the volume level.</p>
+<p>See <a href="trait.LocalPlayerInterface.html#tymethod.volume"><code>Volume</code></a> for more details.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.position" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.position" class="fn">position</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="struct" href="struct.Time.html" title="struct mpris_server::Time">Time</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.minimum_rate" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.minimum_rate" class="fn">minimum_rate</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>The current track position in microseconds, between 0 and the
+<a href="struct.Metadata.html#method.set_length" title="method mpris_server::Metadata::set_length"><code>mpris:length</code></a> metadata entry.</p>
+<p>When this property changes, the
+<code>org.freedesktop.DBus.Properties.PropertiesChanged</code> signal via
+<a href="struct.Server.html#method.properties_changed" title="method mpris_server::Server::properties_changed"><code>properties_changed</code></a> must <em>not</em> be emitted.</p>
+<p><strong>Note:</strong> If the media player allows it, the current playback position
+can be changed either the <a href="trait.LocalPlayerInterface.html#tymethod.set_position"><code>SetPosition</code></a> method or the <a href="trait.LocalPlayerInterface.html#tymethod.seek"><code>Seek</code></a>
+method on this interface. If this is not the case, the <a href="trait.LocalPlayerInterface.html#tymethod.can_seek"><code>CanSeek</code></a>
+property is <strong>false</strong>, and setting this property has no effect and
+can raise an error.</p>
+<p>If the playback progresses in a way that is inconstistent with the
+<a href="trait.LocalPlayerInterface.html#tymethod.rate"><code>Rate</code></a> property, the <a href="struct.Server.html#method.seeked" title="method mpris_server::Server::seeked"><code>Seeked</code></a> signal is emitted.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.minimum_rate" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.minimum_rate" class="fn">minimum_rate</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="type" href="type.PlaybackRate.html" title="type mpris_server::PlaybackRate">PlaybackRate</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.maximum_rate" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.maximum_rate" class="fn">maximum_rate</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>The minimum value which the <a href="trait.LocalPlayerInterface.html#tymethod.rate"><code>Rate</code></a> property can take. Clients should
+not attempt to set the <a href="trait.LocalPlayerInterface.html#tymethod.rate"><code>Rate</code></a> property below this value.</p>
+<p>When this property changes, the
+<code>org.freedesktop.DBus.Properties.PropertiesChanged</code> signal via
+<a href="struct.Server.html#method.properties_changed" title="method mpris_server::Server::properties_changed"><code>properties_changed</code></a> must be emitted with the new value.</p>
+<p>Note that even if this value is 0.0 or negative, clients should not
+attempt to set the <a href="trait.LocalPlayerInterface.html#tymethod.rate"><code>Rate</code></a> property to 0.0.</p>
+<p>This value should always be 1.0 or less.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.maximum_rate" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.maximum_rate" class="fn">maximum_rate</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="type" href="type.PlaybackRate.html" title="type mpris_server::PlaybackRate">PlaybackRate</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.can_go_next" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.can_go_next" class="fn">can_go_next</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>The maximum value which the <a href="trait.LocalPlayerInterface.html#tymethod.rate"><code>Rate</code></a> property can take. Clients should
+not attempt to set the <a href="trait.LocalPlayerInterface.html#tymethod.rate"><code>Rate</code></a> property above this value.</p>
+<p>When this property changes, the
+<code>org.freedesktop.DBus.Properties.PropertiesChanged</code> signal via
+<a href="struct.Server.html#method.properties_changed" title="method mpris_server::Server::properties_changed"><code>properties_changed</code></a> must be emitted with the new value.</p>
+<p>This value should always be 1.0 or greater.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.can_go_next" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.can_go_next" class="fn">can_go_next</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.bool.html">bool</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.can_go_previous" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.can_go_previous" class="fn">can_go_previous</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Whether the client can call the <a href="trait.LocalPlayerInterface.html#tymethod.next"><code>Next</code></a> method on this interface and
+expect the current track to change.</p>
+<p>When this property changes, the
+<code>org.freedesktop.DBus.Properties.PropertiesChanged</code> signal via
+<a href="struct.Server.html#method.properties_changed" title="method mpris_server::Server::properties_changed"><code>properties_changed</code></a> must be emitted with the new value.</p>
+<p>If it is unknown whether a call to <a href="trait.LocalPlayerInterface.html#tymethod.next"><code>Next</code></a> will be successful (for
+example, when streaming tracks), this property should be set to
+<strong>true</strong>.</p>
+<p>If <a href="trait.LocalPlayerInterface.html#tymethod.can_control"><code>CanControl</code></a> is <strong>false</strong>, this property should also be <strong>false</strong>.</p>
+<h6 id="rationale-2"><a href="#rationale-2">Rationale</a></h6>
+<p>Even when playback can generally be controlled, there may not always be
+a next track to move to.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.can_go_previous" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.can_go_previous" class="fn">can_go_previous</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.bool.html">bool</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.can_play" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.can_play" class="fn">can_play</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Whether the client can call the <a href="trait.LocalPlayerInterface.html#tymethod.previous"><code>Previous</code></a> method on this interface
+and expect the current track to change.</p>
+<p>When this property changes, the
+<code>org.freedesktop.DBus.Properties.PropertiesChanged</code> signal via
+<a href="struct.Server.html#method.properties_changed" title="method mpris_server::Server::properties_changed"><code>properties_changed</code></a> must be emitted with the new value.</p>
+<p>If it is unknown whether a call to <a href="trait.LocalPlayerInterface.html#tymethod.previous"><code>Previous</code></a> will be successful (for
+example, when streaming tracks), this property should be set to
+<strong>true</strong>.</p>
+<p>If <a href="trait.LocalPlayerInterface.html#tymethod.can_control"><code>CanControl</code></a> is <strong>false</strong>, this property should also be <strong>false</strong>.</p>
+<h6 id="rationale-3"><a href="#rationale-3">Rationale</a></h6>
+<p>Even when playback can generally be controlled, there may not always be
+a next previous to move to.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.can_play" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.can_play" class="fn">can_play</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.bool.html">bool</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.can_pause" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.can_pause" class="fn">can_pause</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Whether playback can be started using <a href="trait.LocalPlayerInterface.html#tymethod.play"><code>Play</code></a> or <a href="trait.LocalPlayerInterface.html#tymethod.play_pause"><code>PlayPause</code></a>.</p>
+<p>When this property changes, the
+<code>org.freedesktop.DBus.Properties.PropertiesChanged</code> signal via
+<a href="struct.Server.html#method.properties_changed" title="method mpris_server::Server::properties_changed"><code>properties_changed</code></a> must be emitted with the new value.</p>
+<p>Note that this is related to whether there is a “current track”: the
+value should not depend on whether the track is currently paused or
+playing. In fact, if a track is currently playing (and <a href="trait.LocalPlayerInterface.html#tymethod.can_control"><code>CanControl</code></a> is
+<strong>true</strong>), this should be <strong>true</strong>.</p>
+<p>If <a href="trait.LocalPlayerInterface.html#tymethod.can_control"><code>CanControl</code></a> is <strong>false</strong>, this property should also be <strong>false</strong>.</p>
+<h6 id="rationale-4"><a href="#rationale-4">Rationale</a></h6>
+<p>Even when playback can generally be controlled, it may not be possible
+to enter a “playing” state, for example if there is no “current track”.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.can_pause" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.can_pause" class="fn">can_pause</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.bool.html">bool</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.can_seek" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.can_seek" class="fn">can_seek</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Whether playback can be paused using <a href="trait.LocalPlayerInterface.html#tymethod.pause"><code>Pause</code></a> or <a href="trait.LocalPlayerInterface.html#tymethod.play_pause"><code>PlayPause</code></a>.</p>
+<p>When this property changes, the
+<code>org.freedesktop.DBus.Properties.PropertiesChanged</code> signal via
+<a href="struct.Server.html#method.properties_changed" title="method mpris_server::Server::properties_changed"><code>properties_changed</code></a> must be emitted with the new value.</p>
+<p>Note that this is an intrinsic property of the current track: its value
+should not depend on whether the track is currently paused or playing.
+In fact, if playback is currently paused (and <a href="trait.LocalPlayerInterface.html#tymethod.can_control"><code>CanControl</code></a> is
+<strong>true</strong>), this should be <strong>true</strong>.</p>
+<p>If <a href="trait.LocalPlayerInterface.html#tymethod.can_control"><code>CanControl</code></a> is <strong>false</strong>, this property should also be <strong>false</strong>.</p>
+<h6 id="rationale-5"><a href="#rationale-5">Rationale</a></h6>
+<p>Not all media is pausable: it may not be possible to pause some streamed
+media, for example.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.can_seek" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.can_seek" class="fn">can_seek</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.bool.html">bool</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section><section id="tymethod.can_control" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1225-1231">source</a><h4 class="code-header">fn <a href="#tymethod.can_control" class="fn">can_control</a>&lt;'life0, 'async_trait&gt;(
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Whether the client can control the playback position using <a href="trait.LocalPlayerInterface.html#tymethod.seek"><code>Seek</code></a> and
+<a href="trait.LocalPlayerInterface.html#tymethod.set_position"><code>SetPosition</code></a>. This may be different for different tracks.</p>
+<p>When this property changes, the
+<code>org.freedesktop.DBus.Properties.PropertiesChanged</code> signal via
+<a href="struct.Server.html#method.properties_changed" title="method mpris_server::Server::properties_changed"><code>properties_changed</code></a> must be emitted with the new value.</p>
+<p>If <a href="trait.LocalPlayerInterface.html#tymethod.can_control"><code>CanControl</code></a> is <strong>false</strong>, this property should also be <strong>false</strong>.</p>
+<h6 id="rationale-6"><a href="#rationale-6">Rationale</a></h6>
+<p>Not all media is seekable: it may not be possible to seek when playing
+some streamed media, for example.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.can_control" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1121-1127">source</a><h4 class="code-header">fn <a href="#tymethod.can_control" class="fn">can_control</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.bool.html">bool</a>&gt;&gt; + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
-    'life0: 'async_trait,</span></h4></section></div><h2 id="implementors" class="small-section-header">Implementors<a href="#implementors" class="anchor">§</a></h2><div id="implementors-list"></div><script src="../implementors/mpris_server/trait.LocalPlayerInterface.js" async></script></section></div></main></body></html>
+    'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Whether the media player may be controlled over this interface.</p>
+<p>When this property changes, the
+<code>org.freedesktop.DBus.Properties.PropertiesChanged</code> signal via
+<a href="struct.Server.html#method.properties_changed" title="method mpris_server::Server::properties_changed"><code>properties_changed</code></a> must <em>not</em> be emitted.</p>
+<p>This property is not expected to change, as it describes an intrinsic
+capability of the implementation.</p>
+<p>If this is <strong>false</strong>, clients should assume that all properties on this
+interface are read-only (and will raise errors if writing to them is
+attempted), no methods are implemented and all other properties starting
+with <code>Can</code> are also <strong>false</strong>.</p>
+<h6 id="rationale-7"><a href="#rationale-7">Rationale</a></h6>
+<p>This allows clients to determine whether to present and enable controls
+to the user in advance of attempting to call methods and write to
+properties.</p>
+</div></details></div><h2 id="implementors" class="small-section-header">Implementors<a href="#implementors" class="anchor">§</a></h2><div id="implementors-list"></div><script src="../implementors/mpris_server/trait.LocalPlayerInterface.js" async></script></section></div></main></body></html>
