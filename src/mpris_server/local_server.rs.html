@@ -936,13 +936,19 @@
 <a href="#936" id="936">936</a>
 <a href="#937" id="937">937</a>
 <a href="#938" id="938">938</a>
+<a href="#939" id="939">939</a>
+<a href="#940" id="940">940</a>
+<a href="#941" id="941">941</a>
+<a href="#942" id="942">942</a>
+<a href="#943" id="943">943</a>
+<a href="#944" id="944">944</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{cell::RefCell, fmt, future::Future, marker::PhantomData, pin::Pin, rc::Rc};
 
 <span class="kw">use </span>async_trait::async_trait;
 <span class="kw">use </span>enumflags2::BitFlags;
 <span class="kw">use </span>futures_channel::{mpsc, oneshot};
 <span class="kw">use </span>futures_util::StreamExt;
-<span class="kw">use </span>zbus::{fdo, <span class="prelude-ty">Result</span>};
+<span class="kw">use </span>zbus::{fdo, Connection, <span class="prelude-ty">Result</span>};
 
 <span class="kw">use crate</span>::{
     LocalPlayerInterface, LocalPlaylistsInterface, LocalTrackListInterface, LoopStatus,
@@ -1489,19 +1495,25 @@
         })
     }
 
-    <span class="doccomment">/// Returns a reference to the inner implementation.
+    <span class="doccomment">/// Returns a reference to the underlying implementation.
     </span><span class="kw">pub fn </span>imp(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>T {
         <span class="kw-2">&amp;</span><span class="self">self</span>.imp
     }
 
-    <span class="doccomment">/// Run the server. This method will continually run until the server is
-    /// dropped.
+    <span class="doccomment">/// Returns a reference to the inner [`Connection`].
     ///
-    /// This is no-op and returns [Ok] immediately if the server is already
-    /// running.
-    </span><span class="kw">pub async fn </span>run(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    /// If you needed to call this, consider filing an issue.
+    </span><span class="kw">pub async fn </span>connection(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span>Connection&gt; {
+        <span class="self">self</span>.inner.connection().<span class="kw">await
+    </span>}
+
+    <span class="doccomment">/// Initialize the connection and run the server. This method will
+    /// continually run until the server is dropped.
+    ///
+    /// This is no-op if the server is already running.
+    </span><span class="kw">pub async fn </span>init_and_run(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="self">self</span>.inner.init().<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="kw">if let </span><span class="prelude-val">Some</span>(runner) = <span class="self">self</span>.runner.take() {
-            <span class="self">self</span>.inner.init().<span class="kw">await</span><span class="question-mark">?</span>;
             runner.<span class="kw">await</span>;
         }
         <span class="prelude-val">Ok</span>(())

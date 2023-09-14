@@ -921,6 +921,30 @@
 <a href="#921" id="921">921</a>
 <a href="#922" id="922">922</a>
 <a href="#923" id="923">923</a>
+<a href="#924" id="924">924</a>
+<a href="#925" id="925">925</a>
+<a href="#926" id="926">926</a>
+<a href="#927" id="927">927</a>
+<a href="#928" id="928">928</a>
+<a href="#929" id="929">929</a>
+<a href="#930" id="930">930</a>
+<a href="#931" id="931">931</a>
+<a href="#932" id="932">932</a>
+<a href="#933" id="933">933</a>
+<a href="#934" id="934">934</a>
+<a href="#935" id="935">935</a>
+<a href="#936" id="936">936</a>
+<a href="#937" id="937">937</a>
+<a href="#938" id="938">938</a>
+<a href="#939" id="939">939</a>
+<a href="#940" id="940">940</a>
+<a href="#941" id="941">941</a>
+<a href="#942" id="942">942</a>
+<a href="#943" id="943">943</a>
+<a href="#944" id="944">944</a>
+<a href="#945" id="945">945</a>
+<a href="#946" id="946">946</a>
+<a href="#947" id="947">947</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{
     collections::HashMap,
     fmt,
@@ -1323,7 +1347,7 @@
     </span>T: PlayerInterface + <span class="lifetime">&#39;static</span>,
 {
     <span class="doccomment">/// Creates a new [`Server`] with the given bus name suffix and
-    /// implementation, which must implement [`RootInterface`] and
+    /// implementation, `imp`, which must implement [`RootInterface`] and
     /// [`PlayerInterface`].
     ///
     /// To start the connection, [`Server::init`] must be called.
@@ -1360,12 +1384,24 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>.imp
     }
 
+    <span class="doccomment">/// Returns a reference to the inner [`Connection`].
+    ///
+    /// If you needed to call this, consider filing an issue.
+    </span><span class="kw">pub async fn </span>connection(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span>Connection&gt; {
+        <span class="self">self</span>.get_or_init_connection().<span class="kw">await
+    </span>}
+
     <span class="macro">signal_delegate!</span>(RawPlayerInterface&lt;T&gt;, seeked(position: Time));
 
     <span class="doccomment">/// Emits the `PropertiesChanged` signal for the given properties.
     ///
-    /// [`Server::track_list_properties_changed`] or [`Server::playlists_properties_changed`] are used
-    /// to emit `PropertiesChanged` for the `TrackList` or `Playlists` interfaces respectively.
+    /// This categorizes the property in the `changed` or `invalidated`
+    /// properties as defined by the spec.
+    ///
+    /// [`Server::track_list_properties_changed`] or
+    /// [`Server::playlists_properties_changed`] are used
+    /// to emit `PropertiesChanged` for the `TrackList` or `Playlists`
+    /// interfaces respectively.
     </span><span class="kw">pub async fn </span>properties_changed(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         properties: <span class="kw">impl </span>Into&lt;BitFlags&lt;Property&gt;&gt;,
@@ -1390,25 +1426,23 @@
                 player_changed, Shuffle, shuffle;
                 player_changed, Metadata, metadata;
                 player_changed, Volume, volume;
-                player_changed, Position, position;
                 player_changed, MinimumRate, minimum_rate;
                 player_changed, MaximumRate, maximum_rate;
                 player_changed, CanGoNext, can_go_next;
                 player_changed, CanGoPrevious, can_go_previous;
                 player_changed, CanPlay, can_play;
                 player_changed, CanPause, can_pause;
-                player_changed, CanSeek, can_seek;
-                player_changed, CanControl, can_control
+                player_changed, CanSeek, can_seek
             );
         }
 
         <span class="kw">if </span>!root_changed.is_empty() {
-            <span class="self">self</span>.properties_changed_inner::&lt;RawRootInterface&lt;T&gt;&gt;(root_changed)
+            <span class="self">self</span>.properties_changed_inner::&lt;RawRootInterface&lt;T&gt;&gt;(root_changed, <span class="kw-2">&amp;</span>[])
                 .<span class="kw">await</span><span class="question-mark">?</span>;
         }
 
         <span class="kw">if </span>!player_changed.is_empty() {
-            <span class="self">self</span>.properties_changed_inner::&lt;RawPlayerInterface&lt;T&gt;&gt;(player_changed)
+            <span class="self">self</span>.properties_changed_inner::&lt;RawPlayerInterface&lt;T&gt;&gt;(player_changed, <span class="kw-2">&amp;</span>[])
                 .<span class="kw">await</span><span class="question-mark">?</span>;
         }
 
@@ -1474,6 +1508,7 @@
     <span class="kw">async fn </span>properties_changed_inner&lt;I&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         changed_properties: HashMap&lt;<span class="kw-2">&amp;</span>str, Value&lt;<span class="lifetime">&#39;_</span>&gt;&gt;,
+        invalidated_properties: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>str],
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;
     <span class="kw">where
         </span>I: Interface,
@@ -1487,7 +1522,7 @@
                 ctxt.path(),
                 fdo::Properties::name(),
                 <span class="string">&quot;PropertiesChanged&quot;</span>,
-                <span class="kw-2">&amp;</span>(I::name(), changed_properties, <span class="kw-2">&amp;</span>[] <span class="kw">as </span><span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>str]),
+                <span class="kw-2">&amp;</span>(I::name(), changed_properties, invalidated_properties),
             )
             .<span class="kw">await</span><span class="question-mark">?</span>;
 
@@ -1516,21 +1551,31 @@
     <span class="macro">signal_delegate!</span>(RawTrackListInterface&lt;T&gt;, track_metadata_changed(track_id: TrackId, metadata: Metadata));
 
     <span class="doccomment">/// Emits the `PropertiesChanged` signal for the given properties.
+    ///
+    /// This categorizes the property in the `changed` or `invalidated`
+    /// properties as defined by the spec.
     </span><span class="kw">pub async fn </span>track_list_properties_changed(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         properties: <span class="kw">impl </span>Into&lt;BitFlags&lt;TrackListProperty&gt;&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>changed = HashMap::new();
+        <span class="kw">let </span><span class="kw-2">mut </span>invalidated = Vec::new();
+
         <span class="kw">for </span>property <span class="kw">in </span>properties.into().iter() {
-            <span class="macro">insert_property!</span>(
-                property, TrackListProperty, <span class="self">self </span>=&gt;
-                changed, Tracks, tracks;
-                changed, CanEditTracks, can_edit_tracks
-            );
+            <span class="kw">match </span>property {
+                TrackListProperty::Tracks =&gt; {
+                    <span class="comment">// The new value must not be sent according to the spec.
+                    </span>invalidated.push(<span class="string">&quot;Tracks&quot;</span>);
+                }
+                TrackListProperty::CanEditTracks =&gt; {
+                    <span class="kw">let </span>value = Value::new(<span class="self">self</span>.imp.can_edit_tracks().<span class="kw">await</span><span class="question-mark">?</span>);
+                    changed.insert(<span class="string">&quot;CanEditTracks&quot;</span>, value);
+                }
+            }
         }
 
-        <span class="kw">if </span>!changed.is_empty() {
-            <span class="self">self</span>.properties_changed_inner::&lt;RawTrackListInterface&lt;T&gt;&gt;(changed)
+        <span class="kw">if </span>!changed.is_empty() || !invalidated.is_empty() {
+            <span class="self">self</span>.properties_changed_inner::&lt;RawTrackListInterface&lt;T&gt;&gt;(changed, <span class="kw-2">&amp;</span>invalidated)
                 .<span class="kw">await</span><span class="question-mark">?</span>;
         }
 
@@ -1556,6 +1601,9 @@
     <span class="macro">signal_delegate!</span>(RawPlaylistsInterface&lt;T&gt;, playlist_changed(playlist: Playlist));
 
     <span class="doccomment">/// Emits the `PropertiesChanged` signal for the given properties.
+    ///
+    /// This categorizes the property in the `changed` or `invalidated`
+    /// properties as defined by the spec.
     </span><span class="kw">pub async fn </span>playlists_properties_changed(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         properties: <span class="kw">impl </span>Into&lt;BitFlags&lt;PlaylistsProperty&gt;&gt;,
@@ -1571,7 +1619,7 @@
         }
 
         <span class="kw">if </span>!changed.is_empty() {
-            <span class="self">self</span>.properties_changed_inner::&lt;RawPlaylistsInterface&lt;T&gt;&gt;(changed)
+            <span class="self">self</span>.properties_changed_inner::&lt;RawPlaylistsInterface&lt;T&gt;&gt;(changed, <span class="kw-2">&amp;</span>[])
                 .<span class="kw">await</span><span class="question-mark">?</span>;
         }
 

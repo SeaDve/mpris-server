@@ -91,16 +91,16 @@
     Shuffle,
     Metadata,
     Volume,
-    Position,
-    MinimumRate,
+    <span class="comment">// Position (must use `Rate` property together with `Seeked` signal instead)
+    </span>MinimumRate,
     MaximumRate,
     CanGoNext,
     CanGoPrevious,
     CanPlay,
     CanPause,
     CanSeek,
-    CanControl,
-}
+    <span class="comment">// CanControl (not expected to change)
+</span>}
 
 <span class="doccomment">/// Used for emitting `PropertiesChanged` signals on [`Server`] via
 /// [`Server::track_list_properties_changed`], if `T` implements
