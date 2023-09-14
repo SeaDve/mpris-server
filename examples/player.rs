@@ -31,5 +31,5 @@ async fn main() {
     // Emit `Seeked` signal
     player.emit_seeked(Time::from_millis(1000)).await.unwrap();
 
-    player.run().await.unwrap();
+    player.init_and_run().await.unwrap();
 }

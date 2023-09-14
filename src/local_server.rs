@@ -556,14 +556,13 @@ where
         &self.imp
     }
 
-    /// Run the server. This method will continually run until the server is
-    /// dropped.
+    /// Initialize the connection and run the server. This method will
+    /// continually run until the server is dropped.
     ///
-    /// This is no-op and returns [Ok] immediately if the server is already
-    /// running.
-    pub async fn run(&self) -> Result<()> {
+    /// This is no-op if the server is already running.
+    pub async fn init_and_run(&self) -> Result<()> {
+        self.inner.init().await?;
         if let Some(runner) = self.runner.take() {
-            self.inner.init().await?;
             runner.await;
         }
         Ok(())

@@ -308,8 +308,8 @@ impl Player {
         }
     }
 
-    pub async fn run(&self) -> Result<()> {
-        self.server.run().await
+    pub async fn init_and_run(&self) -> Result<()> {
+        self.server.init_and_run().await
     }
 
     pub fn connect_raise(&self, cb: impl Fn() + 'static) {
