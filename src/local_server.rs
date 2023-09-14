@@ -557,6 +557,8 @@ where
     }
 
     /// Returns a reference to the inner [`Connection`].
+    ///
+    /// If you needed to call this, consider filing an issue.
     pub async fn connection(&self) -> Result<&Connection> {
         self.inner.connection().await
     }

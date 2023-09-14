@@ -217,10 +217,10 @@ pub trait RootInterface: Send + Sync {
     /// case, the [`CanQuit`] property is **false** and this method does
     /// nothing.
     ///
-    /// Note: Media players which can be D-Bus activated, or for which there is
-    /// no sensibly easy way to terminate a running instance (via the main
-    /// interface or a notification area icon for example) should allow clients
-    /// to use this method. Otherwise, it should not be needed.
+    /// **Note:** Media players which can be D-Bus activated, or for which there
+    /// is no sensibly easy way to terminate a running instance (via the
+    /// main interface or a notification area icon for example) should allow
+    /// clients to use this method. Otherwise, it should not be needed.
     ///
     /// If the media player does not have a UI, this should be implemented.
     ///
@@ -323,10 +323,10 @@ pub trait RootInterface: Send + Sync {
     /// [`properties_changed`] must be emitted with the new value.
     ///
     /// If **false**, calling [`Raise`] will have no effect, and may raise a
-    /// NotSupported error. If **true**, calling [`Raise`] will cause the media
-    /// application to attempt to bring its user interface to the front,
-    /// although it may be prevented from doing so (by the window manager, for
-    /// example).
+    /// `NotSupported` error. If **true**, calling [`Raise`] will cause the
+    /// media application to attempt to bring its user interface to the
+    /// front, although it may be prevented from doing so (by the window
+    /// manager, for example).
     ///
     /// [`properties_changed`]: Server::properties_changed
     /// [`Raise`]: Self::raise
@@ -361,17 +361,17 @@ pub trait RootInterface: Send + Sync {
     /// The basename of an installed .desktop file which complies with the
     /// [Desktop entry specification], with the ".desktop" extension stripped.
     ///
+    /// This property is *optional*. Clients should handle its absence
+    /// gracefully.
+    ///
     /// When this property changes, the
     /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
     /// [`properties_changed`] must be emitted with the new value.
     ///
-    /// This property is *optional*. Clients should handle its absence
-    /// gracefully.
-    ///
     /// Example: The desktop entry file is
     /// "/usr/share/applications/vlc.desktop", and this property contains "vlc"
     ///
-    /// [`Desktop entry specification`]: https://specifications.freedesktop.org/desktop-entry-spec/latest/
+    /// [Desktop entry specification]: https://specifications.freedesktop.org/desktop-entry-spec/latest/
     /// [`properties_changed`]: Server::properties_changed
     #[doc(alias = "DesktopEntry")]
     async fn desktop_entry(&self) -> fdo::Result<String>;
@@ -620,8 +620,8 @@ pub trait PlayerInterface: RootInterface {
     ///
     /// * [`None`] if the playback will stop when there are no more tracks to
     ///   play
-    /// * [`Track`] if the current track will start again from the begining once
-    ///   it has finished playing
+    /// * [`Track`] if the current track will start again from the beginning
+    ///   once it has finished playing
     /// * [`Playlist`] if the playback loops through a list of tracks
     ///
     /// If [`CanControl`] is **false**, attempting to set this property should
@@ -764,14 +764,14 @@ pub trait PlayerInterface: RootInterface {
     /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
     /// [`properties_changed`] must *not* be emitted.
     ///
-    /// Note: If the media player allows it, the current playback position can
-    /// be changed either the [`SetPosition`] method or the [`Seek`] method on
-    /// this interface. If this is not the case, the [`CanSeek`] property is
-    /// **false**, and setting this property has no effect and can raise an
-    /// error.
+    /// **Note:** If the media player allows it, the current playback position
+    /// can be changed either the [`SetPosition`] method or the [`Seek`]
+    /// method on this interface. If this is not the case, the [`CanSeek`]
+    /// property is **false**, and setting this property has no effect and
+    /// can raise an error.
     ///
     /// If the playback progresses in a way that is inconstistent with the
-    /// [`Rate`] property, the [`Seeked`] signal is emited.
+    /// [`Rate`] property, the [`Seeked`] signal is emitted.
     ///
     /// [`mpris:length`]: Metadata::set_length
     /// [`properties_changed`]: Server::properties_changed
@@ -1025,7 +1025,7 @@ pub trait TrackListInterface: PlayerInterface {
     ///
     /// If the [`CanEditTracks`] property is false, this has no effect.
     ///
-    /// Note: Clients should not assume that the track has been added at the
+    /// **Note:** Clients should not assume that the track has been added at the
     /// time when this method returns. They should wait for a [`TrackAdded`] (or
     /// [`TrackListReplaced`]) signal.
     ///
@@ -1056,9 +1056,9 @@ pub trait TrackListInterface: PlayerInterface {
     ///
     /// If the [`CanEditTracks`] property is false, this has no effect.
     ///
-    /// Note: Clients should not assume that the track has been removed at the
-    /// time when this method returns. They should wait for a [`TrackRemoved`]
-    /// (or TrackListReplaced) signal.
+    /// **Note:** Clients should not assume that the track has been removed at
+    /// the time when this method returns. They should wait for a
+    /// [`TrackRemoved`] (or TrackListReplaced) signal.
     ///
     /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`]: TrackId::NO_TRACK
     /// [`CanEditTracks`]: Self::can_edit_tracks
@@ -1102,7 +1102,7 @@ pub trait TrackListInterface: PlayerInterface {
     async fn tracks(&self) -> fdo::Result<Vec<TrackId>>;
 
     /// If false, calling [`AddTrack`] or [`RemoveTrack`] will have no effect,
-    /// and may raise a NotSupported error.
+    /// and may raise a `NotSupported` error.
     ///
     /// [`AddTrack`]: Self::add_track
     /// [`RemoveTrack`]: Self::remove_track
