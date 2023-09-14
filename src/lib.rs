@@ -196,7 +196,9 @@ macro_rules! define_iface {
 //     PlaylistsInterface
 // );
 
-/// Used to implement `org.mpris.MediaPlayer2` interface.
+/// Used to implement [org.mpris.MediaPlayer2] interface.
+///
+/// [org.mpris.MediaPlayer2]: https://specifications.freedesktop.org/mpris-spec/2.2/Media_Player.html
 #[async_trait]
 pub trait RootInterface: Send + Sync {
     /// Brings the media player's user interface to the front using any
@@ -418,9 +420,11 @@ pub trait RootInterface: Send + Sync {
     async fn supported_mime_types(&self) -> fdo::Result<Vec<String>>;
 }
 
-/// Used to implement `org.mpris.MediaPlayer2.Player` interface, which
+/// Used to implement [org.mpris.MediaPlayer2.Player] interface, which
 /// implements the methods for querying and providing basic control over what is
 /// currently playing.
+///
+/// [org.mpris.MediaPlayer2.Player]: https://specifications.freedesktop.org/mpris-spec/2.2/Player_Interface.html
 #[async_trait]
 #[doc(alias = "org.mpris.MediaPlayer2.Player")]
 pub trait PlayerInterface: RootInterface {
@@ -959,14 +963,14 @@ pub trait PlayerInterface: RootInterface {
     async fn can_control(&self) -> fdo::Result<bool>;
 }
 
-/// Used to implement `org.mpris.MediaPlayer2.TrackList` interface, which
+/// Used to implement [org.mpris.MediaPlayer2.TrackList] interface, which
 /// provides access to a short list of tracks which were recently played or will
 /// be played shortly. This is intended to provide context to the
 /// currently-playing track, rather than giving complete access to the media
 /// player's playlist.
 ///
 /// Example use cases are the list of tracks from the same album as the
-/// currently playing song or the Rhythmbox play queue.
+/// currently playing song or the [Rhythmbox] play queue.
 ///
 /// Each track in the tracklist has a unique identifier. The intention is that
 /// this uniquely identifies the track within the scope of the tracklist. In
@@ -980,14 +984,16 @@ pub trait PlayerInterface: RootInterface {
 /// requirements is valid, as clients should not make any assumptions about the
 /// value of the track id beyond the fact that it is a unique identifier.
 ///
-/// Note that the (memory and processing) burden of implementing the [`TrackList
-/// interface`] and maintaining unique track ids for the playlist can be
-/// mitigated by only exposing a subset of the playlist when it is very long
-/// (the 20 or so tracks around the currently playing track, for example). This
-/// is a recommended practice as the tracklist interface is not designed to
-/// enable browsing through a large list of tracks, but rather to provide
-/// clients with context about the currently playing track.
+/// Note that the (memory and processing) burden of implementing this interface
+/// and maintaining unique track ids for the playlist can be mitigated by only
+/// exposing a subset of the playlist when it is very long (the 20 or so tracks
+/// around the currently playing track, for example). This is a recommended
+/// practice as the tracklist interface is not designed to enable browsing
+/// through a large list of tracks, but rather to provide clients with context
+/// about the currently playing track.
 ///
+/// [org.mpris.MediaPlayer2.TrackList]: https://specifications.freedesktop.org/mpris-spec/2.2/Track_List_Interface.html
+/// [Rhythmbox]: https://wiki.gnome.org/Apps/Rhythmbox
 /// [`TrackList interface`]: TrackListInterface
 #[async_trait]
 #[doc(alias = "org.mpris.MediaPlayer2.TrackList")]
@@ -1094,7 +1100,7 @@ pub trait TrackListInterface: PlayerInterface {
     ///
     /// When this property changes, the
     /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
-    /// [`properties_changed`] must be emitted *without* the new value.
+    /// [`track_list_properties_changed`] must be emitted *without* the new value.
     ///
     /// The `org.freedesktop.DBus.Properties.PropertiesChanged` signal is
     /// emitted every time this property changes, but the signal message
@@ -1103,7 +1109,7 @@ pub trait TrackListInterface: PlayerInterface {
     /// [`TrackListReplaced`] signals to keep their representation of the
     /// tracklist up to date.
     ///
-    /// [`properties_changed`]: Server::properties_changed
+    /// [`track_list_properties_changed`]: Server::track_list_properties_changed
     /// [`TrackAdded`]: Server::track_added
     /// [`TrackRemoved`]: Server::track_removed
     /// [`TrackListReplaced`]: Server::track_list_replaced
@@ -1114,24 +1120,26 @@ pub trait TrackListInterface: PlayerInterface {
     ///
     /// When this property changes, the
     /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
-    /// [`properties_changed`] must be emitted with the new value.
+    /// [`track_list_properties_changed`] must be emitted with the new value.
     ///
     /// If **false**, calling [`AddTrack`] or [`RemoveTrack`] will have no
     /// effect, and may raise a `NotSupported` error.
     ///
-    /// [`properties_changed`]: Server::properties_changed
+    /// [`track_list_properties_changed`]: Server::track_list_properties_changed
     /// [`AddTrack`]: Self::add_track
     /// [`RemoveTrack`]: Self::remove_track
     #[doc(alias = "CanEditTracks")]
     async fn can_edit_tracks(&self) -> fdo::Result<bool>;
 }
 
-/// Used to implement `org.mpris.MediaPlayer2.Playlists` interface, which
+/// Used to implement [org.mpris.MediaPlayer2.Playlists] interface, which
 /// provides access to the media player's playlists.
 ///
 /// Since D-Bus does not provide an easy way to check for what interfaces are
 /// exported on an object, clients should attempt to get one of the properties
 /// on this interface to see if it is implemented.
+///
+/// [org.mpris.MediaPlayer2.Playlists]: https://specifications.freedesktop.org/mpris-spec/2.2/Playlists_Interface.html
 #[async_trait]
 #[doc(alias = "org.mpris.MediaPlayer2.Playlists")]
 pub trait PlaylistsInterface: PlayerInterface {
@@ -1179,9 +1187,9 @@ pub trait PlaylistsInterface: PlayerInterface {
     ///
     /// When this property changes, the
     /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
-    /// [`properties_changed`] must be emitted with the new value.
+    /// [`playlists_properties_changed`] must be emitted with the new value.
     ///
-    /// [`properties_changed`]: Server::properties_changed
+    /// [`playlists_properties_changed`]: Server::playlists_properties_changed
     #[doc(alias = "PlaylistCount")]
     async fn playlist_count(&self) -> fdo::Result<u32>;
 
@@ -1189,7 +1197,7 @@ pub trait PlaylistsInterface: PlayerInterface {
     ///
     /// When this property changes, the
     /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
-    /// [`properties_changed`] must be emitted with the new value.
+    /// [`playlists_properties_changed`] must be emitted with the new value.
     ///
     /// ## Rationale
     ///
@@ -1198,7 +1206,7 @@ pub trait PlaylistsInterface: PlayerInterface {
     /// filesystems (don't let the ctime fool you!). On the other hand, clients
     /// should have some way to get the "most recent" playlists.
     ///
-    /// [`properties_changed`]: Server::properties_changed
+    /// [`playlists_properties_changed`]: Server::playlists_properties_changed
     #[doc(alias = "Orderings")]
     async fn orderings(&self) -> fdo::Result<Vec<PlaylistOrdering>>;
 
@@ -1206,7 +1214,7 @@ pub trait PlaylistsInterface: PlayerInterface {
     ///
     /// When this property changes, the
     /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
-    /// [`properties_changed`] must be emitted with the new value.
+    /// [`playlists_properties_changed`] must be emitted with the new value.
     ///
     /// If there is no currently-active playlist, the structure's Valid field
     /// will be **false**, and the playlist details are undefined.
@@ -1216,7 +1224,7 @@ pub trait PlaylistsInterface: PlayerInterface {
     /// have the option of simply inserting the contents of the playlist
     /// into the current tracklist.
     ///
-    /// [`properties_changed`]: Server::properties_changed
+    /// [`playlists_properties_changed`]: Server::playlists_properties_changed
     /// [`ActivatePlaylist`]: Self::activate_playlist
     #[doc(alias = "ActivePlaylist")]
     async fn active_playlist(&self) -> fdo::Result<MaybePlaylist>;
