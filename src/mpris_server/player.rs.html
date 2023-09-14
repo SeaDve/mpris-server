@@ -958,6 +958,7 @@
 <a href="#958" id="958">958</a>
 <a href="#959" id="959">959</a>
 <a href="#960" id="960">960</a>
+<a href="#961" id="961">961</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::cell::{Cell, Ref, RefCell};
 
 <span class="kw">use </span>async_trait::async_trait;
@@ -1704,7 +1705,8 @@
         <span class="self">self</span>.server.properties_changed(Property::CanSeek).<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>can_control(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+    <span class="doccomment">/// This can only be set on construct.
+    </span><span class="kw">pub fn </span>can_control(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="self">self</span>.server.imp().can_control.get()
     }
 }
