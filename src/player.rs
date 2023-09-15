@@ -8,7 +8,7 @@ use crate::{
     PlaybackStatus, Property, Time, TrackId, Volume,
 };
 
-/// Ready-to-use mutable object that internally implements
+/// Ready-to-use mutable *service* side object that internally implements
 /// [`LocalRootInterface`] and [`LocalPlayerInterface`].
 ///
 /// This automatically emits properties changed signal and allows you to connect

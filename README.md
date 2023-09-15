@@ -7,7 +7,7 @@
 
 Implement MPRIS D-Bus interface in your application.
 
-This library provides the essential functionalities for implementing the [MPRIS D-Bus interface](https://specifications.freedesktop.org/mpris-spec/2.2/). This enables your application to become discoverable and controllable by other MPRIS-compatible media controllers, including but not limited to GNOME Shell, KDE Plasma, and other libraries such as [`mpris`](https://github.com/Mange/mpris-rs).
+This library provides the essential functionalities for implementing the [MPRIS D-Bus interface](https://specifications.freedesktop.org/mpris-spec/2.2/) on the *service* side. This enables your application to become discoverable and controllable by other MPRIS-compatible media controllers, including but not limited to GNOME Shell, KDE Plasma, and other libraries such as [`mpris`](https://github.com/Mange/mpris-rs).
 
 This library supports all the following interfaces as defined in the specification:
 
