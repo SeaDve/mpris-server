@@ -1,9 +1,9 @@
 use std::{collections::HashMap, fmt};
 
 use serde::Serialize;
-use zbus::zvariant::{self, OwnedObjectPath, Type, Value};
+use zbus::zvariant::{self, Type, Value};
 
-use crate::{Time, Uri};
+use crate::{Time, TrackId, Uri};
 
 /// Combined date and time.
 ///
@@ -91,11 +91,27 @@ impl Metadata {
     /// within the scope of the playlist. There may or may not be an actual
     /// D-Bus object at that path; this specification says nothing about
     /// what interfaces such an object may implement.
-    pub fn set_trackid(&mut self, trackid: impl Into<OwnedObjectPath>) {
+    pub fn trackid(&self) -> Option<TrackId> {
+        self.get_value("mpris:trackid")?.clone().downcast()
+    }
+
+    /// Sets a unique identity for this track within the context of an
+    /// MPRIS object (eg: tracklist).
+    ///
+    /// This contains a D-Bus path that uniquely identifies the track
+    /// within the scope of the playlist. There may or may not be an actual
+    /// D-Bus object at that path; this specification says nothing about
+    /// what interfaces such an object may implement.
+    pub fn set_trackid(&mut self, trackid: impl Into<TrackId>) {
         self.insert("mpris:trackid", trackid.into());
     }
 
-    /// The duration of the track in microseconds.
+    /// The duration of the track.
+    pub fn length(&self) -> Option<Time> {
+        self.get_value("mpris:length")?.clone().downcast()
+    }
+
+    /// Sets the duration of the track.
     pub fn set_length(&mut self, length: Time) {
         self.insert("mpris:length", length);
     }
@@ -104,16 +120,34 @@ impl Metadata {
     ///
     /// Clients should not assume this will continue to exist when
     /// the media player stops giving out the URL.
+    pub fn art_url(&self) -> Option<Uri> {
+        self.get_value("mpris:artUrl")?.clone().downcast()
+    }
+
+    /// Sets the location of an image representing the track or album.
+    ///
+    /// Clients should not assume this will continue to exist when
+    /// the media player stops giving out the URL.
     pub fn set_art_url(&mut self, art_url: impl Into<Uri>) {
         self.insert("mpris:artUrl", art_url.into());
     }
 
     /// The album name.
+    pub fn album(&self) -> Option<&str> {
+        self.get_value("xesam:album")?.downcast_ref()
+    }
+
+    /// Sets the album name.
     pub fn set_album(&mut self, album: impl Into<String>) {
         self.insert("xesam:album", album.into());
     }
 
     /// The album artist(s).
+    pub fn album_artist(&self) -> Option<Vec<String>> {
+        self.get_value("xesam:albumArtist")?.clone().downcast()
+    }
+
+    /// Sets the album artist(s).
     pub fn set_album_artist(&mut self, album_artist: impl IntoIterator<Item = impl Into<String>>) {
         self.insert(
             "xesam:albumArtist",
@@ -125,6 +159,11 @@ impl Metadata {
     }
 
     /// The track artist(s).
+    pub fn artist(&self) -> Option<Vec<String>> {
+        self.get_value("xesam:artist")?.clone().downcast()
+    }
+
+    /// Sets the track artist(s).
     pub fn set_artist(&mut self, artist: impl IntoIterator<Item = impl Into<String>>) {
         self.insert(
             "xesam:artist",
@@ -133,11 +172,21 @@ impl Metadata {
     }
 
     /// The track lyrics.
+    pub fn lyrics(&self) -> Option<&str> {
+        self.get_value("xesam:asText")?.downcast_ref()
+    }
+
+    /// Sets the track lyrics.
     pub fn set_lyrics(&mut self, lyrics: impl Into<String>) {
         self.insert("xesam:asText", lyrics.into());
     }
 
     /// The speed of the music, in beats per minute.
+    pub fn audio_bpm(&self) -> Option<i32> {
+        self.get_value("xesam:audioBPM")?.downcast_ref().copied()
+    }
+
+    /// Sets the speed of the music, in beats per minute.
     pub fn set_audio_bpm(&mut self, audio_bpm: i32) {
         self.insert("xesam:audioBPM", audio_bpm);
     }
@@ -145,11 +194,23 @@ impl Metadata {
     /// An automatically-generated rating, based on things such
     /// as how often it has been played. This should be in the
     /// range 0.0 to 1.0.
+    pub fn auto_rating(&self) -> Option<f64> {
+        self.get_value("xesam:autoRating")?.downcast_ref().copied()
+    }
+
+    /// Sets an automatically-generated rating, based on things such
+    /// as how often it has been played. This should be in the
+    /// range 0.0 to 1.0.
     pub fn set_auto_rating(&mut self, auto_rating: f64) {
         self.insert("xesam:autoRating", auto_rating);
     }
 
     /// A (list of) freeform comment(s).
+    pub fn comment(&self) -> Option<Vec<String>> {
+        self.get_value("xesam:comment")?.clone().downcast()
+    }
+
+    /// Sets a (list of) freeform comment(s).
     pub fn set_comment(&mut self, comment: impl IntoIterator<Item = impl Into<String>>) {
         self.insert(
             "xesam:comment",
@@ -158,6 +219,11 @@ impl Metadata {
     }
 
     /// The composer(s) of the track.
+    pub fn composer(&self) -> Option<Vec<String>> {
+        self.get_value("xesam:composer")?.clone().downcast()
+    }
+
+    /// Sets the composer(s) of the track.
     pub fn set_composer(&mut self, composer: impl IntoIterator<Item = impl Into<String>>) {
         self.insert(
             "xesam:composer",
@@ -167,21 +233,42 @@ impl Metadata {
 
     /// When the track was created. Usually only the year component
     /// will be useful.
+    pub fn content_created(&self) -> Option<DateTime> {
+        self.get_value("xesam:contentCreated")?.clone().downcast()
+    }
+
+    /// Sets when the track was created. Usually only the year component
+    /// will be useful.
     pub fn set_content_created(&mut self, content_created: impl Into<DateTime>) {
         self.insert("xesam:contentCreated", content_created.into());
     }
 
     /// The disc number on the album that this track is from.
+    pub fn disc_number(&self) -> Option<i32> {
+        self.get_value("xesam:discNumber")?.downcast_ref().copied()
+    }
+
+    /// Sets the disc number on the album that this track is from.
     pub fn set_disc_number(&mut self, disc_number: i32) {
         self.insert("xesam:discNumber", disc_number);
     }
 
     /// When the track was first played.
+    pub fn first_used(&self) -> Option<DateTime> {
+        self.get_value("xesam:firstUsed")?.clone().downcast()
+    }
+
+    /// Sets when the track was first played.
     pub fn set_first_used(&mut self, first_used: impl Into<DateTime>) {
         self.insert("xesam:firstUsed", first_used.into());
     }
 
     /// The genre(s) of the track.
+    pub fn genre(&self) -> Option<Vec<String>> {
+        self.get_value("xesam:genre")?.clone().downcast()
+    }
+
+    /// Sets the genre(s) of the track.
     pub fn set_genre(&mut self, genre: impl IntoIterator<Item = impl Into<String>>) {
         self.insert(
             "xesam:genre",
@@ -190,11 +277,21 @@ impl Metadata {
     }
 
     /// When the track was last played.
+    pub fn last_used(&self) -> Option<DateTime> {
+        self.get_value("xesam:lastUsed")?.clone().downcast()
+    }
+
+    /// Sets when the track was last played.
     pub fn set_last_used(&mut self, last_used: impl Into<DateTime>) {
         self.insert("xesam:lastUsed", last_used.into());
     }
 
     /// The lyricist(s) of the track.
+    pub fn lyricist(&self) -> Option<Vec<String>> {
+        self.get_value("xesam:lyricist")?.clone().downcast()
+    }
+
+    /// Sets the lyricist(s) of the track.
     pub fn set_lyricist(&mut self, lyricist: impl IntoIterator<Item = impl Into<String>>) {
         self.insert(
             "xesam:lyricist",
@@ -203,26 +300,51 @@ impl Metadata {
     }
 
     /// The track title.
+    pub fn title(&self) -> Option<&str> {
+        self.get_value("xesam:title")?.downcast_ref()
+    }
+
+    /// Sets the track title.
     pub fn set_title(&mut self, title: impl Into<String>) {
         self.insert("xesam:title", title.into());
     }
 
     /// The track number on the album disc.
+    pub fn track_number(&self) -> Option<i32> {
+        self.get_value("xesam:trackNumber")?.downcast_ref().copied()
+    }
+
+    /// Sets the track number on the album disc.
     pub fn set_track_number(&mut self, track_number: i32) {
         self.insert("xesam:trackNumber", track_number);
     }
 
     /// The location of the media file.
+    pub fn url(&self) -> Option<Uri> {
+        self.get_value("xesam:url")?.clone().downcast()
+    }
+
+    /// Sets the location of the media file.
     pub fn set_url(&mut self, url: impl Into<Uri>) {
         self.insert("xesam:url", url.into());
     }
 
     /// The number of times the track has been played.
+    pub fn use_count(&self) -> Option<i32> {
+        self.get_value("xesam:useCount")?.downcast_ref().copied()
+    }
+
+    /// Sets the number of times the track has been played.
     pub fn set_use_count(&mut self, use_count: i32) {
         self.insert("xesam:useCount", use_count);
     }
 
     /// A user-specified rating. This should be in the range 0.0 to 1.0.
+    pub fn user_rating(&self) -> Option<f64> {
+        self.get_value("xesam:userRating")?.downcast_ref().copied()
+    }
+
+    /// Sets a user-specified rating. This should be in the range 0.0 to 1.0.
     pub fn set_user_rating(&mut self, user_rating: f64) {
         self.insert("xesam:userRating", user_rating);
     }
@@ -230,37 +352,52 @@ impl Metadata {
 
 /// A builder used to create [`Metadata`].
 #[derive(Debug, Default, Clone)]
+#[must_use = "must call `build()` to finish building the metadata"]
 pub struct MetadataBuilder {
     m: Metadata,
 }
 
 impl MetadataBuilder {
-    /// Insert a new key-value pair into the metadata.
+    /// Sets a value for the given key.
     pub fn other(mut self, key: impl Into<String>, value: impl Into<Value<'static>>) -> Self {
         self.m.insert(key, value);
         self
     }
 
-    pub fn trackid(mut self, trackid: impl Into<OwnedObjectPath>) -> Self {
+    /// Sets a unique identity for this track within the context of an
+    /// MPRIS object (eg: tracklist).
+    ///
+    /// This contains a D-Bus path that uniquely identifies the track
+    /// within the scope of the playlist. There may or may not be an actual
+    /// D-Bus object at that path; this specification says nothing about
+    /// what interfaces such an object may implement.
+    pub fn trackid(mut self, trackid: impl Into<TrackId>) -> Self {
         self.m.set_trackid(trackid);
         self
     }
 
+    /// Sets the duration of the track.
     pub fn length(mut self, length: Time) -> Self {
         self.m.set_length(length);
         self
     }
 
+    /// Sets the location of an image representing the track or album.
+    ///
+    /// Clients should not assume this will continue to exist when
+    /// the media player stops giving out the URL.
     pub fn art_url(mut self, art_url: impl Into<Uri>) -> Self {
         self.m.set_art_url(art_url);
         self
     }
 
+    /// Sets the album name.
     pub fn album(mut self, album: impl Into<String>) -> Self {
         self.m.set_album(album);
         self
     }
 
+    /// Sets the album artist(s).
     pub fn album_artist(
         mut self,
         album_artist: impl IntoIterator<Item = impl Into<String>>,
@@ -269,91 +406,113 @@ impl MetadataBuilder {
         self
     }
 
+    /// Sets the track artist(s).
     pub fn artist(mut self, artist: impl IntoIterator<Item = impl Into<String>>) -> Self {
         self.m.set_artist(artist);
         self
     }
 
+    /// Sets the track lyrics.
     pub fn lyrics(mut self, lyrics: impl Into<String>) -> Self {
         self.m.set_lyrics(lyrics);
         self
     }
 
+    /// Sets the speed of the music, in beats per minute.
     pub fn audio_bpm(mut self, audio_bpm: i32) -> Self {
         self.m.set_audio_bpm(audio_bpm);
         self
     }
 
+    /// Sets an automatically-generated rating, based on things such
+    /// as how often it has been played. This should be in the
+    /// range 0.0 to 1.0.
     pub fn auto_rating(mut self, auto_rating: f64) -> Self {
         self.m.set_auto_rating(auto_rating);
         self
     }
 
+    /// Sets a (list of) freeform comment(s).
     pub fn comment(mut self, comment: impl IntoIterator<Item = impl Into<String>>) -> Self {
         self.m.set_comment(comment);
         self
     }
 
+    /// Sets the composer(s) of the track.
     pub fn composer(mut self, composer: impl IntoIterator<Item = impl Into<String>>) -> Self {
         self.m.set_composer(composer);
         self
     }
 
+    /// Sets when the track was created. Usually only the year component
+    /// will be useful.
     pub fn content_created(mut self, content_created: impl Into<DateTime>) -> Self {
         self.m.set_content_created(content_created);
         self
     }
 
+    /// Sets the disc number on the album that this track is from.
     pub fn disc_number(mut self, disc_number: i32) -> Self {
         self.m.set_disc_number(disc_number);
         self
     }
 
+    /// Sets when the track was first played.
     pub fn first_used(mut self, first_used: impl Into<DateTime>) -> Self {
         self.m.set_first_used(first_used);
         self
     }
 
+    /// Sets the genre(s) of the track.
     pub fn genre(mut self, genre: impl IntoIterator<Item = impl Into<String>>) -> Self {
         self.m.set_genre(genre);
         self
     }
 
+    /// Sets when the track was last played.
     pub fn last_used(mut self, last_used: impl Into<DateTime>) -> Self {
         self.m.set_last_used(last_used);
         self
     }
 
+    /// Sets the lyricist(s) of the track.
     pub fn lyricist(mut self, lyricist: impl IntoIterator<Item = impl Into<String>>) -> Self {
         self.m.set_lyricist(lyricist);
         self
     }
 
+    /// Sets the track title.
     pub fn title(mut self, title: impl Into<String>) -> Self {
         self.m.set_title(title.into());
         self
     }
 
+    /// Sets the track number on the album disc.
     pub fn track_number(mut self, track_number: i32) -> Self {
         self.m.set_track_number(track_number);
         self
     }
 
+    /// Sets the location of the media file.
     pub fn url(mut self, url: impl Into<Uri>) -> Self {
         self.m.set_url(url.into());
         self
     }
 
+    /// Sets the number of times the track has been played.
     pub fn use_count(mut self, use_count: i32) -> Self {
         self.m.set_use_count(use_count);
         self
     }
 
+    /// Sets a user-specified rating. This should be in the range 0.0 to 1.0.
     pub fn user_rating(mut self, user_rating: f64) -> Self {
         self.m.set_user_rating(user_rating);
         self
     }
 
+    /// Creates [`Metadata`] from the builder.
+    #[must_use = "building metadata is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> Metadata {
         self.m
     }

@@ -9,9 +9,9 @@
 // TODO:
 // * Document public interface
 // * Replace `DateTime`, and `Uri` with proper types
-// * Add getter on Metadata
 // * Profile if inlining is worth it
 // * Add public `test` method to check if interface is implemented correctly
+// * Avoid clones in `Metadata` getters
 
 mod local_server;
 mod loop_status;
@@ -383,12 +383,11 @@ macro_rules! define_iface {
             #[doc(alias = "Play")]
             async fn play(&self) -> fdo::Result<()>;
 
-            /// Seeks forward in the current track by the specified number of
-            /// microseconds.
+            /// Seeks forward in the current track by the specified offset in time.
             ///
             /// ## Parameters
             ///
-            /// * `offset` - The number of microseconds to seek forward.
+            /// * `offset` - The offset in time to seek forward.
             ///
             /// A negative value seeks back. If this would mean seeking back further
             /// than the start of the track, the position is set to 0.
@@ -402,7 +401,7 @@ macro_rules! define_iface {
             #[doc(alias = "Seek")]
             async fn seek(&self, offset: Time) -> fdo::Result<()>;
 
-            /// Sets the current track position in microseconds.
+            /// Sets the current track position.
             ///
             /// ## Parameters
             ///
@@ -410,7 +409,7 @@ macro_rules! define_iface {
             ///   not match the id of the currently-playing track, the call is ignored
             ///   as "stale". [`/org/mpris/MediaPlayer2/TrackList/NoTrack`] is not a
             ///   valid value for this argument.
-            /// * `position` - The position in microseconds. This must be between 0 and
+            /// * `position` - The track position. This must be between 0 and
             ///   <track_length>.
             ///
             /// If the Position argument is less than 0, do nothing.
@@ -632,8 +631,8 @@ macro_rules! define_iface {
             #[doc(alias = "Volume")]
             async fn set_volume(&self, volume: Volume) -> Result<()>;
 
-            /// The current track position in microseconds, between 0 and the
-            /// [`mpris:length`] metadata entry.
+            /// The current track position, between 0 and the [`mpris:length`]
+            /// metadata entry.
             ///
             /// When this property changes, the
             /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via

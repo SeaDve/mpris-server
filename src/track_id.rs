@@ -89,6 +89,14 @@ impl TryFrom<String> for TrackId {
     }
 }
 
+impl TryFrom<Value<'_>> for TrackId {
+    type Error = Error;
+
+    fn try_from(value: Value<'_>) -> Result<Self> {
+        ObjectPath::try_from(value).map(|o| Self(o.to_owned()))
+    }
+}
+
 impl<'de> Deserialize<'de> for TrackId {
     fn deserialize<D>(deserializer: D) -> core::result::Result<Self, D::Error>
     where
