@@ -564,7 +564,7 @@ where
     }
 
     /// Initialize the connection and run the server. This method will
-    /// continually run until the server is dropped.
+    /// continuously run until the server is dropped.
     ///
     /// This is no-op if the server is already running.
     pub async fn init_and_run(&self) -> Result<()> {
