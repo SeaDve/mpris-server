@@ -133,12 +133,13 @@ macro_rules! define_iface {
             /// [`properties_changed`] must be emitted with the new value.
             ///
             /// If **false**, calling [`Quit`] will have no effect, and may raise a
-            /// `NotSupported` error. If **true**, calling [`Quit`] will cause the media
+            /// [`NotSupported`] error. If **true**, calling [`Quit`] will cause the media
             /// application to attempt to quit (although it may still be prevented from
             /// quitting by the user, for example).
             ///
             /// [`properties_changed`]: Server::properties_changed
             /// [`Quit`]: Self::quit
+            /// [`NotSupported`]: fdo::Error::NotSupported
             #[doc(alias = "CanQuit")]
             async fn can_quit(&self) -> fdo::Result<bool>;
 
@@ -221,13 +222,14 @@ macro_rules! define_iface {
             /// [`properties_changed`] must be emitted with the new value.
             ///
             /// If **false**, calling [`Raise`] will have no effect, and may raise a
-            /// `NotSupported` error. If **true**, calling [`Raise`] will cause the
+            /// [`NotSupported`] error. If **true**, calling [`Raise`] will cause the
             /// media application to attempt to bring its user interface to the
             /// front, although it may be prevented from doing so (by the window
             /// manager, for example).
             ///
             /// [`properties_changed`]: Server::properties_changed
             /// [`Raise`]: Self::raise
+            /// [`NotSupported`]: fdo::Error::NotSupported
             #[doc(alias = "CanRaise")]
             async fn can_raise(&self) -> fdo::Result<bool>;
 
@@ -1026,11 +1028,12 @@ macro_rules! define_iface {
             /// [`track_list_properties_changed`] must be emitted with the new value.
             ///
             /// If **false**, calling [`AddTrack`] or [`RemoveTrack`] will have no
-            /// effect, and may raise a `NotSupported` error.
+            /// effect, and may raise a [`NotSupported`] error.
             ///
             /// [`track_list_properties_changed`]: Server::track_list_properties_changed
             /// [`AddTrack`]: Self::add_track
             /// [`RemoveTrack`]: Self::remove_track
+            /// [`NotSupported`]: fdo::Error::NotSupported
             #[doc(alias = "CanEditTracks")]
             async fn can_edit_tracks(&self) -> fdo::Result<bool>;
         }
