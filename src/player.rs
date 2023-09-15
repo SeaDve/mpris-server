@@ -752,6 +752,7 @@ impl Player {
 
 /// A builder used to create [`Player`].
 #[derive(Debug)]
+#[must_use = "must call `build()` to finish building the player"]
 pub struct PlayerBuilder {
     bus_name_suffix: String,
     can_quit: bool,
@@ -910,6 +911,7 @@ impl PlayerBuilder {
         self
     }
 
+    #[must_use = "building player is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> Result<Player> {
         let server = LocalServer::new(
             &self.bus_name_suffix,
