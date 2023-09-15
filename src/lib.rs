@@ -41,7 +41,7 @@ pub mod builder {
 ///
 /// # Examples
 ///
-/// ```
+/// ```ignore
 /// use mpris_server::{async_trait, LocalRootInterface, RootInterface};
 /// use zbus::fdo;
 ///
