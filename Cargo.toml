@@ -6,6 +6,7 @@ homepage = "https://github.com/SeaDve/mpris-server"
 repository = "https://github.com/SeaDve/mpris-server"
 documentation = "https://docs.rs/mpris-server"
 authors = ["Dave Patrick Caberto"]
+categories = ["api-bindings", "multimedia", "os::unix-apis"]
 keywords = ["mpris", "dbus"]
 readme = "README.md"
 license = "MPL-2.0"
