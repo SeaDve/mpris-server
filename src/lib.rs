@@ -25,21 +25,13 @@ mod server;
 mod time;
 mod track_id;
 
-use zbus::{fdo, zvariant::OwnedObjectPath, Result};
-
-pub use crate::{
-    local_server::LocalServer,
-    loop_status::LoopStatus,
-    metadata::{DateTime, Metadata},
-    playback_status::PlaybackStatus,
-    player::Player,
-    playlist::{MaybePlaylist, Playlist},
-    playlist_ordering::PlaylistOrdering,
-    property::{PlaylistsProperty, Property, TrackListProperty},
-    server::Server,
-    time::Time,
-    track_id::TrackId,
-};
+/// This contains the definitions of builder-pattern structs.
+///
+/// The `builder` methods on the objects must be used instead to construct
+/// these builder-pattern structs.
+pub mod builder {
+    pub use crate::{metadata::MetadataBuilder, player::PlayerBuilder};
+}
 
 /// Retrofits support for `async fn` in trait impls and declarations.
 ///
@@ -49,8 +41,8 @@ pub use crate::{
 /// # Examples
 ///
 /// ```
+/// use mpris_server::{async_trait, LocalRootInterface, RootInterface};
 /// use zbus::fdo;
-/// use mpris_server::{async_trait, RootInterface, LocalRootInterface};
 ///
 /// struct MyPlayer;
 ///
@@ -75,16 +67,22 @@ pub use crate::{
 /// }
 /// ```
 pub use async_trait::async_trait;
-
 pub use zbus;
+use zbus::{fdo, zvariant::OwnedObjectPath, Result};
 
-/// This contains the definitions of builder-pattern structs.
-///
-/// The `builder` methods on the objects must be used instead to construct
-/// these builder-pattern structs.
-pub mod builder {
-    pub use crate::{metadata::MetadataBuilder, player::PlayerBuilder};
-}
+pub use crate::{
+    local_server::LocalServer,
+    loop_status::LoopStatus,
+    metadata::{DateTime, Metadata},
+    playback_status::PlaybackStatus,
+    player::Player,
+    playlist::{MaybePlaylist, Playlist},
+    playlist_ordering::PlaylistOrdering,
+    property::{PlaylistsProperty, Property, TrackListProperty},
+    server::Server,
+    time::Time,
+    track_id::TrackId,
+};
 
 macro_rules! define_iface {
     (#[$attr:meta],
