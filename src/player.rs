@@ -558,7 +558,7 @@ impl Player {
             .push(Box::new(cb));
     }
 
-    pub async fn emit_seeked(&self, position: Time) -> Result<()> {
+    pub async fn seeked(&self, position: Time) -> Result<()> {
         self.server.seeked(position).await
     }
 

@@ -31,5 +31,5 @@ async fn main() {
     player.set_can_play(false).await.unwrap();
 
     // Emit `Seeked` signal
-    player.emit_seeked(Time::from_millis(1000)).await.unwrap();
+    player.seeked(Time::from_millis(1000)).await.unwrap();
 }
