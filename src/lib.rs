@@ -25,7 +25,6 @@ mod server;
 mod time;
 mod track_id;
 
-use async_trait::async_trait;
 use zbus::{fdo, zvariant::OwnedObjectPath, Result};
 
 pub use crate::{
@@ -42,11 +41,42 @@ pub use crate::{
     track_id::TrackId,
 };
 
-/// This contains libraries that are used alongside with this crate.
-pub mod export {
-    pub use async_trait;
-    pub use zbus;
-}
+/// Retrofits support for `async fn` in trait impls and declarations.
+///
+/// Any trait declaration or trait `impl` decorated with `#[async_trait]` or
+/// `#[async_trait(?Send)]` is retrofitted with support for `async fn`s:
+///
+/// # Examples
+///
+/// ```
+/// use zbus::fdo;
+/// use mpris_server::{async_trait, RootInterface, LocalRootInterface};
+///
+/// struct MyPlayer;
+///
+/// #[async_trait]
+/// impl RootInterface for MyPlayer {
+///     async fn identity(&self) -> fdo::Result<String> {
+///         Ok("MyPlayer".into())
+///     }
+///
+///     // Other methods...
+/// }
+///
+/// struct MyLocalPlayer;
+///
+/// #[async_trait(?Send)]
+/// impl LocalRootInterface for MyLocalPlayer {
+///     async fn identity(&self) -> fdo::Result<String> {
+///         Ok("MyLocalPlayer".into())
+///     }
+///
+///     // Other methods...
+/// }
+/// ```
+pub use async_trait::async_trait;
+
+pub use zbus;
 
 /// This contains the definitions of builder-pattern structs.
 ///

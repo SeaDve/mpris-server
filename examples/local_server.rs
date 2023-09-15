@@ -1,8 +1,6 @@
 use mpris_server::{
-    export::{
-        async_trait::async_trait,
-        zbus::{fdo, Result},
-    },
+    async_trait,
+    zbus::{fdo, Result},
     LocalPlayerInterface, LocalPlaylistsInterface, LocalRootInterface, LocalServer,
     LocalTrackListInterface, LoopStatus, MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus,
     Playlist, PlaylistId, PlaylistOrdering, Property, Time, TrackId, Uri, Volume,

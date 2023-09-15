@@ -1,10 +1,8 @@
 use std::future;
 
 use mpris_server::{
-    export::{
-        async_trait::async_trait,
-        zbus::{fdo, Result},
-    },
+    async_trait,
+    zbus::{fdo, Result},
     LoopStatus, MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, Playlist,
     PlaylistId, PlaylistOrdering, PlaylistsInterface, RootInterface, Server, Time, TrackId,
     TrackListInterface, Uri, Volume,

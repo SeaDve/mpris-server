@@ -30,10 +30,8 @@ It is recommended to manually create your own implementation of the interfaces i
 use std::future;
 
 use mpris_server::{
-    export::{
-        async_trait::async_trait,
-        zbus::{fdo, Result},
-    },
+    async_trait,
+    zbus::{fdo, Result},
     Metadata, PlayerInterface, Property, RootInterface, Server, Time, Volume,
 };
 
