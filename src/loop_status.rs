@@ -2,7 +2,7 @@ use std::fmt;
 
 use zbus::zvariant::{self, Type, Value};
 
-/// A repeat / loop status
+/// A repeat / loop status.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Type)]
 #[zvariant(signature = "s")]
 #[doc(alias = "Loop_Status")]
