@@ -959,6 +959,8 @@
 <a href="#959" id="959">959</a>
 <a href="#960" id="960">960</a>
 <a href="#961" id="961">961</a>
+<a href="#962" id="962">962</a>
+<a href="#963" id="963">963</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::cell::{Cell, Ref, RefCell};
 
 <span class="kw">use </span>async_trait::async_trait;
@@ -969,7 +971,7 @@
     PlaybackStatus, Property, Time, TrackId, Volume,
 };
 
-<span class="doccomment">/// Ready-to-use mutable object that internally implements
+<span class="doccomment">/// Ready-to-use mutable *service* side object that internally implements
 /// [`LocalRootInterface`] and [`LocalPlayerInterface`].
 ///
 /// This automatically emits properties changed signal and allows you to connect
@@ -1519,7 +1521,7 @@
             .push(Box::new(cb));
     }
 
-    <span class="kw">pub async fn </span>emit_seeked(<span class="kw-2">&amp;</span><span class="self">self</span>, position: Time) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>seeked(<span class="kw-2">&amp;</span><span class="self">self</span>, position: Time) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.server.seeked(position).<span class="kw">await
     </span>}
 
@@ -1713,6 +1715,7 @@
 
 <span class="doccomment">/// A builder used to create [`Player`].
 </span><span class="attr">#[derive(Debug)]
+#[must_use = <span class="string">&quot;must call `build()` to finish building the player&quot;</span>]
 </span><span class="kw">pub struct </span>PlayerBuilder {
     bus_name_suffix: String,
     can_quit: bool,
@@ -1871,7 +1874,8 @@
         <span class="self">self
     </span>}
 
-    <span class="kw">pub fn </span>build(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Player&gt; {
+    <span class="attr">#[must_use = <span class="string">&quot;building player is usually expensive and is not expected to have side effects&quot;</span>]
+    </span><span class="kw">pub fn </span>build(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Player&gt; {
         <span class="kw">let </span>server = LocalServer::new(
             <span class="kw-2">&amp;</span><span class="self">self</span>.bus_name_suffix,
             Inner {
