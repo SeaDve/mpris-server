@@ -68,6 +68,7 @@ pub mod builder {
 /// }
 /// ```
 pub use async_trait::async_trait;
+pub use enumflags2;
 pub use zbus;
 use zbus::{fdo, zvariant::OwnedObjectPath, Result};
 
