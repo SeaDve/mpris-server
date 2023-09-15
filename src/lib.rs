@@ -9,10 +9,11 @@
 // TODO:
 // * Document public interface
 // * Replace `DateTime`, and `Uri` with proper types
+// * Add sensible default method impls on `*Interface` traits
 // * Profile if inlining is worth it
 // * Add public `test` method to check if interface is implemented correctly
 // * Avoid clones in `Metadata` getters
-// * Blanket impl `*Interface` for Arc<T>, Mutex<T>, etc.?
+// * Blanket impl `*Interface` traits for Arc<T>, Mutex<T>, etc.?
 
 mod local_server;
 mod loop_status;
