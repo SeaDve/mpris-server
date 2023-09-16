@@ -936,6 +936,81 @@
 <a href="#936" id="936">936</a>
 <a href="#937" id="937">937</a>
 <a href="#938" id="938">938</a>
+<a href="#939" id="939">939</a>
+<a href="#940" id="940">940</a>
+<a href="#941" id="941">941</a>
+<a href="#942" id="942">942</a>
+<a href="#943" id="943">943</a>
+<a href="#944" id="944">944</a>
+<a href="#945" id="945">945</a>
+<a href="#946" id="946">946</a>
+<a href="#947" id="947">947</a>
+<a href="#948" id="948">948</a>
+<a href="#949" id="949">949</a>
+<a href="#950" id="950">950</a>
+<a href="#951" id="951">951</a>
+<a href="#952" id="952">952</a>
+<a href="#953" id="953">953</a>
+<a href="#954" id="954">954</a>
+<a href="#955" id="955">955</a>
+<a href="#956" id="956">956</a>
+<a href="#957" id="957">957</a>
+<a href="#958" id="958">958</a>
+<a href="#959" id="959">959</a>
+<a href="#960" id="960">960</a>
+<a href="#961" id="961">961</a>
+<a href="#962" id="962">962</a>
+<a href="#963" id="963">963</a>
+<a href="#964" id="964">964</a>
+<a href="#965" id="965">965</a>
+<a href="#966" id="966">966</a>
+<a href="#967" id="967">967</a>
+<a href="#968" id="968">968</a>
+<a href="#969" id="969">969</a>
+<a href="#970" id="970">970</a>
+<a href="#971" id="971">971</a>
+<a href="#972" id="972">972</a>
+<a href="#973" id="973">973</a>
+<a href="#974" id="974">974</a>
+<a href="#975" id="975">975</a>
+<a href="#976" id="976">976</a>
+<a href="#977" id="977">977</a>
+<a href="#978" id="978">978</a>
+<a href="#979" id="979">979</a>
+<a href="#980" id="980">980</a>
+<a href="#981" id="981">981</a>
+<a href="#982" id="982">982</a>
+<a href="#983" id="983">983</a>
+<a href="#984" id="984">984</a>
+<a href="#985" id="985">985</a>
+<a href="#986" id="986">986</a>
+<a href="#987" id="987">987</a>
+<a href="#988" id="988">988</a>
+<a href="#989" id="989">989</a>
+<a href="#990" id="990">990</a>
+<a href="#991" id="991">991</a>
+<a href="#992" id="992">992</a>
+<a href="#993" id="993">993</a>
+<a href="#994" id="994">994</a>
+<a href="#995" id="995">995</a>
+<a href="#996" id="996">996</a>
+<a href="#997" id="997">997</a>
+<a href="#998" id="998">998</a>
+<a href="#999" id="999">999</a>
+<a href="#1000" id="1000">1000</a>
+<a href="#1001" id="1001">1001</a>
+<a href="#1002" id="1002">1002</a>
+<a href="#1003" id="1003">1003</a>
+<a href="#1004" id="1004">1004</a>
+<a href="#1005" id="1005">1005</a>
+<a href="#1006" id="1006">1006</a>
+<a href="#1007" id="1007">1007</a>
+<a href="#1008" id="1008">1008</a>
+<a href="#1009" id="1009">1009</a>
+<a href="#1010" id="1010">1010</a>
+<a href="#1011" id="1011">1011</a>
+<a href="#1012" id="1012">1012</a>
+<a href="#1013" id="1013">1013</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{cell::RefCell, fmt, future::Future, marker::PhantomData, pin::Pin, rc::Rc};
 
 <span class="kw">use </span>async_trait::async_trait;
@@ -1415,24 +1490,6 @@
     }
 }
 
-<span class="macro">macro_rules! </span>emit_delegate {
-    (<span class="macro-nonterminal">$name</span>:ident, <span class="macro-nonterminal">$signal_ty</span>:ty) =&gt; {
-        <span class="attr">#[inline]
-        </span><span class="kw">pub async fn </span><span class="macro-nonterminal">$name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: <span class="macro-nonterminal">$signal_ty</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-            <span class="self">self</span>.inner.<span class="macro-nonterminal">$name</span>(signal).<span class="kw">await
-        </span>}
-    };
-}
-
-<span class="macro">macro_rules! </span>properties_changed_delegate {
-    (<span class="macro-nonterminal">$name</span>:ident, <span class="macro-nonterminal">$property_ty</span>:ty) =&gt; {
-        <span class="attr">#[inline]
-        </span><span class="kw">pub async fn </span><span class="macro-nonterminal">$name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, properties: <span class="kw">impl </span>Into&lt;BitFlags&lt;<span class="macro-nonterminal">$property_ty</span>&gt;&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-            <span class="self">self</span>.inner.<span class="macro-nonterminal">$name</span>(properties).<span class="kw">await
-        </span>}
-    };
-}
-
 <span class="doccomment">/// Local version of [`Server`] that doesn&#39;t require `T` to be `Send` and
 /// `Sync`.
 ///
@@ -1459,7 +1516,26 @@
 <span class="kw">where
     </span>T: LocalPlayerInterface + <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">pub fn </span>new(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+    <span class="doccomment">/// Creates a new [`LocalServer`] with the given bus name suffix and
+    /// implementation, `imp`, which must implement [`LocalRootInterface`] and
+    /// [`LocalPlayerInterface`].
+    ///
+    /// To start the connection, [`LocalServer::init_and_run`] must be called.
+    ///
+    /// The resulting bus name will be
+    /// `org.mpris.MediaPlayer2.&lt;bus_name_suffix&gt;`, where
+    /// `&lt;bus_name_suffix&gt;`must be a unique identifier, such as one based on a
+    /// UNIX process id. For example, this could be:
+    ///
+    /// * org.mpris.MediaPlayer2.vlc.instance7389
+    ///
+    /// Note: According to the [`D-Bus specification`], the unique identifier
+    /// &quot;must only contain  the ASCII characters `[A-Z][a-z][0-9]_-`&quot; and
+    /// &quot;must not begin with a digit&quot;.
+    ///
+    /// [`LocalRootInterface`]: crate::LocalRootInterface
+    /// [`D-Bus specification`]: dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus
+    </span><span class="kw">pub fn </span>new(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="kw">let </span>(tx, <span class="kw-2">mut </span>rx) = mpsc::unbounded::&lt;Action&gt;();
 
         <span class="kw">let </span>inner = Server::new(
@@ -1490,6 +1566,20 @@
         })
     }
 
+    <span class="doccomment">/// Initialize the connection and run the server. This must be called as
+    /// soon as possible after creating the server.
+    ///
+    /// This method will continuously run until the server is dropped.
+    ///
+    /// This is no-op if the server is already running.
+    </span><span class="kw">pub async fn </span>init_and_run(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="self">self</span>.inner.init().<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(runner) = <span class="self">self</span>.runner.take() {
+            runner.<span class="kw">await</span>;
+        }
+        <span class="prelude-val">Ok</span>(())
+    }
+
     <span class="doccomment">/// Returns a reference to the underlying implementation.
     </span><span class="kw">pub fn </span>imp(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>T {
         <span class="kw-2">&amp;</span><span class="self">self</span>.imp
@@ -1502,20 +1592,28 @@
         <span class="self">self</span>.inner.connection().<span class="kw">await
     </span>}
 
-    <span class="doccomment">/// Initialize the connection and run the server. This method will
-    /// continuously run until the server is dropped.
-    ///
-    /// This is no-op if the server is already running.
-    </span><span class="kw">pub async fn </span>init_and_run(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="self">self</span>.inner.init().<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(runner) = <span class="self">self</span>.runner.take() {
-            runner.<span class="kw">await</span>;
-        }
-        <span class="prelude-val">Ok</span>(())
-    }
+    <span class="doccomment">/// Emits the given signal.
+    </span><span class="attr">#[inline]
+    </span><span class="kw">pub async fn </span>emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: Signal) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="self">self</span>.inner.emit(signal).<span class="kw">await
+    </span>}
 
-    <span class="macro">emit_delegate!</span>(emit, Signal);
-    <span class="macro">properties_changed_delegate!</span>(properties_changed, Property);
+    <span class="doccomment">/// Emits the `PropertiesChanged` signal for the given properties.
+    ///
+    /// This categorizes the property in the `changed` or `invalidated`
+    /// properties as defined by the spec.
+    ///
+    /// [`LocalServer::track_list_properties_changed`] or
+    /// [`LocalServer::playlists_properties_changed`] are used
+    /// to emit `PropertiesChanged` for the `TrackList` or `Playlists`
+    /// interfaces respectively.
+    </span><span class="attr">#[inline]
+    </span><span class="kw">pub async fn </span>properties_changed(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        properties: <span class="kw">impl </span>Into&lt;BitFlags&lt;Property&gt;&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="self">self</span>.inner.properties_changed(properties).<span class="kw">await
+    </span>}
 
     <span class="kw">async fn </span>handle_root_action(imp: <span class="kw-2">&amp;</span>T, action: RootAction) {
         <span class="kw">match </span>action {
@@ -1696,7 +1794,14 @@
 <span class="kw">where
     </span>T: LocalTrackListInterface + <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">pub fn </span>new_with_track_list(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+    <span class="doccomment">/// Creates a new [`LocalServer`] with the given bus name suffix and
+    /// implementation, which must implement [`TrackListInterface`] in addition
+    /// to [`LocalRootInterface`] and [`LocalPlayerInterface`].
+    ///
+    /// See also [`LocalServer::new`].
+    ///
+    /// [`LocalRootInterface`]: crate::LocalRootInterface
+    </span><span class="kw">pub fn </span>new_with_track_list(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="kw">let </span>(tx, <span class="kw-2">mut </span>rx) = mpsc::unbounded::&lt;Action&gt;();
 
         <span class="kw">let </span>inner = Server::new_with_track_list(
@@ -1730,8 +1835,23 @@
         })
     }
 
-    <span class="macro">emit_delegate!</span>(track_list_emit, TrackListSignal);
-    <span class="macro">properties_changed_delegate!</span>(track_list_properties_changed, TrackListProperty);
+    <span class="doccomment">/// Emits the given signal on the `TrackList` interface.
+    </span><span class="attr">#[inline]
+    </span><span class="kw">pub async fn </span>track_list_emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: TrackListSignal) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="self">self</span>.inner.track_list_emit(signal).<span class="kw">await
+    </span>}
+
+    <span class="doccomment">/// Emits the `PropertiesChanged` signal for the given properties.
+    ///
+    /// This categorizes the property in the `changed` or `invalidated`
+    /// properties as defined by the spec.
+    </span><span class="attr">#[inline]
+    </span><span class="kw">pub async fn </span>track_list_properties_changed(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        properties: <span class="kw">impl </span>Into&lt;BitFlags&lt;TrackListProperty&gt;&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="self">self</span>.inner.track_list_properties_changed(properties).<span class="kw">await
+    </span>}
 
     <span class="kw">async fn </span>handle_track_list_action(imp: <span class="kw-2">&amp;</span>T, action: TrackListAction) {
         <span class="kw">match </span>action {
@@ -1769,7 +1889,14 @@
 <span class="kw">where
     </span>T: LocalPlaylistsInterface + <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">pub fn </span>new_with_playlists(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+    <span class="doccomment">/// Creates a new [`LocalServer`] with the given bus name suffix and
+    /// implementation, which must implement [`LocalPlaylistsInterface`] in
+    /// addition to [`LocalRootInterface`] and [`LocalPlayerInterface`].
+    ///
+    /// See also [`LocalServer::new`].
+    ///
+    /// [`LocalRootInterface`]: crate::LocalRootInterface
+    </span><span class="kw">pub fn </span>new_with_playlists(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="kw">let </span>(tx, <span class="kw-2">mut </span>rx) = mpsc::unbounded::&lt;Action&gt;();
 
         <span class="kw">let </span>inner = Server::new_with_playlists(
@@ -1803,8 +1930,23 @@
         })
     }
 
-    <span class="macro">emit_delegate!</span>(playlists_emit, PlaylistsSignal);
-    <span class="macro">properties_changed_delegate!</span>(playlists_properties_changed, PlaylistsProperty);
+    <span class="doccomment">/// Emits the given signal on the `Playlists` interface.
+    </span><span class="attr">#[inline]
+    </span><span class="kw">pub async fn </span>playlists_emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: PlaylistsSignal) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="self">self</span>.inner.playlists_emit(signal).<span class="kw">await
+    </span>}
+
+    <span class="doccomment">/// Emits the `PropertiesChanged` signal for the given properties.
+    ///
+    /// This categorizes the property in the `changed` or `invalidated`
+    /// properties as defined by the spec.
+    </span><span class="attr">#[inline]
+    </span><span class="kw">pub async fn </span>playlists_properties_changed(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        properties: <span class="kw">impl </span>Into&lt;BitFlags&lt;PlaylistsProperty&gt;&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="self">self</span>.inner.playlists_properties_changed(properties).<span class="kw">await
+    </span>}
 
     <span class="kw">async fn </span>handle_playlists_actions(imp: <span class="kw-2">&amp;</span>T, action: PlaylistsAction) {
         <span class="kw">match </span>action {
@@ -1838,7 +1980,15 @@
 <span class="kw">where
     </span>T: LocalTrackListInterface + LocalPlaylistsInterface + <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">pub fn </span>new_with_all(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+    <span class="doccomment">/// Creates a new [`LocalServer`] with the given bus name suffix and
+    /// implementation, which must implement [`LocalTrackListInterface`] and
+    /// [`LocalPlaylistsInterface`] in addition to [`LocalRootInterface`] and
+    /// [`LocalPlayerInterface`].
+    ///
+    /// See also [`LocalServer::new`].
+    ///
+    /// [`LocalRootInterface`]: crate::LocalRootInterface
+    </span><span class="kw">pub fn </span>new_with_all(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="kw">let </span>(tx, <span class="kw-2">mut </span>rx) = mpsc::unbounded::&lt;Action&gt;();
 
         <span class="kw">let </span>inner = Server::new_with_all(
