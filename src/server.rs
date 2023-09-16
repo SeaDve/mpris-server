@@ -461,6 +461,7 @@ where
     ) -> Result<()> {
         let mut root_changed = HashMap::new();
         let mut player_changed = HashMap::new();
+
         for property in properties.into().iter() {
             insert_property!(
                 property, Property, self =>
@@ -662,6 +663,7 @@ where
         properties: impl Into<BitFlags<PlaylistsProperty>>,
     ) -> Result<()> {
         let mut changed = HashMap::new();
+
         for property in properties.into().iter() {
             insert_property!(
                 property, PlaylistsProperty, self =>
