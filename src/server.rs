@@ -585,7 +585,7 @@ where
             .object_server()
             .interface::<_, I>(OBJECT_PATH)
             .await?;
-        let _lock = iface_ref.get_mut().await;
+        let _guard = iface_ref.get_mut().await;
 
         self.get_or_init_connection()
             .await?
