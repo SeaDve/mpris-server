@@ -1,9 +1,9 @@
 use crate::{Metadata, Playlist, Time, TrackId};
 
-/// Used for emitting signals on [`Server`] via [`Server::emit`].
+/// Used for emitting signals on [`Server::emit`] and [`LocalServer::emit`].
 ///
-/// [`Server`]: crate::Server
 /// [`Server::emit`]: crate::Server::emit
+/// [`LocalServer::emit`]: crate::LocalServer::emit
 #[derive(Debug)]
 pub enum Signal {
     /// Indicates that the track position has changed in a way that is
@@ -24,10 +24,14 @@ pub enum Signal {
     },
 }
 
-/// Used for emitting signals on [`Server`] via [`Server::track_list_emit`].
+/// Used for emitting signals on [`Server::track_list_emit`] and
+/// [`LocalServer::track_list_emit`], if `T` implements [`TrackListInterface`]
+/// or [`LocalTrackListInterface`].
 ///
-/// [`Server`]: crate::Server
 /// [`Server::track_list_emit`]: crate::Server::track_list_emit
+/// [`LocalServer::track_list_emit`]: crate::LocalServer::track_list_emit
+/// [`TrackListInterface`]: crate::TrackListInterface
+/// [`LocalTrackListInterface`]: crate::LocalTrackListInterface
 #[derive(Debug)]
 pub enum TrackListSignal {
     /// Indicates that the entire tracklist has been replaced.
@@ -57,8 +61,9 @@ pub enum TrackListSignal {
     },
     /// Indicates that a track has been added to the track list.
     TrackAdded {
-        /// The metadata of the newly added item. This must include a
-        /// [`mpris:trackid`] entry.
+        /// The metadata of the newly added item.
+        ///
+        /// This must include a [`mpris:trackid`] entry.
         ///
         /// [`mpris:trackid`]: crate::Metadata::trackid
         metadata: Metadata,
@@ -73,7 +78,7 @@ pub enum TrackListSignal {
     TrackRemoved {
         /// The identifier of the track being removed.
         ///
-        /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`] is not a valid value
+        /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`] is *not* a valid value
         /// for this argument.
         ///
         /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`]: crate::TrackId::NO_TRACK
@@ -91,7 +96,7 @@ pub enum TrackListSignal {
         ///
         /// If the track id has changed, this will be the old value.
         ///
-        /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`] is not a valid value
+        /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`] is *not* a valid value
         /// for this argument.
         ///
         /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`]: crate::TrackId::NO_TRACK
@@ -106,10 +111,14 @@ pub enum TrackListSignal {
     },
 }
 
-/// Used for emitting signals on [`Server`] via [`Server::playlists_emit`].
+/// Used for emitting signals on [`Server::playlists_emit`] and
+/// [`LocalServer::playlists_emit`], if `T` implements
+/// [`PlaylistsInterface`] or [`LocalPlaylistsInterface`].
 ///
-/// [`Server`]: crate::Server
 /// [`Server::playlists_emit`]: crate::Server::playlists_emit
+/// [`LocalServer::playlists_emit`]: crate::LocalServer::playlists_emit
+/// [`PlaylistsInterface`]: crate::PlaylistsInterface
+/// [`LocalPlaylistsInterface`]: crate::LocalPlaylistsInterface
 #[derive(Debug)]
 pub enum PlaylistsSignal {
     /// Indicates that either the Name or Icon attribute of a playlist has
