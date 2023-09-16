@@ -577,19 +577,18 @@ where
     where
         I: Interface,
     {
+        let connection = self.get_or_init_connection().await?;
+
         // FIXME Hold a lock to the interface until the signal is emitted.
         // This is a workaround for `Invalid client serial` errors.
         // See https://github.com/flatpak/xdg-dbus-proxy/issues/46
-        let iface_ref = self
-            .get_or_init_connection()
-            .await?
+        let iface_ref = connection
             .object_server()
             .interface::<_, I>(OBJECT_PATH)
             .await?;
         let _guard = iface_ref.get_mut().await;
 
-        self.get_or_init_connection()
-            .await?
+        connection
             .emit_signal(
                 None::<BusName<'_>>,
                 OBJECT_PATH,
