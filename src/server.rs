@@ -9,9 +9,9 @@ use enumflags2::BitFlags;
 use serde::Serialize;
 use zbus::{
     dbus_interface, fdo,
-    names::{BusName, InterfaceName, MemberName, WellKnownName},
+    names::{BusName, WellKnownName},
     zvariant::{DynamicType, ObjectPath, Value},
-    Connection, ConnectionBuilder, Error, Interface, Result, SignalContext,
+    Connection, ConnectionBuilder, Interface, Result, SignalContext,
 };
 
 use crate::{
@@ -439,11 +439,9 @@ where
 
     /// Emits the given signal.
     pub async fn emit(&self, signal: Signal) -> Result<()> {
-        let player_interface = RawPlayerInterface::<T>::name();
-
         match signal {
             Signal::Seeked { position } => {
-                self.emit_inner(player_interface, "Seeked", &(position,))
+                self.emit_inner::<RawPlayerInterface<T>>("Seeked", &(position,))
                     .await?;
             }
         }
@@ -564,33 +562,27 @@ where
     where
         I: Interface,
     {
-        self.emit_inner(
-            fdo::Properties::name(),
+        self.emit_inner::<fdo::Properties>(
             "PropertiesChanged",
             &(I::name(), changed_properties, invalidated_properties),
         )
         .await
     }
 
-    async fn emit_inner<'i, 'm, I, M, B>(
+    async fn emit_inner<I>(
         &self,
-        interface: I,
-        signal_name: M,
-        body: &B,
+        signal_name: &str,
+        body: &(impl Serialize + DynamicType),
     ) -> Result<()>
     where
-        I: TryInto<InterfaceName<'i>>,
-        M: TryInto<MemberName<'m>>,
-        I::Error: Into<Error>,
-        M::Error: Into<Error>,
-        B: Serialize + DynamicType,
+        I: Interface,
     {
         self.get_or_init_connection()
             .await?
             .emit_signal(
                 None::<BusName<'_>>,
                 OBJECT_PATH,
-                interface,
+                I::name(),
                 signal_name,
                 body,
             )
@@ -615,15 +607,12 @@ where
 
     /// Emits the given signal on the `TrackList` interface.
     pub async fn track_list_emit(&self, signal: TrackListSignal) -> Result<()> {
-        let track_list_interface = RawTrackListInterface::<T>::name();
-
         match signal {
             TrackListSignal::TrackListReplaced {
                 tracks,
                 current_track,
             } => {
-                self.emit_inner(
-                    track_list_interface,
+                self.emit_inner::<RawTrackListInterface<T>>(
                     "TrackListReplaced",
                     &(tracks, current_track),
                 )
@@ -633,16 +622,15 @@ where
                 metadata,
                 after_track,
             } => {
-                self.emit_inner(track_list_interface, "TrackAdded", &(metadata, after_track))
+                self.emit_inner::<RawTrackListInterface<T>>("TrackAdded", &(metadata, after_track))
                     .await?;
             }
             TrackListSignal::TrackRemoved { track_id } => {
-                self.emit_inner(track_list_interface, "TrackRemoved", &(track_id,))
+                self.emit_inner::<RawTrackListInterface<T>>("TrackRemoved", &(track_id,))
                     .await?;
             }
             TrackListSignal::TrackMetadataChanged { track_id, metadata } => {
-                self.emit_inner(
-                    track_list_interface,
+                self.emit_inner::<RawTrackListInterface<T>>(
                     "TrackMetadataChanged",
                     &(track_id, metadata),
                 )
@@ -703,11 +691,9 @@ where
 
     /// Emits the given signal on the `Playlists` interface.
     pub async fn playlists_emit(&self, signal: PlaylistsSignal) -> Result<()> {
-        let playlists_interface = RawPlaylistsInterface::<T>::name();
-
         match signal {
             PlaylistsSignal::PlaylistChanged { playlist } => {
-                self.emit_inner(playlists_interface, "PlaylistChanged", &(playlist,))
+                self.emit_inner::<RawPlaylistsInterface<T>>("PlaylistChanged", &(playlist,))
                     .await?;
             }
         }
