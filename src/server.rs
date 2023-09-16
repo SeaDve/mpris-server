@@ -8,9 +8,9 @@ use async_lock::OnceCell;
 use enumflags2::BitFlags;
 use zbus::{
     dbus_interface, fdo,
-    names::WellKnownName,
+    names::{BusName, WellKnownName},
     zvariant::{ObjectPath, Value},
-    Connection, ConnectionBuilder, Interface, InterfaceRef, Result, SignalContext,
+    Connection, ConnectionBuilder, Interface, Result, SignalContext,
 };
 
 use crate::{
@@ -376,8 +376,9 @@ where
 macro_rules! signal_delegate {
     ($iface:ty, $name:ident($($arg_name:ident: $arg_ty:ty),*)) => {
         pub async fn $name(&self, $($arg_name: $arg_ty),*) -> Result<()> {
-            let iface_ref = self.interface_ref::<$iface>().await?;
-            <$iface>::$name(iface_ref.signal_context(), $($arg_name),*).await
+            let connection = self.get_or_init_connection().await?;
+            let ctxt = SignalContext::from_parts(connection.clone(), OBJECT_PATH);
+            <$iface>::$name(&ctxt, $($arg_name),*).await
         }
     };
 }
@@ -551,14 +552,6 @@ where
             .await
     }
 
-    async fn interface_ref<I: zbus::Interface>(&self) -> Result<InterfaceRef<I>> {
-        self.get_or_init_connection()
-            .await?
-            .object_server()
-            .interface::<_, I>(OBJECT_PATH)
-            .await
-    }
-
     async fn properties_changed_inner<I>(
         &self,
         changed_properties: HashMap<&str, Value<'_>>,
@@ -567,13 +560,11 @@ where
     where
         I: Interface,
     {
-        let iface_ref = self.interface_ref::<I>().await?;
-
-        let ctxt = iface_ref.signal_context();
-        ctxt.connection()
+        self.get_or_init_connection()
+            .await?
             .emit_signal(
-                ctxt.destination(),
-                ctxt.path(),
+                None::<BusName<'_>>,
+                OBJECT_PATH,
                 fdo::Properties::name(),
                 "PropertiesChanged",
                 &(I::name(), changed_properties, invalidated_properties),

@@ -4,8 +4,8 @@ use mpris_server::{
     async_trait,
     zbus::{fdo, Result},
     LoopStatus, MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, Playlist,
-    PlaylistId, PlaylistOrdering, PlaylistsInterface, RootInterface, Server, Time, TrackId,
-    TrackListInterface, Uri, Volume,
+    PlaylistId, PlaylistOrdering, PlaylistsInterface, Property, RootInterface, Server, Time,
+    TrackId, TrackListInterface, Uri, Volume,
 };
 
 pub struct Player;
@@ -314,6 +314,15 @@ async fn main() {
     // Create a server that exports all interfaces.
     let server = Server::new_with_all("Test.ApplicationWithTrackListAndPlaylists", Player).unwrap();
     server.init().await.unwrap();
+
+    // Emit `PropertiesChanged` signal for `CanSeek` and `Metadata` properties
+    server
+        .properties_changed(Property::CanSeek | Property::Metadata)
+        .await
+        .unwrap();
+
+    // Emit `Seeked` signal
+    server.seeked(Time::from_micros(124)).await.unwrap();
 
     // Prevent the program from exiting.
     future::pending::<()>().await;
