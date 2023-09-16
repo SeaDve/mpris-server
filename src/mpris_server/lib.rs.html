@@ -1192,21 +1192,18 @@
 <a href="#1192" id="1192">1192</a>
 <a href="#1193" id="1193">1193</a>
 <a href="#1194" id="1194">1194</a>
-</pre></div><pre class="rust"><code><span class="attr">#![warn(
-    rust_2018_idioms,
-    missing_debug_implementations,
-    missing_copy_implementations
-)]
+</pre></div><pre class="rust"><code><span class="attr">#![warn(rust_2018_idioms, missing_debug_implementations)]
 #![deny(rustdoc::broken_intra_doc_links)]
 #![doc = <span class="macro">include_str!</span>(<span class="string">&quot;../README.md&quot;</span>)]
 
 </span><span class="comment">// TODO:
 // * Document public interface
 // * Replace `DateTime`, and `Uri` with proper types
+// * Add sensible default method impls on `*Interface` traits
 // * Profile if inlining is worth it
 // * Add public `test` method to check if interface is implemented correctly
 // * Avoid clones in `Metadata` getters
-// * Blanket impl `*Interface` for Arc&lt;T&gt;, Mutex&lt;T&gt;, etc.?
+// * Blanket impl `*Interface` traits for Arc&lt;T&gt;, Mutex&lt;T&gt;, etc.?
 
 </span><span class="kw">mod </span>local_server;
 <span class="kw">mod </span>loop_status;
@@ -1217,6 +1214,7 @@
 <span class="kw">mod </span>playlist_ordering;
 <span class="kw">mod </span>property;
 <span class="kw">mod </span>server;
+<span class="kw">mod </span>signal;
 <span class="kw">mod </span>time;
 <span class="kw">mod </span>track_id;
 
@@ -1262,6 +1260,7 @@
 /// }
 /// ```
 </span><span class="kw">pub use </span>async_trait::async_trait;
+<span class="kw">pub use </span>enumflags2;
 <span class="kw">pub use </span>zbus;
 <span class="kw">use </span>zbus::{fdo, zvariant::OwnedObjectPath, <span class="prelude-ty">Result</span>};
 
@@ -1275,6 +1274,7 @@
     playlist_ordering::PlaylistOrdering,
     property::{PlaylistsProperty, Property, TrackListProperty},
     server::Server,
+    signal::{PlaylistsSignal, Signal, TrackListSignal},
     time::Time,
     track_id::TrackId,
 };
@@ -1686,8 +1686,8 @@
             /// [`mpris:trackid`]: Metadata::set_trackid
             /// [`Metadata`]: Self::metadata
             /// [`TrackList interface`]: TrackListInterface
-            /// [`TrackAdded`]: Server::track_added
-            /// [`TrackListReplaced`]: Server::track_list_replaced
+            /// [`TrackAdded`]: TrackListSignal::TrackAdded
+            /// [`TrackListReplaced`]: TrackListSignal::TrackListReplaced
             </span><span class="attr">#[doc(alias = <span class="string">&quot;OpenUri&quot;</span>)]
             </span><span class="kw">async fn </span>open_uri(<span class="kw-2">&amp;</span><span class="self">self</span>, uri: String) -&gt; fdo::Result&lt;()&gt;;
 
@@ -1878,7 +1878,7 @@
             /// [`Seek`]: Self::seek
             /// [`CanSeek`]: Self::can_seek
             /// [`Rate`]: Self::rate
-            /// [`Seeked`]: Server::seeked
+            /// [`Seeked`]: Signal::Seeked
             </span><span class="attr">#[doc(alias = <span class="string">&quot;Position&quot;</span>)]
             </span><span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Time&gt;;
 
@@ -2142,8 +2142,8 @@
             /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`]: TrackId::NO_TRACK
             /// [`GoTo`]: Self::go_to
             /// [`CanEditTracks`]: Self::can_edit_tracks
-            /// [`TrackAdded`]: Server::track_added
-            /// [`TrackListReplaced`]: Server::track_list_replaced
+            /// [`TrackAdded`]: TrackListSignal::TrackAdded
+            /// [`TrackListReplaced`]: TrackListSignal::TrackListReplaced
             </span><span class="attr">#[doc(alias = <span class="string">&quot;AddTrack&quot;</span>)]
             </span><span class="kw">async fn </span>add_track(
                 <span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -2170,8 +2170,8 @@
             ///
             /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`]: TrackId::NO_TRACK
             /// [`CanEditTracks`]: Self::can_edit_tracks
-            /// [`TrackRemoved`]: Server::track_removed
-            /// [`TrackListReplaced`]: Server::track_list_replaced
+            /// [`TrackRemoved`]: TrackListSignal::TrackRemoved
+            /// [`TrackListReplaced`]: TrackListSignal::TrackListReplaced
             </span><span class="attr">#[doc(alias = <span class="string">&quot;RemoveTrack&quot;</span>)]
             </span><span class="kw">async fn </span>remove_track(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId) -&gt; fdo::Result&lt;()&gt;;
 
@@ -2190,7 +2190,7 @@
             /// [`TrackListReplaced`] signal should be fired from
             /// `/org/mpris/MediaPlayer2`.
             ///
-            /// [`TrackListReplaced`]: Server::track_list_replaced
+            /// [`TrackListReplaced`]: TrackListSignal::TrackListReplaced
             </span><span class="attr">#[doc(alias = <span class="string">&quot;GoTo&quot;</span>)]
             </span><span class="kw">async fn </span>go_to(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId) -&gt; fdo::Result&lt;()&gt;;
 
@@ -2210,9 +2210,9 @@
             /// tracklist up to date.
             ///
             /// [`track_list_properties_changed`]: Server::track_list_properties_changed
-            /// [`TrackAdded`]: Server::track_added
-            /// [`TrackRemoved`]: Server::track_removed
-            /// [`TrackListReplaced`]: Server::track_list_replaced
+            /// [`TrackAdded`]: TrackListSignal::TrackAdded
+            /// [`TrackRemoved`]: TrackListSignal::TrackRemoved
+            /// [`TrackListReplaced`]: TrackListSignal::TrackListReplaced
             </span><span class="attr">#[doc(alias = <span class="string">&quot;Tracks&quot;</span>)]
             </span><span class="kw">async fn </span>tracks(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;TrackId&gt;&gt;;
 

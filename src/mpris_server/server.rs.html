@@ -945,6 +945,69 @@
 <a href="#945" id="945">945</a>
 <a href="#946" id="946">946</a>
 <a href="#947" id="947">947</a>
+<a href="#948" id="948">948</a>
+<a href="#949" id="949">949</a>
+<a href="#950" id="950">950</a>
+<a href="#951" id="951">951</a>
+<a href="#952" id="952">952</a>
+<a href="#953" id="953">953</a>
+<a href="#954" id="954">954</a>
+<a href="#955" id="955">955</a>
+<a href="#956" id="956">956</a>
+<a href="#957" id="957">957</a>
+<a href="#958" id="958">958</a>
+<a href="#959" id="959">959</a>
+<a href="#960" id="960">960</a>
+<a href="#961" id="961">961</a>
+<a href="#962" id="962">962</a>
+<a href="#963" id="963">963</a>
+<a href="#964" id="964">964</a>
+<a href="#965" id="965">965</a>
+<a href="#966" id="966">966</a>
+<a href="#967" id="967">967</a>
+<a href="#968" id="968">968</a>
+<a href="#969" id="969">969</a>
+<a href="#970" id="970">970</a>
+<a href="#971" id="971">971</a>
+<a href="#972" id="972">972</a>
+<a href="#973" id="973">973</a>
+<a href="#974" id="974">974</a>
+<a href="#975" id="975">975</a>
+<a href="#976" id="976">976</a>
+<a href="#977" id="977">977</a>
+<a href="#978" id="978">978</a>
+<a href="#979" id="979">979</a>
+<a href="#980" id="980">980</a>
+<a href="#981" id="981">981</a>
+<a href="#982" id="982">982</a>
+<a href="#983" id="983">983</a>
+<a href="#984" id="984">984</a>
+<a href="#985" id="985">985</a>
+<a href="#986" id="986">986</a>
+<a href="#987" id="987">987</a>
+<a href="#988" id="988">988</a>
+<a href="#989" id="989">989</a>
+<a href="#990" id="990">990</a>
+<a href="#991" id="991">991</a>
+<a href="#992" id="992">992</a>
+<a href="#993" id="993">993</a>
+<a href="#994" id="994">994</a>
+<a href="#995" id="995">995</a>
+<a href="#996" id="996">996</a>
+<a href="#997" id="997">997</a>
+<a href="#998" id="998">998</a>
+<a href="#999" id="999">999</a>
+<a href="#1000" id="1000">1000</a>
+<a href="#1001" id="1001">1001</a>
+<a href="#1002" id="1002">1002</a>
+<a href="#1003" id="1003">1003</a>
+<a href="#1004" id="1004">1004</a>
+<a href="#1005" id="1005">1005</a>
+<a href="#1006" id="1006">1006</a>
+<a href="#1007" id="1007">1007</a>
+<a href="#1008" id="1008">1008</a>
+<a href="#1009" id="1009">1009</a>
+<a href="#1010" id="1010">1010</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{
     collections::HashMap,
     fmt,
@@ -953,17 +1016,19 @@
 
 <span class="kw">use </span>async_lock::OnceCell;
 <span class="kw">use </span>enumflags2::BitFlags;
+<span class="kw">use </span>serde::Serialize;
 <span class="kw">use </span>zbus::{
     dbus_interface, fdo,
-    names::WellKnownName,
-    zvariant::{ObjectPath, Value},
-    Connection, ConnectionBuilder, Interface, InterfaceRef, <span class="prelude-ty">Result</span>, SignalContext,
+    names::{BusName, InterfaceName, MemberName, WellKnownName},
+    zvariant::{DynamicType, ObjectPath, Value},
+    Connection, ConnectionBuilder, Error, Interface, <span class="prelude-ty">Result</span>, SignalContext,
 };
 
 <span class="kw">use crate</span>::{
     LoopStatus, MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, Playlist,
-    PlaylistId, PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, Property, RootInterface,
-    Time, TrackId, TrackListInterface, TrackListProperty, Uri, Volume,
+    PlaylistId, PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, PlaylistsSignal, Property,
+    RootInterface, Signal, Time, TrackId, TrackListInterface, TrackListProperty, TrackListSignal,
+    Uri, Volume,
 };
 
 <span class="kw">const </span>OBJECT_PATH: ObjectPath&lt;<span class="lifetime">&#39;static</span>&gt; =
@@ -1320,15 +1385,6 @@
     }
 }
 
-<span class="macro">macro_rules! </span>signal_delegate {
-    (<span class="macro-nonterminal">$iface</span>:ty, <span class="macro-nonterminal">$name</span>:ident($(<span class="macro-nonterminal">$arg_name</span>:ident: <span class="macro-nonterminal">$arg_ty</span>:ty),<span class="kw-2">*</span>)) =&gt; {
-        <span class="kw">pub async fn </span><span class="macro-nonterminal">$name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, $(<span class="macro-nonterminal">$arg_name</span>: <span class="macro-nonterminal">$arg_ty</span>),<span class="kw-2">*</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-            <span class="kw">let </span>iface_ref = <span class="self">self</span>.interface_ref::&lt;<span class="macro-nonterminal">$iface</span>&gt;().<span class="kw">await</span><span class="question-mark">?</span>;
-            &lt;<span class="macro-nonterminal">$iface</span>&gt;::<span class="macro-nonterminal">$name</span>(iface_ref.signal_context(), $(<span class="macro-nonterminal">$arg_name</span>),<span class="kw-2">*</span>).<span class="kw">await
-        </span>}
-    };
-}
-
 <span class="macro">macro_rules! </span>insert_property {
     (<span class="macro-nonterminal">$item</span>:ident, <span class="macro-nonterminal">$property_type</span>:ident, <span class="macro-nonterminal">$source</span>:ident =&gt; $(<span class="macro-nonterminal">$map</span>:ident, <span class="macro-nonterminal">$property</span>:ident, <span class="macro-nonterminal">$getter</span>:ident);<span class="kw-2">*</span>) =&gt; {
         <span class="kw">match </span><span class="macro-nonterminal">$item </span>{
@@ -1391,7 +1447,19 @@
         <span class="self">self</span>.get_or_init_connection().<span class="kw">await
     </span>}
 
-    <span class="macro">signal_delegate!</span>(RawPlayerInterface&lt;T&gt;, seeked(position: Time));
+    <span class="doccomment">/// Emits the given signal.
+    </span><span class="kw">pub async fn </span>emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: Signal) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="kw">let </span>player_interface = RawPlayerInterface::&lt;T&gt;::name();
+
+        <span class="kw">match </span>signal {
+            Signal::Seeked { position } =&gt; {
+                <span class="self">self</span>.emit_inner(player_interface, <span class="string">&quot;Seeked&quot;</span>, <span class="kw-2">&amp;</span>(position,))
+                    .<span class="kw">await</span><span class="question-mark">?</span>;
+            }
+        }
+
+        <span class="prelude-val">Ok</span>(())
+    }
 
     <span class="doccomment">/// Emits the `PropertiesChanged` signal for the given properties.
     ///
@@ -1408,6 +1476,7 @@
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>root_changed = HashMap::new();
         <span class="kw">let </span><span class="kw-2">mut </span>player_changed = HashMap::new();
+
         <span class="kw">for </span>property <span class="kw">in </span>properties.into().iter() {
             <span class="macro">insert_property!</span>(
                 property, Property, <span class="self">self </span>=&gt;
@@ -1497,14 +1566,6 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">async fn </span>interface_ref&lt;I: zbus::Interface&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;InterfaceRef&lt;I&gt;&gt; {
-        <span class="self">self</span>.get_or_init_connection()
-            .<span class="kw">await</span><span class="question-mark">?
-            </span>.object_server()
-            .interface::&lt;<span class="kw">_</span>, I&gt;(OBJECT_PATH)
-            .<span class="kw">await
-    </span>}
-
     <span class="kw">async fn </span>properties_changed_inner&lt;I&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         changed_properties: HashMap&lt;<span class="kw-2">&amp;</span>str, Value&lt;<span class="lifetime">&#39;_</span>&gt;&gt;,
@@ -1513,21 +1574,38 @@
     <span class="kw">where
         </span>I: Interface,
     {
-        <span class="kw">let </span>iface_ref = <span class="self">self</span>.interface_ref::&lt;I&gt;().<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="self">self</span>.emit_inner(
+            fdo::Properties::name(),
+            <span class="string">&quot;PropertiesChanged&quot;</span>,
+            <span class="kw-2">&amp;</span>(I::name(), changed_properties, invalidated_properties),
+        )
+        .<span class="kw">await
+    </span>}
 
-        <span class="kw">let </span>ctxt = iface_ref.signal_context();
-        ctxt.connection()
-            .emit_signal(
-                ctxt.destination(),
-                ctxt.path(),
-                fdo::Properties::name(),
-                <span class="string">&quot;PropertiesChanged&quot;</span>,
-                <span class="kw-2">&amp;</span>(I::name(), changed_properties, invalidated_properties),
+    <span class="kw">async fn </span>emit_inner&lt;<span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;m</span>, I, M, B&gt;(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        interface: I,
+        signal_name: M,
+        body: <span class="kw-2">&amp;</span>B,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;
+    <span class="kw">where
+        </span>I: TryInto&lt;InterfaceName&lt;<span class="lifetime">&#39;i</span>&gt;&gt;,
+        M: TryInto&lt;MemberName&lt;<span class="lifetime">&#39;m</span>&gt;&gt;,
+        I::Error: Into&lt;Error&gt;,
+        M::Error: Into&lt;Error&gt;,
+        B: Serialize + DynamicType,
+    {
+        <span class="self">self</span>.get_or_init_connection()
+            .<span class="kw">await</span><span class="question-mark">?
+            </span>.emit_signal(
+                <span class="prelude-val">None</span>::&lt;BusName&lt;<span class="lifetime">&#39;_</span>&gt;&gt;,
+                OBJECT_PATH,
+                interface,
+                signal_name,
+                body,
             )
-            .<span class="kw">await</span><span class="question-mark">?</span>;
-
-        <span class="prelude-val">Ok</span>(())
-    }
+            .<span class="kw">await
+    </span>}
 }
 
 <span class="kw">impl</span>&lt;T&gt; Server&lt;T&gt;
@@ -1545,10 +1623,45 @@
         })
     }
 
-    <span class="macro">signal_delegate!</span>(RawTrackListInterface&lt;T&gt;, track_list_replaced(tracks: Vec&lt;TrackId&gt;, current_track: TrackId));
-    <span class="macro">signal_delegate!</span>(RawTrackListInterface&lt;T&gt;, track_added(metadata: Metadata, after_track: TrackId));
-    <span class="macro">signal_delegate!</span>(RawTrackListInterface&lt;T&gt;, track_removed(track_id: TrackId));
-    <span class="macro">signal_delegate!</span>(RawTrackListInterface&lt;T&gt;, track_metadata_changed(track_id: TrackId, metadata: Metadata));
+    <span class="doccomment">/// Emits the given signal on the `TrackList` interface.
+    </span><span class="kw">pub async fn </span>track_list_emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: TrackListSignal) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="kw">let </span>track_list_interface = RawTrackListInterface::&lt;T&gt;::name();
+
+        <span class="kw">match </span>signal {
+            TrackListSignal::TrackListReplaced {
+                tracks,
+                current_track,
+            } =&gt; {
+                <span class="self">self</span>.emit_inner(
+                    track_list_interface,
+                    <span class="string">&quot;TrackListReplaced&quot;</span>,
+                    <span class="kw-2">&amp;</span>(tracks, current_track),
+                )
+                .<span class="kw">await</span><span class="question-mark">?</span>;
+            }
+            TrackListSignal::TrackAdded {
+                metadata,
+                after_track,
+            } =&gt; {
+                <span class="self">self</span>.emit_inner(track_list_interface, <span class="string">&quot;TrackAdded&quot;</span>, <span class="kw-2">&amp;</span>(metadata, after_track))
+                    .<span class="kw">await</span><span class="question-mark">?</span>;
+            }
+            TrackListSignal::TrackRemoved { track_id } =&gt; {
+                <span class="self">self</span>.emit_inner(track_list_interface, <span class="string">&quot;TrackRemoved&quot;</span>, <span class="kw-2">&amp;</span>(track_id,))
+                    .<span class="kw">await</span><span class="question-mark">?</span>;
+            }
+            TrackListSignal::TrackMetadataChanged { track_id, metadata } =&gt; {
+                <span class="self">self</span>.emit_inner(
+                    track_list_interface,
+                    <span class="string">&quot;TrackMetadataChanged&quot;</span>,
+                    <span class="kw-2">&amp;</span>(track_id, metadata),
+                )
+                .<span class="kw">await</span><span class="question-mark">?</span>;
+            }
+        }
+
+        <span class="prelude-val">Ok</span>(())
+    }
 
     <span class="doccomment">/// Emits the `PropertiesChanged` signal for the given properties.
     ///
@@ -1598,7 +1711,19 @@
         })
     }
 
-    <span class="macro">signal_delegate!</span>(RawPlaylistsInterface&lt;T&gt;, playlist_changed(playlist: Playlist));
+    <span class="doccomment">/// Emits the given signal on the `Playlists` interface.
+    </span><span class="kw">pub async fn </span>playlists_emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: PlaylistsSignal) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="kw">let </span>playlists_interface = RawPlaylistsInterface::&lt;T&gt;::name();
+
+        <span class="kw">match </span>signal {
+            PlaylistsSignal::PlaylistChanged { playlist } =&gt; {
+                <span class="self">self</span>.emit_inner(playlists_interface, <span class="string">&quot;PlaylistChanged&quot;</span>, <span class="kw-2">&amp;</span>(playlist,))
+                    .<span class="kw">await</span><span class="question-mark">?</span>;
+            }
+        }
+
+        <span class="prelude-val">Ok</span>(())
+    }
 
     <span class="doccomment">/// Emits the `PropertiesChanged` signal for the given properties.
     ///
@@ -1609,6 +1734,7 @@
         properties: <span class="kw">impl </span>Into&lt;BitFlags&lt;PlaylistsProperty&gt;&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>changed = HashMap::new();
+
         <span class="kw">for </span>property <span class="kw">in </span>properties.into().iter() {
             <span class="macro">insert_property!</span>(
                 property, PlaylistsProperty, <span class="self">self </span>=&gt;

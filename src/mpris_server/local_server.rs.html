@@ -936,12 +936,6 @@
 <a href="#936" id="936">936</a>
 <a href="#937" id="937">937</a>
 <a href="#938" id="938">938</a>
-<a href="#939" id="939">939</a>
-<a href="#940" id="940">940</a>
-<a href="#941" id="941">941</a>
-<a href="#942" id="942">942</a>
-<a href="#943" id="943">943</a>
-<a href="#944" id="944">944</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{cell::RefCell, fmt, future::Future, marker::PhantomData, pin::Pin, rc::Rc};
 
 <span class="kw">use </span>async_trait::async_trait;
@@ -953,8 +947,9 @@
 <span class="kw">use crate</span>::{
     LocalPlayerInterface, LocalPlaylistsInterface, LocalTrackListInterface, LoopStatus,
     MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, Playlist, PlaylistId,
-    PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, Property, RootInterface, Server, Time,
-    TrackId, TrackListInterface, TrackListProperty, Uri, Volume,
+    PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, PlaylistsSignal, Property,
+    RootInterface, Server, Signal, Time, TrackId, TrackListInterface, TrackListProperty,
+    TrackListSignal, Uri, Volume,
 };
 
 <span class="kw">enum </span>RootAction {
@@ -1420,11 +1415,11 @@
     }
 }
 
-<span class="macro">macro_rules! </span>signal_delegate {
-    (<span class="macro-nonterminal">$name</span>:ident($(<span class="macro-nonterminal">$arg_name</span>:ident: <span class="macro-nonterminal">$arg_ty</span>:ty),<span class="kw-2">*</span>)) =&gt; {
+<span class="macro">macro_rules! </span>emit_delegate {
+    (<span class="macro-nonterminal">$name</span>:ident, <span class="macro-nonterminal">$signal_ty</span>:ty) =&gt; {
         <span class="attr">#[inline]
-        </span><span class="kw">pub async fn </span><span class="macro-nonterminal">$name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, $(<span class="macro-nonterminal">$arg_name</span>: <span class="macro-nonterminal">$arg_ty</span>),<span class="kw-2">*</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-            <span class="self">self</span>.inner.<span class="macro-nonterminal">$name</span>($(<span class="macro-nonterminal">$arg_name</span>),<span class="kw-2">*</span>).<span class="kw">await
+        </span><span class="kw">pub async fn </span><span class="macro-nonterminal">$name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: <span class="macro-nonterminal">$signal_ty</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+            <span class="self">self</span>.inner.<span class="macro-nonterminal">$name</span>(signal).<span class="kw">await
         </span>}
     };
 }
@@ -1519,9 +1514,7 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="comment">// org.mpris.MediaPlayer2.Player
-    </span><span class="macro">signal_delegate!</span>(seeked(position: Time));
-
+    <span class="macro">emit_delegate!</span>(emit, Signal);
     <span class="macro">properties_changed_delegate!</span>(properties_changed, Property);
 
     <span class="kw">async fn </span>handle_root_action(imp: <span class="kw-2">&amp;</span>T, action: RootAction) {
@@ -1737,11 +1730,7 @@
         })
     }
 
-    <span class="macro">signal_delegate!</span>(track_list_replaced(tracks: Vec&lt;TrackId&gt;, current_track: TrackId));
-    <span class="macro">signal_delegate!</span>(track_added(metadata: Metadata, after_track: TrackId));
-    <span class="macro">signal_delegate!</span>(track_removed(track_id: TrackId));
-    <span class="macro">signal_delegate!</span>(track_metadata_changed(track_id: TrackId, metadata: Metadata));
-
+    <span class="macro">emit_delegate!</span>(track_list_emit, TrackListSignal);
     <span class="macro">properties_changed_delegate!</span>(track_list_properties_changed, TrackListProperty);
 
     <span class="kw">async fn </span>handle_track_list_action(imp: <span class="kw-2">&amp;</span>T, action: TrackListAction) {
@@ -1814,8 +1803,7 @@
         })
     }
 
-    <span class="macro">signal_delegate!</span>(playlist_changed(playlist: Playlist));
-
+    <span class="macro">emit_delegate!</span>(playlists_emit, PlaylistsSignal);
     <span class="macro">properties_changed_delegate!</span>(playlists_properties_changed, PlaylistsProperty);
 
     <span class="kw">async fn </span>handle_playlists_actions(imp: <span class="kw-2">&amp;</span>T, action: PlaylistsAction) {

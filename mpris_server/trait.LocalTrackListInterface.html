@@ -102,8 +102,8 @@ effect as calling <a href="trait.LocalTrackListInterface.html#tymethod.go_to"><c
 </ul>
 <p>If the <a href="trait.LocalTrackListInterface.html#tymethod.can_edit_tracks"><code>CanEditTracks</code></a> property is <strong>false</strong>, this has no effect.</p>
 <p><strong>Note:</strong> Clients should not assume that the track has been added at the
-time when this method returns. They should wait for a <a href="struct.Server.html#method.track_added" title="method mpris_server::Server::track_added"><code>TrackAdded</code></a> (or
-<a href="struct.Server.html#method.track_list_replaced" title="method mpris_server::Server::track_list_replaced"><code>TrackListReplaced</code></a>) signal.</p>
+time when this method returns. They should wait for a <a href="enum.TrackListSignal.html#variant.TrackAdded" title="variant mpris_server::TrackListSignal::TrackAdded"><code>TrackAdded</code></a> (or
+<a href="enum.TrackListSignal.html#variant.TrackListReplaced" title="variant mpris_server::TrackListSignal::TrackListReplaced"><code>TrackListReplaced</code></a>) signal.</p>
 </div></details><details class="toggle method-toggle" open><summary><section id="tymethod.remove_track" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1152-1158">source</a><h4 class="code-header">fn <a href="#tymethod.remove_track" class="fn">remove_track</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self,
     track_id: <a class="struct" href="struct.TrackId.html" title="struct mpris_server::TrackId">TrackId</a>
@@ -120,7 +120,7 @@ for this argument.</li>
 <p>If the <a href="trait.LocalTrackListInterface.html#tymethod.can_edit_tracks"><code>CanEditTracks</code></a> property is <strong>false</strong>, this has no effect.</p>
 <p><strong>Note:</strong> Clients should not assume that the track has been removed at
 the time when this method returns. They should wait for a
-<a href="struct.Server.html#method.track_removed" title="method mpris_server::Server::track_removed"><code>TrackRemoved</code></a> (or <a href="struct.Server.html#method.track_list_replaced" title="method mpris_server::Server::track_list_replaced"><code>TrackListReplaced</code></a>) signal.</p>
+<a href="enum.TrackListSignal.html#variant.TrackRemoved" title="variant mpris_server::TrackListSignal::TrackRemoved"><code>TrackRemoved</code></a> (or <a href="enum.TrackListSignal.html#variant.TrackListReplaced" title="variant mpris_server::TrackListSignal::TrackListReplaced"><code>TrackListReplaced</code></a>) signal.</p>
 </div></details><details class="toggle method-toggle" open><summary><section id="tymethod.go_to" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1152-1158">source</a><h4 class="code-header">fn <a href="#tymethod.go_to" class="fn">go_to</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self,
     track_id: <a class="struct" href="struct.TrackId.html" title="struct mpris_server::TrackId">TrackId</a>
@@ -136,7 +136,7 @@ for this argument.</li>
 <p>If the track is not part of this tracklist, this has no effect.</p>
 <p>If this object is not <code>/org/mpris/MediaPlayer2</code>, the current tracklist’s
 tracks should be replaced with the contents of this tracklist, and the
-<a href="struct.Server.html#method.track_list_replaced" title="method mpris_server::Server::track_list_replaced"><code>TrackListReplaced</code></a> signal should be fired from
+<a href="enum.TrackListSignal.html#variant.TrackListReplaced" title="variant mpris_server::TrackListSignal::TrackListReplaced"><code>TrackListReplaced</code></a> signal should be fired from
 <code>/org/mpris/MediaPlayer2</code>.</p>
 </div></details><details class="toggle method-toggle" open><summary><section id="tymethod.tracks" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1152-1158">source</a><h4 class="code-header">fn <a href="#tymethod.tracks" class="fn">tracks</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self
@@ -151,8 +151,8 @@ value.</p>
 <p>The <code>org.freedesktop.DBus.Properties.PropertiesChanged</code> signal is
 emitted every time this property changes, but the signal message
 does not contain the new value. Client implementations should rather
-rely on the <a href="struct.Server.html#method.track_added" title="method mpris_server::Server::track_added"><code>TrackAdded</code></a>, <a href="struct.Server.html#method.track_removed" title="method mpris_server::Server::track_removed"><code>TrackRemoved</code></a> and
-<a href="struct.Server.html#method.track_list_replaced" title="method mpris_server::Server::track_list_replaced"><code>TrackListReplaced</code></a> signals to keep their representation of the
+rely on the <a href="enum.TrackListSignal.html#variant.TrackAdded" title="variant mpris_server::TrackListSignal::TrackAdded"><code>TrackAdded</code></a>, <a href="enum.TrackListSignal.html#variant.TrackRemoved" title="variant mpris_server::TrackListSignal::TrackRemoved"><code>TrackRemoved</code></a> and
+<a href="enum.TrackListSignal.html#variant.TrackListReplaced" title="variant mpris_server::TrackListSignal::TrackListReplaced"><code>TrackListReplaced</code></a> signals to keep their representation of the
 tracklist up to date.</p>
 </div></details><details class="toggle method-toggle" open><summary><section id="tymethod.can_edit_tracks" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1152-1158">source</a><h4 class="code-header">fn <a href="#tymethod.can_edit_tracks" class="fn">can_edit_tracks</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self

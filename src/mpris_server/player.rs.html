@@ -968,7 +968,7 @@
 
 <span class="kw">use crate</span>::{
     LocalPlayerInterface, LocalRootInterface, LocalServer, LoopStatus, Metadata, PlaybackRate,
-    PlaybackStatus, Property, Time, TrackId, Volume,
+    PlaybackStatus, Property, Signal, Time, TrackId, Volume,
 };
 
 <span class="doccomment">/// Ready-to-use mutable *service* side object that internally implements
@@ -1522,7 +1522,7 @@
     }
 
     <span class="kw">pub async fn </span>seeked(<span class="kw-2">&amp;</span><span class="self">self</span>, position: Time) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="self">self</span>.server.seeked(position).<span class="kw">await
+        <span class="self">self</span>.server.emit(Signal::Seeked { position }).<span class="kw">await
     </span>}
 
     <span class="kw">pub fn </span>playback_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PlaybackStatus {

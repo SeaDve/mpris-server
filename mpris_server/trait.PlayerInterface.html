@@ -270,8 +270,8 @@ implemented.</p>
 method returns. They should wait until the <a href="struct.Metadata.html#method.set_trackid" title="method mpris_server::Metadata::set_trackid"><code>mpris:trackid</code></a> field in
 the <a href="trait.PlayerInterface.html#tymethod.metadata"><code>Metadata</code></a> property changes.</p>
 <p>If the media player implements the <a href="trait.TrackListInterface.html" title="trait mpris_server::TrackListInterface"><code>TrackList interface</code></a>, then the
-opened track should be made part of the tracklist, the <a href="struct.Server.html#method.track_added" title="method mpris_server::Server::track_added"><code>TrackAdded</code></a> or
-<a href="struct.Server.html#method.track_list_replaced" title="method mpris_server::Server::track_list_replaced"><code>TrackListReplaced</code></a> signal should be fired, as well as the
+opened track should be made part of the tracklist, the <a href="enum.TrackListSignal.html#variant.TrackAdded" title="variant mpris_server::TrackListSignal::TrackAdded"><code>TrackAdded</code></a> or
+<a href="enum.TrackListSignal.html#variant.TrackListReplaced" title="variant mpris_server::TrackListSignal::TrackListReplaced"><code>TrackListReplaced</code></a> signal should be fired, as well as the
 <code>org.freedesktop.DBus.Properties.PropertiesChanged</code> signal on the
 <a href="trait.TrackListInterface.html" title="trait mpris_server::TrackListInterface"><code>TrackList interface</code></a>.</p>
 </div></details><details class="toggle method-toggle" open><summary><section id="tymethod.playback_status" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1144-1150">source</a><h4 class="code-header">fn <a href="#tymethod.playback_status" class="fn">playback_status</a>&lt;'life0, 'async_trait&gt;(
@@ -410,7 +410,7 @@ method on this interface. If this is not the case, the <a href="trait.PlayerInte
 property is <strong>false</strong>, and setting this property has no effect and
 can raise an error.</p>
 <p>If the playback progresses in a way that is inconstistent with the
-<a href="trait.PlayerInterface.html#tymethod.rate"><code>Rate</code></a> property, the <a href="struct.Server.html#method.seeked" title="method mpris_server::Server::seeked"><code>Seeked</code></a> signal is emitted.</p>
+<a href="trait.PlayerInterface.html#tymethod.rate"><code>Rate</code></a> property, the <a href="enum.Signal.html#variant.Seeked" title="variant mpris_server::Signal::Seeked"><code>Seeked</code></a> signal is emitted.</p>
 </div></details><details class="toggle method-toggle" open><summary><section id="tymethod.minimum_rate" class="method"><a class="srclink rightside" href="../src/mpris_server/lib.rs.html#1144-1150">source</a><h4 class="code-header">fn <a href="#tymethod.minimum_rate" class="fn">minimum_rate</a>&lt;'life0, 'async_trait&gt;(
     &amp;'life0 self
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="type" href="type.PlaybackRate.html" title="type mpris_server::PlaybackRate">PlaybackRate</a>&gt;&gt; + <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'async_trait&gt;&gt;<span class="where fmt-newline">where
