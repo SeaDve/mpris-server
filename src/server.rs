@@ -577,6 +577,16 @@ where
     where
         I: Interface,
     {
+        // FIXME Hold a lock to the interface until the signal is emitted.
+        // This is a workaround for `invalid client serial` errors.
+        let iface_ref = self
+            .get_or_init_connection()
+            .await?
+            .object_server()
+            .interface::<_, I>(OBJECT_PATH)
+            .await?;
+        let _lock = iface_ref.get_mut().await;
+
         self.get_or_init_connection()
             .await?
             .emit_signal(
