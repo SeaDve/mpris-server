@@ -4,8 +4,8 @@ use mpris_server::{
     async_trait,
     zbus::{fdo, Result},
     LoopStatus, MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, Playlist,
-    PlaylistId, PlaylistOrdering, PlaylistsInterface, Property, RootInterface, Server, Time,
-    TrackId, TrackListInterface, Uri, Volume,
+    PlaylistId, PlaylistOrdering, PlaylistsInterface, Property, RootInterface, Server, Signal,
+    Time, TrackId, TrackListInterface, Uri, Volume,
 };
 
 pub struct Player;
@@ -322,7 +322,12 @@ async fn main() {
         .unwrap();
 
     // Emit `Seeked` signal
-    server.seeked(Time::from_micros(124)).await.unwrap();
+    server
+        .emit(Signal::Seeked {
+            position: Time::from_micros(124),
+        })
+        .await
+        .unwrap();
 
     // Prevent the program from exiting.
     future::pending::<()>().await;

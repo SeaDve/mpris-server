@@ -6,17 +6,19 @@ use std::{
 
 use async_lock::OnceCell;
 use enumflags2::BitFlags;
+use serde::Serialize;
 use zbus::{
     dbus_interface, fdo,
-    names::{BusName, WellKnownName},
-    zvariant::{ObjectPath, Value},
-    Connection, ConnectionBuilder, Interface, Result, SignalContext,
+    names::{BusName, InterfaceName, MemberName, WellKnownName},
+    zvariant::{DynamicType, ObjectPath, Value},
+    Connection, ConnectionBuilder, Error, Interface, Result, SignalContext,
 };
 
 use crate::{
     LoopStatus, MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, Playlist,
-    PlaylistId, PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, Property, RootInterface,
-    Time, TrackId, TrackListInterface, TrackListProperty, Uri, Volume,
+    PlaylistId, PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, PlaylistsSignal, Property,
+    RootInterface, Signal, Time, TrackId, TrackListInterface, TrackListProperty, TrackListSignal,
+    Uri, Volume,
 };
 
 const OBJECT_PATH: ObjectPath<'static> =
@@ -373,16 +375,6 @@ where
     }
 }
 
-macro_rules! signal_delegate {
-    ($iface:ty, $name:ident($($arg_name:ident: $arg_ty:ty),*)) => {
-        pub async fn $name(&self, $($arg_name: $arg_ty),*) -> Result<()> {
-            let connection = self.get_or_init_connection().await?;
-            let ctxt = SignalContext::from_parts(connection.clone(), OBJECT_PATH);
-            <$iface>::$name(&ctxt, $($arg_name),*).await
-        }
-    };
-}
-
 macro_rules! insert_property {
     ($item:ident, $property_type:ident, $source:ident => $($map:ident, $property:ident, $getter:ident);*) => {
         match $item {
@@ -445,7 +437,19 @@ where
         self.get_or_init_connection().await
     }
 
-    signal_delegate!(RawPlayerInterface<T>, seeked(position: Time));
+    /// Emits the given signal.
+    pub async fn emit(&self, signal: Signal) -> Result<()> {
+        let player_interface = RawPlayerInterface::<T>::name();
+
+        match signal {
+            Signal::Seeked { position } => {
+                self.emit_inner(player_interface, "Seeked", &(position,))
+                    .await?;
+            }
+        }
+
+        Ok(())
+    }
 
     /// Emits the `PropertiesChanged` signal for the given properties.
     ///
@@ -560,18 +564,37 @@ where
     where
         I: Interface,
     {
+        self.emit_inner(
+            fdo::Properties::name(),
+            "PropertiesChanged",
+            &(I::name(), changed_properties, invalidated_properties),
+        )
+        .await
+    }
+
+    async fn emit_inner<'i, 'm, I, M, B>(
+        &self,
+        interface: I,
+        signal_name: M,
+        body: &B,
+    ) -> Result<()>
+    where
+        I: TryInto<InterfaceName<'i>>,
+        M: TryInto<MemberName<'m>>,
+        I::Error: Into<Error>,
+        M::Error: Into<Error>,
+        B: Serialize + DynamicType,
+    {
         self.get_or_init_connection()
             .await?
             .emit_signal(
                 None::<BusName<'_>>,
                 OBJECT_PATH,
-                fdo::Properties::name(),
-                "PropertiesChanged",
-                &(I::name(), changed_properties, invalidated_properties),
+                interface,
+                signal_name,
+                body,
             )
-            .await?;
-
-        Ok(())
+            .await
     }
 }
 
@@ -590,10 +613,45 @@ where
         })
     }
 
-    signal_delegate!(RawTrackListInterface<T>, track_list_replaced(tracks: Vec<TrackId>, current_track: TrackId));
-    signal_delegate!(RawTrackListInterface<T>, track_added(metadata: Metadata, after_track: TrackId));
-    signal_delegate!(RawTrackListInterface<T>, track_removed(track_id: TrackId));
-    signal_delegate!(RawTrackListInterface<T>, track_metadata_changed(track_id: TrackId, metadata: Metadata));
+    /// Emits the given signal on the `TrackList` interface.
+    pub async fn track_list_emit(&self, signal: TrackListSignal) -> Result<()> {
+        let track_list_interface = RawTrackListInterface::<T>::name();
+
+        match signal {
+            TrackListSignal::TrackListReplaced {
+                tracks,
+                current_track,
+            } => {
+                self.emit_inner(
+                    track_list_interface,
+                    "TrackListReplaced",
+                    &(tracks, current_track),
+                )
+                .await?;
+            }
+            TrackListSignal::TrackAdded {
+                metadata,
+                after_track,
+            } => {
+                self.emit_inner(track_list_interface, "TrackAdded", &(metadata, after_track))
+                    .await?;
+            }
+            TrackListSignal::TrackRemoved { track_id } => {
+                self.emit_inner(track_list_interface, "TrackRemoved", &(track_id,))
+                    .await?;
+            }
+            TrackListSignal::TrackMetadataChanged { track_id, metadata } => {
+                self.emit_inner(
+                    track_list_interface,
+                    "TrackMetadataChanged",
+                    &(track_id, metadata),
+                )
+                .await?;
+            }
+        }
+
+        Ok(())
+    }
 
     /// Emits the `PropertiesChanged` signal for the given properties.
     ///
@@ -643,7 +701,19 @@ where
         })
     }
 
-    signal_delegate!(RawPlaylistsInterface<T>, playlist_changed(playlist: Playlist));
+    /// Emits the given signal on the `Playlists` interface.
+    pub async fn playlists_emit(&self, signal: PlaylistsSignal) -> Result<()> {
+        let playlists_interface = RawPlaylistsInterface::<T>::name();
+
+        match signal {
+            PlaylistsSignal::PlaylistChanged { playlist } => {
+                self.emit_inner(playlists_interface, "PlaylistChanged", &(playlist,))
+                    .await?;
+            }
+        }
+
+        Ok(())
+    }
 
     /// Emits the `PropertiesChanged` signal for the given properties.
     ///

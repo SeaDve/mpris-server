@@ -5,7 +5,7 @@ use zbus::{fdo, Result};
 
 use crate::{
     LocalPlayerInterface, LocalRootInterface, LocalServer, LoopStatus, Metadata, PlaybackRate,
-    PlaybackStatus, Property, Time, TrackId, Volume,
+    PlaybackStatus, Property, Signal, Time, TrackId, Volume,
 };
 
 /// Ready-to-use mutable *service* side object that internally implements
@@ -559,7 +559,7 @@ impl Player {
     }
 
     pub async fn seeked(&self, position: Time) -> Result<()> {
-        self.server.seeked(position).await
+        self.server.emit(Signal::Seeked { position }).await
     }
 
     pub fn playback_status(&self) -> PlaybackStatus {

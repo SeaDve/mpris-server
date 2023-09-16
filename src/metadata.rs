@@ -84,8 +84,8 @@ impl Metadata {
         self.0.get(key)
     }
 
-    /// Removes the key from the metadata, returning the value at the key if the key
-    /// was previously in the metadata.
+    /// Removes the key from the metadata, returning the value at the key if the
+    /// key was previously in the metadata.
     pub fn remove(&mut self, key: &str) -> Option<Value<'static>> {
         self.0.remove(key)
     }

@@ -9,8 +9,9 @@ use zbus::{fdo, Connection, Result};
 use crate::{
     LocalPlayerInterface, LocalPlaylistsInterface, LocalTrackListInterface, LoopStatus,
     MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, Playlist, PlaylistId,
-    PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, Property, RootInterface, Server, Time,
-    TrackId, TrackListInterface, TrackListProperty, Uri, Volume,
+    PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, PlaylistsSignal, Property,
+    RootInterface, Server, Signal, Time, TrackId, TrackListInterface, TrackListProperty,
+    TrackListSignal, Uri, Volume,
 };
 
 enum RootAction {
@@ -476,11 +477,11 @@ where
     }
 }
 
-macro_rules! signal_delegate {
-    ($name:ident($($arg_name:ident: $arg_ty:ty),*)) => {
+macro_rules! emit_delegate {
+    ($name:ident, $signal_ty:ty) => {
         #[inline]
-        pub async fn $name(&self, $($arg_name: $arg_ty),*) -> Result<()> {
-            self.inner.$name($($arg_name),*).await
+        pub async fn $name(&self, signal: $signal_ty) -> Result<()> {
+            self.inner.$name(signal).await
         }
     };
 }
@@ -575,9 +576,7 @@ where
         Ok(())
     }
 
-    // org.mpris.MediaPlayer2.Player
-    signal_delegate!(seeked(position: Time));
-
+    emit_delegate!(emit, Signal);
     properties_changed_delegate!(properties_changed, Property);
 
     async fn handle_root_action(imp: &T, action: RootAction) {
@@ -793,11 +792,7 @@ where
         })
     }
 
-    signal_delegate!(track_list_replaced(tracks: Vec<TrackId>, current_track: TrackId));
-    signal_delegate!(track_added(metadata: Metadata, after_track: TrackId));
-    signal_delegate!(track_removed(track_id: TrackId));
-    signal_delegate!(track_metadata_changed(track_id: TrackId, metadata: Metadata));
-
+    emit_delegate!(track_list_emit, TrackListSignal);
     properties_changed_delegate!(track_list_properties_changed, TrackListProperty);
 
     async fn handle_track_list_action(imp: &T, action: TrackListAction) {
@@ -870,8 +865,7 @@ where
         })
     }
 
-    signal_delegate!(playlist_changed(playlist: Playlist));
-
+    emit_delegate!(playlists_emit, PlaylistsSignal);
     properties_changed_delegate!(playlists_properties_changed, PlaylistsProperty);
 
     async fn handle_playlists_actions(imp: &T, action: PlaylistsAction) {

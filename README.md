@@ -77,7 +77,12 @@ async fn main() {
     server.properties_changed(Property::CanSeek | Property::Metadata).await.unwrap();
 
     // Emit `Seeked` signal
-    server.seeked(Time::from_micros(124)).await.unwrap();
+    server
+        .emit(Signal::Seeked {
+            position: Time::from_micros(124),
+        })
+        .await
+        .unwrap();
 
     // Prevent the program from exiting.
     future::pending::<()>().await;
@@ -110,7 +115,12 @@ async fn main() {
     player.set_can_play(false).await.unwrap();
 
     // Emit `Seeked` signal
-    player.seeked(Time::from_millis(1000)).await.unwrap();
+    server
+        .emit(Signal::Seeked {
+            position: Time::from_millis(1000),
+        })
+        .await
+        .unwrap();
 
     player.init_and_run().await.unwrap();
 }

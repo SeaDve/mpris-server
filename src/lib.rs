@@ -1,8 +1,4 @@
-#![warn(
-    rust_2018_idioms,
-    missing_debug_implementations,
-    missing_copy_implementations
-)]
+#![warn(rust_2018_idioms, missing_debug_implementations)]
 #![deny(rustdoc::broken_intra_doc_links)]
 #![doc = include_str!("../README.md")]
 
@@ -24,6 +20,7 @@ mod playlist;
 mod playlist_ordering;
 mod property;
 mod server;
+mod signal;
 mod time;
 mod track_id;
 
@@ -83,6 +80,7 @@ pub use crate::{
     playlist_ordering::PlaylistOrdering,
     property::{PlaylistsProperty, Property, TrackListProperty},
     server::Server,
+    signal::{PlaylistsSignal, Signal, TrackListSignal},
     time::Time,
     track_id::TrackId,
 };
@@ -494,8 +492,8 @@ macro_rules! define_iface {
             /// [`mpris:trackid`]: Metadata::set_trackid
             /// [`Metadata`]: Self::metadata
             /// [`TrackList interface`]: TrackListInterface
-            /// [`TrackAdded`]: Server::track_added
-            /// [`TrackListReplaced`]: Server::track_list_replaced
+            /// [`TrackAdded`]: TrackListSignal::TrackAdded
+            /// [`TrackListReplaced`]: TrackListSignal::TrackListReplaced
             #[doc(alias = "OpenUri")]
             async fn open_uri(&self, uri: String) -> fdo::Result<()>;
 
@@ -686,7 +684,7 @@ macro_rules! define_iface {
             /// [`Seek`]: Self::seek
             /// [`CanSeek`]: Self::can_seek
             /// [`Rate`]: Self::rate
-            /// [`Seeked`]: Server::seeked
+            /// [`Seeked`]: Signal::Seeked
             #[doc(alias = "Position")]
             async fn position(&self) -> fdo::Result<Time>;
 
@@ -950,8 +948,8 @@ macro_rules! define_iface {
             /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`]: TrackId::NO_TRACK
             /// [`GoTo`]: Self::go_to
             /// [`CanEditTracks`]: Self::can_edit_tracks
-            /// [`TrackAdded`]: Server::track_added
-            /// [`TrackListReplaced`]: Server::track_list_replaced
+            /// [`TrackAdded`]: TrackListSignal::TrackAdded
+            /// [`TrackListReplaced`]: TrackListSignal::TrackListReplaced
             #[doc(alias = "AddTrack")]
             async fn add_track(
                 &self,
@@ -978,8 +976,8 @@ macro_rules! define_iface {
             ///
             /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`]: TrackId::NO_TRACK
             /// [`CanEditTracks`]: Self::can_edit_tracks
-            /// [`TrackRemoved`]: Server::track_removed
-            /// [`TrackListReplaced`]: Server::track_list_replaced
+            /// [`TrackRemoved`]: TrackListSignal::TrackRemoved
+            /// [`TrackListReplaced`]: TrackListSignal::TrackListReplaced
             #[doc(alias = "RemoveTrack")]
             async fn remove_track(&self, track_id: TrackId) -> fdo::Result<()>;
 
@@ -998,7 +996,7 @@ macro_rules! define_iface {
             /// [`TrackListReplaced`] signal should be fired from
             /// `/org/mpris/MediaPlayer2`.
             ///
-            /// [`TrackListReplaced`]: Server::track_list_replaced
+            /// [`TrackListReplaced`]: TrackListSignal::TrackListReplaced
             #[doc(alias = "GoTo")]
             async fn go_to(&self, track_id: TrackId) -> fdo::Result<()>;
 
@@ -1018,9 +1016,9 @@ macro_rules! define_iface {
             /// tracklist up to date.
             ///
             /// [`track_list_properties_changed`]: Server::track_list_properties_changed
-            /// [`TrackAdded`]: Server::track_added
-            /// [`TrackRemoved`]: Server::track_removed
-            /// [`TrackListReplaced`]: Server::track_list_replaced
+            /// [`TrackAdded`]: TrackListSignal::TrackAdded
+            /// [`TrackRemoved`]: TrackListSignal::TrackRemoved
+            /// [`TrackListReplaced`]: TrackListSignal::TrackListReplaced
             #[doc(alias = "Tracks")]
             async fn tracks(&self) -> fdo::Result<Vec<TrackId>>;
 
