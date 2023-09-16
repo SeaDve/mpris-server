@@ -1004,7 +1004,6 @@
 <a href="#1004" id="1004">1004</a>
 <a href="#1005" id="1005">1005</a>
 <a href="#1006" id="1006">1006</a>
-<a href="#1007" id="1007">1007</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{
     collections::HashMap,
     fmt,
@@ -1584,20 +1583,19 @@
     <span class="kw">where
         </span>I: Interface,
     {
+        <span class="kw">let </span>connection = <span class="self">self</span>.get_or_init_connection().<span class="kw">await</span><span class="question-mark">?</span>;
+
         <span class="comment">// FIXME Hold a lock to the interface until the signal is emitted.
         // This is a workaround for `Invalid client serial` errors.
         // See https://github.com/flatpak/xdg-dbus-proxy/issues/46
-        </span><span class="kw">let </span>iface_ref = <span class="self">self
-            </span>.get_or_init_connection()
-            .<span class="kw">await</span><span class="question-mark">?
-            </span>.object_server()
+        </span><span class="kw">let </span>iface_ref = connection
+            .object_server()
             .interface::&lt;<span class="kw">_</span>, I&gt;(OBJECT_PATH)
             .<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="kw">let </span>_guard = iface_ref.get_mut().<span class="kw">await</span>;
 
-        <span class="self">self</span>.get_or_init_connection()
-            .<span class="kw">await</span><span class="question-mark">?
-            </span>.emit_signal(
+        connection
+            .emit_signal(
                 <span class="prelude-val">None</span>::&lt;BusName&lt;<span class="lifetime">&#39;_</span>&gt;&gt;,
                 OBJECT_PATH,
                 I::name(),
