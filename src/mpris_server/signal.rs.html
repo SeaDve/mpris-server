@@ -127,12 +127,21 @@
 <a href="#127" id="127">127</a>
 <a href="#128" id="128">128</a>
 <a href="#129" id="129">129</a>
+<a href="#130" id="130">130</a>
+<a href="#131" id="131">131</a>
+<a href="#132" id="132">132</a>
+<a href="#133" id="133">133</a>
+<a href="#134" id="134">134</a>
+<a href="#135" id="135">135</a>
+<a href="#136" id="136">136</a>
+<a href="#137" id="137">137</a>
+<a href="#138" id="138">138</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{Metadata, Playlist, Time, TrackId};
 
-<span class="doccomment">/// Used for emitting signals on [`Server`] via [`Server::emit`].
+<span class="doccomment">/// Used for emitting signals on [`Server::emit`] and [`LocalServer::emit`].
 ///
-/// [`Server`]: crate::Server
 /// [`Server::emit`]: crate::Server::emit
+/// [`LocalServer::emit`]: crate::LocalServer::emit
 </span><span class="attr">#[derive(Debug)]
 </span><span class="kw">pub enum </span>Signal {
     <span class="doccomment">/// Indicates that the track position has changed in a way that is
@@ -153,10 +162,14 @@
     },
 }
 
-<span class="doccomment">/// Used for emitting signals on [`Server`] via [`Server::track_list_emit`].
+<span class="doccomment">/// Used for emitting signals on [`Server::track_list_emit`] and
+/// [`LocalServer::track_list_emit`], if `T` implements [`TrackListInterface`]
+/// or [`LocalTrackListInterface`].
 ///
-/// [`Server`]: crate::Server
 /// [`Server::track_list_emit`]: crate::Server::track_list_emit
+/// [`LocalServer::track_list_emit`]: crate::LocalServer::track_list_emit
+/// [`TrackListInterface`]: crate::TrackListInterface
+/// [`LocalTrackListInterface`]: crate::LocalTrackListInterface
 </span><span class="attr">#[derive(Debug)]
 </span><span class="kw">pub enum </span>TrackListSignal {
     <span class="doccomment">/// Indicates that the entire tracklist has been replaced.
@@ -186,8 +199,9 @@
     },
     <span class="doccomment">/// Indicates that a track has been added to the track list.
     </span>TrackAdded {
-        <span class="doccomment">/// The metadata of the newly added item. This must include a
-        /// [`mpris:trackid`] entry.
+        <span class="doccomment">/// The metadata of the newly added item.
+        ///
+        /// This must include a [`mpris:trackid`] entry.
         ///
         /// [`mpris:trackid`]: crate::Metadata::trackid
         </span>metadata: Metadata,
@@ -202,7 +216,7 @@
     </span>TrackRemoved {
         <span class="doccomment">/// The identifier of the track being removed.
         ///
-        /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`] is not a valid value
+        /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`] is *not* a valid value
         /// for this argument.
         ///
         /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`]: crate::TrackId::NO_TRACK
@@ -220,7 +234,7 @@
         ///
         /// If the track id has changed, this will be the old value.
         ///
-        /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`] is not a valid value
+        /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`] is *not* a valid value
         /// for this argument.
         ///
         /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`]: crate::TrackId::NO_TRACK
@@ -235,10 +249,14 @@
     },
 }
 
-<span class="doccomment">/// Used for emitting signals on [`Server`] via [`Server::playlists_emit`].
+<span class="doccomment">/// Used for emitting signals on [`Server::playlists_emit`] and
+/// [`LocalServer::playlists_emit`], if `T` implements
+/// [`PlaylistsInterface`] or [`LocalPlaylistsInterface`].
 ///
-/// [`Server`]: crate::Server
 /// [`Server::playlists_emit`]: crate::Server::playlists_emit
+/// [`LocalServer::playlists_emit`]: crate::LocalServer::playlists_emit
+/// [`PlaylistsInterface`]: crate::PlaylistsInterface
+/// [`LocalPlaylistsInterface`]: crate::LocalPlaylistsInterface
 </span><span class="attr">#[derive(Debug)]
 </span><span class="kw">pub enum </span>PlaylistsSignal {
     <span class="doccomment">/// Indicates that either the Name or Icon attribute of a playlist has

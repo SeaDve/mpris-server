@@ -65,13 +65,17 @@
 <a href="#65" id="65">65</a>
 <a href="#66" id="66">66</a>
 <a href="#67" id="67">67</a>
+<a href="#68" id="68">68</a>
+<a href="#69" id="69">69</a>
+<a href="#70" id="70">70</a>
+<a href="#71" id="71">71</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>enumflags2::bitflags;
 
-<span class="doccomment">/// Used for emitting `PropertiesChanged` signals on [`Server`] via
-/// [`Server::properties_changed`].
+<span class="doccomment">/// Used for emitting `PropertiesChanged` signals on
+/// [`Server::properties_changed`] and [`LocalServer::properties_changed`].
 ///
-/// [`Server`]: crate::Server
 /// [`Server::properties_changed`]: crate::Server::properties_changed
+/// [`LocalServer::properties_changed`]: crate::LocalServer::properties_changed
 </span><span class="attr">#[bitflags]
 #[repr(u32)]
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
@@ -102,13 +106,15 @@
     <span class="comment">// CanControl (not expected to change)
 </span>}
 
-<span class="doccomment">/// Used for emitting `PropertiesChanged` signals on [`Server`] via
-/// [`Server::track_list_properties_changed`], if `T` implements
-/// [`TrackListInterface`].
+<span class="doccomment">/// Used for emitting `PropertiesChanged` signals on
+/// [`Server::track_list_properties_changed`] and
+/// [`LocalServer::track_list_properties_changed`], if `T` implements
+/// [`TrackListInterface`] or [`LocalTrackListInterface`].
 ///
-/// [`Server`]: crate::Server
 /// [`Server::track_list_properties_changed`]: crate::Server::track_list_properties_changed
+/// [`LocalServer::track_list_properties_changed`]: crate::LocalServer::track_list_properties_changed
 /// [`TrackListInterface`]: crate::TrackListInterface
+/// [`LocalTrackListInterface`]: crate::LocalTrackListInterface
 </span><span class="attr">#[bitflags]
 #[repr(u32)]
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
@@ -117,13 +123,15 @@
     CanEditTracks,
 }
 
-<span class="doccomment">/// Used for emitting `PropertiesChanged` signals on [`Server`] via
-/// [`Server::playlists_properties_changed`], if `T` implements
-/// [`PlaylistsInterface`].
+<span class="doccomment">/// Used for emitting `PropertiesChanged` signals on
+/// [`Server::playlists_properties_changed`] and
+/// [`LocalServer::playlists_properties_changed`], if `T` implements
+/// [`PlaylistsInterface`] or [`LocalPlaylistsInterface`].
 ///
-/// [`Server`]: crate::Server
 /// [`Server::playlists_properties_changed`]: crate::Server::playlists_properties_changed
+/// [`LocalServer::playlists_properties_changed`]: crate::LocalServer::playlists_properties_changed
 /// [`PlaylistsInterface`]: crate::PlaylistsInterface
+/// [`LocalPlaylistsInterface`]: crate::LocalPlaylistsInterface
 </span><span class="attr">#[bitflags]
 #[repr(u32)]
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
