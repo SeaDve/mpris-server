@@ -578,7 +578,7 @@ where
         I: Interface,
     {
         // FIXME Hold a lock to the interface until the signal is emitted.
-        // This is a workaround for `invalid client serial` errors.
+        // This is a workaround for `Invalid client serial` errors.
         let iface_ref = self
             .get_or_init_connection()
             .await?
