@@ -3,7 +3,8 @@
 #![doc = include_str!("../README.md")]
 
 // TODO:
-// * Document public interface
+// * Document the rest of public interface
+// * Add GDBus backend feature
 // * Replace `DateTime`, and `Uri` with proper types
 // * Add sensible default method impls on `*Interface` traits
 // * Profile if inlining is worth it
