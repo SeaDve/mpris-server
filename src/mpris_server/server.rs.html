@@ -1008,18 +1008,13 @@
 <a href="#1008" id="1008">1008</a>
 <a href="#1009" id="1009">1009</a>
 <a href="#1010" id="1010">1010</a>
-<a href="#1011" id="1011">1011</a>
-<a href="#1012" id="1012">1012</a>
-<a href="#1013" id="1013">1013</a>
-<a href="#1014" id="1014">1014</a>
-<a href="#1015" id="1015">1015</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{
     collections::HashMap,
     fmt,
     sync::{Arc, Mutex},
 };
 
-<span class="kw">use </span>async_lock::{Mutex <span class="kw">as </span>AsyncMutex, OnceCell};
+<span class="kw">use </span>async_lock::OnceCell;
 <span class="kw">use </span>enumflags2::BitFlags;
 <span class="kw">use </span>serde::Serialize;
 <span class="kw">use </span>zbus::{
@@ -1379,7 +1374,6 @@
     </span>connection_init:
         Mutex&lt;<span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>FnOnce() -&gt; <span class="prelude-ty">Result</span>&lt;ConnectionBuilder&lt;<span class="lifetime">&#39;static</span>&gt;&gt; + Send + Sync&gt;&gt;&gt;,
     imp: Arc&lt;T&gt;,
-    emit_lock: AsyncMutex&lt;()&gt;,
 }
 
 <span class="kw">impl</span>&lt;T&gt; fmt::Debug <span class="kw">for </span>Server&lt;T&gt;
@@ -1559,7 +1553,6 @@
             connection: OnceCell::new(),
             connection_init: Mutex::new(<span class="prelude-val">Some</span>(Box::new(connection_init))),
             imp,
-            emit_lock: AsyncMutex::new(()),
         })
     }
 
@@ -1602,9 +1595,6 @@
         M::Error: Into&lt;Error&gt;,
         B: Serialize + DynamicType,
     {
-        <span class="comment">// Don&#39;t allow emitting signals while another signal is being emitted.
-        </span><span class="kw">let </span>_guard = <span class="self">self</span>.emit_lock.lock().<span class="kw">await</span>;
-
         <span class="self">self</span>.get_or_init_connection()
             .<span class="kw">await</span><span class="question-mark">?
             </span>.emit_signal(
