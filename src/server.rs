@@ -4,7 +4,7 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-use async_lock::{Mutex as AsyncMutex, OnceCell};
+use async_lock::OnceCell;
 use enumflags2::BitFlags;
 use serde::Serialize;
 use zbus::{
@@ -364,7 +364,6 @@ where
     connection_init:
         Mutex<Option<Box<dyn FnOnce() -> Result<ConnectionBuilder<'static>> + Send + Sync>>>,
     imp: Arc<T>,
-    emit_lock: AsyncMutex<()>,
 }
 
 impl<T> fmt::Debug for Server<T>
@@ -544,7 +543,6 @@ where
             connection: OnceCell::new(),
             connection_init: Mutex::new(Some(Box::new(connection_init))),
             imp,
-            emit_lock: AsyncMutex::new(()),
         })
     }
 
@@ -587,9 +585,6 @@ where
         M::Error: Into<Error>,
         B: Serialize + DynamicType,
     {
-        // Don't allow emitting signals while another signal is being emitted.
-        let _guard = self.emit_lock.lock().await;
-
         self.get_or_init_connection()
             .await?
             .emit_signal(
