@@ -1584,14 +1584,14 @@
         </span>I: Interface,
     {
         <span class="comment">// FIXME Hold a lock to the interface until the signal is emitted.
-        // This is a workaround for `invalid client serial` errors.
+        // This is a workaround for `Invalid client serial` errors.
         </span><span class="kw">let </span>iface_ref = <span class="self">self
             </span>.get_or_init_connection()
             .<span class="kw">await</span><span class="question-mark">?
             </span>.object_server()
             .interface::&lt;<span class="kw">_</span>, I&gt;(OBJECT_PATH)
             .<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">let </span>_lock = iface_ref.get_mut().<span class="kw">await</span>;
+        <span class="kw">let </span>_guard = iface_ref.get_mut().<span class="kw">await</span>;
 
         <span class="self">self</span>.get_or_init_connection()
             .<span class="kw">await</span><span class="question-mark">?
