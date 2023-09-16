@@ -83,8 +83,9 @@ pub enum TrackListSignal {
     ///   track id has changed, this will be the old value.
     ///   [`/org/mpris/MediaPlayer2/TrackList/NoTrack`] is not a valid value for
     ///   this argument.
-    /// * `metadata` - The new track metadata. This must include a [`mpris:trackid`]
-    ///   entry. If the track id has changed, this will be the new value.
+    /// * `metadata` - The new track metadata. This must include a
+    ///   [`mpris:trackid`] entry. If the track id has changed, this will be the
+    ///   new value.
     ///
     /// This may indicate that a track has been replaced, in which case the
     /// [`mpris:trackid`] metadata entry is different from the `track_id`

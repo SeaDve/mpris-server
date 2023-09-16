@@ -477,24 +477,6 @@ where
     }
 }
 
-macro_rules! emit_delegate {
-    ($name:ident, $signal_ty:ty) => {
-        #[inline]
-        pub async fn $name(&self, signal: $signal_ty) -> Result<()> {
-            self.inner.$name(signal).await
-        }
-    };
-}
-
-macro_rules! properties_changed_delegate {
-    ($name:ident, $property_ty:ty) => {
-        #[inline]
-        pub async fn $name(&self, properties: impl Into<BitFlags<$property_ty>>) -> Result<()> {
-            self.inner.$name(properties).await
-        }
-    };
-}
-
 /// Local version of [`Server`] that doesn't require `T` to be `Send` and
 /// `Sync`.
 ///
@@ -521,6 +503,25 @@ impl<T> LocalServer<T>
 where
     T: LocalPlayerInterface + 'static,
 {
+    /// Creates a new [`LocalServer`] with the given bus name suffix and
+    /// implementation, `imp`, which must implement [`LocalRootInterface`] and
+    /// [`LocalPlayerInterface`].
+    ///
+    /// To start the connection, [`LocalServer::init_and_run`] must be called.
+    ///
+    /// The resulting bus name will be
+    /// `org.mpris.MediaPlayer2.<bus_name_suffix>`, where
+    /// `<bus_name_suffix>`must be a unique identifier, such as one based on a
+    /// UNIX process id. For example, this could be:
+    ///
+    /// * org.mpris.MediaPlayer2.vlc.instance7389
+    ///
+    /// Note: According to the [`D-Bus specification`], the unique identifier
+    /// "must only contain  the ASCII characters `[A-Z][a-z][0-9]_-`" and
+    /// "must not begin with a digit".
+    ///
+    /// [`LocalRootInterface`]: crate::LocalRootInterface
+    /// [`D-Bus specification`]: dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus
     pub fn new(bus_name_suffix: &str, imp: T) -> Result<Self> {
         let (tx, mut rx) = mpsc::unbounded::<Action>();
 
@@ -552,6 +553,20 @@ where
         })
     }
 
+    /// Initialize the connection and run the server. This must be called as
+    /// soon as possible after creating the server.
+    ///
+    /// This method will continuously run until the server is dropped.
+    ///
+    /// This is no-op if the server is already running.
+    pub async fn init_and_run(&self) -> Result<()> {
+        self.inner.init().await?;
+        if let Some(runner) = self.runner.take() {
+            runner.await;
+        }
+        Ok(())
+    }
+
     /// Returns a reference to the underlying implementation.
     pub fn imp(&self) -> &T {
         &self.imp
@@ -564,20 +579,28 @@ where
         self.inner.connection().await
     }
 
-    /// Initialize the connection and run the server. This method will
-    /// continuously run until the server is dropped.
-    ///
-    /// This is no-op if the server is already running.
-    pub async fn init_and_run(&self) -> Result<()> {
-        self.inner.init().await?;
-        if let Some(runner) = self.runner.take() {
-            runner.await;
-        }
-        Ok(())
+    /// Emits the given signal.
+    #[inline]
+    pub async fn emit(&self, signal: Signal) -> Result<()> {
+        self.inner.emit(signal).await
     }
 
-    emit_delegate!(emit, Signal);
-    properties_changed_delegate!(properties_changed, Property);
+    /// Emits the `PropertiesChanged` signal for the given properties.
+    ///
+    /// This categorizes the property in the `changed` or `invalidated`
+    /// properties as defined by the spec.
+    ///
+    /// [`LocalServer::track_list_properties_changed`] or
+    /// [`LocalServer::playlists_properties_changed`] are used
+    /// to emit `PropertiesChanged` for the `TrackList` or `Playlists`
+    /// interfaces respectively.
+    #[inline]
+    pub async fn properties_changed(
+        &self,
+        properties: impl Into<BitFlags<Property>>,
+    ) -> Result<()> {
+        self.inner.properties_changed(properties).await
+    }
 
     async fn handle_root_action(imp: &T, action: RootAction) {
         match action {
@@ -758,6 +781,13 @@ impl<T> LocalServer<T>
 where
     T: LocalTrackListInterface + 'static,
 {
+    /// Creates a new [`LocalServer`] with the given bus name suffix and
+    /// implementation, which must implement [`TrackListInterface`] in addition
+    /// to [`LocalRootInterface`] and [`LocalPlayerInterface`].
+    ///
+    /// See also [`LocalServer::new`].
+    ///
+    /// [`LocalRootInterface`]: crate::LocalRootInterface
     pub fn new_with_track_list(bus_name_suffix: &str, imp: T) -> Result<Self> {
         let (tx, mut rx) = mpsc::unbounded::<Action>();
 
@@ -792,8 +822,23 @@ where
         })
     }
 
-    emit_delegate!(track_list_emit, TrackListSignal);
-    properties_changed_delegate!(track_list_properties_changed, TrackListProperty);
+    /// Emits the given signal on the `TrackList` interface.
+    #[inline]
+    pub async fn track_list_emit(&self, signal: TrackListSignal) -> Result<()> {
+        self.inner.track_list_emit(signal).await
+    }
+
+    /// Emits the `PropertiesChanged` signal for the given properties.
+    ///
+    /// This categorizes the property in the `changed` or `invalidated`
+    /// properties as defined by the spec.
+    #[inline]
+    pub async fn track_list_properties_changed(
+        &self,
+        properties: impl Into<BitFlags<TrackListProperty>>,
+    ) -> Result<()> {
+        self.inner.track_list_properties_changed(properties).await
+    }
 
     async fn handle_track_list_action(imp: &T, action: TrackListAction) {
         match action {
@@ -831,6 +876,13 @@ impl<T> LocalServer<T>
 where
     T: LocalPlaylistsInterface + 'static,
 {
+    /// Creates a new [`LocalServer`] with the given bus name suffix and
+    /// implementation, which must implement [`LocalPlaylistsInterface`] in
+    /// addition to [`LocalRootInterface`] and [`LocalPlayerInterface`].
+    ///
+    /// See also [`LocalServer::new`].
+    ///
+    /// [`LocalRootInterface`]: crate::LocalRootInterface
     pub fn new_with_playlists(bus_name_suffix: &str, imp: T) -> Result<Self> {
         let (tx, mut rx) = mpsc::unbounded::<Action>();
 
@@ -865,8 +917,23 @@ where
         })
     }
 
-    emit_delegate!(playlists_emit, PlaylistsSignal);
-    properties_changed_delegate!(playlists_properties_changed, PlaylistsProperty);
+    /// Emits the given signal on the `Playlists` interface.
+    #[inline]
+    pub async fn playlists_emit(&self, signal: PlaylistsSignal) -> Result<()> {
+        self.inner.playlists_emit(signal).await
+    }
+
+    /// Emits the `PropertiesChanged` signal for the given properties.
+    ///
+    /// This categorizes the property in the `changed` or `invalidated`
+    /// properties as defined by the spec.
+    #[inline]
+    pub async fn playlists_properties_changed(
+        &self,
+        properties: impl Into<BitFlags<PlaylistsProperty>>,
+    ) -> Result<()> {
+        self.inner.playlists_properties_changed(properties).await
+    }
 
     async fn handle_playlists_actions(imp: &T, action: PlaylistsAction) {
         match action {
@@ -900,6 +967,14 @@ impl<T> LocalServer<T>
 where
     T: LocalTrackListInterface + LocalPlaylistsInterface + 'static,
 {
+    /// Creates a new [`LocalServer`] with the given bus name suffix and
+    /// implementation, which must implement [`LocalTrackListInterface`] and
+    /// [`LocalPlaylistsInterface`] in addition to [`LocalRootInterface`] and
+    /// [`LocalPlayerInterface`].
+    ///
+    /// See also [`LocalServer::new`].
+    ///
+    /// [`LocalRootInterface`]: crate::LocalRootInterface
     pub fn new_with_all(bus_name_suffix: &str, imp: T) -> Result<Self> {
         let (tx, mut rx) = mpsc::unbounded::<Action>();
 
