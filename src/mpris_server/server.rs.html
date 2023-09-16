@@ -994,20 +994,6 @@
 <a href="#994" id="994">994</a>
 <a href="#995" id="995">995</a>
 <a href="#996" id="996">996</a>
-<a href="#997" id="997">997</a>
-<a href="#998" id="998">998</a>
-<a href="#999" id="999">999</a>
-<a href="#1000" id="1000">1000</a>
-<a href="#1001" id="1001">1001</a>
-<a href="#1002" id="1002">1002</a>
-<a href="#1003" id="1003">1003</a>
-<a href="#1004" id="1004">1004</a>
-<a href="#1005" id="1005">1005</a>
-<a href="#1006" id="1006">1006</a>
-<a href="#1007" id="1007">1007</a>
-<a href="#1008" id="1008">1008</a>
-<a href="#1009" id="1009">1009</a>
-<a href="#1010" id="1010">1010</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{
     collections::HashMap,
     fmt,
@@ -1019,9 +1005,9 @@
 <span class="kw">use </span>serde::Serialize;
 <span class="kw">use </span>zbus::{
     dbus_interface, fdo,
-    names::{BusName, InterfaceName, MemberName, WellKnownName},
+    names::{BusName, WellKnownName},
     zvariant::{DynamicType, ObjectPath, Value},
-    Connection, ConnectionBuilder, Error, Interface, <span class="prelude-ty">Result</span>, SignalContext,
+    Connection, ConnectionBuilder, Interface, <span class="prelude-ty">Result</span>, SignalContext,
 };
 
 <span class="kw">use crate</span>::{
@@ -1449,11 +1435,9 @@
 
     <span class="doccomment">/// Emits the given signal.
     </span><span class="kw">pub async fn </span>emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: Signal) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="kw">let </span>player_interface = RawPlayerInterface::&lt;T&gt;::name();
-
         <span class="kw">match </span>signal {
             Signal::Seeked { position } =&gt; {
-                <span class="self">self</span>.emit_inner(player_interface, <span class="string">&quot;Seeked&quot;</span>, <span class="kw-2">&amp;</span>(position,))
+                <span class="self">self</span>.emit_inner::&lt;RawPlayerInterface&lt;T&gt;&gt;(<span class="string">&quot;Seeked&quot;</span>, <span class="kw-2">&amp;</span>(position,))
                     .<span class="kw">await</span><span class="question-mark">?</span>;
             }
         }
@@ -1574,33 +1558,27 @@
     <span class="kw">where
         </span>I: Interface,
     {
-        <span class="self">self</span>.emit_inner(
-            fdo::Properties::name(),
+        <span class="self">self</span>.emit_inner::&lt;fdo::Properties&gt;(
             <span class="string">&quot;PropertiesChanged&quot;</span>,
             <span class="kw-2">&amp;</span>(I::name(), changed_properties, invalidated_properties),
         )
         .<span class="kw">await
     </span>}
 
-    <span class="kw">async fn </span>emit_inner&lt;<span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;m</span>, I, M, B&gt;(
+    <span class="kw">async fn </span>emit_inner&lt;I&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        interface: I,
-        signal_name: M,
-        body: <span class="kw-2">&amp;</span>B,
+        signal_name: <span class="kw-2">&amp;</span>str,
+        body: <span class="kw-2">&amp;</span>(<span class="kw">impl </span>Serialize + DynamicType),
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;
     <span class="kw">where
-        </span>I: TryInto&lt;InterfaceName&lt;<span class="lifetime">&#39;i</span>&gt;&gt;,
-        M: TryInto&lt;MemberName&lt;<span class="lifetime">&#39;m</span>&gt;&gt;,
-        I::Error: Into&lt;Error&gt;,
-        M::Error: Into&lt;Error&gt;,
-        B: Serialize + DynamicType,
+        </span>I: Interface,
     {
         <span class="self">self</span>.get_or_init_connection()
             .<span class="kw">await</span><span class="question-mark">?
             </span>.emit_signal(
                 <span class="prelude-val">None</span>::&lt;BusName&lt;<span class="lifetime">&#39;_</span>&gt;&gt;,
                 OBJECT_PATH,
-                interface,
+                I::name(),
                 signal_name,
                 body,
             )
@@ -1625,15 +1603,12 @@
 
     <span class="doccomment">/// Emits the given signal on the `TrackList` interface.
     </span><span class="kw">pub async fn </span>track_list_emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: TrackListSignal) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="kw">let </span>track_list_interface = RawTrackListInterface::&lt;T&gt;::name();
-
         <span class="kw">match </span>signal {
             TrackListSignal::TrackListReplaced {
                 tracks,
                 current_track,
             } =&gt; {
-                <span class="self">self</span>.emit_inner(
-                    track_list_interface,
+                <span class="self">self</span>.emit_inner::&lt;RawTrackListInterface&lt;T&gt;&gt;(
                     <span class="string">&quot;TrackListReplaced&quot;</span>,
                     <span class="kw-2">&amp;</span>(tracks, current_track),
                 )
@@ -1643,16 +1618,15 @@
                 metadata,
                 after_track,
             } =&gt; {
-                <span class="self">self</span>.emit_inner(track_list_interface, <span class="string">&quot;TrackAdded&quot;</span>, <span class="kw-2">&amp;</span>(metadata, after_track))
+                <span class="self">self</span>.emit_inner::&lt;RawTrackListInterface&lt;T&gt;&gt;(<span class="string">&quot;TrackAdded&quot;</span>, <span class="kw-2">&amp;</span>(metadata, after_track))
                     .<span class="kw">await</span><span class="question-mark">?</span>;
             }
             TrackListSignal::TrackRemoved { track_id } =&gt; {
-                <span class="self">self</span>.emit_inner(track_list_interface, <span class="string">&quot;TrackRemoved&quot;</span>, <span class="kw-2">&amp;</span>(track_id,))
+                <span class="self">self</span>.emit_inner::&lt;RawTrackListInterface&lt;T&gt;&gt;(<span class="string">&quot;TrackRemoved&quot;</span>, <span class="kw-2">&amp;</span>(track_id,))
                     .<span class="kw">await</span><span class="question-mark">?</span>;
             }
             TrackListSignal::TrackMetadataChanged { track_id, metadata } =&gt; {
-                <span class="self">self</span>.emit_inner(
-                    track_list_interface,
+                <span class="self">self</span>.emit_inner::&lt;RawTrackListInterface&lt;T&gt;&gt;(
                     <span class="string">&quot;TrackMetadataChanged&quot;</span>,
                     <span class="kw-2">&amp;</span>(track_id, metadata),
                 )
@@ -1713,11 +1687,9 @@
 
     <span class="doccomment">/// Emits the given signal on the `Playlists` interface.
     </span><span class="kw">pub async fn </span>playlists_emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: PlaylistsSignal) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="kw">let </span>playlists_interface = RawPlaylistsInterface::&lt;T&gt;::name();
-
         <span class="kw">match </span>signal {
             PlaylistsSignal::PlaylistChanged { playlist } =&gt; {
-                <span class="self">self</span>.emit_inner(playlists_interface, <span class="string">&quot;PlaylistChanged&quot;</span>, <span class="kw-2">&amp;</span>(playlist,))
+                <span class="self">self</span>.emit_inner::&lt;RawPlaylistsInterface&lt;T&gt;&gt;(<span class="string">&quot;PlaylistChanged&quot;</span>, <span class="kw-2">&amp;</span>(playlist,))
                     .<span class="kw">await</span><span class="question-mark">?</span>;
             }
         }
