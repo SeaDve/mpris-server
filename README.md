@@ -22,6 +22,8 @@ To implement these interfaces, this crate offers two flavors: you can either cre
 
 For more detailed examples, see also the [examples directory](https://github.com/SeaDve/mpris-server/tree/main/examples).
 
+There is also a real-word example of this library being used in [Mousai](https://github.com/SeaDve/Mousai), a music recognizer application for Linux.
+
 ### Manual Implementation (via `Server` or `LocalServer`)
 
 It is recommended to manually create your own implementation of the interfaces if you want to have more control. You can do this by creating your own struct and implementing the required interfaces, then passing your struct as implementation in `Server`. You can also use `LocalServer` and the local version of the interfaces if your struct can't be sent and shared across threads.
