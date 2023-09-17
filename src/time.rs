@@ -146,8 +146,8 @@ impl Time {
     /// assert_eq!(Time::from_micros(5_000_000).as_nanos(), 5_000_000_000);
     /// assert_eq!(Time::from_micros(3).as_nanos(), 3_000);
     #[inline]
-    pub const fn as_nanos(&self) -> i64 {
-        self.as_micros() * 1000
+    pub const fn as_nanos(&self) -> i128 {
+        self.as_micros() as i128 * 1000
     }
 
     /// Returns true if this `Time` is zero.
