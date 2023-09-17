@@ -5,7 +5,6 @@ use std::{
     marker::PhantomData,
     pin::Pin,
     rc::Rc,
-    sync::Arc,
     task::{Context, Poll},
 };
 
@@ -527,7 +526,7 @@ pub struct LocalServer<T>
 where
     T: LocalPlayerInterface + 'static,
 {
-    inner: Server<InnerImp<T>>,
+    inner: Rc<Server<InnerImp<T>>>,
     imp: Rc<T>,
     runner: RefCell<Option<TaskInner>>,
 }
@@ -813,21 +812,20 @@ where
     {
         let (tx, rx) = mpsc::unbounded::<Action>();
 
-        let inner = server_func(
+        let inner = Rc::new(server_func(
             bus_name_suffix,
             InnerImp {
                 tx,
                 imp_ty: PhantomData,
             },
-        )?;
+        )?);
 
         let imp = Rc::new(imp);
 
-        let connection = Arc::clone(&inner.connection);
+        let inner_clone = Rc::clone(&inner);
         let imp_clone = Rc::clone(&imp);
         let runner = Box::pin(async move {
-            // Initialize the connection
-            connection.get().await?;
+            inner_clone.init().await?;
             runner_func(rx, imp_clone).await;
             Ok(())
         });
