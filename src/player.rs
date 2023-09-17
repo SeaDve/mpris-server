@@ -4,8 +4,8 @@ use async_trait::async_trait;
 use zbus::{fdo, Result};
 
 use crate::{
-    LocalPlayerInterface, LocalRootInterface, LocalServer, LoopStatus, Metadata, PlaybackRate,
-    PlaybackStatus, Property, Signal, Time, TrackId, Volume,
+    LocalPlayerInterface, LocalRootInterface, LocalServer, LocalServerTask, LoopStatus, Metadata,
+    PlaybackRate, PlaybackStatus, Property, Signal, Time, TrackId, Volume,
 };
 
 /// Ready-to-use mutable *service*-side object that internally implements
@@ -313,8 +313,14 @@ impl Player {
         }
     }
 
-    pub async fn init_and_run(&self) -> Result<()> {
-        self.server.init_and_run().await
+    /// Returns a task that initializes the connection and run the player's
+    /// server until the player and the task is dropped.
+    ///
+    /// The task must be awaited as soon as possible after creating the player.
+    ///
+    /// The returned task is no-op if the player's server has been ran before.
+    pub fn init_and_run(&self) -> LocalServerTask {
+        self.server.init_and_run()
     }
 
     pub fn connect_raise(&self, cb: impl Fn() + 'static) {

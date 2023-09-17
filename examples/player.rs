@@ -1,17 +1,15 @@
-use std::{future, rc::Rc};
+use std::future;
 
 use mpris_server::{zbus::Result, Player, Time};
 
 #[async_std::main]
 async fn main() -> Result<()> {
-    let player = Rc::new(
-        Player::builder("Test.Application")
-            .can_play(true)
-            .can_pause(true)
-            .can_go_previous(true)
-            .can_go_next(true)
-            .build()?,
-    );
+    let player = Player::builder("Test.Application")
+        .can_play(true)
+        .can_pause(true)
+        .can_go_previous(true)
+        .can_go_next(true)
+        .build()?;
 
     // Handle `PlayPause` method call
     player.connect_play_pause(|| {
@@ -28,10 +26,10 @@ async fn main() -> Result<()> {
         println!("Next");
     });
 
-    // Init connection and run event handler
-    let player_clone = Rc::clone(&player);
+    // Initialize connection and run event handler task
+    let task = player.init_and_run();
     async_std::task::spawn_local(async move {
-        player_clone.init_and_run().await.unwrap();
+        task.await.unwrap();
     });
 
     // Update `CanPlay` property and emit `PropertiesChanged` signal for it

@@ -99,28 +99,26 @@ If you want to create a simple player without having to implement the interfaces
 However, `Player` currently only supports the more commonly used `org.mpris.MediaPlayer2` and `org.mpris.MediaPlayer2.Player` interfaces.
 
 ```rust,ignore
-use std::{future, rc::Rc};
+use std::future;
 
 use mpris_server::{zbus::Result, Player, Time};
 
 #[async_std::main]
 async fn main() -> Result<()> {
-    let player = Rc::new(
-        Player::builder("com.my.Application")
-            .can_play(true)
-            .can_pause(true)
-            .build()?,
-    );
+    let player = Player::builder("com.my.Application")
+        .can_play(true)
+        .can_pause(true)
+        .build()?;
 
     // Handle `PlayPause` method call
     player.connect_play_pause(|| {
         println!("PlayPause");
     });
 
-    // Init connection and run event handler
-    let player_clone = Rc::clone(&player);
+    // Initialize connection and run event handler task
+    let task = player.init_and_run();
     async_std::task::spawn_local(async move {
-        player_clone.init_and_run().await.unwrap();
+        task.await.unwrap();
     });
 
     // Update `CanPlay` property and emit `PropertiesChanged` signal for it

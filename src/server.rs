@@ -345,6 +345,37 @@ where
     }
 }
 
+pub(crate) struct LazyConnection {
+    connection: OnceCell<Connection>,
+    #[allow(clippy::type_complexity)]
+    connection_init:
+        Mutex<Option<Box<dyn FnOnce() -> Result<ConnectionBuilder<'static>> + Send + Sync>>>,
+}
+
+impl LazyConnection {
+    fn new(
+        init_func: impl FnOnce() -> Result<ConnectionBuilder<'static>> + Send + Sync + 'static,
+    ) -> Self {
+        Self {
+            connection: OnceCell::new(),
+            connection_init: Mutex::new(Some(Box::new(init_func))),
+        }
+    }
+
+    /// Returns a reference to the underlying [`Connection`], initializing it if
+    /// it has not been initialized yet.
+    pub(crate) async fn get(&self) -> Result<&Connection> {
+        self.connection
+            .get_or_try_init(|| async {
+                // Safety: connection only initialized once
+                let connection_init = self.connection_init.lock().unwrap().take().unwrap();
+                let connection = connection_init()?.build().await?;
+                Ok(connection)
+            })
+            .await
+    }
+}
+
 /// Thin wrapper around [`zbus::Connection`] that calls to `T`'s implementation
 /// of [`RootInterface`], [`PlayerInterface`], [`TrackListInterface`], and
 /// [`PlaylistsInterface`] to implement `org.mpris.MediaPlayer2` and its
@@ -359,10 +390,7 @@ pub struct Server<T>
 where
     T: PlayerInterface + 'static,
 {
-    connection: OnceCell<Connection>,
-    #[allow(clippy::type_complexity)]
-    connection_init:
-        Mutex<Option<Box<dyn FnOnce() -> Result<ConnectionBuilder<'static>> + Send + Sync>>>,
+    pub(crate) connection: Arc<LazyConnection>,
     imp: Arc<T>,
 }
 
@@ -421,7 +449,7 @@ where
     /// This is also called automatically when emitting signals and properties
     /// changed.
     pub async fn init(&self) -> Result<()> {
-        self.get_or_init_connection().await?;
+        self.connection.get().await?;
         Ok(())
     }
 
@@ -434,7 +462,7 @@ where
     ///
     /// If you needed to call this, consider filing an issue.
     pub async fn connection(&self) -> Result<&Connection> {
-        self.get_or_init_connection().await
+        self.connection.get().await
     }
 
     /// Emits the given signal.
@@ -538,21 +566,9 @@ where
         };
 
         Ok(Self {
-            connection: OnceCell::new(),
-            connection_init: Mutex::new(Some(Box::new(connection_init))),
+            connection: Arc::new(LazyConnection::new(connection_init)),
             imp,
         })
-    }
-
-    async fn get_or_init_connection(&self) -> Result<&Connection> {
-        self.connection
-            .get_or_try_init(|| async {
-                // Safety: connection only initialized once
-                let connection_init = self.connection_init.lock().unwrap().take().unwrap();
-                let connection = connection_init()?.build().await?;
-                Ok(connection)
-            })
-            .await
     }
 
     async fn properties_changed_inner<I>(
@@ -578,7 +594,7 @@ where
     where
         I: Interface,
     {
-        let connection = self.get_or_init_connection().await?;
+        let connection = self.connection.get().await?;
 
         // FIXME Hold a lock to the interface until the signal is emitted.
         // This is a workaround for `Invalid client serial` errors.

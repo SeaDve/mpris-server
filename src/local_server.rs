@@ -1,9 +1,18 @@
-use std::{cell::RefCell, fmt, future::Future, marker::PhantomData, pin::Pin, rc::Rc};
+use std::{
+    cell::RefCell,
+    fmt,
+    future::Future,
+    marker::PhantomData,
+    pin::Pin,
+    rc::Rc,
+    sync::Arc,
+    task::{Context, Poll},
+};
 
 use async_trait::async_trait;
 use enumflags2::BitFlags;
 use futures_channel::{mpsc, oneshot};
-use futures_util::StreamExt;
+use futures_util::{FutureExt, StreamExt};
 use zbus::{fdo, Connection, Result};
 
 use crate::{
@@ -477,6 +486,28 @@ where
     }
 }
 
+#[must_use = "futures do nothing unless you `.await` or poll them"]
+pub struct LocalServerTask {
+    inner: Option<Pin<Box<dyn Future<Output = Result<()>>>>>,
+}
+
+impl fmt::Debug for LocalServerTask {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("LocalServerTask").finish()
+    }
+}
+
+impl Future for LocalServerTask {
+    type Output = Result<()>;
+
+    fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
+        match self.inner.as_mut() {
+            Some(inner) => inner.poll_unpin(cx),
+            None => Poll::Ready(Ok(())),
+        }
+    }
+}
+
 /// Local version of [`Server`] that doesn't require `T` to be `Send` and
 /// `Sync`.
 ///
@@ -490,7 +521,8 @@ where
 {
     inner: Server<InnerImp<T>>,
     imp: Rc<T>,
-    runner: RefCell<Option<Pin<Box<dyn Future<Output = ()>>>>>,
+    #[allow(clippy::type_complexity)]
+    runner: RefCell<Option<Pin<Box<dyn Future<Output = Result<()>>>>>>,
 }
 
 impl<T> fmt::Debug for LocalServer<T>
@@ -542,18 +574,16 @@ where
         )
     }
 
-    /// Initialize the connection and run the server. This must be called as
-    /// soon as possible after creating the server.
+    /// Returns a task that initializes the connection and run the server until
+    /// the server and the task is dropped.
     ///
-    /// This method will continuously run until the server is dropped.
+    /// The task must be awaited as soon as possible after creating the server.
     ///
-    /// This is no-op if the server is already running.
-    pub async fn init_and_run(&self) -> Result<()> {
-        self.inner.init().await?;
-        if let Some(runner) = self.runner.take() {
-            runner.await;
+    /// The returned task is no-op if the server has been ran before.
+    pub fn init_and_run(&self) -> LocalServerTask {
+        LocalServerTask {
+            inner: self.runner.take(),
         }
-        Ok(())
     }
 
     /// Returns a reference to the underlying implementation.
@@ -769,7 +799,7 @@ where
         bus_name_suffix: &str,
         imp: T,
         server_func: impl FnOnce(&str, InnerImp<T>) -> Result<Server<InnerImp<T>>>,
-        runner_func: impl FnOnce(mpsc::UnboundedReceiver<Action>, Rc<T>) -> R,
+        runner_func: impl FnOnce(mpsc::UnboundedReceiver<Action>, Rc<T>) -> R + 'static,
     ) -> Result<Self>
     where
         R: Future<Output = ()> + 'static,
@@ -786,13 +816,19 @@ where
 
         let imp = Rc::new(imp);
 
+        let connection = Arc::clone(&inner.connection);
         let imp_clone = Rc::clone(&imp);
-        let runner = runner_func(rx, imp_clone);
+        let runner = Box::pin(async move {
+            // Initialize the connection
+            connection.get().await?;
+            runner_func(rx, imp_clone).await;
+            Ok(())
+        });
 
         Ok(Self {
             inner,
             imp,
-            runner: RefCell::new(Some(Box::pin(runner))),
+            runner: RefCell::new(Some(runner)),
         })
     }
 }
