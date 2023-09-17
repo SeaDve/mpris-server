@@ -13,6 +13,11 @@ use crate::{
 ///
 /// This automatically emits properties changed signal and allows you to connect
 /// to method and property setter calls.
+///
+/// If you need more control to the implementation, you can use [`LocalServer`]
+/// or [`Server`] directly instead.
+///
+/// [`Server`]: crate::Server
 #[derive(Debug)]
 pub struct Player {
     server: LocalServer<Inner>,
