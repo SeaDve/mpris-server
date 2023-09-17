@@ -488,22 +488,24 @@ where
 
 type TaskInner = Pin<Box<dyn Future<Output = Result<()>>>>;
 
-/// A task that initializes the connection and run the server until the server
-/// and the task is dropped.
+/// A task that initializes the connection and runs [`LocalServer`]'s event
+/// handler until the server and this task is dropped.
 ///
 /// This must be awaited as soon as possible after creating the server.
+///
+/// See [`LocalServer::init_and_run`] for more information.
 #[must_use = "futures do nothing unless you `.await` or poll them"]
-pub struct LocalServerTask {
+pub struct LocalServerRunTask {
     inner: Option<TaskInner>,
 }
 
-impl fmt::Debug for LocalServerTask {
+impl fmt::Debug for LocalServerRunTask {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("LocalServerTask").finish()
     }
 }
 
-impl Future for LocalServerTask {
+impl Future for LocalServerRunTask {
     type Output = Result<()>;
 
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
@@ -585,8 +587,8 @@ where
     /// The task must be awaited as soon as possible after creating the server.
     ///
     /// The returned task is no-op if the server has been ran before.
-    pub fn init_and_run(&self) -> LocalServerTask {
-        LocalServerTask {
+    pub fn init_and_run(&self) -> LocalServerRunTask {
+        LocalServerRunTask {
             inner: self.runner.take(),
         }
     }

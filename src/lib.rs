@@ -72,7 +72,7 @@ pub use zbus;
 use zbus::{fdo, zvariant::OwnedObjectPath, Result};
 
 pub use crate::{
-    local_server::{LocalServer, LocalServerTask},
+    local_server::{LocalServer, LocalServerRunTask},
     loop_status::LoopStatus,
     metadata::{DateTime, Metadata},
     playback_status::PlaybackStatus,
