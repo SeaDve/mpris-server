@@ -1,3 +1,5 @@
+use std::{future, rc::Rc};
+
 use mpris_server::{
     async_trait,
     zbus::{fdo, Result},
@@ -291,11 +293,14 @@ impl LocalPlaylistsInterface for Player {
 
 #[async_std::main]
 async fn main() -> Result<()> {
-    let server = LocalServer::new_with_all("Test.Application", Player)?;
+    let server = Rc::new(LocalServer::new_with_all("Test.Application", Player)?);
 
     // Unlike in `Server`, we have to call `init_and_run` here to handle incoming
     // requests in the local thread.
-    server.init_and_run().await?;
+    let server_clone = Rc::clone(&server);
+    async_std::task::spawn_local(async move {
+        server_clone.init_and_run().await.unwrap();
+    });
 
     // Emit `PropertiesChanged` signal for `CanSeek` and `Metadata` properties
     server
@@ -308,6 +313,9 @@ async fn main() -> Result<()> {
             position: Time::from_micros(124),
         })
         .await?;
+
+    // Prevent the program from exiting.
+    future::pending::<()>().await;
 
     Ok(())
 }
