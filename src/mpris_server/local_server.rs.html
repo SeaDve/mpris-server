@@ -1029,6 +1029,7 @@
 <a href="#1029" id="1029">1029</a>
 <a href="#1030" id="1030">1030</a>
 <a href="#1031" id="1031">1031</a>
+<a href="#1032" id="1032">1032</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{
     cell::RefCell,
     fmt,
@@ -1517,13 +1518,15 @@
     }
 }
 
+<span class="kw">type </span>TaskInner = Pin&lt;Box&lt;<span class="kw">dyn </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;()&gt;&gt;&gt;&gt;;
+
 <span class="doccomment">/// A task that initializes the connection and run the server until the server
 /// and the task is dropped.
 ///
 /// This must be awaited as soon as possible after creating the server.
 </span><span class="attr">#[must_use = <span class="string">&quot;futures do nothing unless you `.await` or poll them&quot;</span>]
 </span><span class="kw">pub struct </span>LocalServerTask {
-    inner: <span class="prelude-ty">Option</span>&lt;Pin&lt;Box&lt;<span class="kw">dyn </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;()&gt;&gt;&gt;&gt;&gt;,
+    inner: <span class="prelude-ty">Option</span>&lt;TaskInner&gt;,
 }
 
 <span class="kw">impl </span>fmt::Debug <span class="kw">for </span>LocalServerTask {
@@ -1556,8 +1559,7 @@
 {
     inner: Server&lt;InnerImp&lt;T&gt;&gt;,
     imp: Rc&lt;T&gt;,
-    <span class="attr">#[allow(clippy::type_complexity)]
-    </span>runner: RefCell&lt;<span class="prelude-ty">Option</span>&lt;Pin&lt;Box&lt;<span class="kw">dyn </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;()&gt;&gt;&gt;&gt;&gt;&gt;,
+    runner: RefCell&lt;<span class="prelude-ty">Option</span>&lt;TaskInner&gt;&gt;,
 }
 
 <span class="kw">impl</span>&lt;T&gt; fmt::Debug <span class="kw">for </span>LocalServer&lt;T&gt;
