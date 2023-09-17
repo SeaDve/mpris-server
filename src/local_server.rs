@@ -486,6 +486,10 @@ where
     }
 }
 
+/// A task that initializes the connection and run the server until the server
+/// and the task is dropped.
+///
+/// This must be awaited as soon as possible after creating the server.
 #[must_use = "futures do nothing unless you `.await` or poll them"]
 pub struct LocalServerTask {
     inner: Option<Pin<Box<dyn Future<Output = Result<()>>>>>,
