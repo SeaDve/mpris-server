@@ -4,13 +4,11 @@
 
 // TODO:
 // * Document the rest of public interface
-// * Add GDBus backend feature
 // * Replace `DateTime`, and `Uri` with proper types
 // * Add sensible default method impls on `*Interface` traits
 // * Profile if inlining is worth it
 // * Add public `test` method to check if interface is implemented correctly
 // * Avoid clones in `Metadata` getters
-// * Blanket impl `*Interface` traits for Arc<T>, Mutex<T>, etc.?
 
 mod local_server;
 mod loop_status;
