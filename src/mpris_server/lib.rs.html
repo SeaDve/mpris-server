@@ -1193,6 +1193,34 @@
 <a href="#1193" id="1193">1193</a>
 <a href="#1194" id="1194">1194</a>
 <a href="#1195" id="1195">1195</a>
+<a href="#1196" id="1196">1196</a>
+<a href="#1197" id="1197">1197</a>
+<a href="#1198" id="1198">1198</a>
+<a href="#1199" id="1199">1199</a>
+<a href="#1200" id="1200">1200</a>
+<a href="#1201" id="1201">1201</a>
+<a href="#1202" id="1202">1202</a>
+<a href="#1203" id="1203">1203</a>
+<a href="#1204" id="1204">1204</a>
+<a href="#1205" id="1205">1205</a>
+<a href="#1206" id="1206">1206</a>
+<a href="#1207" id="1207">1207</a>
+<a href="#1208" id="1208">1208</a>
+<a href="#1209" id="1209">1209</a>
+<a href="#1210" id="1210">1210</a>
+<a href="#1211" id="1211">1211</a>
+<a href="#1212" id="1212">1212</a>
+<a href="#1213" id="1213">1213</a>
+<a href="#1214" id="1214">1214</a>
+<a href="#1215" id="1215">1215</a>
+<a href="#1216" id="1216">1216</a>
+<a href="#1217" id="1217">1217</a>
+<a href="#1218" id="1218">1218</a>
+<a href="#1219" id="1219">1219</a>
+<a href="#1220" id="1220">1220</a>
+<a href="#1221" id="1221">1221</a>
+<a href="#1222" id="1222">1222</a>
+<a href="#1223" id="1223">1223</a>
 </pre></div><pre class="rust"><code><span class="attr">#![warn(rust_2018_idioms, missing_debug_implementations)]
 #![deny(rustdoc::broken_intra_doc_links)]
 #![doc = <span class="macro">include_str!</span>(<span class="string">&quot;../README.md&quot;</span>)]
@@ -1364,10 +1392,12 @@
             /// fulfil the request, in which case attempting to set this property
             /// will have no effect (but should not raise an error).
             ///
-            /// ## Rationale
+            /// &lt;details&gt;&lt;summary&gt;Rationale&lt;/summary&gt;
             ///
             /// This allows remote control interfaces, such as LIRC or mobile devices
             /// like phones, to control whether a video is shown in fullscreen.
+            ///
+            /// &lt;/details&gt;
             ///
             /// [`properties_changed`]: Server::properties_changed
             /// [`CanSetFullscreen`]: Self::can_set_fullscreen
@@ -1402,10 +1432,12 @@
             /// that it will not be able to fulfil the request, however, this property
             /// should be **false**.
             ///
-            /// ## Rationale
+            /// &lt;details&gt;&lt;summary&gt;Rationale&lt;/summary&gt;
             ///
             /// This allows clients to choose whether to display controls for entering
             /// or exiting fullscreen mode.
+            ///
+            /// &lt;/details&gt;
             ///
             /// [`properties_changed`]: Server::properties_changed
             /// [`Fullscreen`]: Self::fullscreen
@@ -1485,10 +1517,12 @@
             ///
             /// Note that URI schemes should be lower-case.
             ///
-            /// ## Rationale
+            /// &lt;details&gt;&lt;summary&gt;Rationale&lt;/summary&gt;
             ///
             /// This is important for clients to know when using the editing
             /// capabilities of the [`Playlists interface`], for example.
+            ///
+            /// &lt;/details&gt;
             ///
             /// [`properties_changed`]: Server::properties_changed
             /// [`Playlists interface`]: PlaylistsInterface
@@ -1504,10 +1538,12 @@
             /// Mime-types should be in the standard format (eg: audio/mpeg or
             /// application/ogg).
             ///
-            /// ## Rationale
+            /// &lt;details&gt;&lt;summary&gt;Rationale&lt;/summary&gt;
             ///
             /// This is important for clients to know when using the editing
             /// capabilities of the [`Playlists interface`], for example.
+            ///
+            /// &lt;/details&gt;
             ///
             /// [`properties_changed`]: Server::properties_changed
             /// [`Playlists interface`]: PlaylistsInterface
@@ -1645,12 +1681,14 @@
             ///
             /// If the [`CanSeek`] property is **false**, this has no effect.
             ///
-            /// ## Rationale
+            /// &lt;details&gt;&lt;summary&gt;Rationale&lt;/summary&gt;
             ///
             /// The reason for having this method, rather than making [`Position`]
             /// writable, is to include the `track_id` argument to avoid race
             /// conditions where a client tries to seek to a position when the track
             /// has already changed.
+            ///
+            /// &lt;/details&gt;
             ///
             /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`]: TrackId::NO_TRACK
             /// [`CanSeek`]: Self::can_seek
@@ -1767,11 +1805,13 @@
             /// recommended to only use sensible fractions or multiples of 1 (eg: 0.5,
             /// 0.25, 1.5, 2.0, etc).
             ///
-            /// ## Rationale
+            /// &lt;details&gt;&lt;summary&gt;Rationale&lt;/summary&gt;
             ///
             /// This allows clients to display (reasonably) accurate progress bars
             /// without having to regularly query the media player for the current
             /// position.
+            ///
+            /// &lt;/details&gt;
             ///
             /// [`properties_changed`]: Server::properties_changed
             /// [`MinimumRate`]: Self::minimum_rate
@@ -1928,10 +1968,12 @@
             ///
             /// If [`CanControl`] is **false**, this property should also be **false**.
             ///
-            /// ## Rationale
+            /// &lt;details&gt;&lt;summary&gt;Rationale&lt;/summary&gt;
             ///
             /// Even when playback can generally be controlled, there may not always be
             /// a next track to move to.
+            ///
+            /// &lt;/details&gt;
             ///
             /// [`Next`]: Self::next
             /// [`properties_changed`]: Server::properties_changed
@@ -1952,10 +1994,12 @@
             ///
             /// If [`CanControl`] is **false**, this property should also be **false**.
             ///
-            /// ## Rationale
+            /// &lt;details&gt;&lt;summary&gt;Rationale&lt;/summary&gt;
             ///
             /// Even when playback can generally be controlled, there may not always be
             /// a next previous to move to.
+            ///
+            /// &lt;/details&gt;
             ///
             /// [`Previous`]: Self::previous
             /// [`properties_changed`]: Server::properties_changed
@@ -1976,10 +2020,12 @@
             ///
             /// If [`CanControl`] is **false**, this property should also be **false**.
             ///
-            /// ## Rationale
+            /// &lt;details&gt;&lt;summary&gt;Rationale&lt;/summary&gt;
             ///
             /// Even when playback can generally be controlled, it may not be possible
             /// to enter a &quot;playing&quot; state, for example if there is no &quot;current track&quot;.
+            ///
+            /// &lt;/details&gt;
             ///
             /// [`Play`]: Self::play
             /// [`PlayPause`]: Self::play_pause
@@ -2001,10 +2047,12 @@
             ///
             /// If [`CanControl`] is **false**, this property should also be **false**.
             ///
-            /// ## Rationale
+            /// &lt;details&gt;&lt;summary&gt;Rationale&lt;/summary&gt;
             ///
             /// Not all media is pausable: it may not be possible to pause some streamed
             /// media, for example.
+            ///
+            /// &lt;/details&gt;
             ///
             /// [`Pause`]: Self::pause
             /// [`PlayPause`]: Self::play_pause
@@ -2022,10 +2070,12 @@
             ///
             /// If [`CanControl`] is **false**, this property should also be **false**.
             ///
-            /// ## Rationale
+            /// &lt;details&gt;&lt;summary&gt;Rationale&lt;/summary&gt;
             ///
             /// Not all media is seekable: it may not be possible to seek when playing
             /// some streamed media, for example.
+            ///
+            /// &lt;/details&gt;
             ///
             /// [`Seek`]: Self::seek
             /// [`SetPosition`]: Self::set_position
@@ -2048,11 +2098,13 @@
             /// attempted), no methods are implemented and all other properties starting
             /// with `Can` are also **false**.
             ///
-            /// ## Rationale
+            /// &lt;details&gt;&lt;summary&gt;Rationale&lt;/summary&gt;
             ///
             /// This allows clients to determine whether to present and enable controls
             /// to the user in advance of attempting to call methods and write to
             /// properties.
+            ///
+            /// &lt;/details&gt;
             ///
             /// [`properties_changed`]: Server::properties_changed
             </span><span class="attr">#[doc(alias = <span class="string">&quot;CanControl&quot;</span>)]
@@ -2304,12 +2356,14 @@
             /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
             /// [`playlists_properties_changed`] must be emitted with the new value.
             ///
-            /// ## Rationale
+            /// &lt;details&gt;&lt;summary&gt;Rationale&lt;/summary&gt;
             ///
             /// Media players may not have access to all the data required for some
             /// orderings. For example, creation times are not available on UNIX
             /// filesystems (don&#39;t let the ctime fool you!). On the other hand, clients
             /// should have some way to get the &quot;most recent&quot; playlists.
+            ///
+            /// &lt;/details&gt;
             ///
             /// [`playlists_properties_changed`]: Server::playlists_properties_changed
             </span><span class="attr">#[doc(alias = <span class="string">&quot;Orderings&quot;</span>)]
@@ -2372,14 +2426,16 @@
 
 <span class="doccomment">/// Unique playlist identifier.
 ///
-/// ## Rationale
+/// &lt;details&gt;&lt;summary&gt;Rationale&lt;/summary&gt;
 ///
 /// Multiple playlists may have the same name.
 ///
 /// This is a D-Bus object id as that is the definitive way to have unique
 /// identifiers on D-Bus. It also allows for future optional expansions to
 /// the specification where tracks are exported to D-Bus with an interface
-/// similar to org.gnome.UPnP.MediaItem2.
+/// similar to `org.gnome.UPnP.MediaItem2`.
+///
+/// &lt;/details&gt;
 </span><span class="attr">#[doc(alias = <span class="string">&quot;Playlist_Id&quot;</span>)]
 </span><span class="kw">pub type </span>PlaylistId = OwnedObjectPath;
 

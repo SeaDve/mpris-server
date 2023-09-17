@@ -136,6 +136,8 @@
 <a href="#136" id="136">136</a>
 <a href="#137" id="137">137</a>
 <a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
+<a href="#140" id="140">140</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{Metadata, Playlist, Time, TrackId};
 
 <span class="doccomment">/// Used for emitting signals on [`Server::emit`] and [`LocalServer::emit`].
@@ -265,10 +267,12 @@
     /// Client implementations should be aware that this signal may not be
     /// implemented.
     ///
-    /// ## Rationale
+    /// &lt;details&gt;&lt;summary&gt;Rationale&lt;/summary&gt;
     ///
     /// Without this signal, media players have no way to notify clients of a
     /// change in the attributes of a playlist other than the active one.
+    ///
+    /// &lt;/details&gt;
     </span>PlaylistChanged {
         <span class="doccomment">/// The playlist which details have changed.
         </span>playlist: Playlist,

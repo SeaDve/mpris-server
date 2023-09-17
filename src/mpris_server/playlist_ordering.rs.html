@@ -50,6 +50,8 @@
 <a href="#50" id="50">50</a>
 <a href="#51" id="51">51</a>
 <a href="#52" id="52">52</a>
+<a href="#53" id="53">53</a>
+<a href="#54" id="54">54</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::fmt;
 
 <span class="kw">use </span>serde::Deserialize;
@@ -57,11 +59,13 @@
 
 <span class="doccomment">/// Specifies the ordering of returned playlists.
 ///
-/// ## Rationale
+/// &lt;details&gt;&lt;summary&gt;Rationale&lt;/summary&gt;
 ///
 /// Some media players may allow users to order playlists
 /// as they wish. This ordering allows playlists to be retrieved
 /// in that order.
+///
+/// &lt;/details&gt;
 </span><span class="attr">#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Type)]
 #[zvariant(signature = <span class="string">&quot;s&quot;</span>)]
 #[doc(alias = <span class="string">&quot;Playlist_Ordering&quot;</span>)]

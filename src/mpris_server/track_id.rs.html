@@ -113,6 +113,8 @@
 <a href="#113" id="113">113</a>
 <a href="#114" id="114">114</a>
 <a href="#115" id="115">115</a>
+<a href="#116" id="116">116</a>
+<a href="#117" id="117">117</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{fmt, ops};
 
 <span class="kw">use </span>serde::{de, Deserialize, Deserializer, Serialize};
@@ -133,12 +135,14 @@
 /// have special meaning, such as /org/mpris/MediaPlayer2/TrackList/NoTrack
 /// to indicate &quot;no track&quot;.
 ///
-/// ## Rationale
+/// &lt;details&gt;&lt;summary&gt;Rationale&lt;/summary&gt;
 ///
 /// This is a D-Bus object id as that is the definitive way to have unique
 /// identifiers on D-Bus. It also allows for future optional expansions
 /// to the specification where tracks are exported to D-Bus with an
-/// interface similar to org.gnome.UPnP.MediaItem2.
+/// interface similar to `org.gnome.UPnP.MediaItem2`.
+///
+/// &lt;/details&gt;
 </span><span class="attr">#[derive(Debug, Default, Clone, PartialEq, Eq, Hash, Serialize, Type)]
 #[serde(transparent)]
 #[doc(alias = <span class="string">&quot;Track_Id&quot;</span>)]

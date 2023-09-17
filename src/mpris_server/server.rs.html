@@ -1004,6 +1004,7 @@
 <a href="#1004" id="1004">1004</a>
 <a href="#1005" id="1005">1005</a>
 <a href="#1006" id="1006">1006</a>
+<a href="#1007" id="1007">1007</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{
     collections::HashMap,
     fmt,
@@ -1409,7 +1410,7 @@
     /// `&lt;bus_name_suffix&gt;`must be a unique identifier, such as one based on a
     /// UNIX process id. For example, this could be:
     ///
-    /// * org.mpris.MediaPlayer2.vlc.instance7389
+    /// * `org.mpris.MediaPlayer2.vlc.instance7389`
     ///
     /// Note: According to the [`D-Bus specification`], the unique identifier
     /// &quot;must only contain  the ASCII characters `[A-Z][a-z][0-9]_-`&quot; and
@@ -1553,7 +1554,8 @@
     <span class="kw">async fn </span>get_or_init_connection(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span>Connection&gt; {
         <span class="self">self</span>.connection
             .get_or_try_init(|| <span class="kw">async </span>{
-                <span class="kw">let </span>connection_init = <span class="self">self</span>.connection_init.lock().unwrap().take().unwrap();
+                <span class="comment">// Safety: connection only initialized once
+                </span><span class="kw">let </span>connection_init = <span class="self">self</span>.connection_init.lock().unwrap().take().unwrap();
                 <span class="kw">let </span>connection = connection_init()<span class="question-mark">?</span>.build().<span class="kw">await</span><span class="question-mark">?</span>;
                 <span class="prelude-val">Ok</span>(connection)
             })

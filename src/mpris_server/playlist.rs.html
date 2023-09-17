@@ -117,12 +117,20 @@
 <a href="#117" id="117">117</a>
 <a href="#118" id="118">118</a>
 <a href="#119" id="119">119</a>
+<a href="#120" id="120">120</a>
+<a href="#121" id="121">121</a>
+<a href="#122" id="122">122</a>
+<a href="#123" id="123">123</a>
+<a href="#124" id="124">124</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>serde::Serialize;
 <span class="kw">use </span>zbus::zvariant::{ObjectPath, Type, Value};
 
 <span class="kw">use crate</span>::{PlaylistId, Uri};
 
 <span class="doccomment">/// A data structure describing a playlist.
+///
+/// See [`MaybePlaylist`] for a data structure that may or may not contain a
+/// playlist.
 </span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Serialize, Type)]
 </span><span class="kw">pub struct </span>Playlist {
     <span class="doccomment">/// A unique identifier for the playlist.
@@ -153,10 +161,12 @@
 
 <span class="doccomment">/// A data structure describing a playlist, or nothing.
 ///
-/// ## Rationale
+/// &lt;details&gt;&lt;summary&gt;Rationale&lt;/summary&gt;
 ///
 /// D-Bus does not (at the time of writing) support a MAYBE type, so we are
 /// forced to invent our own.
+///
+/// &lt;/details&gt;
 </span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Serialize, Type)]
 #[doc(alias = <span class="string">&quot;Maybe_Playlist&quot;</span>)]
 </span><span class="kw">pub struct </span>MaybePlaylist {
