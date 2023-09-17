@@ -41,7 +41,7 @@ on this interface to see if it is implemented.</p>
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.unit.html">()</a>&gt;&gt; + <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
     'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Starts playing the given playlist.</p>
-<h6 id="parameters"><a href="#parameters">Parameters</a></h6>
+<h5 id="parameters"><a href="#parameters">Parameters</a></h5>
 <ul>
 <li><code>playlist_id</code> - The id of the playlist to activate.</li>
 </ul>
@@ -62,7 +62,7 @@ list of upcoming tracks, and skip to the first track in the playlist.</p>
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="struct.Playlist.html" title="struct mpris_server::Playlist">Playlist</a>&gt;&gt;&gt; + <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
     'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Gets a set of playlists.</p>
-<h6 id="parameters-1"><a href="#parameters-1">Parameters</a></h6>
+<h5 id="parameters-1"><a href="#parameters-1">Parameters</a></h5>
 <ul>
 <li><code>index</code> - The index of the first playlist to be fetched (according to
 the ordering).</li>
@@ -70,7 +70,7 @@ the ordering).</li>
 <li><code>order</code> - The ordering that should be used.</li>
 <li><code>reverse_order</code> - Whether the order should be reversed.</li>
 </ul>
-<h6 id="returns"><a href="#returns">Returns</a></h6>
+<h5 id="returns"><a href="#returns">Returns</a></h5>
 <ul>
 <li><code>playlists</code> - A list of (at most <code>max_count</code>) playlists.</li>
 </ul>

@@ -216,7 +216,7 @@ no effect.</p>
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.unit.html">()</a>&gt;&gt; + <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
     'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Seeks forward in the current track by the specified offset in time.</p>
-<h6 id="parameters"><a href="#parameters">Parameters</a></h6>
+<h5 id="parameters"><a href="#parameters">Parameters</a></h5>
 <ul>
 <li><code>offset</code> - The offset in time to seek forward.</li>
 </ul>
@@ -232,7 +232,7 @@ acts like a call to Next.</p>
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.unit.html">()</a>&gt;&gt; + <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
     'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Sets the current track position.</p>
-<h6 id="parameters-1"><a href="#parameters-1">Parameters</a></h6>
+<h5 id="parameters-1"><a href="#parameters-1">Parameters</a></h5>
 <ul>
 <li><code>track_id</code> - The currently playing track’s identifier. If this does
 not match the id of the currently-playing track, the call is ignored
@@ -256,7 +256,7 @@ has already changed.</p>
 ) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.72.0/core/pin/struct.Pin.html" title="struct core::pin::Pin">Pin</a>&lt;<a class="struct" href="https://doc.rust-lang.org/1.72.0/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/future/future/trait.Future.html" title="trait core::future::future::Future">Future</a>&lt;Output = Result&lt;<a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.unit.html">()</a>&gt;&gt; + <a class="trait" href="https://doc.rust-lang.org/1.72.0/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'async_trait&gt;&gt;<span class="where fmt-newline">where
     Self: 'async_trait,
     'life0: 'async_trait,</span></h4></section></summary><div class="docblock"><p>Opens the <code>uri</code> given as an argument</p>
-<h6 id="parameters-2"><a href="#parameters-2">Parameters</a></h6>
+<h5 id="parameters-2"><a href="#parameters-2">Parameters</a></h5>
 <ul>
 <li><code>uri</code> - Uri of the track to load. Its uri scheme should be an element
 of the <a href="trait.RootInterface.html#tymethod.supported_uri_schemes" title="method mpris_server::RootInterface::supported_uri_schemes"><code>SupportedUriSchemes</code></a> property and the mime-type should match
