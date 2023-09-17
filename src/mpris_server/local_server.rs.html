@@ -986,6 +986,9 @@
 <a href="#986" id="986">986</a>
 <a href="#987" id="987">987</a>
 <a href="#988" id="988">988</a>
+<a href="#989" id="989">989</a>
+<a href="#990" id="990">990</a>
+<a href="#991" id="991">991</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{cell::RefCell, fmt, future::Future, marker::PhantomData, pin::Pin, rc::Rc};
 
 <span class="kw">use </span>async_trait::async_trait;
@@ -1468,6 +1471,9 @@
 <span class="doccomment">/// Local version of [`Server`] that doesn&#39;t require `T` to be `Send` and
 /// `Sync`.
 ///
+/// If your type is already `Send` and `Sync`, consider using [`Server`] instead
+/// because [`LocalServer`] has an overhead of sending messages across threads.
+///
 /// For more information, see [`Server`] documentations.
 </span><span class="kw">pub struct </span>LocalServer&lt;T&gt;
 <span class="kw">where
@@ -1504,9 +1510,9 @@
     ///
     /// * `org.mpris.MediaPlayer2.vlc.instance7389`
     ///
-    /// **Note:** According to the [`D-Bus specification`], the unique identifier
-    /// &quot;must only contain  the ASCII characters `[A-Z][a-z][0-9]_-`&quot; and
-    /// &quot;must not begin with a digit&quot;.
+    /// **Note:** According to the [`D-Bus specification`], the unique
+    /// identifier &quot;must only contain  the ASCII characters
+    /// `[A-Z][a-z][0-9]_-`&quot; and &quot;must not begin with a digit&quot;.
     ///
     /// [`LocalRootInterface`]: crate::LocalRootInterface
     /// [`D-Bus specification`]: dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus
