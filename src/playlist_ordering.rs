@@ -5,11 +5,13 @@ use zbus::zvariant::{Type, Value};
 
 /// Specifies the ordering of returned playlists.
 ///
-/// ## Rationale
+/// <details><summary>Rationale</summary>
 ///
 /// Some media players may allow users to order playlists
 /// as they wish. This ordering allows playlists to be retrieved
 /// in that order.
+///
+/// </details>
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Type)]
 #[zvariant(signature = "s")]
 #[doc(alias = "Playlist_Ordering")]

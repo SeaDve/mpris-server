@@ -514,7 +514,7 @@ where
     /// `<bus_name_suffix>`must be a unique identifier, such as one based on a
     /// UNIX process id. For example, this could be:
     ///
-    /// * org.mpris.MediaPlayer2.vlc.instance7389
+    /// * `org.mpris.MediaPlayer2.vlc.instance7389`
     ///
     /// Note: According to the [`D-Bus specification`], the unique identifier
     /// "must only contain  the ASCII characters `[A-Z][a-z][0-9]_-`" and

@@ -127,10 +127,12 @@ pub enum PlaylistsSignal {
     /// Client implementations should be aware that this signal may not be
     /// implemented.
     ///
-    /// ## Rationale
+    /// <details><summary>Rationale</summary>
     ///
     /// Without this signal, media players have no way to notify clients of a
     /// change in the attributes of a playlist other than the active one.
+    ///
+    /// </details>
     PlaylistChanged {
         /// The playlist which details have changed.
         playlist: Playlist,

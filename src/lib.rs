@@ -169,10 +169,12 @@ macro_rules! define_iface {
             /// fulfil the request, in which case attempting to set this property
             /// will have no effect (but should not raise an error).
             ///
-            /// ## Rationale
+            /// <details><summary>Rationale</summary>
             ///
             /// This allows remote control interfaces, such as LIRC or mobile devices
             /// like phones, to control whether a video is shown in fullscreen.
+            ///
+            /// </details>
             ///
             /// [`properties_changed`]: Server::properties_changed
             /// [`CanSetFullscreen`]: Self::can_set_fullscreen
@@ -207,10 +209,12 @@ macro_rules! define_iface {
             /// that it will not be able to fulfil the request, however, this property
             /// should be **false**.
             ///
-            /// ## Rationale
+            /// <details><summary>Rationale</summary>
             ///
             /// This allows clients to choose whether to display controls for entering
             /// or exiting fullscreen mode.
+            ///
+            /// </details>
             ///
             /// [`properties_changed`]: Server::properties_changed
             /// [`Fullscreen`]: Self::fullscreen
@@ -290,10 +294,12 @@ macro_rules! define_iface {
             ///
             /// Note that URI schemes should be lower-case.
             ///
-            /// ## Rationale
+            /// <details><summary>Rationale</summary>
             ///
             /// This is important for clients to know when using the editing
             /// capabilities of the [`Playlists interface`], for example.
+            ///
+            /// </details>
             ///
             /// [`properties_changed`]: Server::properties_changed
             /// [`Playlists interface`]: PlaylistsInterface
@@ -309,10 +315,12 @@ macro_rules! define_iface {
             /// Mime-types should be in the standard format (eg: audio/mpeg or
             /// application/ogg).
             ///
-            /// ## Rationale
+            /// <details><summary>Rationale</summary>
             ///
             /// This is important for clients to know when using the editing
             /// capabilities of the [`Playlists interface`], for example.
+            ///
+            /// </details>
             ///
             /// [`properties_changed`]: Server::properties_changed
             /// [`Playlists interface`]: PlaylistsInterface
@@ -450,12 +458,14 @@ macro_rules! define_iface {
             ///
             /// If the [`CanSeek`] property is **false**, this has no effect.
             ///
-            /// ## Rationale
+            /// <details><summary>Rationale</summary>
             ///
             /// The reason for having this method, rather than making [`Position`]
             /// writable, is to include the `track_id` argument to avoid race
             /// conditions where a client tries to seek to a position when the track
             /// has already changed.
+            ///
+            /// </details>
             ///
             /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`]: TrackId::NO_TRACK
             /// [`CanSeek`]: Self::can_seek
@@ -572,11 +582,13 @@ macro_rules! define_iface {
             /// recommended to only use sensible fractions or multiples of 1 (eg: 0.5,
             /// 0.25, 1.5, 2.0, etc).
             ///
-            /// ## Rationale
+            /// <details><summary>Rationale</summary>
             ///
             /// This allows clients to display (reasonably) accurate progress bars
             /// without having to regularly query the media player for the current
             /// position.
+            ///
+            /// </details>
             ///
             /// [`properties_changed`]: Server::properties_changed
             /// [`MinimumRate`]: Self::minimum_rate
@@ -733,10 +745,12 @@ macro_rules! define_iface {
             ///
             /// If [`CanControl`] is **false**, this property should also be **false**.
             ///
-            /// ## Rationale
+            /// <details><summary>Rationale</summary>
             ///
             /// Even when playback can generally be controlled, there may not always be
             /// a next track to move to.
+            ///
+            /// </details>
             ///
             /// [`Next`]: Self::next
             /// [`properties_changed`]: Server::properties_changed
@@ -757,10 +771,12 @@ macro_rules! define_iface {
             ///
             /// If [`CanControl`] is **false**, this property should also be **false**.
             ///
-            /// ## Rationale
+            /// <details><summary>Rationale</summary>
             ///
             /// Even when playback can generally be controlled, there may not always be
             /// a next previous to move to.
+            ///
+            /// </details>
             ///
             /// [`Previous`]: Self::previous
             /// [`properties_changed`]: Server::properties_changed
@@ -781,10 +797,12 @@ macro_rules! define_iface {
             ///
             /// If [`CanControl`] is **false**, this property should also be **false**.
             ///
-            /// ## Rationale
+            /// <details><summary>Rationale</summary>
             ///
             /// Even when playback can generally be controlled, it may not be possible
             /// to enter a "playing" state, for example if there is no "current track".
+            ///
+            /// </details>
             ///
             /// [`Play`]: Self::play
             /// [`PlayPause`]: Self::play_pause
@@ -806,10 +824,12 @@ macro_rules! define_iface {
             ///
             /// If [`CanControl`] is **false**, this property should also be **false**.
             ///
-            /// ## Rationale
+            /// <details><summary>Rationale</summary>
             ///
             /// Not all media is pausable: it may not be possible to pause some streamed
             /// media, for example.
+            ///
+            /// </details>
             ///
             /// [`Pause`]: Self::pause
             /// [`PlayPause`]: Self::play_pause
@@ -827,10 +847,12 @@ macro_rules! define_iface {
             ///
             /// If [`CanControl`] is **false**, this property should also be **false**.
             ///
-            /// ## Rationale
+            /// <details><summary>Rationale</summary>
             ///
             /// Not all media is seekable: it may not be possible to seek when playing
             /// some streamed media, for example.
+            ///
+            /// </details>
             ///
             /// [`Seek`]: Self::seek
             /// [`SetPosition`]: Self::set_position
@@ -853,11 +875,13 @@ macro_rules! define_iface {
             /// attempted), no methods are implemented and all other properties starting
             /// with `Can` are also **false**.
             ///
-            /// ## Rationale
+            /// <details><summary>Rationale</summary>
             ///
             /// This allows clients to determine whether to present and enable controls
             /// to the user in advance of attempting to call methods and write to
             /// properties.
+            ///
+            /// </details>
             ///
             /// [`properties_changed`]: Server::properties_changed
             #[doc(alias = "CanControl")]
@@ -1109,12 +1133,14 @@ macro_rules! define_iface {
             /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
             /// [`playlists_properties_changed`] must be emitted with the new value.
             ///
-            /// ## Rationale
+            /// <details><summary>Rationale</summary>
             ///
             /// Media players may not have access to all the data required for some
             /// orderings. For example, creation times are not available on UNIX
             /// filesystems (don't let the ctime fool you!). On the other hand, clients
             /// should have some way to get the "most recent" playlists.
+            ///
+            /// </details>
             ///
             /// [`playlists_properties_changed`]: Server::playlists_properties_changed
             #[doc(alias = "Orderings")]
@@ -1177,14 +1203,16 @@ pub type Volume = f64;
 
 /// Unique playlist identifier.
 ///
-/// ## Rationale
+/// <details><summary>Rationale</summary>
 ///
 /// Multiple playlists may have the same name.
 ///
 /// This is a D-Bus object id as that is the definitive way to have unique
 /// identifiers on D-Bus. It also allows for future optional expansions to
 /// the specification where tracks are exported to D-Bus with an interface
-/// similar to org.gnome.UPnP.MediaItem2.
+/// similar to `org.gnome.UPnP.MediaItem2`.
+///
+/// </details>
 #[doc(alias = "Playlist_Id")]
 pub type PlaylistId = OwnedObjectPath;
 

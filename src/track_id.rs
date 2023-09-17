@@ -18,12 +18,14 @@ use zbus::zvariant::{Error, ObjectPath, Result, Type, Value};
 /// have special meaning, such as /org/mpris/MediaPlayer2/TrackList/NoTrack
 /// to indicate "no track".
 ///
-/// ## Rationale
+/// <details><summary>Rationale</summary>
 ///
 /// This is a D-Bus object id as that is the definitive way to have unique
 /// identifiers on D-Bus. It also allows for future optional expansions
 /// to the specification where tracks are exported to D-Bus with an
-/// interface similar to org.gnome.UPnP.MediaItem2.
+/// interface similar to `org.gnome.UPnP.MediaItem2`.
+///
+/// </details>
 #[derive(Debug, Default, Clone, PartialEq, Eq, Hash, Serialize, Type)]
 #[serde(transparent)]
 #[doc(alias = "Track_Id")]

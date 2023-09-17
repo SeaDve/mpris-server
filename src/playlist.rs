@@ -4,6 +4,9 @@ use zbus::zvariant::{ObjectPath, Type, Value};
 use crate::{PlaylistId, Uri};
 
 /// A data structure describing a playlist.
+///
+/// See [`MaybePlaylist`] for a data structure that may or may not contain a
+/// playlist.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Type)]
 pub struct Playlist {
     /// A unique identifier for the playlist.
@@ -34,10 +37,12 @@ impl<'a> From<Playlist> for Value<'a> {
 
 /// A data structure describing a playlist, or nothing.
 ///
-/// ## Rationale
+/// <details><summary>Rationale</summary>
 ///
 /// D-Bus does not (at the time of writing) support a MAYBE type, so we are
 /// forced to invent our own.
+///
+/// </details>
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Type)]
 #[doc(alias = "Maybe_Playlist")]
 pub struct MaybePlaylist {
