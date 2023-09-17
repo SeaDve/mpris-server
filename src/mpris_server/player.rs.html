@@ -978,8 +978,8 @@
 <span class="kw">use </span>zbus::{fdo, <span class="prelude-ty">Result</span>};
 
 <span class="kw">use crate</span>::{
-    LocalPlayerInterface, LocalRootInterface, LocalServer, LocalServerTask, LoopStatus, Metadata,
-    PlaybackRate, PlaybackStatus, Property, Signal, Time, TrackId, Volume,
+    LocalPlayerInterface, LocalRootInterface, LocalServer, LocalServerRunTask, LoopStatus,
+    Metadata, PlaybackRate, PlaybackStatus, Property, Signal, Time, TrackId, Volume,
 };
 
 <span class="doccomment">/// Ready-to-use mutable *service*-side object that internally implements
@@ -1293,7 +1293,7 @@
     /// The task must be awaited as soon as possible after creating the player.
     ///
     /// The returned task is no-op if the player&#39;s server has been ran before.
-    </span><span class="kw">pub fn </span>init_and_run(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; LocalServerTask {
+    </span><span class="kw">pub fn </span>init_and_run(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; LocalServerRunTask {
         <span class="self">self</span>.server.init_and_run()
     }
 
