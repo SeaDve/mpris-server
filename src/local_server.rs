@@ -523,34 +523,20 @@ where
     /// [`LocalRootInterface`]: crate::LocalRootInterface
     /// [`D-Bus specification`]: dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus
     pub fn new(bus_name_suffix: &str, imp: T) -> Result<Self> {
-        let (tx, mut rx) = mpsc::unbounded::<Action>();
-
-        let inner = Server::new(
+        Self::new_inner(
             bus_name_suffix,
-            InnerImp {
-                tx,
-                imp_ty: PhantomData,
-            },
-        )?;
-
-        let imp = Rc::new(imp);
-
-        let imp_clone = Rc::clone(&imp);
-        let runner = async move {
-            while let Some(action) = rx.next().await {
-                match action {
-                    Action::Root(action) => Self::handle_root_action(&imp_clone, action).await,
-                    Action::Player(action) => Self::handle_player_action(&imp_clone, action).await,
-                    Action::TrackList(_) | Action::Playlists(_) => unreachable!(),
-                }
-            }
-        };
-
-        Ok(Self {
-            inner,
             imp,
-            runner: RefCell::new(Some(Box::pin(runner))),
-        })
+            Server::new,
+            |mut rx, imp| async move {
+                while let Some(action) = rx.next().await {
+                    match action {
+                        Action::Root(action) => Self::handle_root_action(&imp, action).await,
+                        Action::Player(action) => Self::handle_player_action(&imp, action).await,
+                        Action::TrackList(_) | Action::Playlists(_) => unreachable!(),
+                    }
+                }
+            },
+        )
     }
 
     /// Initialize the connection and run the server. This must be called as
@@ -775,6 +761,37 @@ where
             }
         }
     }
+
+    fn new_inner<R>(
+        bus_name_suffix: &str,
+        imp: T,
+        server_func: impl FnOnce(&str, InnerImp<T>) -> Result<Server<InnerImp<T>>>,
+        runner_func: impl FnOnce(mpsc::UnboundedReceiver<Action>, Rc<T>) -> R,
+    ) -> Result<Self>
+    where
+        R: Future<Output = ()> + 'static,
+    {
+        let (tx, rx) = mpsc::unbounded::<Action>();
+
+        let inner = server_func(
+            bus_name_suffix,
+            InnerImp {
+                tx,
+                imp_ty: PhantomData,
+            },
+        )?;
+
+        let imp = Rc::new(imp);
+
+        let imp_clone = Rc::clone(&imp);
+        let runner = runner_func(rx, imp_clone);
+
+        Ok(Self {
+            inner,
+            imp,
+            runner: RefCell::new(Some(Box::pin(runner))),
+        })
+    }
 }
 
 impl<T> LocalServer<T>
@@ -789,37 +806,23 @@ where
     ///
     /// [`LocalRootInterface`]: crate::LocalRootInterface
     pub fn new_with_track_list(bus_name_suffix: &str, imp: T) -> Result<Self> {
-        let (tx, mut rx) = mpsc::unbounded::<Action>();
-
-        let inner = Server::new_with_track_list(
+        Self::new_inner(
             bus_name_suffix,
-            InnerImp {
-                tx,
-                imp_ty: PhantomData,
-            },
-        )?;
-
-        let imp = Rc::new(imp);
-
-        let imp_clone = Rc::clone(&imp);
-        let runner = async move {
-            while let Some(action) = rx.next().await {
-                match action {
-                    Action::Root(action) => Self::handle_root_action(&imp_clone, action).await,
-                    Action::Player(action) => Self::handle_player_action(&imp_clone, action).await,
-                    Action::TrackList(action) => {
-                        Self::handle_track_list_action(&imp_clone, action).await
-                    }
-                    Action::Playlists(_) => unreachable!(),
-                }
-            }
-        };
-
-        Ok(Self {
-            inner,
             imp,
-            runner: RefCell::new(Some(Box::pin(runner))),
-        })
+            Server::new_with_track_list,
+            |mut rx, imp| async move {
+                while let Some(action) = rx.next().await {
+                    match action {
+                        Action::Root(action) => Self::handle_root_action(&imp, action).await,
+                        Action::Player(action) => Self::handle_player_action(&imp, action).await,
+                        Action::TrackList(action) => {
+                            Self::handle_track_list_action(&imp, action).await
+                        }
+                        Action::Playlists(_) => unreachable!(),
+                    }
+                }
+            },
+        )
     }
 
     /// Emits the given signal on the `TrackList` interface.
@@ -884,37 +887,23 @@ where
     ///
     /// [`LocalRootInterface`]: crate::LocalRootInterface
     pub fn new_with_playlists(bus_name_suffix: &str, imp: T) -> Result<Self> {
-        let (tx, mut rx) = mpsc::unbounded::<Action>();
-
-        let inner = Server::new_with_playlists(
+        Self::new_inner(
             bus_name_suffix,
-            InnerImp {
-                tx,
-                imp_ty: PhantomData,
-            },
-        )?;
-
-        let imp = Rc::new(imp);
-
-        let imp_clone = Rc::clone(&imp);
-        let runner = async move {
-            while let Some(action) = rx.next().await {
-                match action {
-                    Action::Root(action) => Self::handle_root_action(&imp_clone, action).await,
-                    Action::Player(action) => Self::handle_player_action(&imp_clone, action).await,
-                    Action::Playlists(action) => {
-                        Self::handle_playlists_actions(&imp_clone, action).await
-                    }
-                    Action::TrackList(_) => unreachable!(),
-                }
-            }
-        };
-
-        Ok(Self {
-            inner,
             imp,
-            runner: RefCell::new(Some(Box::pin(runner))),
-        })
+            Server::new_with_playlists,
+            |mut rx, imp| async move {
+                while let Some(action) = rx.next().await {
+                    match action {
+                        Action::Root(action) => Self::handle_root_action(&imp, action).await,
+                        Action::Player(action) => Self::handle_player_action(&imp, action).await,
+                        Action::Playlists(action) => {
+                            Self::handle_playlists_actions(&imp, action).await
+                        }
+                        Action::TrackList(_) => unreachable!(),
+                    }
+                }
+            },
+        )
     }
 
     /// Emits the given signal on the `Playlists` interface.
@@ -976,38 +965,24 @@ where
     ///
     /// [`LocalRootInterface`]: crate::LocalRootInterface
     pub fn new_with_all(bus_name_suffix: &str, imp: T) -> Result<Self> {
-        let (tx, mut rx) = mpsc::unbounded::<Action>();
-
-        let inner = Server::new_with_all(
+        Self::new_inner(
             bus_name_suffix,
-            InnerImp {
-                tx,
-                imp_ty: PhantomData,
-            },
-        )?;
-
-        let imp = Rc::new(imp);
-
-        let imp_clone = Rc::clone(&imp);
-        let runner = async move {
-            while let Some(action) = rx.next().await {
-                match action {
-                    Action::Root(action) => Self::handle_root_action(&imp_clone, action).await,
-                    Action::Player(action) => Self::handle_player_action(&imp_clone, action).await,
-                    Action::Playlists(action) => {
-                        Self::handle_playlists_actions(&imp_clone, action).await
-                    }
-                    Action::TrackList(action) => {
-                        Self::handle_track_list_action(&imp_clone, action).await
+            imp,
+            Server::new_with_all,
+            |mut rx, imp| async move {
+                while let Some(action) = rx.next().await {
+                    match action {
+                        Action::Root(action) => Self::handle_root_action(&imp, action).await,
+                        Action::Player(action) => Self::handle_player_action(&imp, action).await,
+                        Action::Playlists(action) => {
+                            Self::handle_playlists_actions(&imp, action).await
+                        }
+                        Action::TrackList(action) => {
+                            Self::handle_track_list_action(&imp, action).await
+                        }
                     }
                 }
-            }
-        };
-
-        Ok(Self {
-            inner,
-            imp,
-            runner: RefCell::new(Some(Box::pin(runner))),
-        })
+            },
+        )
     }
 }
