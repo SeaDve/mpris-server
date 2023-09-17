@@ -41,6 +41,10 @@ impl Time {
 
     /// Creates a new `Time` from the specified number of whole seconds.
     ///
+    /// # Panics
+    ///
+    /// This will panic if the number of seconds overflows.
+    ///
     /// # Examples
     ///  ```
     /// use mpris_server::Time;
@@ -49,10 +53,17 @@ impl Time {
     /// ```
     #[inline]
     pub const fn from_secs(secs: i64) -> Self {
-        Self::from_micros(secs * 1_000_000)
+        match secs.checked_mul(1_000_000) {
+            Some(micros) => Self::from_micros(micros),
+            None => panic!("overflow when creating time from seconds"),
+        }
     }
 
     /// Creates a new `Time` from the specified number of whole milliseconds.
+    ///
+    /// # Panics
+    ///
+    /// This will panic if the number of milliseconds overflows.
     ///
     /// # Examples
     ///  ```
@@ -62,7 +73,10 @@ impl Time {
     /// ```
     #[inline]
     pub const fn from_millis(millis: i64) -> Self {
-        Self::from_micros(millis * 1000)
+        match millis.checked_mul(1000) {
+            Some(micros) => Self::from_micros(micros),
+            None => panic!("overflow when creating time from milliseconds"),
+        }
     }
 
     /// Creates a new `Time` from the specified number of whole microseconds.
