@@ -4,7 +4,7 @@
 
 // TODO:
 // * Document the rest of public interface
-// * Replace `DateTime`, and `Uri` with proper types
+// * Replace `DateTime` and `Uri` with proper types
 // * Add sensible default method impls on `*Interface` traits
 // * Profile if inlining is worth it
 // * Add public `test` method to check if interface is implemented correctly
