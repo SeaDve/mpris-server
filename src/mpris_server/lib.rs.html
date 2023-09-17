@@ -1219,21 +1219,17 @@
 <a href="#1219" id="1219">1219</a>
 <a href="#1220" id="1220">1220</a>
 <a href="#1221" id="1221">1221</a>
-<a href="#1222" id="1222">1222</a>
-<a href="#1223" id="1223">1223</a>
 </pre></div><pre class="rust"><code><span class="attr">#![warn(rust_2018_idioms, missing_debug_implementations)]
 #![deny(rustdoc::broken_intra_doc_links)]
 #![doc = <span class="macro">include_str!</span>(<span class="string">&quot;../README.md&quot;</span>)]
 
 </span><span class="comment">// TODO:
 // * Document the rest of public interface
-// * Add GDBus backend feature
 // * Replace `DateTime`, and `Uri` with proper types
 // * Add sensible default method impls on `*Interface` traits
 // * Profile if inlining is worth it
 // * Add public `test` method to check if interface is implemented correctly
 // * Avoid clones in `Metadata` getters
-// * Blanket impl `*Interface` traits for Arc&lt;T&gt;, Mutex&lt;T&gt;, etc.?
 
 </span><span class="kw">mod </span>local_server;
 <span class="kw">mod </span>loop_status;
