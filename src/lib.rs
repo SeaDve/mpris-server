@@ -425,7 +425,7 @@ macro_rules! define_iface {
 
             /// Seeks forward in the current track by the specified offset in time.
             ///
-            /// ## Parameters
+            /// # Parameters
             ///
             /// * `offset` - The offset in time to seek forward.
             ///
@@ -443,7 +443,7 @@ macro_rules! define_iface {
 
             /// Sets the current track position.
             ///
-            /// ## Parameters
+            /// # Parameters
             ///
             /// * `track_id` - The currently playing track's identifier. If this does
             ///   not match the id of the currently-playing track, the call is ignored
@@ -475,7 +475,7 @@ macro_rules! define_iface {
 
             /// Opens the `uri` given as an argument
             ///
-            /// ## Parameters
+            /// # Parameters
             ///
             /// * `uri` - Uri of the track to load. Its uri scheme should be an element
             ///   of the [`SupportedUriSchemes`] property and the mime-type should match
@@ -927,11 +927,11 @@ macro_rules! define_iface {
         pub trait $track_list_iface_ident: $player_iface_ident {
             /// Gets all the metadata available for a set of tracks.
             ///
-            /// ## Parameters
+            /// # Parameters
             ///
             /// * `track_ids` - The list of track ids for which metadata is requested.
             ///
-            /// ## Returns
+            /// # Returns
             ///
             /// * `metadata` - Metadata of the set of tracks given as input.
             ///
@@ -948,7 +948,7 @@ macro_rules! define_iface {
 
             /// Adds a URI in the tracklist.
             ///
-            /// ## Parameters
+            /// # Parameters
             ///
             /// * `uri` - The uri of the item to add. Its uri scheme should be an
             ///   element of the [`SupportedUriSchemes`] property and the mime-type
@@ -985,7 +985,7 @@ macro_rules! define_iface {
 
             /// Removes an item from the tracklist.
             ///
-            /// ## Parameters
+            /// # Parameters
             ///
             /// * `track_id` - Identifier of the track to be removed.
             ///   [`/org/mpris/MediaPlayer2/TrackList/NoTrack`] is *not* a valid value
@@ -1008,7 +1008,7 @@ macro_rules! define_iface {
 
             /// Skip to the specified TrackId.
             ///
-            /// ## Parameters
+            /// # Parameters
             ///
             /// * `track_id` - Identifier of the track to skip to.
             ///   [`/org/mpris/MediaPlayer2/TrackList/NoTrack`] is *not* a valid value
@@ -1079,7 +1079,7 @@ macro_rules! define_iface {
         pub trait $playlists_iface_ident: $player_iface_ident {
             /// Starts playing the given playlist.
             ///
-            /// ## Parameters
+            /// # Parameters
             ///
             /// * `playlist_id` - The id of the playlist to activate.
             ///
@@ -1097,7 +1097,7 @@ macro_rules! define_iface {
 
             /// Gets a set of playlists.
             ///
-            /// ## Parameters
+            /// # Parameters
             ///
             /// * `index` - The index of the first playlist to be fetched (according to
             ///   the ordering).
@@ -1105,7 +1105,7 @@ macro_rules! define_iface {
             /// * `order` - The ordering that should be used.
             /// * `reverse_order` - Whether the order should be reversed.
             ///
-            /// ## Returns
+            /// # Returns
             ///
             /// * `playlists` - A list of (at most `max_count`) playlists.
             #[doc(alias = "GetPlaylists")]
