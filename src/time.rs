@@ -94,7 +94,7 @@ impl Time {
 
     /// Creates a new `Time` from the specified number of whole nanoseconds.
     ///
-    /// Note: This will round of the nanoseconds to microseconds level of
+    /// **Note:** This will round of the nanoseconds to microseconds level of
     /// precision.
     ///
     /// # Examples
