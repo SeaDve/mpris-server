@@ -986,31 +986,6 @@
 <a href="#986" id="986">986</a>
 <a href="#987" id="987">987</a>
 <a href="#988" id="988">988</a>
-<a href="#989" id="989">989</a>
-<a href="#990" id="990">990</a>
-<a href="#991" id="991">991</a>
-<a href="#992" id="992">992</a>
-<a href="#993" id="993">993</a>
-<a href="#994" id="994">994</a>
-<a href="#995" id="995">995</a>
-<a href="#996" id="996">996</a>
-<a href="#997" id="997">997</a>
-<a href="#998" id="998">998</a>
-<a href="#999" id="999">999</a>
-<a href="#1000" id="1000">1000</a>
-<a href="#1001" id="1001">1001</a>
-<a href="#1002" id="1002">1002</a>
-<a href="#1003" id="1003">1003</a>
-<a href="#1004" id="1004">1004</a>
-<a href="#1005" id="1005">1005</a>
-<a href="#1006" id="1006">1006</a>
-<a href="#1007" id="1007">1007</a>
-<a href="#1008" id="1008">1008</a>
-<a href="#1009" id="1009">1009</a>
-<a href="#1010" id="1010">1010</a>
-<a href="#1011" id="1011">1011</a>
-<a href="#1012" id="1012">1012</a>
-<a href="#1013" id="1013">1013</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{cell::RefCell, fmt, future::Future, marker::PhantomData, pin::Pin, rc::Rc};
 
 <span class="kw">use </span>async_trait::async_trait;
@@ -1536,34 +1511,20 @@
     /// [`LocalRootInterface`]: crate::LocalRootInterface
     /// [`D-Bus specification`]: dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus
     </span><span class="kw">pub fn </span>new(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
-        <span class="kw">let </span>(tx, <span class="kw-2">mut </span>rx) = mpsc::unbounded::&lt;Action&gt;();
-
-        <span class="kw">let </span>inner = Server::new(
+        <span class="self">Self</span>::new_inner(
             bus_name_suffix,
-            InnerImp {
-                tx,
-                imp_ty: PhantomData,
-            },
-        )<span class="question-mark">?</span>;
-
-        <span class="kw">let </span>imp = Rc::new(imp);
-
-        <span class="kw">let </span>imp_clone = Rc::clone(<span class="kw-2">&amp;</span>imp);
-        <span class="kw">let </span>runner = <span class="kw">async move </span>{
-            <span class="kw">while let </span><span class="prelude-val">Some</span>(action) = rx.next().<span class="kw">await </span>{
-                <span class="kw">match </span>action {
-                    Action::Root(action) =&gt; <span class="self">Self</span>::handle_root_action(<span class="kw-2">&amp;</span>imp_clone, action).<span class="kw">await</span>,
-                    Action::Player(action) =&gt; <span class="self">Self</span>::handle_player_action(<span class="kw-2">&amp;</span>imp_clone, action).<span class="kw">await</span>,
-                    Action::TrackList(<span class="kw">_</span>) | Action::Playlists(<span class="kw">_</span>) =&gt; <span class="macro">unreachable!</span>(),
-                }
-            }
-        };
-
-        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
-            inner,
             imp,
-            runner: RefCell::new(<span class="prelude-val">Some</span>(Box::pin(runner))),
-        })
+            Server::new,
+            |<span class="kw-2">mut </span>rx, imp| <span class="kw">async move </span>{
+                <span class="kw">while let </span><span class="prelude-val">Some</span>(action) = rx.next().<span class="kw">await </span>{
+                    <span class="kw">match </span>action {
+                        Action::Root(action) =&gt; <span class="self">Self</span>::handle_root_action(<span class="kw-2">&amp;</span>imp, action).<span class="kw">await</span>,
+                        Action::Player(action) =&gt; <span class="self">Self</span>::handle_player_action(<span class="kw-2">&amp;</span>imp, action).<span class="kw">await</span>,
+                        Action::TrackList(<span class="kw">_</span>) | Action::Playlists(<span class="kw">_</span>) =&gt; <span class="macro">unreachable!</span>(),
+                    }
+                }
+            },
+        )
     }
 
     <span class="doccomment">/// Initialize the connection and run the server. This must be called as
@@ -1788,6 +1749,37 @@
             }
         }
     }
+
+    <span class="kw">fn </span>new_inner&lt;R&gt;(
+        bus_name_suffix: <span class="kw-2">&amp;</span>str,
+        imp: T,
+        server_func: <span class="kw">impl </span>FnOnce(<span class="kw-2">&amp;</span>str, InnerImp&lt;T&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;Server&lt;InnerImp&lt;T&gt;&gt;&gt;,
+        runner_func: <span class="kw">impl </span>FnOnce(mpsc::UnboundedReceiver&lt;Action&gt;, Rc&lt;T&gt;) -&gt; R,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt;
+    <span class="kw">where
+        </span>R: Future&lt;Output = ()&gt; + <span class="lifetime">&#39;static</span>,
+    {
+        <span class="kw">let </span>(tx, rx) = mpsc::unbounded::&lt;Action&gt;();
+
+        <span class="kw">let </span>inner = server_func(
+            bus_name_suffix,
+            InnerImp {
+                tx,
+                imp_ty: PhantomData,
+            },
+        )<span class="question-mark">?</span>;
+
+        <span class="kw">let </span>imp = Rc::new(imp);
+
+        <span class="kw">let </span>imp_clone = Rc::clone(<span class="kw-2">&amp;</span>imp);
+        <span class="kw">let </span>runner = runner_func(rx, imp_clone);
+
+        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
+            inner,
+            imp,
+            runner: RefCell::new(<span class="prelude-val">Some</span>(Box::pin(runner))),
+        })
+    }
 }
 
 <span class="kw">impl</span>&lt;T&gt; LocalServer&lt;T&gt;
@@ -1802,37 +1794,23 @@
     ///
     /// [`LocalRootInterface`]: crate::LocalRootInterface
     </span><span class="kw">pub fn </span>new_with_track_list(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
-        <span class="kw">let </span>(tx, <span class="kw-2">mut </span>rx) = mpsc::unbounded::&lt;Action&gt;();
-
-        <span class="kw">let </span>inner = Server::new_with_track_list(
+        <span class="self">Self</span>::new_inner(
             bus_name_suffix,
-            InnerImp {
-                tx,
-                imp_ty: PhantomData,
-            },
-        )<span class="question-mark">?</span>;
-
-        <span class="kw">let </span>imp = Rc::new(imp);
-
-        <span class="kw">let </span>imp_clone = Rc::clone(<span class="kw-2">&amp;</span>imp);
-        <span class="kw">let </span>runner = <span class="kw">async move </span>{
-            <span class="kw">while let </span><span class="prelude-val">Some</span>(action) = rx.next().<span class="kw">await </span>{
-                <span class="kw">match </span>action {
-                    Action::Root(action) =&gt; <span class="self">Self</span>::handle_root_action(<span class="kw-2">&amp;</span>imp_clone, action).<span class="kw">await</span>,
-                    Action::Player(action) =&gt; <span class="self">Self</span>::handle_player_action(<span class="kw-2">&amp;</span>imp_clone, action).<span class="kw">await</span>,
-                    Action::TrackList(action) =&gt; {
-                        <span class="self">Self</span>::handle_track_list_action(<span class="kw-2">&amp;</span>imp_clone, action).<span class="kw">await
-                    </span>}
-                    Action::Playlists(<span class="kw">_</span>) =&gt; <span class="macro">unreachable!</span>(),
-                }
-            }
-        };
-
-        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
-            inner,
             imp,
-            runner: RefCell::new(<span class="prelude-val">Some</span>(Box::pin(runner))),
-        })
+            Server::new_with_track_list,
+            |<span class="kw-2">mut </span>rx, imp| <span class="kw">async move </span>{
+                <span class="kw">while let </span><span class="prelude-val">Some</span>(action) = rx.next().<span class="kw">await </span>{
+                    <span class="kw">match </span>action {
+                        Action::Root(action) =&gt; <span class="self">Self</span>::handle_root_action(<span class="kw-2">&amp;</span>imp, action).<span class="kw">await</span>,
+                        Action::Player(action) =&gt; <span class="self">Self</span>::handle_player_action(<span class="kw-2">&amp;</span>imp, action).<span class="kw">await</span>,
+                        Action::TrackList(action) =&gt; {
+                            <span class="self">Self</span>::handle_track_list_action(<span class="kw-2">&amp;</span>imp, action).<span class="kw">await
+                        </span>}
+                        Action::Playlists(<span class="kw">_</span>) =&gt; <span class="macro">unreachable!</span>(),
+                    }
+                }
+            },
+        )
     }
 
     <span class="doccomment">/// Emits the given signal on the `TrackList` interface.
@@ -1897,37 +1875,23 @@
     ///
     /// [`LocalRootInterface`]: crate::LocalRootInterface
     </span><span class="kw">pub fn </span>new_with_playlists(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
-        <span class="kw">let </span>(tx, <span class="kw-2">mut </span>rx) = mpsc::unbounded::&lt;Action&gt;();
-
-        <span class="kw">let </span>inner = Server::new_with_playlists(
+        <span class="self">Self</span>::new_inner(
             bus_name_suffix,
-            InnerImp {
-                tx,
-                imp_ty: PhantomData,
-            },
-        )<span class="question-mark">?</span>;
-
-        <span class="kw">let </span>imp = Rc::new(imp);
-
-        <span class="kw">let </span>imp_clone = Rc::clone(<span class="kw-2">&amp;</span>imp);
-        <span class="kw">let </span>runner = <span class="kw">async move </span>{
-            <span class="kw">while let </span><span class="prelude-val">Some</span>(action) = rx.next().<span class="kw">await </span>{
-                <span class="kw">match </span>action {
-                    Action::Root(action) =&gt; <span class="self">Self</span>::handle_root_action(<span class="kw-2">&amp;</span>imp_clone, action).<span class="kw">await</span>,
-                    Action::Player(action) =&gt; <span class="self">Self</span>::handle_player_action(<span class="kw-2">&amp;</span>imp_clone, action).<span class="kw">await</span>,
-                    Action::Playlists(action) =&gt; {
-                        <span class="self">Self</span>::handle_playlists_actions(<span class="kw-2">&amp;</span>imp_clone, action).<span class="kw">await
-                    </span>}
-                    Action::TrackList(<span class="kw">_</span>) =&gt; <span class="macro">unreachable!</span>(),
-                }
-            }
-        };
-
-        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
-            inner,
             imp,
-            runner: RefCell::new(<span class="prelude-val">Some</span>(Box::pin(runner))),
-        })
+            Server::new_with_playlists,
+            |<span class="kw-2">mut </span>rx, imp| <span class="kw">async move </span>{
+                <span class="kw">while let </span><span class="prelude-val">Some</span>(action) = rx.next().<span class="kw">await </span>{
+                    <span class="kw">match </span>action {
+                        Action::Root(action) =&gt; <span class="self">Self</span>::handle_root_action(<span class="kw-2">&amp;</span>imp, action).<span class="kw">await</span>,
+                        Action::Player(action) =&gt; <span class="self">Self</span>::handle_player_action(<span class="kw-2">&amp;</span>imp, action).<span class="kw">await</span>,
+                        Action::Playlists(action) =&gt; {
+                            <span class="self">Self</span>::handle_playlists_actions(<span class="kw-2">&amp;</span>imp, action).<span class="kw">await
+                        </span>}
+                        Action::TrackList(<span class="kw">_</span>) =&gt; <span class="macro">unreachable!</span>(),
+                    }
+                }
+            },
+        )
     }
 
     <span class="doccomment">/// Emits the given signal on the `Playlists` interface.
@@ -1989,39 +1953,25 @@
     ///
     /// [`LocalRootInterface`]: crate::LocalRootInterface
     </span><span class="kw">pub fn </span>new_with_all(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
-        <span class="kw">let </span>(tx, <span class="kw-2">mut </span>rx) = mpsc::unbounded::&lt;Action&gt;();
-
-        <span class="kw">let </span>inner = Server::new_with_all(
+        <span class="self">Self</span>::new_inner(
             bus_name_suffix,
-            InnerImp {
-                tx,
-                imp_ty: PhantomData,
-            },
-        )<span class="question-mark">?</span>;
-
-        <span class="kw">let </span>imp = Rc::new(imp);
-
-        <span class="kw">let </span>imp_clone = Rc::clone(<span class="kw-2">&amp;</span>imp);
-        <span class="kw">let </span>runner = <span class="kw">async move </span>{
-            <span class="kw">while let </span><span class="prelude-val">Some</span>(action) = rx.next().<span class="kw">await </span>{
-                <span class="kw">match </span>action {
-                    Action::Root(action) =&gt; <span class="self">Self</span>::handle_root_action(<span class="kw-2">&amp;</span>imp_clone, action).<span class="kw">await</span>,
-                    Action::Player(action) =&gt; <span class="self">Self</span>::handle_player_action(<span class="kw-2">&amp;</span>imp_clone, action).<span class="kw">await</span>,
-                    Action::Playlists(action) =&gt; {
-                        <span class="self">Self</span>::handle_playlists_actions(<span class="kw-2">&amp;</span>imp_clone, action).<span class="kw">await
-                    </span>}
-                    Action::TrackList(action) =&gt; {
-                        <span class="self">Self</span>::handle_track_list_action(<span class="kw-2">&amp;</span>imp_clone, action).<span class="kw">await
-                    </span>}
-                }
-            }
-        };
-
-        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
-            inner,
             imp,
-            runner: RefCell::new(<span class="prelude-val">Some</span>(Box::pin(runner))),
-        })
+            Server::new_with_all,
+            |<span class="kw-2">mut </span>rx, imp| <span class="kw">async move </span>{
+                <span class="kw">while let </span><span class="prelude-val">Some</span>(action) = rx.next().<span class="kw">await </span>{
+                    <span class="kw">match </span>action {
+                        Action::Root(action) =&gt; <span class="self">Self</span>::handle_root_action(<span class="kw-2">&amp;</span>imp, action).<span class="kw">await</span>,
+                        Action::Player(action) =&gt; <span class="self">Self</span>::handle_player_action(<span class="kw-2">&amp;</span>imp, action).<span class="kw">await</span>,
+                        Action::Playlists(action) =&gt; {
+                            <span class="self">Self</span>::handle_playlists_actions(<span class="kw-2">&amp;</span>imp, action).<span class="kw">await
+                        </span>}
+                        Action::TrackList(action) =&gt; {
+                            <span class="self">Self</span>::handle_track_list_action(<span class="kw-2">&amp;</span>imp, action).<span class="kw">await
+                        </span>}
+                    }
+                }
+            },
+        )
     }
 }
 </code></pre></div></section></main></body></html>
