@@ -1025,6 +1025,10 @@
 <a href="#1025" id="1025">1025</a>
 <a href="#1026" id="1026">1026</a>
 <a href="#1027" id="1027">1027</a>
+<a href="#1028" id="1028">1028</a>
+<a href="#1029" id="1029">1029</a>
+<a href="#1030" id="1030">1030</a>
+<a href="#1031" id="1031">1031</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{
     cell::RefCell,
     fmt,
@@ -1513,7 +1517,11 @@
     }
 }
 
-<span class="attr">#[must_use = <span class="string">&quot;futures do nothing unless you `.await` or poll them&quot;</span>]
+<span class="doccomment">/// A task that initializes the connection and run the server until the server
+/// and the task is dropped.
+///
+/// This must be awaited as soon as possible after creating the server.
+</span><span class="attr">#[must_use = <span class="string">&quot;futures do nothing unless you `.await` or poll them&quot;</span>]
 </span><span class="kw">pub struct </span>LocalServerTask {
     inner: <span class="prelude-ty">Option</span>&lt;Pin&lt;Box&lt;<span class="kw">dyn </span>Future&lt;Output = <span class="prelude-ty">Result</span>&lt;()&gt;&gt;&gt;&gt;&gt;,
 }
