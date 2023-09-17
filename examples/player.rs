@@ -1,14 +1,13 @@
-use mpris_server::{Player, Time};
+use mpris_server::{zbus::Result, Player, Time};
 
 #[async_std::main]
-async fn main() {
+async fn main() -> Result<()> {
     let player = Player::builder("Test.Application")
         .can_play(true)
         .can_pause(true)
         .can_go_previous(true)
         .can_go_next(true)
-        .build()
-        .unwrap();
+        .build()?;
 
     // Handle `PlayPause` method call
     player.connect_play_pause(|| {
@@ -25,11 +24,13 @@ async fn main() {
         println!("Next");
     });
 
-    player.init_and_run().await.unwrap();
+    player.init_and_run().await?;
 
     // Update `CanPlay` property and emit `PropertiesChanged` signal for it
-    player.set_can_play(false).await.unwrap();
+    player.set_can_play(false).await?;
 
     // Emit `Seeked` signal
-    player.seeked(Time::from_millis(1000)).await.unwrap();
+    player.seeked(Time::from_millis(1000)).await?;
+
+    Ok(())
 }

@@ -34,7 +34,7 @@ use std::future;
 use mpris_server::{
     async_trait,
     zbus::{fdo, Result},
-    Metadata, PlayerInterface, Property, RootInterface, Server, Time, Volume,
+    Metadata, PlayerInterface, Property, RootInterface, Server, Signal, Time, Volume,
 };
 
 pub struct MyPlayer;
@@ -69,25 +69,26 @@ impl PlayerInterface for MyPlayer {
 }
 
 #[async_std::main]
-async fn main() {
-    let server = Server::new("com.my.Application", MyPlayer).unwrap();
+async fn main() -> Result<()> {
+    let server = Server::new("com.my.Application", MyPlayer)?;
 
     // Initialize server's connection to the session bus
-    server.init().await.unwrap();
+    server.init().await?;
 
     // Emit `PropertiesChanged` signal for `CanSeek` and `Metadata` properties
-    server.properties_changed(Property::CanSeek | Property::Metadata).await.unwrap();
+    server.properties_changed(Property::CanSeek | Property::Metadata).await?;
 
     // Emit `Seeked` signal
     server
         .emit(Signal::Seeked {
             position: Time::from_micros(124),
         })
-        .await
-        .unwrap();
+        .await?;
 
     // Prevent the program from exiting.
     future::pending::<()>().await;
+
+    Ok(())
 }
 ```
 
@@ -98,15 +99,14 @@ If you want to create a simple player without having to implement the interfaces
 However, `Player` currently only supports the more commonly used `org.mpris.MediaPlayer2` and `org.mpris.MediaPlayer2.Player` interfaces.
 
 ```rust,ignore
-use mpris_server::{Player, Time};
+use mpris_server::{zbus::Result, Player, Time};
 
 #[async_std::main]
-async fn main() {
+async fn main() -> Result<()> {
     let player = Player::builder("com.my.Application")
         .can_play(true)
         .can_pause(true)
-        .build()
-        .unwrap();
+        .build()?;
 
     // Handle `PlayPause` method call
     player.connect_play_pause(|| {
@@ -114,17 +114,14 @@ async fn main() {
     });
 
     // Update `CanPlay` property and emit `PropertiesChanged` signal for it
-    player.set_can_play(false).await.unwrap();
+    player.set_can_play(false).await?;
 
     // Emit `Seeked` signal
-    server
-        .emit(Signal::Seeked {
-            position: Time::from_millis(1000),
-        })
-        .await
-        .unwrap();
+    player.seeked(Time::from_millis(1000)).await?;
 
-    player.init_and_run().await.unwrap();
+    player.init_and_run().await?;
+
+    Ok(())
 }
 ```
 

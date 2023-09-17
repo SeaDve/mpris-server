@@ -292,43 +292,43 @@ impl PlaylistsInterface for Player {
 }
 
 #[async_std::main]
-async fn main() {
+async fn main() -> Result<()> {
     // Create a server that exports `org.mpris.MediaPlayer2` and
     // `org.mpris.MediaPlayer2.Player` interfaces.
-    let server = Server::new("Test.Application", Player).unwrap();
+    let server = Server::new("Test.Application", Player)?;
 
     // We only just need to call `init` here as the server is ran in the background,
     // unlike in `LocalServer`.
-    server.init().await.unwrap();
+    server.init().await?;
 
     // Create a server that exports `org.mpris.MediaPlayer2.TrackList`
     // interface, in addition to the previous interfaces.
-    let server = Server::new_with_track_list("Test.ApplicationWithTrackList", Player).unwrap();
-    server.init().await.unwrap();
+    let server = Server::new_with_track_list("Test.ApplicationWithTrackList", Player)?;
+    server.init().await?;
 
     // Create a server that exports `org.mpris.MediaPlayer2.Playlists`
     // interface, in addition to the previous interfaces.
-    let server = Server::new_with_playlists("Test.ApplicationWithPlaylists", Player).unwrap();
-    server.init().await.unwrap();
+    let server = Server::new_with_playlists("Test.ApplicationWithPlaylists", Player)?;
+    server.init().await?;
 
     // Create a server that exports all interfaces.
-    let server = Server::new_with_all("Test.ApplicationWithTrackListAndPlaylists", Player).unwrap();
-    server.init().await.unwrap();
+    let server = Server::new_with_all("Test.ApplicationWithTrackListAndPlaylists", Player)?;
+    server.init().await?;
 
     // Emit `PropertiesChanged` signal for `CanSeek` and `Metadata` properties
     server
         .properties_changed(Property::CanSeek | Property::Metadata)
-        .await
-        .unwrap();
+        .await?;
 
     // Emit `Seeked` signal
     server
         .emit(Signal::Seeked {
             position: Time::from_micros(124),
         })
-        .await
-        .unwrap();
+        .await?;
 
     // Prevent the program from exiting.
     future::pending::<()>().await;
+
+    Ok(())
 }

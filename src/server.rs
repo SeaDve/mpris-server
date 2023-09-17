@@ -547,6 +547,7 @@ where
     async fn get_or_init_connection(&self) -> Result<&Connection> {
         self.connection
             .get_or_try_init(|| async {
+                // Safety: connection only initialized once
                 let connection_init = self.connection_init.lock().unwrap().take().unwrap();
                 let connection = connection_init()?.build().await?;
                 Ok(connection)

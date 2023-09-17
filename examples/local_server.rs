@@ -290,24 +290,24 @@ impl LocalPlaylistsInterface for Player {
 }
 
 #[async_std::main]
-async fn main() {
-    let server = LocalServer::new_with_all("Test.Application", Player).unwrap();
+async fn main() -> Result<()> {
+    let server = LocalServer::new_with_all("Test.Application", Player)?;
 
     // Unlike in `Server`, we have to call `init_and_run` here to handle incoming
     // requests in the local thread.
-    server.init_and_run().await.unwrap();
+    server.init_and_run().await?;
 
     // Emit `PropertiesChanged` signal for `CanSeek` and `Metadata` properties
     server
         .properties_changed(Property::CanSeek | Property::Metadata)
-        .await
-        .unwrap();
+        .await?;
 
     // Emit `Seeked` signal
     server
         .emit(Signal::Seeked {
             position: Time::from_micros(124),
         })
-        .await
-        .unwrap();
+        .await?;
+
+    Ok(())
 }
