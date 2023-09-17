@@ -500,7 +500,9 @@ pub struct LocalServerRunTask {
 
 impl fmt::Debug for LocalServerRunTask {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("LocalServerTask").finish()
+        f.debug_struct("LocalServerRunTask")
+            .field("has_inner", &self.inner.is_some())
+            .finish()
     }
 }
 
