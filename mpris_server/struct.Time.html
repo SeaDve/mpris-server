@@ -28,7 +28,7 @@
 
 <span class="macro">assert_eq!</span>(Time::from_micros(<span class="number">5</span>).as_nanos(), <span class="number">5_000</span>);</code></pre></div>
 </div></details><details class="toggle method-toggle" open><summary><section id="method.from_nanos" class="method"><a class="srclink rightside" href="../src/mpris_server/time.rs.html#108-110">source</a><h4 class="code-header">pub const fn <a href="#method.from_nanos" class="fn">from_nanos</a>(nanos: <a class="primitive" href="https://doc.rust-lang.org/1.72.0/std/primitive.i64.html">i64</a>) -&gt; Self</h4></section></summary><div class="docblock"><p>Creates a new <code>Time</code> from the specified number of whole nanoseconds.</p>
-<p>Note: This will round of the nanoseconds to microseconds level of
+<p><strong>Note:</strong> This will round of the nanoseconds to microseconds level of
 precision.</p>
 <h5 id="examples-4"><a href="#examples-4">Examples</a></h5>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>mpris_server::Time;
