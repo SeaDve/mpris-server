@@ -16,7 +16,7 @@ This library supports all the following interfaces as defined in the specificati
 * [org.mpris.MediaPlayer2.TrackList](https://specifications.freedesktop.org/mpris-spec/2.2/Track_List_Interface.html)
 * [org.mpris.MediaPlayer2.Playlists](https://specifications.freedesktop.org/mpris-spec/2.2/Playlists_Interface.html)
 
-To implement these interfaces, this crate offers two flavors: you can either create your own struct and implement `RootInterface` and `PlayerInterface` (or with optional `TrackListInterface` and `PlaylistsInterface`), or you can use the ready-to-use mutable `Player` struct.
+To implement these interfaces, this crate offers two flavors: you can either create your own struct and implement `RootInterface` and `PlayerInterface` (or with optional `TrackListInterface` and `PlaylistsInterface`), or you can use the ready-to-use `Player` struct.
 
 ## Examples
 
@@ -94,7 +94,7 @@ async fn main() -> Result<()> {
 
 ### Ready-to-use Implementation (via `Player`)
 
-If you want to create a simple player without having to implement the interfaces, you can use the ready-to-use `Player` struct that implements those interfaces internally. This struct is mutable, automatically emits properties changed signal, and allows you to connect to method and property setter calls.
+If you want to create a simple player without having to implement the interfaces, you can use the ready-to-use `Player` struct that implements those interfaces internally. This struct has its own internal state, automatically emits properties changed signals, and allows you to connect to method and property setter calls.
 
 However, `Player` currently only supports the more commonly used `org.mpris.MediaPlayer2` and `org.mpris.MediaPlayer2.Player` interfaces.
 

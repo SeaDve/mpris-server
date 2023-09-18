@@ -11,8 +11,8 @@ use crate::{
 /// Ready-to-use mutable *service*-side object that internally implements
 /// [`LocalRootInterface`] and [`LocalPlayerInterface`].
 ///
-/// This automatically emits properties changed signal and allows you to connect
-/// to method and property setter calls.
+/// This has its own internal state, automatically emits properties changed
+/// signals, and allows you to connect to method and property setter calls.
 ///
 /// If you need more control to the implementation, you can use [`LocalServer`]
 /// or [`Server`] directly instead.
