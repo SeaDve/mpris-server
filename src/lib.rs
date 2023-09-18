@@ -5,6 +5,7 @@
 // TODO:
 // * Document the rest of public interface
 // * Don't let `dbus_interface` emit properties changed signal internally
+// * Use executor to handle actions concurrently in `LocalServer`
 // * Replace `DateTime` and `Uri` with proper types
 // * Add sensible default method impls on `*Interface` traits
 // * Profile if inlining is worth it
