@@ -1,4 +1,7 @@
-use std::cell::{Cell, Ref, RefCell};
+use std::{
+    cell::{Cell, Ref, RefCell},
+    rc::{Rc, Weak},
+};
 
 use async_trait::async_trait;
 use zbus::{fdo, Result};
@@ -20,14 +23,16 @@ use crate::{
 /// [`Server`]: crate::Server
 #[derive(Debug)]
 pub struct Player {
-    server: LocalServer<Inner>,
+    server: Rc<LocalServer<State>>,
 }
 
 #[allow(clippy::type_complexity)]
-struct Inner {
-    raise_cbs: RefCell<Vec<Box<dyn Fn()>>>,
-    quit_cbs: RefCell<Vec<Box<dyn Fn()>>>,
-    set_fullscreen_cbs: RefCell<Vec<Box<dyn Fn(bool)>>>, // Property
+struct State {
+    server: Weak<LocalServer<State>>,
+
+    raise_cbs: RefCell<Vec<Box<dyn Fn(&Player)>>>,
+    quit_cbs: RefCell<Vec<Box<dyn Fn(&Player)>>>,
+    set_fullscreen_cbs: RefCell<Vec<Box<dyn Fn(&Player, bool)>>>, // Property
     can_quit: Cell<bool>,
     fullscreen: Cell<bool>,
     can_set_fullscreen: Cell<bool>,
@@ -38,19 +43,19 @@ struct Inner {
     supported_uri_schemes: RefCell<Vec<String>>,
     supported_mime_types: RefCell<Vec<String>>,
 
-    next_cbs: RefCell<Vec<Box<dyn Fn()>>>,
-    previous_cbs: RefCell<Vec<Box<dyn Fn()>>>,
-    pause_cbs: RefCell<Vec<Box<dyn Fn()>>>,
-    play_pause_cbs: RefCell<Vec<Box<dyn Fn()>>>,
-    stop_cbs: RefCell<Vec<Box<dyn Fn()>>>,
-    play_cbs: RefCell<Vec<Box<dyn Fn()>>>,
-    seek_cbs: RefCell<Vec<Box<dyn Fn(Time)>>>,
-    set_position_cbs: RefCell<Vec<Box<dyn Fn(&TrackId, Time)>>>,
-    open_uri_cbs: RefCell<Vec<Box<dyn Fn(&str)>>>,
-    set_loop_status_cbs: RefCell<Vec<Box<dyn Fn(LoopStatus)>>>, // Property
-    set_rate_cbs: RefCell<Vec<Box<dyn Fn(PlaybackRate)>>>,      // Property
-    set_shuffle_cbs: RefCell<Vec<Box<dyn Fn(bool)>>>,           // Property
-    set_volume_cbs: RefCell<Vec<Box<dyn Fn(Volume)>>>,          // Property
+    next_cbs: RefCell<Vec<Box<dyn Fn(&Player)>>>,
+    previous_cbs: RefCell<Vec<Box<dyn Fn(&Player)>>>,
+    pause_cbs: RefCell<Vec<Box<dyn Fn(&Player)>>>,
+    play_pause_cbs: RefCell<Vec<Box<dyn Fn(&Player)>>>,
+    stop_cbs: RefCell<Vec<Box<dyn Fn(&Player)>>>,
+    play_cbs: RefCell<Vec<Box<dyn Fn(&Player)>>>,
+    seek_cbs: RefCell<Vec<Box<dyn Fn(&Player, Time)>>>,
+    set_position_cbs: RefCell<Vec<Box<dyn Fn(&Player, &TrackId, Time)>>>,
+    open_uri_cbs: RefCell<Vec<Box<dyn Fn(&Player, &str)>>>,
+    set_loop_status_cbs: RefCell<Vec<Box<dyn Fn(&Player, LoopStatus)>>>, // Property
+    set_rate_cbs: RefCell<Vec<Box<dyn Fn(&Player, PlaybackRate)>>>,      // Property
+    set_shuffle_cbs: RefCell<Vec<Box<dyn Fn(&Player, bool)>>>,           // Property
+    set_volume_cbs: RefCell<Vec<Box<dyn Fn(&Player, Volume)>>>,          // Property
     playback_status: Cell<PlaybackStatus>,
     loop_status: Cell<LoopStatus>,
     rate: Cell<PlaybackRate>,
@@ -68,18 +73,28 @@ struct Inner {
     can_control: Cell<bool>,
 }
 
+impl State {
+    fn player(&self) -> Player {
+        Player {
+            server: self.server.upgrade().expect("server must not be dropped"),
+        }
+    }
+}
+
 #[async_trait(?Send)]
-impl LocalRootInterface for Inner {
+impl LocalRootInterface for State {
     async fn raise(&self) -> fdo::Result<()> {
+        let player = self.player();
         for cb in self.raise_cbs.borrow().iter() {
-            cb();
+            cb(&player);
         }
         Ok(())
     }
 
     async fn quit(&self) -> fdo::Result<()> {
+        let player = self.player();
         for cb in self.quit_cbs.borrow().iter() {
-            cb();
+            cb(&player);
         }
         Ok(())
     }
@@ -93,8 +108,9 @@ impl LocalRootInterface for Inner {
     }
 
     async fn set_fullscreen(&self, fullscreen: bool) -> Result<()> {
+        let player = self.player();
         for cb in self.set_fullscreen_cbs.borrow().iter() {
-            cb(fullscreen);
+            cb(&player, fullscreen);
         }
         Ok(())
     }
@@ -129,66 +145,75 @@ impl LocalRootInterface for Inner {
 }
 
 #[async_trait(?Send)]
-impl LocalPlayerInterface for Inner {
+impl LocalPlayerInterface for State {
     async fn next(&self) -> fdo::Result<()> {
+        let player = self.player();
         for cb in self.next_cbs.borrow().iter() {
-            cb();
+            cb(&player);
         }
         Ok(())
     }
 
     async fn previous(&self) -> fdo::Result<()> {
+        let player = self.player();
         for cb in self.previous_cbs.borrow().iter() {
-            cb();
+            cb(&player);
         }
         Ok(())
     }
 
     async fn pause(&self) -> fdo::Result<()> {
+        let player = self.player();
         for cb in self.pause_cbs.borrow().iter() {
-            cb();
+            cb(&player);
         }
         Ok(())
     }
 
     async fn play_pause(&self) -> fdo::Result<()> {
+        let player = self.player();
         for cb in self.play_pause_cbs.borrow().iter() {
-            cb();
+            cb(&player);
         }
         Ok(())
     }
 
     async fn stop(&self) -> fdo::Result<()> {
+        let player = self.player();
         for cb in self.stop_cbs.borrow().iter() {
-            cb();
+            cb(&player);
         }
         Ok(())
     }
 
     async fn play(&self) -> fdo::Result<()> {
+        let player = self.player();
         for cb in self.play_cbs.borrow().iter() {
-            cb();
+            cb(&player);
         }
         Ok(())
     }
 
     async fn seek(&self, offset: Time) -> fdo::Result<()> {
+        let player = self.player();
         for cb in self.seek_cbs.borrow().iter() {
-            cb(offset);
+            cb(&player, offset);
         }
         Ok(())
     }
 
     async fn set_position(&self, track_id: TrackId, position: Time) -> fdo::Result<()> {
+        let player = self.player();
         for cb in self.set_position_cbs.borrow().iter() {
-            cb(&track_id, position);
+            cb(&player, &track_id, position);
         }
         Ok(())
     }
 
     async fn open_uri(&self, uri: String) -> fdo::Result<()> {
+        let player = self.player();
         for cb in self.open_uri_cbs.borrow().iter() {
-            cb(&uri);
+            cb(&player, &uri);
         }
         Ok(())
     }
@@ -202,8 +227,9 @@ impl LocalPlayerInterface for Inner {
     }
 
     async fn set_loop_status(&self, loop_status: LoopStatus) -> Result<()> {
+        let player = self.player();
         for cb in self.set_loop_status_cbs.borrow().iter() {
-            cb(loop_status);
+            cb(&player, loop_status);
         }
         Ok(())
     }
@@ -213,8 +239,9 @@ impl LocalPlayerInterface for Inner {
     }
 
     async fn set_rate(&self, rate: PlaybackRate) -> Result<()> {
+        let player = self.player();
         for cb in self.set_rate_cbs.borrow().iter() {
-            cb(rate);
+            cb(&player, rate);
         }
         Ok(())
     }
@@ -224,8 +251,9 @@ impl LocalPlayerInterface for Inner {
     }
 
     async fn set_shuffle(&self, shuffle: bool) -> Result<()> {
+        let player = self.player();
         for cb in self.set_shuffle_cbs.borrow().iter() {
-            cb(shuffle);
+            cb(&player, shuffle);
         }
         Ok(())
     }
@@ -239,8 +267,9 @@ impl LocalPlayerInterface for Inner {
     }
 
     async fn set_volume(&self, volume: Volume) -> Result<()> {
+        let player = self.player();
         for cb in self.set_volume_cbs.borrow().iter() {
-            cb(volume);
+            cb(&player, volume);
         }
         Ok(())
     }
@@ -323,15 +352,15 @@ impl Player {
         self.server.init_and_run()
     }
 
-    pub fn connect_raise(&self, cb: impl Fn() + 'static) {
+    pub fn connect_raise(&self, cb: impl Fn(&Player) + 'static) {
         self.server.imp().raise_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    pub fn connect_quit(&self, cb: impl Fn() + 'static) {
+    pub fn connect_quit(&self, cb: impl Fn(&Player) + 'static) {
         self.server.imp().quit_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    pub fn connect_set_fullscreen(&self, cb: impl Fn(bool) + 'static) {
+    pub fn connect_set_fullscreen(&self, cb: impl Fn(&Player, bool) + 'static) {
         self.server
             .imp()
             .set_fullscreen_cbs
@@ -485,11 +514,11 @@ impl Player {
             .await
     }
 
-    pub fn connect_next(&self, cb: impl Fn() + 'static) {
+    pub fn connect_next(&self, cb: impl Fn(&Player) + 'static) {
         self.server.imp().next_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    pub fn connect_previous(&self, cb: impl Fn() + 'static) {
+    pub fn connect_previous(&self, cb: impl Fn(&Player) + 'static) {
         self.server
             .imp()
             .previous_cbs
@@ -497,11 +526,11 @@ impl Player {
             .push(Box::new(cb));
     }
 
-    pub fn connect_pause(&self, cb: impl Fn() + 'static) {
+    pub fn connect_pause(&self, cb: impl Fn(&Player) + 'static) {
         self.server.imp().pause_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    pub fn connect_play_pause(&self, cb: impl Fn() + 'static) {
+    pub fn connect_play_pause(&self, cb: impl Fn(&Player) + 'static) {
         self.server
             .imp()
             .play_pause_cbs
@@ -509,19 +538,19 @@ impl Player {
             .push(Box::new(cb));
     }
 
-    pub fn connect_stop(&self, cb: impl Fn() + 'static) {
+    pub fn connect_stop(&self, cb: impl Fn(&Player) + 'static) {
         self.server.imp().stop_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    pub fn connect_play(&self, cb: impl Fn() + 'static) {
+    pub fn connect_play(&self, cb: impl Fn(&Player) + 'static) {
         self.server.imp().play_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    pub fn connect_seek(&self, cb: impl Fn(Time) + 'static) {
+    pub fn connect_seek(&self, cb: impl Fn(&Player, Time) + 'static) {
         self.server.imp().seek_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    pub fn connect_set_position(&self, cb: impl Fn(&TrackId, Time) + 'static) {
+    pub fn connect_set_position(&self, cb: impl Fn(&Player, &TrackId, Time) + 'static) {
         self.server
             .imp()
             .set_position_cbs
@@ -529,7 +558,7 @@ impl Player {
             .push(Box::new(cb));
     }
 
-    pub fn connect_open_uri(&self, cb: impl Fn(&str) + 'static) {
+    pub fn connect_open_uri(&self, cb: impl Fn(&Player, &str) + 'static) {
         self.server
             .imp()
             .open_uri_cbs
@@ -537,7 +566,7 @@ impl Player {
             .push(Box::new(cb));
     }
 
-    pub fn connect_set_loop_status(&self, cb: impl Fn(LoopStatus) + 'static) {
+    pub fn connect_set_loop_status(&self, cb: impl Fn(&Player, LoopStatus) + 'static) {
         self.server
             .imp()
             .set_loop_status_cbs
@@ -545,7 +574,7 @@ impl Player {
             .push(Box::new(cb));
     }
 
-    pub fn connect_set_rate(&self, cb: impl Fn(PlaybackRate) + 'static) {
+    pub fn connect_set_rate(&self, cb: impl Fn(&Player, PlaybackRate) + 'static) {
         self.server
             .imp()
             .set_rate_cbs
@@ -553,7 +582,7 @@ impl Player {
             .push(Box::new(cb));
     }
 
-    pub fn connect_set_shuffle(&self, cb: impl Fn(bool) + 'static) {
+    pub fn connect_set_shuffle(&self, cb: impl Fn(&Player, bool) + 'static) {
         self.server
             .imp()
             .set_shuffle_cbs
@@ -561,7 +590,7 @@ impl Player {
             .push(Box::new(cb));
     }
 
-    pub fn connect_set_volume(&self, cb: impl Fn(Volume) + 'static) {
+    pub fn connect_set_volume(&self, cb: impl Fn(&Player, Volume) + 'static) {
         self.server
             .imp()
             .set_volume_cbs
@@ -924,10 +953,11 @@ impl PlayerBuilder {
 
     #[must_use = "building player is usually expensive and is not expected to have side effects"]
     pub fn build(self) -> Player {
-        Player {
-            server: LocalServer::new(
+        let server = Rc::new_cyclic(|server_weak| {
+            LocalServer::new(
                 &self.bus_name_suffix,
-                Inner {
+                State {
+                    server: server_weak.clone(),
                     raise_cbs: RefCell::new(Vec::new()),
                     quit_cbs: RefCell::new(Vec::new()),
                     set_fullscreen_cbs: RefCell::new(Vec::new()),
@@ -969,7 +999,9 @@ impl PlayerBuilder {
                     can_seek: Cell::new(self.can_seek),
                     can_control: Cell::new(self.can_control),
                 },
-            ),
-        }
+            )
+        });
+
+        Player { server }
     }
 }

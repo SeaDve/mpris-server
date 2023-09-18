@@ -12,17 +12,17 @@ async fn main() -> Result<()> {
         .build();
 
     // Handle `PlayPause` method call
-    player.connect_play_pause(|| {
+    player.connect_play_pause(|_player| {
         println!("PlayPause");
     });
 
     // Handle `Play` method call
-    player.connect_previous(|| {
+    player.connect_previous(|_player| {
         println!("Previous");
     });
 
     // Handle `Next` method call
-    player.connect_next(|| {
+    player.connect_next(|_player| {
         println!("Next");
     });
 

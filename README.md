@@ -111,7 +111,7 @@ async fn main() -> Result<()> {
         .build();
 
     // Handle `PlayPause` method call
-    player.connect_play_pause(|| {
+    player.connect_play_pause(|_player| {
         println!("PlayPause");
     });
 
