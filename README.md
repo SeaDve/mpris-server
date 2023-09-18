@@ -70,7 +70,7 @@ impl PlayerInterface for MyPlayer {
 
 #[async_std::main]
 async fn main() -> Result<()> {
-    let server = Server::new("com.my.Application", MyPlayer)?;
+    let server = Server::new("com.my.Application", MyPlayer);
 
     // Initialize server's connection to the session bus
     server.init().await?;
@@ -108,7 +108,7 @@ async fn main() -> Result<()> {
     let player = Player::builder("com.my.Application")
         .can_play(true)
         .can_pause(true)
-        .build()?;
+        .build();
 
     // Handle `PlayPause` method call
     player.connect_play_pause(|| {

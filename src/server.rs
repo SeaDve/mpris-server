@@ -9,7 +9,7 @@ use enumflags2::BitFlags;
 use serde::Serialize;
 use zbus::{
     dbus_interface, fdo,
-    names::{BusName, WellKnownName},
+    names::BusName,
     zvariant::{DynamicType, ObjectPath, Value},
     Connection, ConnectionBuilder, Interface, Result, SignalContext,
 };
@@ -410,7 +410,7 @@ where
     /// `[A-Z][a-z][0-9]_-`" and "must not begin with a digit".
     ///
     /// [`D-Bus specification`]: dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus
-    pub fn new(bus_name_suffix: &str, imp: T) -> Result<Self> {
+    pub fn new(bus_name_suffix: &str, imp: T) -> Self {
         Self::new_inner(bus_name_suffix, imp, |builder, _| Ok(builder))
     }
 
@@ -513,9 +513,8 @@ where
             + Send
             + Sync
             + 'static,
-    ) -> Result<Self> {
-        let bus_name =
-            WellKnownName::try_from(format!("org.mpris.MediaPlayer2.{}", bus_name_suffix))?;
+    ) -> Self {
+        let bus_name = format!("org.mpris.MediaPlayer2.{}", bus_name_suffix);
         let imp = Arc::new(imp);
 
         let imp_clone = Arc::clone(&imp);
@@ -537,11 +536,11 @@ where
             builder_ext_func(builder, imp_clone)
         });
 
-        Ok(Self {
+        Self {
             connection: OnceCell::new(),
             connection_init: Mutex::new(Some(connection_init)),
             imp,
-        })
+        }
     }
 
     async fn get_or_init_connection(&self) -> Result<&Connection> {
@@ -610,7 +609,7 @@ where
     /// to [`RootInterface`] and [`PlayerInterface`].
     ///
     /// See also [`Server::new`].
-    pub fn new_with_track_list(bus_name_suffix: &str, imp: T) -> Result<Self> {
+    pub fn new_with_track_list(bus_name_suffix: &str, imp: T) -> Self {
         Self::new_inner(bus_name_suffix, imp, |builder, imp| {
             builder.serve_at(OBJECT_PATH, RawTrackListInterface { imp })
         })
@@ -694,7 +693,7 @@ where
     /// to [`RootInterface`] and [`PlayerInterface`].
     ///
     /// See also [`Server::new`].
-    pub fn new_with_playlists(bus_name_suffix: &str, imp: T) -> Result<Self> {
+    pub fn new_with_playlists(bus_name_suffix: &str, imp: T) -> Self {
         Self::new_inner(bus_name_suffix, imp, |builder, imp| {
             builder.serve_at(OBJECT_PATH, RawPlaylistsInterface { imp })
         })
@@ -750,7 +749,7 @@ where
     /// [`PlayerInterface`].
     ///
     /// See also [`Server::new`].
-    pub fn new_with_all(bus_name_suffix: &str, imp: T) -> Result<Self> {
+    pub fn new_with_all(bus_name_suffix: &str, imp: T) -> Self {
         Self::new_inner(bus_name_suffix, imp, |builder, imp| {
             builder
                 .serve_at(

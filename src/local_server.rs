@@ -565,7 +565,7 @@ where
     ///
     /// [`LocalRootInterface`]: crate::LocalRootInterface
     /// [`D-Bus specification`]: dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus
-    pub fn new(bus_name_suffix: &str, imp: T) -> Result<Self> {
+    pub fn new(bus_name_suffix: &str, imp: T) -> Self {
         Self::new_inner(
             bus_name_suffix,
             imp,
@@ -806,9 +806,9 @@ where
     fn new_inner<R>(
         bus_name_suffix: &str,
         imp: T,
-        server_func: impl FnOnce(&str, InnerImp<T>) -> Result<Server<InnerImp<T>>>,
+        server_func: impl FnOnce(&str, InnerImp<T>) -> Server<InnerImp<T>>,
         runner_func: impl FnOnce(mpsc::UnboundedReceiver<Action>, Rc<T>) -> R + 'static,
-    ) -> Result<Self>
+    ) -> Self
     where
         R: Future<Output = ()> + 'static,
     {
@@ -820,7 +820,7 @@ where
                 tx,
                 imp_ty: PhantomData,
             },
-        )?);
+        ));
 
         let imp = Rc::new(imp);
 
@@ -832,11 +832,11 @@ where
             Ok(())
         });
 
-        Ok(Self {
+        Self {
             inner,
             imp,
             runner: RefCell::new(Some(runner)),
-        })
+        }
     }
 }
 
@@ -851,7 +851,7 @@ where
     /// See also [`LocalServer::new`].
     ///
     /// [`LocalRootInterface`]: crate::LocalRootInterface
-    pub fn new_with_track_list(bus_name_suffix: &str, imp: T) -> Result<Self> {
+    pub fn new_with_track_list(bus_name_suffix: &str, imp: T) -> Self {
         Self::new_inner(
             bus_name_suffix,
             imp,
@@ -932,7 +932,7 @@ where
     /// See also [`LocalServer::new`].
     ///
     /// [`LocalRootInterface`]: crate::LocalRootInterface
-    pub fn new_with_playlists(bus_name_suffix: &str, imp: T) -> Result<Self> {
+    pub fn new_with_playlists(bus_name_suffix: &str, imp: T) -> Self {
         Self::new_inner(
             bus_name_suffix,
             imp,
@@ -1010,7 +1010,7 @@ where
     /// See also [`LocalServer::new`].
     ///
     /// [`LocalRootInterface`]: crate::LocalRootInterface
-    pub fn new_with_all(bus_name_suffix: &str, imp: T) -> Result<Self> {
+    pub fn new_with_all(bus_name_suffix: &str, imp: T) -> Self {
         Self::new_inner(
             bus_name_suffix,
             imp,

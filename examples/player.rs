@@ -9,7 +9,7 @@ async fn main() -> Result<()> {
         .can_pause(true)
         .can_go_previous(true)
         .can_go_next(true)
-        .build()?;
+        .build();
 
     // Handle `PlayPause` method call
     player.connect_play_pause(|| {
