@@ -595,6 +595,7 @@ where
     }
 
     /// Returns a reference to the underlying implementation.
+    #[inline]
     pub fn imp(&self) -> &T {
         &self.imp
     }
