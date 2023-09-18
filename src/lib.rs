@@ -4,6 +4,7 @@
 
 // TODO:
 // * Document the rest of public interface
+// * Don't let `dbus_interface` emit properties changed signal internally
 // * Replace `DateTime` and `Uri` with proper types
 // * Add sensible default method impls on `*Interface` traits
 // * Profile if inlining is worth it

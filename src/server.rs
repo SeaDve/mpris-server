@@ -354,7 +354,7 @@ where
 /// changed signals are *not* emitted automatically; they must be emitted
 /// manually using [`Server::properties_changed`],
 /// [`Server::track_list_properties_changed`], or
-/// [`Server::playlists_properties_changed`].
+/// [`Server::playlists_properties_changed`], when they changed internally.
 pub struct Server<T>
 where
     T: PlayerInterface + 'static,
