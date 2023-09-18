@@ -1219,12 +1219,14 @@
 <a href="#1219" id="1219">1219</a>
 <a href="#1220" id="1220">1220</a>
 <a href="#1221" id="1221">1221</a>
+<a href="#1222" id="1222">1222</a>
 </pre></div><pre class="rust"><code><span class="attr">#![warn(rust_2018_idioms, missing_debug_implementations)]
 #![deny(rustdoc::broken_intra_doc_links)]
 #![doc = <span class="macro">include_str!</span>(<span class="string">&quot;../README.md&quot;</span>)]
 
 </span><span class="comment">// TODO:
 // * Document the rest of public interface
+// * Don&#39;t let `dbus_interface` emit properties changed signal internally
 // * Replace `DateTime` and `Uri` with proper types
 // * Add sensible default method impls on `*Interface` traits
 // * Profile if inlining is worth it

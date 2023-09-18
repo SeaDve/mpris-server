@@ -972,7 +972,43 @@
 <a href="#972" id="972">972</a>
 <a href="#973" id="973">973</a>
 <a href="#974" id="974">974</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>std::cell::{Cell, Ref, RefCell};
+<a href="#975" id="975">975</a>
+<a href="#976" id="976">976</a>
+<a href="#977" id="977">977</a>
+<a href="#978" id="978">978</a>
+<a href="#979" id="979">979</a>
+<a href="#980" id="980">980</a>
+<a href="#981" id="981">981</a>
+<a href="#982" id="982">982</a>
+<a href="#983" id="983">983</a>
+<a href="#984" id="984">984</a>
+<a href="#985" id="985">985</a>
+<a href="#986" id="986">986</a>
+<a href="#987" id="987">987</a>
+<a href="#988" id="988">988</a>
+<a href="#989" id="989">989</a>
+<a href="#990" id="990">990</a>
+<a href="#991" id="991">991</a>
+<a href="#992" id="992">992</a>
+<a href="#993" id="993">993</a>
+<a href="#994" id="994">994</a>
+<a href="#995" id="995">995</a>
+<a href="#996" id="996">996</a>
+<a href="#997" id="997">997</a>
+<a href="#998" id="998">998</a>
+<a href="#999" id="999">999</a>
+<a href="#1000" id="1000">1000</a>
+<a href="#1001" id="1001">1001</a>
+<a href="#1002" id="1002">1002</a>
+<a href="#1003" id="1003">1003</a>
+<a href="#1004" id="1004">1004</a>
+<a href="#1005" id="1005">1005</a>
+<a href="#1006" id="1006">1006</a>
+<a href="#1007" id="1007">1007</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>std::{
+    cell::{Cell, Ref, RefCell},
+    rc::{Rc, Weak},
+};
 
 <span class="kw">use </span>async_trait::async_trait;
 <span class="kw">use </span>zbus::{fdo, <span class="prelude-ty">Result</span>};
@@ -985,8 +1021,8 @@
 <span class="doccomment">/// Ready-to-use mutable *service*-side object that internally implements
 /// [`LocalRootInterface`] and [`LocalPlayerInterface`].
 ///
-/// This automatically emits properties changed signal and allows you to connect
-/// to method and property setter calls.
+/// This has its own internal state, automatically emits properties changed
+/// signals, and allows you to connect to method and property setter calls.
 ///
 /// If you need more control to the implementation, you can use [`LocalServer`]
 /// or [`Server`] directly instead.
@@ -994,14 +1030,16 @@
 /// [`Server`]: crate::Server
 </span><span class="attr">#[derive(Debug)]
 </span><span class="kw">pub struct </span>Player {
-    server: LocalServer&lt;Inner&gt;,
+    server: Rc&lt;LocalServer&lt;State&gt;&gt;,
 }
 
 <span class="attr">#[allow(clippy::type_complexity)]
-</span><span class="kw">struct </span>Inner {
-    raise_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn()&gt;&gt;&gt;,
-    quit_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn()&gt;&gt;&gt;,
-    set_fullscreen_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(bool)&gt;&gt;&gt;, <span class="comment">// Property
+</span><span class="kw">struct </span>State {
+    server: Weak&lt;LocalServer&lt;State&gt;&gt;,
+
+    raise_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player)&gt;&gt;&gt;,
+    quit_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player)&gt;&gt;&gt;,
+    set_fullscreen_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player, bool)&gt;&gt;&gt;, <span class="comment">// Property
     </span>can_quit: Cell&lt;bool&gt;,
     fullscreen: Cell&lt;bool&gt;,
     can_set_fullscreen: Cell&lt;bool&gt;,
@@ -1012,19 +1050,19 @@
     supported_uri_schemes: RefCell&lt;Vec&lt;String&gt;&gt;,
     supported_mime_types: RefCell&lt;Vec&lt;String&gt;&gt;,
 
-    next_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn()&gt;&gt;&gt;,
-    previous_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn()&gt;&gt;&gt;,
-    pause_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn()&gt;&gt;&gt;,
-    play_pause_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn()&gt;&gt;&gt;,
-    stop_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn()&gt;&gt;&gt;,
-    play_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn()&gt;&gt;&gt;,
-    seek_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(Time)&gt;&gt;&gt;,
-    set_position_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>TrackId, Time)&gt;&gt;&gt;,
-    open_uri_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>str)&gt;&gt;&gt;,
-    set_loop_status_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(LoopStatus)&gt;&gt;&gt;, <span class="comment">// Property
-    </span>set_rate_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(PlaybackRate)&gt;&gt;&gt;,      <span class="comment">// Property
-    </span>set_shuffle_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(bool)&gt;&gt;&gt;,           <span class="comment">// Property
-    </span>set_volume_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(Volume)&gt;&gt;&gt;,          <span class="comment">// Property
+    next_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player)&gt;&gt;&gt;,
+    previous_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player)&gt;&gt;&gt;,
+    pause_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player)&gt;&gt;&gt;,
+    play_pause_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player)&gt;&gt;&gt;,
+    stop_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player)&gt;&gt;&gt;,
+    play_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player)&gt;&gt;&gt;,
+    seek_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player, Time)&gt;&gt;&gt;,
+    set_position_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player, <span class="kw-2">&amp;</span>TrackId, Time)&gt;&gt;&gt;,
+    open_uri_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player, <span class="kw-2">&amp;</span>str)&gt;&gt;&gt;,
+    set_loop_status_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player, LoopStatus)&gt;&gt;&gt;, <span class="comment">// Property
+    </span>set_rate_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player, PlaybackRate)&gt;&gt;&gt;,      <span class="comment">// Property
+    </span>set_shuffle_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player, bool)&gt;&gt;&gt;,           <span class="comment">// Property
+    </span>set_volume_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player, Volume)&gt;&gt;&gt;,          <span class="comment">// Property
     </span>playback_status: Cell&lt;PlaybackStatus&gt;,
     loop_status: Cell&lt;LoopStatus&gt;,
     rate: Cell&lt;PlaybackRate&gt;,
@@ -1042,18 +1080,28 @@
     can_control: Cell&lt;bool&gt;,
 }
 
+<span class="kw">impl </span>State {
+    <span class="kw">fn </span>player(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Player {
+        Player {
+            server: <span class="self">self</span>.server.upgrade().expect(<span class="string">&quot;server must not be dropped&quot;</span>),
+        }
+    }
+}
+
 <span class="attr">#[async_trait(<span class="question-mark">?</span>Send)]
-</span><span class="kw">impl </span>LocalRootInterface <span class="kw">for </span>Inner {
+</span><span class="kw">impl </span>LocalRootInterface <span class="kw">for </span>State {
     <span class="kw">async fn </span>raise(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>player = <span class="self">self</span>.player();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.raise_cbs.borrow().iter() {
-            cb();
+            cb(<span class="kw-2">&amp;</span>player);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="kw">async fn </span>quit(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>player = <span class="self">self</span>.player();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.quit_cbs.borrow().iter() {
-            cb();
+            cb(<span class="kw-2">&amp;</span>player);
         }
         <span class="prelude-val">Ok</span>(())
     }
@@ -1067,8 +1115,9 @@
     }
 
     <span class="kw">async fn </span>set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>, fullscreen: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="kw">let </span>player = <span class="self">self</span>.player();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.set_fullscreen_cbs.borrow().iter() {
-            cb(fullscreen);
+            cb(<span class="kw-2">&amp;</span>player, fullscreen);
         }
         <span class="prelude-val">Ok</span>(())
     }
@@ -1103,66 +1152,75 @@
 }
 
 <span class="attr">#[async_trait(<span class="question-mark">?</span>Send)]
-</span><span class="kw">impl </span>LocalPlayerInterface <span class="kw">for </span>Inner {
+</span><span class="kw">impl </span>LocalPlayerInterface <span class="kw">for </span>State {
     <span class="kw">async fn </span>next(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>player = <span class="self">self</span>.player();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.next_cbs.borrow().iter() {
-            cb();
+            cb(<span class="kw-2">&amp;</span>player);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="kw">async fn </span>previous(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>player = <span class="self">self</span>.player();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.previous_cbs.borrow().iter() {
-            cb();
+            cb(<span class="kw-2">&amp;</span>player);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="kw">async fn </span>pause(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>player = <span class="self">self</span>.player();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.pause_cbs.borrow().iter() {
-            cb();
+            cb(<span class="kw-2">&amp;</span>player);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="kw">async fn </span>play_pause(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>player = <span class="self">self</span>.player();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.play_pause_cbs.borrow().iter() {
-            cb();
+            cb(<span class="kw-2">&amp;</span>player);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="kw">async fn </span>stop(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>player = <span class="self">self</span>.player();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.stop_cbs.borrow().iter() {
-            cb();
+            cb(<span class="kw-2">&amp;</span>player);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="kw">async fn </span>play(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>player = <span class="self">self</span>.player();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.play_cbs.borrow().iter() {
-            cb();
+            cb(<span class="kw-2">&amp;</span>player);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="kw">async fn </span>seek(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: Time) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>player = <span class="self">self</span>.player();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.seek_cbs.borrow().iter() {
-            cb(offset);
+            cb(<span class="kw-2">&amp;</span>player, offset);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="kw">async fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId, position: Time) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>player = <span class="self">self</span>.player();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.set_position_cbs.borrow().iter() {
-            cb(<span class="kw-2">&amp;</span>track_id, position);
+            cb(<span class="kw-2">&amp;</span>player, <span class="kw-2">&amp;</span>track_id, position);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="kw">async fn </span>open_uri(<span class="kw-2">&amp;</span><span class="self">self</span>, uri: String) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>player = <span class="self">self</span>.player();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.open_uri_cbs.borrow().iter() {
-            cb(<span class="kw-2">&amp;</span>uri);
+            cb(<span class="kw-2">&amp;</span>player, <span class="kw-2">&amp;</span>uri);
         }
         <span class="prelude-val">Ok</span>(())
     }
@@ -1176,8 +1234,9 @@
     }
 
     <span class="kw">async fn </span>set_loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>, loop_status: LoopStatus) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="kw">let </span>player = <span class="self">self</span>.player();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.set_loop_status_cbs.borrow().iter() {
-            cb(loop_status);
+            cb(<span class="kw-2">&amp;</span>player, loop_status);
         }
         <span class="prelude-val">Ok</span>(())
     }
@@ -1187,8 +1246,9 @@
     }
 
     <span class="kw">async fn </span>set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, rate: PlaybackRate) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="kw">let </span>player = <span class="self">self</span>.player();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.set_rate_cbs.borrow().iter() {
-            cb(rate);
+            cb(<span class="kw-2">&amp;</span>player, rate);
         }
         <span class="prelude-val">Ok</span>(())
     }
@@ -1198,8 +1258,9 @@
     }
 
     <span class="kw">async fn </span>set_shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>, shuffle: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="kw">let </span>player = <span class="self">self</span>.player();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.set_shuffle_cbs.borrow().iter() {
-            cb(shuffle);
+            cb(<span class="kw-2">&amp;</span>player, shuffle);
         }
         <span class="prelude-val">Ok</span>(())
     }
@@ -1213,8 +1274,9 @@
     }
 
     <span class="kw">async fn </span>set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, volume: Volume) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="kw">let </span>player = <span class="self">self</span>.player();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.set_volume_cbs.borrow().iter() {
-            cb(volume);
+            cb(<span class="kw-2">&amp;</span>player, volume);
         }
         <span class="prelude-val">Ok</span>(())
     }
@@ -1297,15 +1359,15 @@
         <span class="self">self</span>.server.init_and_run()
     }
 
-    <span class="kw">pub fn </span>connect_raise(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn() + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_raise(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server.imp().raise_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_quit(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn() + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_quit(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server.imp().quit_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(bool) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player, bool) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server
             .imp()
             .set_fullscreen_cbs
@@ -1459,11 +1521,11 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>connect_next(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn() + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_next(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server.imp().next_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_previous(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn() + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_previous(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server
             .imp()
             .previous_cbs
@@ -1471,11 +1533,11 @@
             .push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_pause(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn() + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_pause(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server.imp().pause_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_play_pause(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn() + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_play_pause(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server
             .imp()
             .play_pause_cbs
@@ -1483,19 +1545,19 @@
             .push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_stop(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn() + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_stop(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server.imp().stop_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_play(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn() + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_play(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server.imp().play_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_seek(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(Time) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_seek(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player, Time) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server.imp().seek_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>TrackId, Time) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player, <span class="kw-2">&amp;</span>TrackId, Time) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server
             .imp()
             .set_position_cbs
@@ -1503,7 +1565,7 @@
             .push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_open_uri(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>str) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_open_uri(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player, <span class="kw-2">&amp;</span>str) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server
             .imp()
             .open_uri_cbs
@@ -1511,7 +1573,7 @@
             .push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_set_loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(LoopStatus) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_set_loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player, LoopStatus) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server
             .imp()
             .set_loop_status_cbs
@@ -1519,7 +1581,7 @@
             .push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(PlaybackRate) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player, PlaybackRate) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server
             .imp()
             .set_rate_cbs
@@ -1527,7 +1589,7 @@
             .push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_set_shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(bool) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_set_shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player, bool) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server
             .imp()
             .set_shuffle_cbs
@@ -1535,7 +1597,7 @@
             .push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(Volume) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player, Volume) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server
             .imp()
             .set_volume_cbs
@@ -1897,53 +1959,57 @@
     </span>}
 
     <span class="attr">#[must_use = <span class="string">&quot;building player is usually expensive and is not expected to have side effects&quot;</span>]
-    </span><span class="kw">pub fn </span>build(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Player&gt; {
-        <span class="kw">let </span>server = LocalServer::new(
-            <span class="kw-2">&amp;</span><span class="self">self</span>.bus_name_suffix,
-            Inner {
-                raise_cbs: RefCell::new(Vec::new()),
-                quit_cbs: RefCell::new(Vec::new()),
-                set_fullscreen_cbs: RefCell::new(Vec::new()),
-                can_quit: Cell::new(<span class="self">self</span>.can_quit),
-                fullscreen: Cell::new(<span class="self">self</span>.fullscreen),
-                can_set_fullscreen: Cell::new(<span class="self">self</span>.can_set_fullscreen),
-                can_raise: Cell::new(<span class="self">self</span>.can_raise),
-                has_track_list: Cell::new(<span class="self">self</span>.has_track_list),
-                identity: RefCell::new(<span class="self">self</span>.identity),
-                desktop_entry: RefCell::new(<span class="self">self</span>.desktop_entry),
-                supported_uri_schemes: RefCell::new(<span class="self">self</span>.supported_uri_schemes),
-                supported_mime_types: RefCell::new(<span class="self">self</span>.supported_mime_types),
-                next_cbs: RefCell::new(Vec::new()),
-                previous_cbs: RefCell::new(Vec::new()),
-                pause_cbs: RefCell::new(Vec::new()),
-                play_pause_cbs: RefCell::new(Vec::new()),
-                stop_cbs: RefCell::new(Vec::new()),
-                play_cbs: RefCell::new(Vec::new()),
-                seek_cbs: RefCell::new(Vec::new()),
-                set_position_cbs: RefCell::new(Vec::new()),
-                open_uri_cbs: RefCell::new(Vec::new()),
-                set_loop_status_cbs: RefCell::new(Vec::new()),
-                set_rate_cbs: RefCell::new(Vec::new()),
-                set_shuffle_cbs: RefCell::new(Vec::new()),
-                set_volume_cbs: RefCell::new(Vec::new()),
-                playback_status: Cell::new(<span class="self">self</span>.playback_status),
-                loop_status: Cell::new(<span class="self">self</span>.loop_status),
-                rate: Cell::new(<span class="self">self</span>.rate),
-                shuffle: Cell::new(<span class="self">self</span>.shuffle),
-                metadata: RefCell::new(<span class="self">self</span>.metadata),
-                volume: Cell::new(<span class="self">self</span>.volume),
-                position: Cell::new(<span class="self">self</span>.position),
-                minimum_rate: Cell::new(<span class="self">self</span>.minimum_rate),
-                maximum_rate: Cell::new(<span class="self">self</span>.maximum_rate),
-                can_go_next: Cell::new(<span class="self">self</span>.can_go_next),
-                can_go_previous: Cell::new(<span class="self">self</span>.can_go_previous),
-                can_play: Cell::new(<span class="self">self</span>.can_play),
-                can_pause: Cell::new(<span class="self">self</span>.can_pause),
-                can_seek: Cell::new(<span class="self">self</span>.can_seek),
-                can_control: Cell::new(<span class="self">self</span>.can_control),
-            },
-        )<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(Player { server })
+    </span><span class="kw">pub fn </span>build(<span class="self">self</span>) -&gt; Player {
+        <span class="kw">let </span>server = Rc::new_cyclic(|server_weak| {
+            LocalServer::new(
+                <span class="kw-2">&amp;</span><span class="self">self</span>.bus_name_suffix,
+                State {
+                    server: server_weak.clone(),
+                    raise_cbs: RefCell::new(Vec::new()),
+                    quit_cbs: RefCell::new(Vec::new()),
+                    set_fullscreen_cbs: RefCell::new(Vec::new()),
+                    can_quit: Cell::new(<span class="self">self</span>.can_quit),
+                    fullscreen: Cell::new(<span class="self">self</span>.fullscreen),
+                    can_set_fullscreen: Cell::new(<span class="self">self</span>.can_set_fullscreen),
+                    can_raise: Cell::new(<span class="self">self</span>.can_raise),
+                    has_track_list: Cell::new(<span class="self">self</span>.has_track_list),
+                    identity: RefCell::new(<span class="self">self</span>.identity),
+                    desktop_entry: RefCell::new(<span class="self">self</span>.desktop_entry),
+                    supported_uri_schemes: RefCell::new(<span class="self">self</span>.supported_uri_schemes),
+                    supported_mime_types: RefCell::new(<span class="self">self</span>.supported_mime_types),
+                    next_cbs: RefCell::new(Vec::new()),
+                    previous_cbs: RefCell::new(Vec::new()),
+                    pause_cbs: RefCell::new(Vec::new()),
+                    play_pause_cbs: RefCell::new(Vec::new()),
+                    stop_cbs: RefCell::new(Vec::new()),
+                    play_cbs: RefCell::new(Vec::new()),
+                    seek_cbs: RefCell::new(Vec::new()),
+                    set_position_cbs: RefCell::new(Vec::new()),
+                    open_uri_cbs: RefCell::new(Vec::new()),
+                    set_loop_status_cbs: RefCell::new(Vec::new()),
+                    set_rate_cbs: RefCell::new(Vec::new()),
+                    set_shuffle_cbs: RefCell::new(Vec::new()),
+                    set_volume_cbs: RefCell::new(Vec::new()),
+                    playback_status: Cell::new(<span class="self">self</span>.playback_status),
+                    loop_status: Cell::new(<span class="self">self</span>.loop_status),
+                    rate: Cell::new(<span class="self">self</span>.rate),
+                    shuffle: Cell::new(<span class="self">self</span>.shuffle),
+                    metadata: RefCell::new(<span class="self">self</span>.metadata),
+                    volume: Cell::new(<span class="self">self</span>.volume),
+                    position: Cell::new(<span class="self">self</span>.position),
+                    minimum_rate: Cell::new(<span class="self">self</span>.minimum_rate),
+                    maximum_rate: Cell::new(<span class="self">self</span>.maximum_rate),
+                    can_go_next: Cell::new(<span class="self">self</span>.can_go_next),
+                    can_go_previous: Cell::new(<span class="self">self</span>.can_go_previous),
+                    can_play: Cell::new(<span class="self">self</span>.can_play),
+                    can_pause: Cell::new(<span class="self">self</span>.can_pause),
+                    can_seek: Cell::new(<span class="self">self</span>.can_seek),
+                    can_control: Cell::new(<span class="self">self</span>.can_control),
+                },
+            )
+        });
+
+        Player { server }
     }
 }
 </code></pre></div></section></main></body></html>
