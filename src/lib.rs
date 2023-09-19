@@ -4,6 +4,7 @@
 
 // TODO:
 // * Document the rest of public interface
+// * Access Server from interfaces
 // * Don't let `dbus_interface` emit properties changed signal internally
 // * Use executor to handle actions concurrently in `LocalServer`
 // * Replace `DateTime` and `Uri` with proper types
