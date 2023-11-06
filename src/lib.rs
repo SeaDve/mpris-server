@@ -3,6 +3,7 @@
 #![doc = include_str!("../README.md")]
 
 // TODO:
+// * Remove MaybePlaylist and just use Option<Playlist>
 // * Document the rest of public interface
 // * Access Server from interfaces
 // * Don't let `dbus_interface` emit properties changed signal internally
