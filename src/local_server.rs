@@ -17,17 +17,17 @@ use zbus::{fdo, Connection, Result};
 use crate::{
     LocalPlayerInterface, LocalPlaylistsInterface, LocalTrackListInterface, LoopStatus,
     MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, Playlist, PlaylistId,
-    PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, PlaylistsSignal, Property,
-    RootInterface, Server, Signal, Time, TrackId, TrackListInterface, TrackListProperty,
-    TrackListSignal, Uri, Volume,
+    PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, PlaylistsSignal, Property, Server,
+    ServerProxy, Signal, Time, TrackId, TrackListInterface, TrackListProperty, TrackListSignal,
+    Uri, Volume,
 };
 
-enum RootAction {
-    //  Methods
+enum PlayerAction {
+    // Methods
     Raise(oneshot::Sender<fdo::Result<()>>),
     Quit(oneshot::Sender<fdo::Result<()>>),
 
-    // `org.mpris.MediaPlayer2` Properties
+    // Properties
     CanQuit(oneshot::Sender<fdo::Result<bool>>),
     Fullscreen(oneshot::Sender<fdo::Result<bool>>),
     SetFullscreen(bool, oneshot::Sender<Result<()>>),
@@ -38,9 +38,7 @@ enum RootAction {
     DesktopEntry(oneshot::Sender<fdo::Result<String>>),
     SupportedUriSchemes(oneshot::Sender<fdo::Result<Vec<String>>>),
     SupportedMimeTypes(oneshot::Sender<fdo::Result<Vec<String>>>),
-}
 
-enum PlayerAction {
     // Methods
     Next(oneshot::Sender<fdo::Result<()>>),
     Previous(oneshot::Sender<fdo::Result<()>>),
@@ -104,7 +102,6 @@ enum TrackListAction {
 }
 
 enum Action {
-    Root(RootAction),
     Player(PlayerAction),
     TrackList(TrackListAction),
     Playlists(PlaylistsAction),
@@ -122,10 +119,6 @@ struct InnerImp<T> {
 }
 
 impl<T> InnerImp<T> {
-    fn send_root(&self, action: RootAction) {
-        self.tx.unbounded_send(Action::Root(action)).unwrap();
-    }
-
     fn send_player(&self, action: PlayerAction) {
         self.tx.unbounded_send(Action::Player(action)).unwrap();
     }
@@ -140,131 +133,133 @@ impl<T> InnerImp<T> {
 }
 
 #[async_trait]
-impl<T> RootInterface for InnerImp<T> {
-    async fn raise(&self) -> fdo::Result<()> {
+impl<T> PlayerInterface for InnerImp<T> {
+    async fn raise(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::Raise(tx));
+        self.send_player(PlayerAction::Raise(tx));
         rx.await.unwrap()
     }
 
-    async fn quit(&self) -> fdo::Result<()> {
+    async fn quit(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::Quit(tx));
+        self.send_player(PlayerAction::Quit(tx));
         rx.await.unwrap()
     }
 
     async fn can_quit(&self) -> fdo::Result<bool> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::CanQuit(tx));
+        self.send_player(PlayerAction::CanQuit(tx));
         rx.await.unwrap()
     }
 
     async fn fullscreen(&self) -> fdo::Result<bool> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::Fullscreen(tx));
+        self.send_player(PlayerAction::Fullscreen(tx));
         rx.await.unwrap()
     }
 
     async fn set_fullscreen(&self, fullscreen: bool) -> Result<()> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::SetFullscreen(fullscreen, tx));
+        self.send_player(PlayerAction::SetFullscreen(fullscreen, tx));
         rx.await.unwrap()
     }
 
     async fn can_set_fullscreen(&self) -> fdo::Result<bool> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::CanSetFullScreen(tx));
+        self.send_player(PlayerAction::CanSetFullScreen(tx));
         rx.await.unwrap()
     }
 
     async fn can_raise(&self) -> fdo::Result<bool> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::CanRaise(tx));
+        self.send_player(PlayerAction::CanRaise(tx));
         rx.await.unwrap()
     }
 
     async fn has_track_list(&self) -> fdo::Result<bool> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::HasTrackList(tx));
+        self.send_player(PlayerAction::HasTrackList(tx));
         rx.await.unwrap()
     }
 
     async fn identity(&self) -> fdo::Result<String> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::Identity(tx));
+        self.send_player(PlayerAction::Identity(tx));
         rx.await.unwrap()
     }
 
     async fn desktop_entry(&self) -> fdo::Result<String> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::DesktopEntry(tx));
+        self.send_player(PlayerAction::DesktopEntry(tx));
         rx.await.unwrap()
     }
 
     async fn supported_uri_schemes(&self) -> fdo::Result<Vec<String>> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::SupportedUriSchemes(tx));
+        self.send_player(PlayerAction::SupportedUriSchemes(tx));
         rx.await.unwrap()
     }
 
     async fn supported_mime_types(&self) -> fdo::Result<Vec<String>> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::SupportedMimeTypes(tx));
+        self.send_player(PlayerAction::SupportedMimeTypes(tx));
         rx.await.unwrap()
     }
-}
 
-#[async_trait]
-impl<T> PlayerInterface for InnerImp<T> {
-    async fn next(&self) -> fdo::Result<()> {
+    async fn next(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
         self.send_player(PlayerAction::Next(tx));
         rx.await.unwrap()
     }
 
-    async fn previous(&self) -> fdo::Result<()> {
+    async fn previous(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
         self.send_player(PlayerAction::Previous(tx));
         rx.await.unwrap()
     }
 
-    async fn pause(&self) -> fdo::Result<()> {
+    async fn pause(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
         self.send_player(PlayerAction::Pause(tx));
         rx.await.unwrap()
     }
 
-    async fn play_pause(&self) -> fdo::Result<()> {
+    async fn play_pause(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
         self.send_player(PlayerAction::PlayPause(tx));
         rx.await.unwrap()
     }
 
-    async fn stop(&self) -> fdo::Result<()> {
+    async fn stop(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
         self.send_player(PlayerAction::Stop(tx));
         rx.await.unwrap()
     }
 
-    async fn play(&self) -> fdo::Result<()> {
+    async fn play(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
         self.send_player(PlayerAction::Play(tx));
         rx.await.unwrap()
     }
 
-    async fn seek(&self, offset: Time) -> fdo::Result<()> {
+    async fn seek(&self, _: &ServerProxy<'_, Self>, offset: Time) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
         self.send_player(PlayerAction::Seek(offset, tx));
         rx.await.unwrap()
     }
 
-    async fn set_position(&self, track_id: TrackId, position: Time) -> fdo::Result<()> {
+    async fn set_position(
+        &self,
+        _: &ServerProxy<'_, Self>,
+        track_id: TrackId,
+        position: Time,
+    ) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
         self.send_player(PlayerAction::SetPosition(track_id, position, tx));
         rx.await.unwrap()
     }
 
-    async fn open_uri(&self, uri: String) -> fdo::Result<()> {
+    async fn open_uri(&self, _: &ServerProxy<'_, Self>, uri: String) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
         self.send_player(PlayerAction::OpenUri(uri, tx));
         rx.await.unwrap()
@@ -390,7 +385,11 @@ impl<T> TrackListInterface for InnerImp<T>
 where
     T: LocalTrackListInterface,
 {
-    async fn get_tracks_metadata(&self, track_ids: Vec<TrackId>) -> fdo::Result<Vec<Metadata>> {
+    async fn get_tracks_metadata(
+        &self,
+        _: &ServerProxy<'_, Self>,
+        track_ids: Vec<TrackId>,
+    ) -> fdo::Result<Vec<Metadata>> {
         let (tx, rx) = oneshot::channel();
         self.send_track_list(TrackListAction::GetTracksMetadata(track_ids, tx));
         rx.await.unwrap()
@@ -398,6 +397,7 @@ where
 
     async fn add_track(
         &self,
+        _: &ServerProxy<'_, Self>,
         uri: Uri,
         after_track: TrackId,
         set_as_current: bool,
@@ -412,13 +412,13 @@ where
         rx.await.unwrap()
     }
 
-    async fn remove_track(&self, track_id: TrackId) -> fdo::Result<()> {
+    async fn remove_track(&self, _: &ServerProxy<'_, Self>, track_id: TrackId) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
         self.send_track_list(TrackListAction::RemoveTrack(track_id, tx));
         rx.await.unwrap()
     }
 
-    async fn go_to(&self, track_id: TrackId) -> fdo::Result<()> {
+    async fn go_to(&self, _: &ServerProxy<'_, Self>, track_id: TrackId) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
         self.send_track_list(TrackListAction::GoTo(track_id, tx));
         rx.await.unwrap()
@@ -442,7 +442,11 @@ impl<T> PlaylistsInterface for InnerImp<T>
 where
     T: LocalPlaylistsInterface,
 {
-    async fn activate_playlist(&self, playlist_id: PlaylistId) -> fdo::Result<()> {
+    async fn activate_playlist(
+        &self,
+        _: &ServerProxy<'_, Self>,
+        playlist_id: PlaylistId,
+    ) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
         self.send_playlists(PlaylistsAction::ActivatePlaylist(playlist_id, tx));
         rx.await.unwrap()
@@ -450,6 +454,7 @@ where
 
     async fn get_playlists(
         &self,
+        _: &ServerProxy<'_, Self>,
         index: u32,
         max_count: u32,
         order: PlaylistOrdering,
@@ -570,11 +575,12 @@ where
             bus_name_suffix,
             imp,
             Server::new,
-            |mut rx, imp| async move {
+            |mut rx, connection, imp| async move {
                 while let Some(action) = rx.next().await {
                     match action {
-                        Action::Root(action) => Self::handle_root_action(&imp, action).await,
-                        Action::Player(action) => Self::handle_player_action(&imp, action).await,
+                        Action::Player(action) => {
+                            Self::handle_player_action(&connection, &imp, action).await
+                        }
                         Action::TrackList(_) | Action::Playlists(_) => unreachable!(),
                     }
                 }
@@ -630,98 +636,94 @@ where
         self.inner.properties_changed(properties).await
     }
 
-    async fn handle_root_action(imp: &T, action: RootAction) {
+    async fn handle_player_action(connection: &Connection, imp: &T, action: PlayerAction) {
+        let proxy = ServerProxy::new(connection, imp);
         match action {
             // Methods
-            RootAction::Raise(sender) => {
-                let ret = imp.raise().await;
+            PlayerAction::Raise(sender) => {
+                let ret = imp.raise(&proxy).await;
                 sender.send(ret).unwrap();
             }
-            RootAction::Quit(sender) => {
-                let ret = imp.quit().await;
+            PlayerAction::Quit(sender) => {
+                let ret = imp.quit(&proxy).await;
                 sender.send(ret).unwrap();
             }
             // Properties
-            RootAction::CanQuit(sender) => {
+            PlayerAction::CanQuit(sender) => {
                 let ret = imp.can_quit().await;
                 sender.send(ret).unwrap();
             }
-            RootAction::Fullscreen(sender) => {
+            PlayerAction::Fullscreen(sender) => {
                 let ret = imp.fullscreen().await;
                 sender.send(ret).unwrap();
             }
-            RootAction::SetFullscreen(fullscreen, sender) => {
+            PlayerAction::SetFullscreen(fullscreen, sender) => {
                 let ret = imp.set_fullscreen(fullscreen).await;
                 sender.send(ret).unwrap();
             }
-            RootAction::CanSetFullScreen(sender) => {
+            PlayerAction::CanSetFullScreen(sender) => {
                 let ret = imp.can_set_fullscreen().await;
                 sender.send(ret).unwrap();
             }
-            RootAction::CanRaise(sender) => {
+            PlayerAction::CanRaise(sender) => {
                 let ret = imp.can_raise().await;
                 sender.send(ret).unwrap();
             }
-            RootAction::HasTrackList(sender) => {
+            PlayerAction::HasTrackList(sender) => {
                 let ret = imp.has_track_list().await;
                 sender.send(ret).unwrap();
             }
-            RootAction::Identity(sender) => {
+            PlayerAction::Identity(sender) => {
                 let ret = imp.identity().await;
                 sender.send(ret).unwrap();
             }
-            RootAction::DesktopEntry(sender) => {
+            PlayerAction::DesktopEntry(sender) => {
                 let ret = imp.desktop_entry().await;
                 sender.send(ret).unwrap();
             }
-            RootAction::SupportedUriSchemes(sender) => {
+            PlayerAction::SupportedUriSchemes(sender) => {
                 let ret = imp.supported_uri_schemes().await;
                 sender.send(ret).unwrap();
             }
-            RootAction::SupportedMimeTypes(sender) => {
+            PlayerAction::SupportedMimeTypes(sender) => {
                 let ret = imp.supported_mime_types().await;
                 sender.send(ret).unwrap();
             }
-        }
-    }
-
-    async fn handle_player_action(imp: &T, action: PlayerAction) {
-        match action {
             // Methods
             PlayerAction::Next(sender) => {
-                let ret = imp.next().await;
+                let ret = imp.next(&proxy).await;
                 sender.send(ret).unwrap();
             }
             PlayerAction::Previous(sender) => {
-                let ret = imp.previous().await;
+                let ret = imp.previous(&proxy).await;
                 sender.send(ret).unwrap();
             }
             PlayerAction::Pause(sender) => {
-                let ret = imp.pause().await;
+                let ret = imp.pause(&proxy).await;
                 sender.send(ret).unwrap();
             }
             PlayerAction::PlayPause(sender) => {
-                let ret = imp.play_pause().await;
+                let ret = imp.play_pause(&proxy).await;
                 sender.send(ret).unwrap();
             }
             PlayerAction::Stop(sender) => {
-                let ret = imp.stop().await;
+                let ret = imp.stop(&proxy).await;
                 sender.send(ret).unwrap();
             }
             PlayerAction::Play(sender) => {
-                let ret = imp.play().await;
+                let ret = imp.play(&proxy).await;
                 sender.send(ret).unwrap();
             }
             PlayerAction::Seek(offset, sender) => {
-                let ret = imp.seek(offset).await;
+                let ret = imp.seek(&proxy, offset).await;
                 sender.send(ret).unwrap();
             }
             PlayerAction::SetPosition(track_id, position, sender) => {
-                let ret = imp.set_position(track_id, position).await;
+                let ret = imp.set_position(&proxy, track_id, position).await;
                 sender.send(ret).unwrap();
             }
             PlayerAction::OpenUri(uri, sender) => {
-                let ret = imp.open_uri(uri).await;
+                let ret = imp.open_uri(&proxy, uri).await;
                 sender.send(ret).unwrap();
             }
             // Properties
@@ -808,7 +810,7 @@ where
         bus_name_suffix: &str,
         imp: T,
         server_func: impl FnOnce(&str, InnerImp<T>) -> Server<InnerImp<T>>,
-        runner_func: impl FnOnce(mpsc::UnboundedReceiver<Action>, Rc<T>) -> R + 'static,
+        runner_func: impl FnOnce(mpsc::UnboundedReceiver<Action>, Connection, Rc<T>) -> R + 'static,
     ) -> Self
     where
         R: Future<Output = ()> + 'static,
@@ -829,7 +831,8 @@ where
         let imp_clone = Rc::clone(&imp);
         let runner = Box::pin(async move {
             inner_clone.init().await?;
-            runner_func(rx, imp_clone).await;
+            let connection = inner_clone.connection().await?;
+            runner_func(rx, connection.clone(), imp_clone).await;
             Ok(())
         });
 
@@ -857,13 +860,14 @@ where
             bus_name_suffix,
             imp,
             Server::new_with_track_list,
-            |mut rx, imp| async move {
+            |mut rx, connection, imp| async move {
                 while let Some(action) = rx.next().await {
                     match action {
-                        Action::Root(action) => Self::handle_root_action(&imp, action).await,
-                        Action::Player(action) => Self::handle_player_action(&imp, action).await,
+                        Action::Player(action) => {
+                            Self::handle_player_action(&connection, &imp, action).await
+                        }
                         Action::TrackList(action) => {
-                            Self::handle_track_list_action(&imp, action).await
+                            Self::handle_track_list_action(&connection, &imp, action).await
                         }
                         Action::Playlists(_) => unreachable!(),
                     }
@@ -890,23 +894,26 @@ where
         self.inner.track_list_properties_changed(properties).await
     }
 
-    async fn handle_track_list_action(imp: &T, action: TrackListAction) {
+    async fn handle_track_list_action(connection: &Connection, imp: &T, action: TrackListAction) {
+        let proxy = ServerProxy::new(connection, imp);
         match action {
             // Methods
             TrackListAction::GetTracksMetadata(track_ids, sender) => {
-                let ret = imp.get_tracks_metadata(track_ids).await;
+                let ret = imp.get_tracks_metadata(&proxy, track_ids).await;
                 sender.send(ret).unwrap();
             }
             TrackListAction::AddTrack(uri, after_track, set_as_current, sender) => {
-                let ret = imp.add_track(uri, after_track, set_as_current).await;
+                let ret = imp
+                    .add_track(&proxy, uri, after_track, set_as_current)
+                    .await;
                 sender.send(ret).unwrap();
             }
             TrackListAction::RemoveTrack(track_id, sender) => {
-                let ret = imp.remove_track(track_id).await;
+                let ret = imp.remove_track(&proxy, track_id).await;
                 sender.send(ret).unwrap();
             }
             TrackListAction::GoTo(track_id, sender) => {
-                let ret = imp.go_to(track_id).await;
+                let ret = imp.go_to(&proxy, track_id).await;
                 sender.send(ret).unwrap();
             }
             // Properties
@@ -938,13 +945,14 @@ where
             bus_name_suffix,
             imp,
             Server::new_with_playlists,
-            |mut rx, imp| async move {
+            |mut rx, connection, imp| async move {
                 while let Some(action) = rx.next().await {
                     match action {
-                        Action::Root(action) => Self::handle_root_action(&imp, action).await,
-                        Action::Player(action) => Self::handle_player_action(&imp, action).await,
+                        Action::Player(action) => {
+                            Self::handle_player_action(&connection, &imp, action).await
+                        }
                         Action::Playlists(action) => {
-                            Self::handle_playlists_actions(&imp, action).await
+                            Self::handle_playlists_actions(&connection, &imp, action).await
                         }
                         Action::TrackList(_) => unreachable!(),
                     }
@@ -971,15 +979,16 @@ where
         self.inner.playlists_properties_changed(properties).await
     }
 
-    async fn handle_playlists_actions(imp: &T, action: PlaylistsAction) {
+    async fn handle_playlists_actions(connection: &Connection, imp: &T, action: PlaylistsAction) {
+        let proxy = ServerProxy::new(connection, imp);
         match action {
             PlaylistsAction::ActivatePlaylist(playlist_id, sender) => {
-                let ret = imp.activate_playlist(playlist_id).await;
+                let ret = imp.activate_playlist(&proxy, playlist_id).await;
                 sender.send(ret).unwrap();
             }
             PlaylistsAction::GetPlaylists(index, max_count, order, reverse_order, sender) => {
                 let ret = imp
-                    .get_playlists(index, max_count, order, reverse_order)
+                    .get_playlists(&proxy, index, max_count, order, reverse_order)
                     .await;
                 sender.send(ret).unwrap();
             }
@@ -1016,16 +1025,17 @@ where
             bus_name_suffix,
             imp,
             Server::new_with_all,
-            |mut rx, imp| async move {
+            |mut rx, connection, imp| async move {
                 while let Some(action) = rx.next().await {
                     match action {
-                        Action::Root(action) => Self::handle_root_action(&imp, action).await,
-                        Action::Player(action) => Self::handle_player_action(&imp, action).await,
+                        Action::Player(action) => {
+                            Self::handle_player_action(&connection, &imp, action).await
+                        }
                         Action::Playlists(action) => {
-                            Self::handle_playlists_actions(&imp, action).await
+                            Self::handle_playlists_actions(&connection, &imp, action).await
                         }
                         Action::TrackList(action) => {
-                            Self::handle_track_list_action(&imp, action).await
+                            Self::handle_track_list_action(&connection, &imp, action).await
                         }
                     }
                 }

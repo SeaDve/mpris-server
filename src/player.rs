@@ -7,8 +7,8 @@ use async_trait::async_trait;
 use zbus::{fdo, Result};
 
 use crate::{
-    LocalPlayerInterface, LocalRootInterface, LocalServer, LocalServerRunTask, LoopStatus,
-    Metadata, PlaybackRate, PlaybackStatus, Property, Signal, Time, TrackId, Volume,
+    LocalPlayerInterface, LocalServer, LocalServerRunTask, LoopStatus, Metadata, PlaybackRate,
+    PlaybackStatus, Property, ServerProxy, Signal, Time, TrackId, Volume,
 };
 
 /// Ready-to-use mutable *service*-side object that internally implements
@@ -82,8 +82,8 @@ impl State {
 }
 
 #[async_trait(?Send)]
-impl LocalRootInterface for State {
-    async fn raise(&self) -> fdo::Result<()> {
+impl LocalPlayerInterface for State {
+    async fn raise(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
         let player = self.player();
         for cb in self.raise_cbs.borrow().iter() {
             cb(&player);
@@ -91,7 +91,7 @@ impl LocalRootInterface for State {
         Ok(())
     }
 
-    async fn quit(&self) -> fdo::Result<()> {
+    async fn quit(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
         let player = self.player();
         for cb in self.quit_cbs.borrow().iter() {
             cb(&player);
@@ -142,11 +142,8 @@ impl LocalRootInterface for State {
     async fn supported_mime_types(&self) -> fdo::Result<Vec<String>> {
         Ok(self.supported_mime_types.borrow().clone())
     }
-}
 
-#[async_trait(?Send)]
-impl LocalPlayerInterface for State {
-    async fn next(&self) -> fdo::Result<()> {
+    async fn next(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
         let player = self.player();
         for cb in self.next_cbs.borrow().iter() {
             cb(&player);
@@ -154,7 +151,7 @@ impl LocalPlayerInterface for State {
         Ok(())
     }
 
-    async fn previous(&self) -> fdo::Result<()> {
+    async fn previous(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
         let player = self.player();
         for cb in self.previous_cbs.borrow().iter() {
             cb(&player);
@@ -162,7 +159,7 @@ impl LocalPlayerInterface for State {
         Ok(())
     }
 
-    async fn pause(&self) -> fdo::Result<()> {
+    async fn pause(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
         let player = self.player();
         for cb in self.pause_cbs.borrow().iter() {
             cb(&player);
@@ -170,7 +167,7 @@ impl LocalPlayerInterface for State {
         Ok(())
     }
 
-    async fn play_pause(&self) -> fdo::Result<()> {
+    async fn play_pause(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
         let player = self.player();
         for cb in self.play_pause_cbs.borrow().iter() {
             cb(&player);
@@ -178,7 +175,7 @@ impl LocalPlayerInterface for State {
         Ok(())
     }
 
-    async fn stop(&self) -> fdo::Result<()> {
+    async fn stop(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
         let player = self.player();
         for cb in self.stop_cbs.borrow().iter() {
             cb(&player);
@@ -186,7 +183,7 @@ impl LocalPlayerInterface for State {
         Ok(())
     }
 
-    async fn play(&self) -> fdo::Result<()> {
+    async fn play(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
         let player = self.player();
         for cb in self.play_cbs.borrow().iter() {
             cb(&player);
@@ -194,7 +191,7 @@ impl LocalPlayerInterface for State {
         Ok(())
     }
 
-    async fn seek(&self, offset: Time) -> fdo::Result<()> {
+    async fn seek(&self, _: &ServerProxy<'_, Self>, offset: Time) -> fdo::Result<()> {
         let player = self.player();
         for cb in self.seek_cbs.borrow().iter() {
             cb(&player, offset);
@@ -202,7 +199,12 @@ impl LocalPlayerInterface for State {
         Ok(())
     }
 
-    async fn set_position(&self, track_id: TrackId, position: Time) -> fdo::Result<()> {
+    async fn set_position(
+        &self,
+        _: &ServerProxy<'_, Self>,
+        track_id: TrackId,
+        position: Time,
+    ) -> fdo::Result<()> {
         let player = self.player();
         for cb in self.set_position_cbs.borrow().iter() {
             cb(&player, &track_id, position);
@@ -210,7 +212,7 @@ impl LocalPlayerInterface for State {
         Ok(())
     }
 
-    async fn open_uri(&self, uri: String) -> fdo::Result<()> {
+    async fn open_uri(&self, _: &ServerProxy<'_, Self>, uri: String) -> fdo::Result<()> {
         let player = self.player();
         for cb in self.open_uri_cbs.borrow().iter() {
             cb(&player, &uri);

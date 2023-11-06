@@ -17,8 +17,7 @@ use zbus::{
 use crate::{
     LoopStatus, MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, Playlist,
     PlaylistId, PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, PlaylistsSignal, Property,
-    RootInterface, Signal, Time, TrackId, TrackListInterface, TrackListProperty, TrackListSignal,
-    Uri, Volume,
+    Signal, Time, TrackId, TrackListInterface, TrackListProperty, TrackListSignal, Uri, Volume,
 };
 
 const OBJECT_PATH: ObjectPath<'static> =
@@ -31,14 +30,16 @@ struct RawRootInterface<T> {
 #[dbus_interface(name = "org.mpris.MediaPlayer2")]
 impl<T> RawRootInterface<T>
 where
-    T: RootInterface + 'static,
+    T: PlayerInterface + 'static,
 {
-    async fn raise(&self) -> fdo::Result<()> {
-        self.imp.raise().await
+    async fn raise(&self, #[zbus(connection)] connection: &zbus::Connection) -> fdo::Result<()> {
+        let proxy = ServerProxy::new(connection, self.imp.as_ref());
+        self.imp.raise(&proxy).await
     }
 
-    async fn quit(&self) -> fdo::Result<()> {
-        self.imp.quit().await
+    async fn quit(&self, #[zbus(connection)] connection: &zbus::Connection) -> fdo::Result<()> {
+        let proxy = ServerProxy::new(connection, self.imp.as_ref());
+        self.imp.quit(&proxy).await
     }
 
     #[dbus_interface(property)]
@@ -101,40 +102,65 @@ impl<T> RawPlayerInterface<T>
 where
     T: PlayerInterface + 'static,
 {
-    async fn next(&self) -> fdo::Result<()> {
-        self.imp.next().await
+    async fn next(&self, #[zbus(connection)] connection: &zbus::Connection) -> fdo::Result<()> {
+        let proxy = ServerProxy::new(connection, self.imp.as_ref());
+        self.imp.next(&proxy).await
     }
 
-    async fn previous(&self) -> fdo::Result<()> {
-        self.imp.previous().await
+    async fn previous(&self, #[zbus(connection)] connection: &zbus::Connection) -> fdo::Result<()> {
+        let proxy = ServerProxy::new(connection, self.imp.as_ref());
+        self.imp.previous(&proxy).await
     }
 
-    async fn pause(&self) -> fdo::Result<()> {
-        self.imp.pause().await
+    async fn pause(&self, #[zbus(connection)] connection: &zbus::Connection) -> fdo::Result<()> {
+        let proxy = ServerProxy::new(connection, self.imp.as_ref());
+        self.imp.pause(&proxy).await
     }
 
-    async fn play_pause(&self) -> fdo::Result<()> {
-        self.imp.play_pause().await
+    async fn play_pause(
+        &self,
+        #[zbus(connection)] connection: &zbus::Connection,
+    ) -> fdo::Result<()> {
+        let proxy = ServerProxy::new(connection, self.imp.as_ref());
+        self.imp.play_pause(&proxy).await
     }
 
-    async fn stop(&self) -> fdo::Result<()> {
-        self.imp.stop().await
+    async fn stop(&self, #[zbus(connection)] connection: &zbus::Connection) -> fdo::Result<()> {
+        let proxy = ServerProxy::new(connection, self.imp.as_ref());
+        self.imp.stop(&proxy).await
     }
 
-    async fn play(&self) -> fdo::Result<()> {
-        self.imp.play().await
+    async fn play(&self, #[zbus(connection)] connection: &zbus::Connection) -> fdo::Result<()> {
+        let proxy = ServerProxy::new(connection, self.imp.as_ref());
+        self.imp.play(&proxy).await
     }
 
-    async fn seek(&self, offset: Time) -> fdo::Result<()> {
-        self.imp.seek(offset).await
+    async fn seek(
+        &self,
+        #[zbus(connection)] connection: &zbus::Connection,
+        offset: Time,
+    ) -> fdo::Result<()> {
+        let proxy = ServerProxy::new(connection, self.imp.as_ref());
+        self.imp.seek(&proxy, offset).await
     }
 
-    async fn set_position(&self, track_id: TrackId, position: Time) -> fdo::Result<()> {
-        self.imp.set_position(track_id, position).await
+    async fn set_position(
+        &self,
+        #[zbus(connection)] connection: &zbus::Connection,
+        track_id: TrackId,
+        position: Time,
+    ) -> fdo::Result<()> {
+        let proxy = ServerProxy::new(connection, self.imp.as_ref());
+        self.imp.set_position(&proxy, track_id, position).await
     }
 
-    async fn open_uri(&self, uri: String) -> fdo::Result<()> {
-        self.imp.open_uri(uri).await
+    async fn open_uri(
+        &self,
+        #[zbus(connection)] connection: &zbus::Connection,
+        uri: String,
+    ) -> fdo::Result<()> {
+        let proxy = ServerProxy::new(connection, self.imp.as_ref());
+        self.imp.open_uri(&proxy, uri).await
     }
 
     #[dbus_interface(signal)]
@@ -245,25 +271,44 @@ impl<T> RawTrackListInterface<T>
 where
     T: TrackListInterface + 'static,
 {
-    async fn get_tracks_metadata(&self, track_ids: Vec<TrackId>) -> fdo::Result<Vec<Metadata>> {
-        self.imp.get_tracks_metadata(track_ids).await
+    async fn get_tracks_metadata(
+        &self,
+        #[zbus(connection)] connection: &zbus::Connection,
+        track_ids: Vec<TrackId>,
+    ) -> fdo::Result<Vec<Metadata>> {
+        let proxy = ServerProxy::new(connection, self.imp.as_ref());
+        self.imp.get_tracks_metadata(&proxy, track_ids).await
     }
 
     async fn add_track(
         &self,
+        #[zbus(connection)] connection: &zbus::Connection,
         uri: Uri,
         after_track: TrackId,
         set_as_current: bool,
     ) -> fdo::Result<()> {
-        self.imp.add_track(uri, after_track, set_as_current).await
+        let proxy = ServerProxy::new(connection, self.imp.as_ref());
+        self.imp
+            .add_track(&proxy, uri, after_track, set_as_current)
+            .await
     }
 
-    async fn remove_track(&self, track_id: TrackId) -> fdo::Result<()> {
-        self.imp.remove_track(track_id).await
+    async fn remove_track(
+        &self,
+        #[zbus(connection)] connection: &zbus::Connection,
+        track_id: TrackId,
+    ) -> fdo::Result<()> {
+        let proxy = ServerProxy::new(connection, self.imp.as_ref());
+        self.imp.remove_track(&proxy, track_id).await
     }
 
-    async fn go_to(&self, track_id: TrackId) -> fdo::Result<()> {
-        self.imp.go_to(track_id).await
+    async fn go_to(
+        &self,
+        #[zbus(connection)] connection: &zbus::Connection,
+        track_id: TrackId,
+    ) -> fdo::Result<()> {
+        let proxy = ServerProxy::new(connection, self.imp.as_ref());
+        self.imp.go_to(&proxy, track_id).await
     }
 
     #[dbus_interface(signal)]
@@ -310,19 +355,26 @@ impl<T> RawPlaylistsInterface<T>
 where
     T: PlaylistsInterface + 'static,
 {
-    async fn activate_playlist(&self, playlist_id: PlaylistId) -> fdo::Result<()> {
-        self.imp.activate_playlist(playlist_id).await
+    async fn activate_playlist(
+        &self,
+        #[zbus(connection)] connection: &zbus::Connection,
+        playlist_id: PlaylistId,
+    ) -> fdo::Result<()> {
+        let proxy = ServerProxy::new(connection, self.imp.as_ref());
+        self.imp.activate_playlist(&proxy, playlist_id).await
     }
 
     async fn get_playlists(
         &self,
+        #[zbus(connection)] connection: &zbus::Connection,
         index: u32,
         max_count: u32,
         order: PlaylistOrdering,
         reverse_order: bool,
     ) -> fdo::Result<Vec<Playlist>> {
+        let proxy = ServerProxy::new(connection, self.imp.as_ref());
         self.imp
-            .get_playlists(index, max_count, order, reverse_order)
+            .get_playlists(&proxy, index, max_count, order, reverse_order)
             .await
     }
 
@@ -345,36 +397,6 @@ where
     }
 }
 
-/// Thin wrapper around [`zbus::Connection`] that calls to `T`'s implementation
-/// of [`RootInterface`], [`PlayerInterface`], [`TrackListInterface`], and
-/// [`PlaylistsInterface`] to implement `org.mpris.MediaPlayer2` and its
-/// sub-interfaces.
-///
-/// When implementing using [`Server`], it is important to note that properties
-/// changed signals are *not* emitted automatically; they must be emitted
-/// manually using [`Server::properties_changed`],
-/// [`Server::track_list_properties_changed`], or
-/// [`Server::playlists_properties_changed`], when they changed internally.
-pub struct Server<T>
-where
-    T: PlayerInterface + 'static,
-{
-    connection: OnceCell<Connection>,
-    #[allow(clippy::type_complexity)]
-    connection_init:
-        Mutex<Option<Box<dyn FnOnce() -> Result<ConnectionBuilder<'static>> + Send + Sync>>>,
-    imp: Arc<T>,
-}
-
-impl<T> fmt::Debug for Server<T>
-where
-    T: PlayerInterface + 'static,
-{
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("Server").finish()
-    }
-}
-
 macro_rules! insert_property {
     ($item:ident, $property_type:ident, $source:ident => $($map:ident, $property:ident, $getter:ident);*) => {
         match $item {
@@ -388,56 +410,29 @@ macro_rules! insert_property {
     };
 }
 
-impl<T> Server<T>
+/// A proxy to a server that allows emitting signals and accessing connection.
+pub struct ServerProxy<'a, T> {
+    connection: &'a Connection,
+    imp: &'a T,
+}
+
+impl<T> fmt::Debug for ServerProxy<'_, T> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("ServerProxy").finish()
+    }
+}
+
+impl<'a, T> ServerProxy<'a, T> {
+    #[inline]
+    pub(crate) fn new(connection: &'a Connection, imp: &'a T) -> Self {
+        Self { connection, imp }
+    }
+}
+
+impl<T> ServerProxy<'_, T>
 where
     T: PlayerInterface + 'static,
 {
-    /// Creates a new [`Server`] with the given bus name suffix and
-    /// implementation, `imp`, which must implement [`RootInterface`] and
-    /// [`PlayerInterface`].
-    ///
-    /// To start the connection, [`Server::init`] must be called.
-    ///
-    /// The resulting bus name will be
-    /// `org.mpris.MediaPlayer2.<bus_name_suffix>`, where
-    /// `<bus_name_suffix>`must be a unique identifier, such as one based on a
-    /// UNIX process id. For example, this could be:
-    ///
-    /// * `org.mpris.MediaPlayer2.vlc.instance7389`
-    ///
-    /// **Note:** According to the [`D-Bus specification`], the unique
-    /// identifier "must only contain  the ASCII characters
-    /// `[A-Z][a-z][0-9]_-`" and "must not begin with a digit".
-    ///
-    /// [`D-Bus specification`]: dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus
-    pub fn new(bus_name_suffix: &str, imp: T) -> Self {
-        Self::new_inner(bus_name_suffix, imp, |builder, _| Ok(builder))
-    }
-
-    /// Initializes the connection.
-    ///
-    /// This is a no-op if the connection has already been initialized.
-    ///
-    /// This is also called automatically when emitting signals and properties
-    /// changed.
-    pub async fn init(&self) -> Result<()> {
-        self.get_or_init_connection().await?;
-        Ok(())
-    }
-
-    /// Returns a reference to the underlying implementation.
-    #[inline]
-    pub fn imp(&self) -> &T {
-        &self.imp
-    }
-
-    /// Returns a reference to the inner [`Connection`].
-    ///
-    /// If you needed to call this, consider filing an issue.
-    pub async fn connection(&self) -> Result<&Connection> {
-        self.get_or_init_connection().await
-    }
-
     /// Emits the given signal.
     pub async fn emit(&self, signal: Signal) -> Result<()> {
         match signal {
@@ -507,54 +502,6 @@ where
         Ok(())
     }
 
-    fn new_inner(
-        bus_name_suffix: &str,
-        imp: T,
-        builder_ext_func: impl FnOnce(ConnectionBuilder<'_>, Arc<T>) -> Result<ConnectionBuilder<'_>>
-            + Send
-            + Sync
-            + 'static,
-    ) -> Self {
-        let bus_name = format!("org.mpris.MediaPlayer2.{}", bus_name_suffix);
-        let imp = Arc::new(imp);
-
-        let imp_clone = Arc::clone(&imp);
-        let connection_init = Box::new(|| {
-            let builder = ConnectionBuilder::session()?
-                .name(bus_name)?
-                .serve_at(
-                    OBJECT_PATH,
-                    RawRootInterface {
-                        imp: Arc::clone(&imp_clone),
-                    },
-                )?
-                .serve_at(
-                    OBJECT_PATH,
-                    RawPlayerInterface {
-                        imp: Arc::clone(&imp_clone),
-                    },
-                )?;
-            builder_ext_func(builder, imp_clone)
-        });
-
-        Self {
-            connection: OnceCell::new(),
-            connection_init: Mutex::new(Some(connection_init)),
-            imp,
-        }
-    }
-
-    async fn get_or_init_connection(&self) -> Result<&Connection> {
-        self.connection
-            .get_or_try_init(|| async {
-                // Safety: connection only initialized once
-                let connection_init = self.connection_init.lock().unwrap().take().unwrap();
-                let connection = connection_init()?.build().await?;
-                Ok(connection)
-            })
-            .await
-    }
-
     async fn properties_changed_inner<I>(
         &self,
         changed_properties: HashMap<&str, Value<'_>>,
@@ -578,18 +525,17 @@ where
     where
         I: Interface,
     {
-        let connection = self.get_or_init_connection().await?;
-
         // FIXME Hold a lock to the interface until the signal is emitted.
         // This is a workaround for `Invalid client serial` errors.
         // See https://github.com/flatpak/xdg-dbus-proxy/issues/46
-        let iface_ref = connection
+        let iface_ref = self
+            .connection
             .object_server()
             .interface::<_, I>(OBJECT_PATH)
             .await?;
         let _guard = iface_ref.get_mut().await;
 
-        connection
+        self.connection
             .emit_signal(
                 None::<BusName<'_>>,
                 OBJECT_PATH,
@@ -601,21 +547,10 @@ where
     }
 }
 
-impl<T> Server<T>
+impl<T> ServerProxy<'_, T>
 where
     T: TrackListInterface + 'static,
 {
-    /// Creates a new [`Server`] with the given bus name suffix and
-    /// implementation, which must implement [`TrackListInterface`] in addition
-    /// to [`RootInterface`] and [`PlayerInterface`].
-    ///
-    /// See also [`Server::new`].
-    pub fn new_with_track_list(bus_name_suffix: &str, imp: T) -> Self {
-        Self::new_inner(bus_name_suffix, imp, |builder, imp| {
-            builder.serve_at(OBJECT_PATH, RawTrackListInterface { imp })
-        })
-    }
-
     /// Emits the given signal on the `TrackList` interface.
     pub async fn track_list_emit(&self, signal: TrackListSignal) -> Result<()> {
         match signal {
@@ -685,21 +620,10 @@ where
     }
 }
 
-impl<T> Server<T>
+impl<T> ServerProxy<'_, T>
 where
     T: PlaylistsInterface + 'static,
 {
-    /// Creates a new [`Server`] with the given bus name suffix and
-    /// implementation, which must implement [`PlaylistsInterface`] in addition
-    /// to [`RootInterface`] and [`PlayerInterface`].
-    ///
-    /// See also [`Server::new`].
-    pub fn new_with_playlists(bus_name_suffix: &str, imp: T) -> Self {
-        Self::new_inner(bus_name_suffix, imp, |builder, imp| {
-            builder.serve_at(OBJECT_PATH, RawPlaylistsInterface { imp })
-        })
-    }
-
     /// Emits the given signal on the `Playlists` interface.
     pub async fn playlists_emit(&self, signal: PlaylistsSignal) -> Result<()> {
         match signal {
@@ -740,6 +664,238 @@ where
     }
 }
 
+/// Thin wrapper around [`zbus::Connection`] that calls to `T`'s implementation
+/// of [`RootInterface`], [`PlayerInterface`], [`TrackListInterface`], and
+/// [`PlaylistsInterface`] to implement `org.mpris.MediaPlayer2` and its
+/// sub-interfaces.
+///
+/// When implementing using [`Server`], it is important to note that properties
+/// changed signals are *not* emitted automatically; they must be emitted
+/// manually using [`Server::properties_changed`],
+/// [`Server::track_list_properties_changed`], or
+/// [`Server::playlists_properties_changed`], when they changed internally.
+pub struct Server<T>
+where
+    T: PlayerInterface + 'static,
+{
+    connection: OnceCell<Connection>,
+    #[allow(clippy::type_complexity)]
+    connection_init:
+        Mutex<Option<Box<dyn FnOnce() -> Result<ConnectionBuilder<'static>> + Send + Sync>>>,
+    imp: Arc<T>,
+}
+
+impl<T> fmt::Debug for Server<T>
+where
+    T: PlayerInterface + 'static,
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Server").finish()
+    }
+}
+
+impl<T> Server<T>
+where
+    T: PlayerInterface + 'static,
+{
+    /// Creates a new [`Server`] with the given bus name suffix and
+    /// implementation, `imp`, which must implement [`RootInterface`] and
+    /// [`PlayerInterface`].
+    ///
+    /// To start the connection, [`Server::init`] must be called.
+    ///
+    /// The resulting bus name will be
+    /// `org.mpris.MediaPlayer2.<bus_name_suffix>`, where
+    /// `<bus_name_suffix>`must be a unique identifier, such as one based on a
+    /// UNIX process id. For example, this could be:
+    ///
+    /// * `org.mpris.MediaPlayer2.vlc.instance7389`
+    ///
+    /// **Note:** According to the [`D-Bus specification`], the unique
+    /// identifier "must only contain  the ASCII characters
+    /// `[A-Z][a-z][0-9]_-`" and "must not begin with a digit".
+    ///
+    /// [`D-Bus specification`]: dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus
+    pub fn new(bus_name_suffix: &str, imp: T) -> Self {
+        Self::new_inner(bus_name_suffix, imp, |builder, _| Ok(builder))
+    }
+
+    /// Initializes the connection.
+    ///
+    /// This is a no-op if the connection has already been initialized.
+    ///
+    /// This is also called automatically when emitting signals and properties
+    /// changed.
+    pub async fn init(&self) -> Result<()> {
+        self.get_or_init_connection().await?;
+        Ok(())
+    }
+
+    /// Returns a reference to the underlying implementation.
+    #[inline]
+    pub fn imp(&self) -> &T {
+        &self.imp
+    }
+
+    /// Returns a reference to the inner [`Connection`].
+    ///
+    /// If you needed to call this, consider filing an issue.
+    pub async fn connection(&self) -> Result<&Connection> {
+        self.get_or_init_connection().await
+    }
+
+    /// Emits the given signal.
+    #[inline]
+    pub async fn emit(&self, signal: Signal) -> Result<()> {
+        ServerProxy::new(self.get_or_init_connection().await?, self.imp())
+            .emit(signal)
+            .await
+    }
+
+    /// Emits the `PropertiesChanged` signal for the given properties.
+    ///
+    /// This categorizes the property in the `changed` or `invalidated`
+    /// properties as defined by the spec.
+    ///
+    /// [`Server::track_list_properties_changed`] or
+    /// [`Server::playlists_properties_changed`] are used
+    /// to emit `PropertiesChanged` for the `TrackList` or `Playlists`
+    /// interfaces respectively.
+    #[inline]
+    pub async fn properties_changed(
+        &self,
+        properties: impl Into<BitFlags<Property>>,
+    ) -> Result<()> {
+        ServerProxy::new(self.get_or_init_connection().await?, self.imp())
+            .properties_changed(properties)
+            .await
+    }
+
+    fn new_inner(
+        bus_name_suffix: &str,
+        imp: T,
+        builder_ext_func: impl FnOnce(ConnectionBuilder<'_>, Arc<T>) -> Result<ConnectionBuilder<'_>>
+            + Send
+            + Sync
+            + 'static,
+    ) -> Self {
+        let bus_name = format!("org.mpris.MediaPlayer2.{}", bus_name_suffix);
+        let imp = Arc::new(imp);
+
+        let imp_clone = Arc::clone(&imp);
+        let connection_init = Box::new(|| {
+            let builder = ConnectionBuilder::session()?
+                .name(bus_name)?
+                .serve_at(
+                    OBJECT_PATH,
+                    RawRootInterface {
+                        imp: Arc::clone(&imp_clone),
+                    },
+                )?
+                .serve_at(
+                    OBJECT_PATH,
+                    RawPlayerInterface {
+                        imp: Arc::clone(&imp_clone),
+                    },
+                )?;
+            builder_ext_func(builder, imp_clone)
+        });
+
+        Self {
+            connection: OnceCell::new(),
+            connection_init: Mutex::new(Some(connection_init)),
+            imp,
+        }
+    }
+
+    async fn get_or_init_connection(&self) -> Result<&Connection> {
+        self.connection
+            .get_or_try_init(|| async {
+                // Safety: connection only initialized once
+                let connection_init = self.connection_init.lock().unwrap().take().unwrap();
+                let connection = connection_init()?.build().await?;
+                Ok(connection)
+            })
+            .await
+    }
+}
+
+impl<T> Server<T>
+where
+    T: TrackListInterface + 'static,
+{
+    /// Creates a new [`Server`] with the given bus name suffix and
+    /// implementation, which must implement [`TrackListInterface`] in addition
+    /// to [`RootInterface`] and [`PlayerInterface`].
+    ///
+    /// See also [`Server::new`].
+    pub fn new_with_track_list(bus_name_suffix: &str, imp: T) -> Self {
+        Self::new_inner(bus_name_suffix, imp, |builder, imp| {
+            builder.serve_at(OBJECT_PATH, RawTrackListInterface { imp })
+        })
+    }
+
+    /// Emits the given signal on the `TrackList` interface.
+    #[inline]
+    pub async fn track_list_emit(&self, signal: TrackListSignal) -> Result<()> {
+        ServerProxy::new(self.get_or_init_connection().await?, self.imp())
+            .track_list_emit(signal)
+            .await
+    }
+
+    /// Emits the `PropertiesChanged` signal for the given properties.
+    ///
+    /// This categorizes the property in the `changed` or `invalidated`
+    /// properties as defined by the spec.
+    #[inline]
+    pub async fn track_list_properties_changed(
+        &self,
+        properties: impl Into<BitFlags<TrackListProperty>>,
+    ) -> Result<()> {
+        ServerProxy::new(self.get_or_init_connection().await?, self.imp())
+            .track_list_properties_changed(properties)
+            .await
+    }
+}
+
+impl<T> Server<T>
+where
+    T: PlaylistsInterface + 'static,
+{
+    /// Creates a new [`Server`] with the given bus name suffix and
+    /// implementation, which must implement [`PlaylistsInterface`] in addition
+    /// to [`RootInterface`] and [`PlayerInterface`].
+    ///
+    /// See also [`Server::new`].
+    pub fn new_with_playlists(bus_name_suffix: &str, imp: T) -> Self {
+        Self::new_inner(bus_name_suffix, imp, |builder, imp| {
+            builder.serve_at(OBJECT_PATH, RawPlaylistsInterface { imp })
+        })
+    }
+
+    /// Emits the given signal on the `Playlists` interface.
+    #[inline]
+    pub async fn playlists_emit(&self, signal: PlaylistsSignal) -> Result<()> {
+        ServerProxy::new(self.get_or_init_connection().await?, self.imp())
+            .playlists_emit(signal)
+            .await
+    }
+
+    /// Emits the `PropertiesChanged` signal for the given properties.
+    ///
+    /// This categorizes the property in the `changed` or `invalidated`
+    /// properties as defined by the spec.
+    #[inline]
+    pub async fn playlists_properties_changed(
+        &self,
+        properties: impl Into<BitFlags<PlaylistsProperty>>,
+    ) -> Result<()> {
+        ServerProxy::new(self.get_or_init_connection().await?, self.imp())
+            .playlists_properties_changed(properties)
+            .await
+    }
+}
+
 impl<T> Server<T>
 where
     T: TrackListInterface + PlaylistsInterface + 'static,
@@ -774,12 +930,12 @@ mod tests {
     struct TestPlayer;
 
     #[async_trait]
-    impl RootInterface for TestPlayer {
-        async fn raise(&self) -> fdo::Result<()> {
+    impl PlayerInterface for TestPlayer {
+        async fn raise(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
             unreachable!()
         }
 
-        async fn quit(&self) -> fdo::Result<()> {
+        async fn quit(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
             unreachable!()
         }
 
@@ -822,43 +978,45 @@ mod tests {
         async fn supported_mime_types(&self) -> fdo::Result<Vec<String>> {
             unreachable!()
         }
-    }
 
-    #[async_trait]
-    impl PlayerInterface for TestPlayer {
-        async fn next(&self) -> fdo::Result<()> {
+        async fn next(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
             unreachable!()
         }
 
-        async fn previous(&self) -> fdo::Result<()> {
+        async fn previous(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
             unreachable!()
         }
 
-        async fn pause(&self) -> fdo::Result<()> {
+        async fn pause(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
             unreachable!()
         }
 
-        async fn play_pause(&self) -> fdo::Result<()> {
+        async fn play_pause(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
             unreachable!()
         }
 
-        async fn stop(&self) -> fdo::Result<()> {
+        async fn stop(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
             unreachable!()
         }
 
-        async fn play(&self) -> fdo::Result<()> {
+        async fn play(&self, _: &ServerProxy<'_, Self>) -> fdo::Result<()> {
             unreachable!()
         }
 
-        async fn seek(&self, _offset: Time) -> fdo::Result<()> {
+        async fn seek(&self, _: &ServerProxy<'_, Self>, _offset: Time) -> fdo::Result<()> {
             unreachable!()
         }
 
-        async fn set_position(&self, _track_id: TrackId, _position: Time) -> fdo::Result<()> {
+        async fn set_position(
+            &self,
+            _: &ServerProxy<'_, Self>,
+            _track_id: TrackId,
+            _position: Time,
+        ) -> fdo::Result<()> {
             unreachable!()
         }
 
-        async fn open_uri(&self, _uri: String) -> fdo::Result<()> {
+        async fn open_uri(&self, _: &ServerProxy<'_, Self>, _uri: String) -> fdo::Result<()> {
             unreachable!()
         }
 
@@ -943,6 +1101,7 @@ mod tests {
     impl TrackListInterface for TestPlayer {
         async fn get_tracks_metadata(
             &self,
+            _: &ServerProxy<'_, Self>,
             _track_ids: Vec<TrackId>,
         ) -> fdo::Result<Vec<Metadata>> {
             unreachable!()
@@ -950,6 +1109,7 @@ mod tests {
 
         async fn add_track(
             &self,
+            _: &ServerProxy<'_, Self>,
             _uri: Uri,
             _after_track: TrackId,
             _set_as_current: bool,
@@ -957,11 +1117,15 @@ mod tests {
             unreachable!()
         }
 
-        async fn remove_track(&self, _track_id: TrackId) -> fdo::Result<()> {
+        async fn remove_track(
+            &self,
+            _: &ServerProxy<'_, Self>,
+            _track_id: TrackId,
+        ) -> fdo::Result<()> {
             unreachable!()
         }
 
-        async fn go_to(&self, _track_id: TrackId) -> fdo::Result<()> {
+        async fn go_to(&self, _: &ServerProxy<'_, Self>, _track_id: TrackId) -> fdo::Result<()> {
             unreachable!()
         }
 
@@ -976,12 +1140,17 @@ mod tests {
 
     #[async_trait]
     impl PlaylistsInterface for TestPlayer {
-        async fn activate_playlist(&self, _playlist_id: PlaylistId) -> fdo::Result<()> {
+        async fn activate_playlist(
+            &self,
+            _: &ServerProxy<'_, Self>,
+            _playlist_id: PlaylistId,
+        ) -> fdo::Result<()> {
             unreachable!()
         }
 
         async fn get_playlists(
             &self,
+            _: &ServerProxy<'_, Self>,
             _index: u32,
             _max_count: u32,
             _order: PlaylistOrdering,

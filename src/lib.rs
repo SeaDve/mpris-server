@@ -81,7 +81,7 @@ pub use crate::{
     playlist::{MaybePlaylist, Playlist},
     playlist_ordering::PlaylistOrdering,
     property::{PlaylistsProperty, Property, TrackListProperty},
-    server::Server,
+    server::{Server, ServerProxy},
     signal::{PlaylistsSignal, Signal, TrackListSignal},
     time::Time,
     track_id::TrackId,
@@ -89,17 +89,23 @@ pub use crate::{
 
 macro_rules! define_iface {
     (#[$attr:meta],
-        $root_iface_ident:ident$(: $bound:tt $(+ $other_bounds:tt)* )? extra_docs $extra_root_docs:literal,
-        $player_iface_ident:ident extra_docs $extra_player_docs:literal,
+        $player_iface_ident:ident$(: $bound:tt $(+ $other_bounds:tt)* )? extra_docs $extra_player_docs:literal,
         $track_list_iface_ident:ident extra_docs $extra_track_list_docs:literal,
         $playlists_iface_ident:ident extra_docs $extra_playlists_docs:literal) => {
-        #[doc = $extra_root_docs]
+        #[doc = $extra_player_docs]
         #[doc = ""]
-        /// Used to implement [org.mpris.MediaPlayer2] interface.
+        /// Used to implement [org.mpris.MediaPlayer2] and [org.mpris.MediaPlayer2.Player]
+        /// interfaces.
+        ///
+        /// [org.mpris.MediaPlayer2.Player] implements the methods for querying and
+        /// providing basic control over what is currently playing.
         ///
         /// [org.mpris.MediaPlayer2]: https://specifications.freedesktop.org/mpris-spec/2.2/Media_Player.html
+        /// [org.mpris.MediaPlayer2.Player]: https://specifications.freedesktop.org/mpris-spec/2.2/Player_Interface.html
         #[$attr]
-        pub trait $root_iface_ident$(: $bound $(+ $other_bounds)* )?  {
+        #[doc(alias = "org.mpris.MediaPlayer2")]
+        #[doc(alias = "org.mpris.MediaPlayer2.Player")]
+        pub trait $player_iface_ident$(: $bound $(+ $other_bounds)* )?  {
             /// Brings the media player's user interface to the front using any
             /// appropriate mechanism available.
             ///
@@ -110,7 +116,7 @@ macro_rules! define_iface {
             ///
             /// [`CanRaise`]: Self::can_raise
             #[doc(alias = "Raise")]
-            async fn raise(&self) -> fdo::Result<()>;
+            async fn raise(&self, _proxy: &ServerProxy<'_, Self>) -> fdo::Result<()>;
 
             /// Causes the media player to stop running.
             ///
@@ -127,7 +133,7 @@ macro_rules! define_iface {
             ///
             /// [`CanQuit`]: Self::can_quit
             #[doc(alias = "Quit")]
-            async fn quit(&self) -> fdo::Result<()>;
+            async fn quit(&self, _proxy: &ServerProxy<'_, Self>) -> fdo::Result<()>;
 
             /// Whether the player may be asked to quit.
             ///
@@ -327,18 +333,7 @@ macro_rules! define_iface {
             /// [`Playlists interface`]: PlaylistsInterface
             #[doc(alias = "SupportedMimeTypes")]
             async fn supported_mime_types(&self) -> fdo::Result<Vec<String>>;
-        }
 
-        #[doc = $extra_player_docs]
-        #[doc = ""]
-        /// Used to implement [org.mpris.MediaPlayer2.Player] interface, which
-        /// implements the methods for querying and providing basic control over what is
-        /// currently playing.
-        ///
-        /// [org.mpris.MediaPlayer2.Player]: https://specifications.freedesktop.org/mpris-spec/2.2/Player_Interface.html
-        #[$attr]
-        #[doc(alias = "org.mpris.MediaPlayer2.Player")]
-        pub trait $player_iface_ident: $root_iface_ident {
             /// Skips to the next track in the tracklist.
             ///
             /// If there is no next track (and endless playback and track repeat are
@@ -351,7 +346,7 @@ macro_rules! define_iface {
             ///
             /// [`CanGoNext`]: Self::can_go_next
             #[doc(alias = "Next")]
-            async fn next(&self) -> fdo::Result<()>;
+            async fn next(&self, _proxy: &ServerProxy<'_, Self>) -> fdo::Result<()>;
 
             /// Skips to the previous track in the tracklist.
             ///
@@ -365,7 +360,7 @@ macro_rules! define_iface {
             ///
             /// [`CanGoPrevious`]: Self::can_go_previous
             #[doc(alias = "Previous")]
-            async fn previous(&self) -> fdo::Result<()>;
+            async fn previous(&self, _proxy: &ServerProxy<'_, Self>) -> fdo::Result<()>;
 
             /// Pauses playback.
             ///
@@ -380,7 +375,7 @@ macro_rules! define_iface {
             /// [`Play`]: Self::play
             /// [`CanPause`]: Self::can_pause
             #[doc(alias = "Pause")]
-            async fn pause(&self) -> fdo::Result<()>;
+            async fn pause(&self, _proxy: &ServerProxy<'_, Self>) -> fdo::Result<()>;
 
             /// Pauses playback.
             ///
@@ -393,7 +388,7 @@ macro_rules! define_iface {
             ///
             /// [`CanPause`]: Self::can_pause
             #[doc(alias = "PlayPause")]
-            async fn play_pause(&self) -> fdo::Result<()>;
+            async fn play_pause(&self, _proxy: &ServerProxy<'_, Self>) -> fdo::Result<()>;
 
             /// Stops playback.
             ///
@@ -407,7 +402,7 @@ macro_rules! define_iface {
             ///
             /// [`CanControl`]: Self::can_control
             #[doc(alias = "Stop")]
-            async fn stop(&self) -> fdo::Result<()>;
+            async fn stop(&self, _proxy: &ServerProxy<'_, Self>) -> fdo::Result<()>;
 
             /// Starts or resumes playback.
             ///
@@ -422,7 +417,7 @@ macro_rules! define_iface {
             ///
             /// [`CanPlay`]: Self::can_play
             #[doc(alias = "Play")]
-            async fn play(&self) -> fdo::Result<()>;
+            async fn play(&self, _proxy: &ServerProxy<'_, Self>) -> fdo::Result<()>;
 
             /// Seeks forward in the current track by the specified offset in time.
             ///
@@ -440,7 +435,7 @@ macro_rules! define_iface {
             ///
             /// [`CanSeek`]: Self::can_seek
             #[doc(alias = "Seek")]
-            async fn seek(&self, offset: Time) -> fdo::Result<()>;
+            async fn seek(&self, _proxy: &ServerProxy<'_, Self>, offset: Time) -> fdo::Result<()>;
 
             /// Sets the current track position.
             ///
@@ -472,7 +467,7 @@ macro_rules! define_iface {
             /// [`CanSeek`]: Self::can_seek
             /// [`Position`]: Self::position
             #[doc(alias = "SetPosition")]
-            async fn set_position(&self, track_id: TrackId, position: Time) -> fdo::Result<()>;
+            async fn set_position(&self,_proxy: &ServerProxy<'_, Self>, track_id: TrackId, position: Time) -> fdo::Result<()>;
 
             /// Opens the `uri` given as an argument
             ///
@@ -507,7 +502,7 @@ macro_rules! define_iface {
             /// [`TrackAdded`]: TrackListSignal::TrackAdded
             /// [`TrackListReplaced`]: TrackListSignal::TrackListReplaced
             #[doc(alias = "OpenUri")]
-            async fn open_uri(&self, uri: String) -> fdo::Result<()>;
+            async fn open_uri(&self, _proxy: &ServerProxy<'_, Self>, uri: String) -> fdo::Result<()>;
 
             /// The current playback status.
             ///
@@ -943,7 +938,7 @@ macro_rules! define_iface {
             /// [`mpris:trackid`]: Metadata::set_trackid
             #[doc(alias = "GetTracksMetadata")]
             async fn get_tracks_metadata(
-                &self,
+                &self, _proxy: &ServerProxy<'_, Self>,
                 track_ids: Vec<TrackId>,
             ) -> fdo::Result<Vec<Metadata>>;
 
@@ -978,7 +973,7 @@ macro_rules! define_iface {
             /// [`TrackListReplaced`]: TrackListSignal::TrackListReplaced
             #[doc(alias = "AddTrack")]
             async fn add_track(
-                &self,
+                &self, _proxy: &ServerProxy<'_, Self>,
                 uri: Uri,
                 after_track: TrackId,
                 set_as_current: bool,
@@ -1005,7 +1000,7 @@ macro_rules! define_iface {
             /// [`TrackRemoved`]: TrackListSignal::TrackRemoved
             /// [`TrackListReplaced`]: TrackListSignal::TrackListReplaced
             #[doc(alias = "RemoveTrack")]
-            async fn remove_track(&self, track_id: TrackId) -> fdo::Result<()>;
+            async fn remove_track(&self, _proxy: &ServerProxy<'_, Self>, track_id: TrackId) -> fdo::Result<()>;
 
             /// Skip to the specified TrackId.
             ///
@@ -1024,7 +1019,7 @@ macro_rules! define_iface {
             ///
             /// [`TrackListReplaced`]: TrackListSignal::TrackListReplaced
             #[doc(alias = "GoTo")]
-            async fn go_to(&self, track_id: TrackId) -> fdo::Result<()>;
+            async fn go_to(&self, _proxy: &ServerProxy<'_, Self>, track_id: TrackId) -> fdo::Result<()>;
 
             /// An array which contains the identifier of each track in the tracklist,
             /// in order.
@@ -1094,7 +1089,7 @@ macro_rules! define_iface {
             /// operating in a "jukebox" mode, it may just append the playlist to the
             /// list of upcoming tracks, and skip to the first track in the playlist.
             #[doc(alias = "ActivatePlaylist")]
-            async fn activate_playlist(&self, playlist_id: PlaylistId) -> fdo::Result<()>;
+            async fn activate_playlist(&self, _proxy: &ServerProxy<'_, Self>, playlist_id: PlaylistId) -> fdo::Result<()>;
 
             /// Gets a set of playlists.
             ///
@@ -1111,7 +1106,7 @@ macro_rules! define_iface {
             /// * `playlists` - A list of (at most `max_count`) playlists.
             #[doc(alias = "GetPlaylists")]
             async fn get_playlists(
-                &self,
+                &self, _proxy: &ServerProxy<'_, Self>,
                 index: u32,
                 max_count: u32,
                 order: PlaylistOrdering,
@@ -1171,16 +1166,14 @@ macro_rules! define_iface {
 
 define_iface!(
     #[async_trait],
-    RootInterface: Send + Sync extra_docs "",
-    PlayerInterface extra_docs "",
+    PlayerInterface: Sized + Send + Sync extra_docs "",
     TrackListInterface extra_docs "",
     PlaylistsInterface extra_docs ""
 );
 
 define_iface!(
     #[async_trait(?Send)],
-    LocalRootInterface extra_docs "Local version of [`RootInterface`] to be used with [`LocalServer`].",
-    LocalPlayerInterface extra_docs "Local version of [`PlayerInterface`] to be used with [`LocalServer`].",
+    LocalPlayerInterface: Sized extra_docs "Local version of [`PlayerInterface`] to be used with [`LocalServer`].",
     LocalTrackListInterface extra_docs "Local version of [`TrackListInterface`] to be used with [`LocalServer`].",
     LocalPlaylistsInterface  extra_docs "Local version of [`PlaylistsInterface`] to be used with [`LocalServer`]."
 );
