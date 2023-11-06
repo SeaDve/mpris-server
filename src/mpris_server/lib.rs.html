@@ -1222,11 +1222,13 @@
 <a href="#1222" id="1222">1222</a>
 <a href="#1223" id="1223">1223</a>
 <a href="#1224" id="1224">1224</a>
+<a href="#1225" id="1225">1225</a>
 </pre></div><pre class="rust"><code><span class="attr">#![warn(rust_2018_idioms, missing_debug_implementations)]
 #![deny(rustdoc::broken_intra_doc_links)]
 #![doc = <span class="macro">include_str!</span>(<span class="string">&quot;../README.md&quot;</span>)]
 
 </span><span class="comment">// TODO:
+// * Remove MaybePlaylist and just use Option&lt;Playlist&gt;
 // * Document the rest of public interface
 // * Access Server from interfaces
 // * Don&#39;t let `dbus_interface` emit properties changed signal internally
