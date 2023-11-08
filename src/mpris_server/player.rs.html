@@ -1412,15 +1412,15 @@
         <span class="self">self</span>.server.run()
     }
 
-    <span class="kw">pub fn </span>connect_raise(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_raise(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server.imp().raise_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_quit(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_quit(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server.imp().quit_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player, bool) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, bool) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server
             .imp()
             .set_fullscreen_cbs
@@ -1592,11 +1592,11 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>connect_next(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_next(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server.imp().next_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_previous(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_previous(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server
             .imp()
             .previous_cbs
@@ -1604,11 +1604,11 @@
             .push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_pause(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_pause(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server.imp().pause_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_play_pause(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_play_pause(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server
             .imp()
             .play_pause_cbs
@@ -1616,19 +1616,19 @@
             .push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_stop(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_stop(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server.imp().stop_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_play(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_play(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server.imp().play_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_seek(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player, Time) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_seek(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, Time) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server.imp().seek_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player, <span class="kw-2">&amp;</span>TrackId, Time) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, <span class="kw-2">&amp;</span>TrackId, Time) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server
             .imp()
             .set_position_cbs
@@ -1636,7 +1636,7 @@
             .push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_open_uri(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player, <span class="kw-2">&amp;</span>str) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_open_uri(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, <span class="kw-2">&amp;</span>str) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server
             .imp()
             .open_uri_cbs
@@ -1644,7 +1644,7 @@
             .push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_set_loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player, LoopStatus) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_set_loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, LoopStatus) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server
             .imp()
             .set_loop_status_cbs
@@ -1652,7 +1652,7 @@
             .push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player, PlaybackRate) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, PlaybackRate) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server
             .imp()
             .set_rate_cbs
@@ -1660,7 +1660,7 @@
             .push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_set_shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player, bool) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_set_shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, bool) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server
             .imp()
             .set_shuffle_cbs
@@ -1668,7 +1668,7 @@
             .push(Box::new(cb));
     }
 
-    <span class="kw">pub fn </span>connect_set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span>Player, Volume) + <span class="lifetime">&#39;static</span>) {
+    <span class="kw">pub fn </span>connect_set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, Volume) + <span class="lifetime">&#39;static</span>) {
         <span class="self">self</span>.server
             .imp()
             .set_volume_cbs
