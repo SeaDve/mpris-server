@@ -1,10 +1,5 @@
-use std::{
-    collections::HashMap,
-    fmt,
-    sync::{Arc, Mutex},
-};
+use std::{collections::HashMap, fmt, sync::Arc};
 
-use async_lock::OnceCell;
 use enumflags2::BitFlags;
 use serde::Serialize;
 use zbus::{
@@ -359,10 +354,7 @@ pub struct Server<T>
 where
     T: PlayerInterface + 'static,
 {
-    connection: OnceCell<Connection>,
-    #[allow(clippy::type_complexity)]
-    connection_init:
-        Mutex<Option<Box<dyn FnOnce() -> Result<ConnectionBuilder<'static>> + Send + Sync>>>,
+    connection: Connection,
     imp: Arc<T>,
 }
 
@@ -396,8 +388,6 @@ where
     /// implementation, `imp`, which must implement [`RootInterface`] and
     /// [`PlayerInterface`].
     ///
-    /// To start the connection, [`Server::init`] must be called.
-    ///
     /// The resulting bus name will be
     /// `org.mpris.MediaPlayer2.<bus_name_suffix>`, where
     /// `<bus_name_suffix>`must be a unique identifier, such as one based on a
@@ -410,19 +400,8 @@ where
     /// `[A-Z][a-z][0-9]_-`" and "must not begin with a digit".
     ///
     /// [`D-Bus specification`]: dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus
-    pub fn new(bus_name_suffix: &str, imp: T) -> Self {
-        Self::new_inner(bus_name_suffix, imp, |builder, _| Ok(builder))
-    }
-
-    /// Initializes the connection.
-    ///
-    /// This is a no-op if the connection has already been initialized.
-    ///
-    /// This is also called automatically when emitting signals and properties
-    /// changed.
-    pub async fn init(&self) -> Result<()> {
-        self.get_or_init_connection().await?;
-        Ok(())
+    pub async fn new(bus_name_suffix: &str, imp: T) -> Result<Self> {
+        Self::new_inner(bus_name_suffix, imp, |builder, _| Ok(builder)).await
     }
 
     /// Returns a reference to the underlying implementation.
@@ -434,8 +413,9 @@ where
     /// Returns a reference to the inner [`Connection`].
     ///
     /// If you needed to call this, consider filing an issue.
-    pub async fn connection(&self) -> Result<&Connection> {
-        self.get_or_init_connection().await
+    #[inline]
+    pub fn connection(&self) -> &Connection {
+        &self.connection
     }
 
     /// Emits the given signal.
@@ -507,52 +487,35 @@ where
         Ok(())
     }
 
-    fn new_inner(
+    async fn new_inner(
         bus_name_suffix: &str,
         imp: T,
         builder_ext_func: impl FnOnce(ConnectionBuilder<'_>, Arc<T>) -> Result<ConnectionBuilder<'_>>
             + Send
             + Sync
             + 'static,
-    ) -> Self {
-        let bus_name = format!("org.mpris.MediaPlayer2.{}", bus_name_suffix);
+    ) -> Result<Self> {
         let imp = Arc::new(imp);
 
-        let imp_clone = Arc::clone(&imp);
-        let connection_init = Box::new(|| {
-            let builder = ConnectionBuilder::session()?
-                .name(bus_name)?
-                .serve_at(
-                    OBJECT_PATH,
-                    RawRootInterface {
-                        imp: Arc::clone(&imp_clone),
-                    },
-                )?
-                .serve_at(
-                    OBJECT_PATH,
-                    RawPlayerInterface {
-                        imp: Arc::clone(&imp_clone),
-                    },
-                )?;
-            builder_ext_func(builder, imp_clone)
-        });
+        let connection_builder = ConnectionBuilder::session()?
+            .name(format!("org.mpris.MediaPlayer2.{}", bus_name_suffix))?
+            .serve_at(
+                OBJECT_PATH,
+                RawRootInterface {
+                    imp: Arc::clone(&imp),
+                },
+            )?
+            .serve_at(
+                OBJECT_PATH,
+                RawPlayerInterface {
+                    imp: Arc::clone(&imp),
+                },
+            )?;
+        let connection = builder_ext_func(connection_builder, Arc::clone(&imp))?
+            .build()
+            .await?;
 
-        Self {
-            connection: OnceCell::new(),
-            connection_init: Mutex::new(Some(connection_init)),
-            imp,
-        }
-    }
-
-    async fn get_or_init_connection(&self) -> Result<&Connection> {
-        self.connection
-            .get_or_try_init(|| async {
-                // Safety: connection only initialized once
-                let connection_init = self.connection_init.lock().unwrap().take().unwrap();
-                let connection = connection_init()?.build().await?;
-                Ok(connection)
-            })
-            .await
+        Ok(Self { connection, imp })
     }
 
     async fn properties_changed_inner<I>(
@@ -578,18 +541,17 @@ where
     where
         I: Interface,
     {
-        let connection = self.get_or_init_connection().await?;
-
         // FIXME Hold a lock to the interface until the signal is emitted.
         // This is a workaround for `Invalid client serial` errors.
         // See https://github.com/flatpak/xdg-dbus-proxy/issues/46
-        let iface_ref = connection
+        let iface_ref = self
+            .connection
             .object_server()
             .interface::<_, I>(OBJECT_PATH)
             .await?;
         let _guard = iface_ref.get_mut().await;
 
-        connection
+        self.connection
             .emit_signal(
                 None::<BusName<'_>>,
                 OBJECT_PATH,
@@ -610,10 +572,11 @@ where
     /// to [`RootInterface`] and [`PlayerInterface`].
     ///
     /// See also [`Server::new`].
-    pub fn new_with_track_list(bus_name_suffix: &str, imp: T) -> Self {
+    pub async fn new_with_track_list(bus_name_suffix: &str, imp: T) -> Result<Self> {
         Self::new_inner(bus_name_suffix, imp, |builder, imp| {
             builder.serve_at(OBJECT_PATH, RawTrackListInterface { imp })
         })
+        .await
     }
 
     /// Emits the given signal on the `TrackList` interface.
@@ -694,10 +657,11 @@ where
     /// to [`RootInterface`] and [`PlayerInterface`].
     ///
     /// See also [`Server::new`].
-    pub fn new_with_playlists(bus_name_suffix: &str, imp: T) -> Self {
+    pub async fn new_with_playlists(bus_name_suffix: &str, imp: T) -> Result<Self> {
         Self::new_inner(bus_name_suffix, imp, |builder, imp| {
             builder.serve_at(OBJECT_PATH, RawPlaylistsInterface { imp })
         })
+        .await
     }
 
     /// Emits the given signal on the `Playlists` interface.
@@ -750,7 +714,7 @@ where
     /// [`PlayerInterface`].
     ///
     /// See also [`Server::new`].
-    pub fn new_with_all(bus_name_suffix: &str, imp: T) -> Self {
+    pub async fn new_with_all(bus_name_suffix: &str, imp: T) -> Result<Self> {
         Self::new_inner(bus_name_suffix, imp, |builder, imp| {
             builder
                 .serve_at(
@@ -761,6 +725,7 @@ where
                 )?
                 .serve_at(OBJECT_PATH, RawPlaylistsInterface { imp })
         })
+        .await
     }
 }
 

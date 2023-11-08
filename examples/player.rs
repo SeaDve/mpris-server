@@ -9,7 +9,8 @@ async fn main() -> Result<()> {
         .can_pause(true)
         .can_go_previous(true)
         .can_go_next(true)
-        .build();
+        .build()
+        .await?;
 
     // Handle `PlayPause` method call
     player.connect_play_pause(|_player| {
@@ -26,8 +27,8 @@ async fn main() -> Result<()> {
         println!("Next");
     });
 
-    // Initialize connection and run event handler task
-    let task = player.init_and_run();
+    // Run event handler task
+    let task = player.run();
     async_std::task::spawn_local(async move {
         task.await.unwrap();
     });

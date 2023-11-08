@@ -293,11 +293,11 @@ impl LocalPlaylistsInterface for Player {
 
 #[async_std::main]
 async fn main() -> Result<()> {
-    let server = LocalServer::new_with_all("Test.Application", Player);
+    let server = LocalServer::new_with_all("Test.Application", Player).await?;
 
-    // Unlike in `Server`, we have to call `init_and_run` here to handle incoming
+    // Unlike in `Server`, we have to call `run` here to handle incoming
     // requests in the local thread.
-    let task = server.init_and_run();
+    let task = server.run();
     async_std::task::spawn_local(async move {
         task.await.unwrap();
     });

@@ -487,12 +487,12 @@ where
 
 type TaskInner = Pin<Box<dyn Future<Output = Result<()>>>>;
 
-/// A task that initializes the connection and runs [`LocalServer`]'s event
-/// handler until the server and this task is dropped.
+/// A task that runs [`LocalServer`]'s event handler until the server
+/// and this task is dropped.
 ///
 /// This must be awaited as soon as possible after creating the server.
 ///
-/// See [`LocalServer::init_and_run`] for more information.
+/// See [`LocalServer::run`] for more information.
 #[must_use = "futures do nothing unless you `.await` or poll them"]
 pub struct LocalServerRunTask {
     inner: Option<TaskInner>,
@@ -528,7 +528,7 @@ pub struct LocalServer<T>
 where
     T: LocalPlayerInterface + 'static,
 {
-    inner: Rc<Server<InnerImp<T>>>,
+    inner: Server<InnerImp<T>>,
     imp: Rc<T>,
     runner: RefCell<Option<TaskInner>>,
 }
@@ -550,7 +550,8 @@ where
     /// implementation, `imp`, which must implement [`LocalRootInterface`] and
     /// [`LocalPlayerInterface`].
     ///
-    /// To start the connection, [`LocalServer::init_and_run`] must be called.
+    /// To start handling events, [`LocalServer::run`] must be called as soon
+    /// as possible.
     ///
     /// The resulting bus name will be
     /// `org.mpris.MediaPlayer2.<bus_name_suffix>`, where
@@ -565,7 +566,7 @@ where
     ///
     /// [`LocalRootInterface`]: crate::LocalRootInterface
     /// [`D-Bus specification`]: dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus
-    pub fn new(bus_name_suffix: &str, imp: T) -> Self {
+    pub async fn new(bus_name_suffix: &str, imp: T) -> Result<Self> {
         Self::new_inner(
             bus_name_suffix,
             imp,
@@ -580,15 +581,16 @@ where
                 }
             },
         )
+        .await
     }
 
-    /// Returns a task that initializes the connection and run the server until
-    /// the server and the task is dropped.
+    /// Returns a task that run the server until the server and the task is
+    /// dropped.
     ///
     /// The task must be awaited as soon as possible after creating the server.
     ///
     /// The returned task is no-op if the server has been ran before.
-    pub fn init_and_run(&self) -> LocalServerRunTask {
+    pub fn run(&self) -> LocalServerRunTask {
         LocalServerRunTask {
             inner: self.runner.take(),
         }
@@ -603,8 +605,9 @@ where
     /// Returns a reference to the inner [`Connection`].
     ///
     /// If you needed to call this, consider filing an issue.
-    pub async fn connection(&self) -> Result<&Connection> {
-        self.inner.connection().await
+    #[inline]
+    pub fn connection(&self) -> &Connection {
+        self.inner.connection()
     }
 
     /// Emits the given signal.
@@ -804,40 +807,40 @@ where
         }
     }
 
-    fn new_inner<R>(
-        bus_name_suffix: &str,
+    async fn new_inner<'a, SR, RR>(
+        bus_name_suffix: &'a str,
         imp: T,
-        server_func: impl FnOnce(&str, InnerImp<T>) -> Server<InnerImp<T>>,
-        runner_func: impl FnOnce(mpsc::UnboundedReceiver<Action>, Rc<T>) -> R + 'static,
-    ) -> Self
+        server_func: impl FnOnce(&'a str, InnerImp<T>) -> SR + 'static,
+        runner_func: impl FnOnce(mpsc::UnboundedReceiver<Action>, Rc<T>) -> RR + 'static,
+    ) -> Result<Self>
     where
-        R: Future<Output = ()> + 'static,
+        SR: Future<Output = Result<Server<InnerImp<T>>>>,
+        RR: Future<Output = ()>,
     {
         let (tx, rx) = mpsc::unbounded::<Action>();
 
-        let inner = Rc::new(server_func(
+        let inner = server_func(
             bus_name_suffix,
             InnerImp {
                 tx,
                 imp_ty: PhantomData,
             },
-        ));
+        )
+        .await?;
 
         let imp = Rc::new(imp);
 
-        let inner_clone = Rc::clone(&inner);
         let imp_clone = Rc::clone(&imp);
         let runner = Box::pin(async move {
-            inner_clone.init().await?;
             runner_func(rx, imp_clone).await;
             Ok(())
         });
 
-        Self {
+        Ok(Self {
             inner,
             imp,
             runner: RefCell::new(Some(runner)),
-        }
+        })
     }
 }
 
@@ -852,7 +855,7 @@ where
     /// See also [`LocalServer::new`].
     ///
     /// [`LocalRootInterface`]: crate::LocalRootInterface
-    pub fn new_with_track_list(bus_name_suffix: &str, imp: T) -> Self {
+    pub async fn new_with_track_list(bus_name_suffix: &str, imp: T) -> Result<Self> {
         Self::new_inner(
             bus_name_suffix,
             imp,
@@ -870,6 +873,7 @@ where
                 }
             },
         )
+        .await
     }
 
     /// Emits the given signal on the `TrackList` interface.
@@ -933,7 +937,7 @@ where
     /// See also [`LocalServer::new`].
     ///
     /// [`LocalRootInterface`]: crate::LocalRootInterface
-    pub fn new_with_playlists(bus_name_suffix: &str, imp: T) -> Self {
+    pub async fn new_with_playlists(bus_name_suffix: &str, imp: T) -> Result<Self> {
         Self::new_inner(
             bus_name_suffix,
             imp,
@@ -951,6 +955,7 @@ where
                 }
             },
         )
+        .await
     }
 
     /// Emits the given signal on the `Playlists` interface.
@@ -1011,7 +1016,7 @@ where
     /// See also [`LocalServer::new`].
     ///
     /// [`LocalRootInterface`]: crate::LocalRootInterface
-    pub fn new_with_all(bus_name_suffix: &str, imp: T) -> Self {
+    pub async fn new_with_all(bus_name_suffix: &str, imp: T) -> Result<Self> {
         Self::new_inner(
             bus_name_suffix,
             imp,
@@ -1031,5 +1036,6 @@ where
                 }
             },
         )
+        .await
     }
 }

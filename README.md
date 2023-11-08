@@ -70,10 +70,7 @@ impl PlayerInterface for MyPlayer {
 
 #[async_std::main]
 async fn main() -> Result<()> {
-    let server = Server::new("com.my.Application", MyPlayer);
-
-    // Initialize server's connection to the session bus
-    server.init().await?;
+    let server = Server::new("com.my.Application", MyPlayer).await?;
 
     // Emit `PropertiesChanged` signal for `CanSeek` and `Metadata` properties
     server.properties_changed(Property::CanSeek | Property::Metadata).await?;
@@ -108,15 +105,16 @@ async fn main() -> Result<()> {
     let player = Player::builder("com.my.Application")
         .can_play(true)
         .can_pause(true)
-        .build();
+        .build()
+        .await?;
 
     // Handle `PlayPause` method call
     player.connect_play_pause(|_player| {
         println!("PlayPause");
     });
 
-    // Initialize connection and run event handler task
-    let task = player.init_and_run();
+    // Run event handler task
+    let task = player.run();
     async_std::task::spawn_local(async move {
         task.await.unwrap();
     });

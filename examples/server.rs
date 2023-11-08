@@ -295,25 +295,18 @@ impl PlaylistsInterface for Player {
 async fn main() -> Result<()> {
     // Create a server that exports `org.mpris.MediaPlayer2` and
     // `org.mpris.MediaPlayer2.Player` interfaces.
-    let server = Server::new("Test.Application", Player);
-
-    // We only just need to call `init` here as the server is ran in the background,
-    // unlike in `LocalServer`.
-    server.init().await?;
+    let _server = Server::new("Test.Application", Player).await?;
 
     // Create a server that exports `org.mpris.MediaPlayer2.TrackList`
     // interface, in addition to the previous interfaces.
-    let server = Server::new_with_track_list("Test.ApplicationWithTrackList", Player);
-    server.init().await?;
+    let _server = Server::new_with_track_list("Test.ApplicationWithTrackList", Player).await?;
 
     // Create a server that exports `org.mpris.MediaPlayer2.Playlists`
     // interface, in addition to the previous interfaces.
-    let server = Server::new_with_playlists("Test.ApplicationWithPlaylists", Player);
-    server.init().await?;
+    let _server = Server::new_with_playlists("Test.ApplicationWithPlaylists", Player).await?;
 
     // Create a server that exports all interfaces.
-    let server = Server::new_with_all("Test.ApplicationWithTrackListAndPlaylists", Player);
-    server.init().await?;
+    let server = Server::new_with_all("Test.ApplicationWithTrackListAndPlaylists", Player).await?;
 
     // Emit `PropertiesChanged` signal for `CanSeek` and `Metadata` properties
     server

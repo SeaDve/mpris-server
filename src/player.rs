@@ -28,7 +28,7 @@ pub struct Player {
 
 #[allow(clippy::type_complexity)]
 struct State {
-    server: Weak<LocalServer<State>>,
+    server: RefCell<Option<Weak<LocalServer<State>>>>,
 
     raise_cbs: RefCell<Vec<Box<dyn Fn(&Player)>>>,
     quit_cbs: RefCell<Vec<Box<dyn Fn(&Player)>>>,
@@ -76,7 +76,13 @@ struct State {
 impl State {
     fn player(&self) -> Player {
         Player {
-            server: self.server.upgrade().expect("server must not be dropped"),
+            server: self
+                .server
+                .borrow()
+                .as_ref()
+                .expect("server must be set up")
+                .upgrade()
+                .expect("server must not be dropped"),
         }
     }
 }
@@ -342,14 +348,14 @@ impl Player {
         }
     }
 
-    /// Returns a task that initializes the connection and run the player's
-    /// server until the player and the task is dropped.
+    /// Returns a task that runs the player's server until the player and the
+    /// task is dropped.
     ///
     /// The task must be awaited as soon as possible after creating the player.
     ///
     /// The returned task is no-op if the player's server has been ran before.
-    pub fn init_and_run(&self) -> LocalServerRunTask {
-        self.server.init_and_run()
+    pub fn run(&self) -> LocalServerRunTask {
+        self.server.run()
     }
 
     pub fn connect_raise(&self, cb: impl Fn(&Player) + 'static) {
@@ -952,12 +958,12 @@ impl PlayerBuilder {
     }
 
     #[must_use = "building player is usually expensive and is not expected to have side effects"]
-    pub fn build(self) -> Player {
-        let server = Rc::new_cyclic(|server_weak| {
+    pub async fn build(self) -> Result<Player> {
+        let server = Rc::new(
             LocalServer::new(
                 &self.bus_name_suffix,
                 State {
-                    server: server_weak.clone(),
+                    server: RefCell::new(None),
                     raise_cbs: RefCell::new(Vec::new()),
                     quit_cbs: RefCell::new(Vec::new()),
                     set_fullscreen_cbs: RefCell::new(Vec::new()),
@@ -1000,8 +1006,11 @@ impl PlayerBuilder {
                     can_control: Cell::new(self.can_control),
                 },
             )
-        });
+            .await?,
+        );
 
-        Player { server }
+        server.imp().server.replace(Some(Rc::downgrade(&server)));
+
+        Ok(Player { server })
     }
 }
