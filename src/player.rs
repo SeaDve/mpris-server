@@ -358,15 +358,15 @@ impl Player {
         self.server.run()
     }
 
-    pub fn connect_raise(&self, cb: impl Fn(&Player) + 'static) {
+    pub fn connect_raise(&self, cb: impl Fn(&Self) + 'static) {
         self.server.imp().raise_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    pub fn connect_quit(&self, cb: impl Fn(&Player) + 'static) {
+    pub fn connect_quit(&self, cb: impl Fn(&Self) + 'static) {
         self.server.imp().quit_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    pub fn connect_set_fullscreen(&self, cb: impl Fn(&Player, bool) + 'static) {
+    pub fn connect_set_fullscreen(&self, cb: impl Fn(&Self, bool) + 'static) {
         self.server
             .imp()
             .set_fullscreen_cbs
@@ -538,11 +538,11 @@ impl Player {
             .await
     }
 
-    pub fn connect_next(&self, cb: impl Fn(&Player) + 'static) {
+    pub fn connect_next(&self, cb: impl Fn(&Self) + 'static) {
         self.server.imp().next_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    pub fn connect_previous(&self, cb: impl Fn(&Player) + 'static) {
+    pub fn connect_previous(&self, cb: impl Fn(&Self) + 'static) {
         self.server
             .imp()
             .previous_cbs
@@ -550,11 +550,11 @@ impl Player {
             .push(Box::new(cb));
     }
 
-    pub fn connect_pause(&self, cb: impl Fn(&Player) + 'static) {
+    pub fn connect_pause(&self, cb: impl Fn(&Self) + 'static) {
         self.server.imp().pause_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    pub fn connect_play_pause(&self, cb: impl Fn(&Player) + 'static) {
+    pub fn connect_play_pause(&self, cb: impl Fn(&Self) + 'static) {
         self.server
             .imp()
             .play_pause_cbs
@@ -562,19 +562,19 @@ impl Player {
             .push(Box::new(cb));
     }
 
-    pub fn connect_stop(&self, cb: impl Fn(&Player) + 'static) {
+    pub fn connect_stop(&self, cb: impl Fn(&Self) + 'static) {
         self.server.imp().stop_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    pub fn connect_play(&self, cb: impl Fn(&Player) + 'static) {
+    pub fn connect_play(&self, cb: impl Fn(&Self) + 'static) {
         self.server.imp().play_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    pub fn connect_seek(&self, cb: impl Fn(&Player, Time) + 'static) {
+    pub fn connect_seek(&self, cb: impl Fn(&Self, Time) + 'static) {
         self.server.imp().seek_cbs.borrow_mut().push(Box::new(cb));
     }
 
-    pub fn connect_set_position(&self, cb: impl Fn(&Player, &TrackId, Time) + 'static) {
+    pub fn connect_set_position(&self, cb: impl Fn(&Self, &TrackId, Time) + 'static) {
         self.server
             .imp()
             .set_position_cbs
@@ -582,7 +582,7 @@ impl Player {
             .push(Box::new(cb));
     }
 
-    pub fn connect_open_uri(&self, cb: impl Fn(&Player, &str) + 'static) {
+    pub fn connect_open_uri(&self, cb: impl Fn(&Self, &str) + 'static) {
         self.server
             .imp()
             .open_uri_cbs
@@ -590,7 +590,7 @@ impl Player {
             .push(Box::new(cb));
     }
 
-    pub fn connect_set_loop_status(&self, cb: impl Fn(&Player, LoopStatus) + 'static) {
+    pub fn connect_set_loop_status(&self, cb: impl Fn(&Self, LoopStatus) + 'static) {
         self.server
             .imp()
             .set_loop_status_cbs
@@ -598,7 +598,7 @@ impl Player {
             .push(Box::new(cb));
     }
 
-    pub fn connect_set_rate(&self, cb: impl Fn(&Player, PlaybackRate) + 'static) {
+    pub fn connect_set_rate(&self, cb: impl Fn(&Self, PlaybackRate) + 'static) {
         self.server
             .imp()
             .set_rate_cbs
@@ -606,7 +606,7 @@ impl Player {
             .push(Box::new(cb));
     }
 
-    pub fn connect_set_shuffle(&self, cb: impl Fn(&Player, bool) + 'static) {
+    pub fn connect_set_shuffle(&self, cb: impl Fn(&Self, bool) + 'static) {
         self.server
             .imp()
             .set_shuffle_cbs
@@ -614,7 +614,7 @@ impl Player {
             .push(Box::new(cb));
     }
 
-    pub fn connect_set_volume(&self, cb: impl Fn(&Player, Volume) + 'static) {
+    pub fn connect_set_volume(&self, cb: impl Fn(&Self, Volume) + 'static) {
         self.server
             .imp()
             .set_volume_cbs
