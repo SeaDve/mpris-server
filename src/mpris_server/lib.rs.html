@@ -1222,8 +1222,6 @@
 <a href="#1222" id="1222">1222</a>
 <a href="#1223" id="1223">1223</a>
 <a href="#1224" id="1224">1224</a>
-<a href="#1225" id="1225">1225</a>
-<a href="#1226" id="1226">1226</a>
 </pre></div><pre class="rust"><code><span class="attr">#![warn(rust_2018_idioms, missing_debug_implementations)]
 #![deny(rustdoc::broken_intra_doc_links)]
 #![doc = <span class="macro">include_str!</span>(<span class="string">&quot;../README.md&quot;</span>)]
@@ -1234,7 +1232,6 @@
 // * Document the rest of public interface
 // * Access Server from interfaces
 // * Don&#39;t let `dbus_interface` emit properties changed signal internally
-// * Use executor to handle actions concurrently in `LocalServer`
 // * Replace `DateTime` and `Uri` with proper types
 // * Add sensible default method impls on `*Interface` traits
 // * Profile if inlining is worth it
@@ -1296,7 +1293,6 @@
 /// }
 /// ```
 </span><span class="kw">pub use </span>async_trait::async_trait;
-<span class="kw">pub use </span>enumflags2;
 <span class="kw">pub use </span>zbus;
 <span class="kw">use </span>zbus::{fdo, zvariant::OwnedObjectPath, <span class="prelude-ty">Result</span>};
 

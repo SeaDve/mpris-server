@@ -967,52 +967,8 @@
 <a href="#967" id="967">967</a>
 <a href="#968" id="968">968</a>
 <a href="#969" id="969">969</a>
-<a href="#970" id="970">970</a>
-<a href="#971" id="971">971</a>
-<a href="#972" id="972">972</a>
-<a href="#973" id="973">973</a>
-<a href="#974" id="974">974</a>
-<a href="#975" id="975">975</a>
-<a href="#976" id="976">976</a>
-<a href="#977" id="977">977</a>
-<a href="#978" id="978">978</a>
-<a href="#979" id="979">979</a>
-<a href="#980" id="980">980</a>
-<a href="#981" id="981">981</a>
-<a href="#982" id="982">982</a>
-<a href="#983" id="983">983</a>
-<a href="#984" id="984">984</a>
-<a href="#985" id="985">985</a>
-<a href="#986" id="986">986</a>
-<a href="#987" id="987">987</a>
-<a href="#988" id="988">988</a>
-<a href="#989" id="989">989</a>
-<a href="#990" id="990">990</a>
-<a href="#991" id="991">991</a>
-<a href="#992" id="992">992</a>
-<a href="#993" id="993">993</a>
-<a href="#994" id="994">994</a>
-<a href="#995" id="995">995</a>
-<a href="#996" id="996">996</a>
-<a href="#997" id="997">997</a>
-<a href="#998" id="998">998</a>
-<a href="#999" id="999">999</a>
-<a href="#1000" id="1000">1000</a>
-<a href="#1001" id="1001">1001</a>
-<a href="#1002" id="1002">1002</a>
-<a href="#1003" id="1003">1003</a>
-<a href="#1004" id="1004">1004</a>
-<a href="#1005" id="1005">1005</a>
-<a href="#1006" id="1006">1006</a>
-<a href="#1007" id="1007">1007</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>std::{
-    collections::HashMap,
-    fmt,
-    sync::{Arc, Mutex},
-};
+</pre></div><pre class="rust"><code><span class="kw">use </span>std::{collections::HashMap, fmt, sync::Arc};
 
-<span class="kw">use </span>async_lock::OnceCell;
-<span class="kw">use </span>enumflags2::BitFlags;
 <span class="kw">use </span>serde::Serialize;
 <span class="kw">use </span>zbus::{
     dbus_interface, fdo,
@@ -1366,10 +1322,7 @@
 <span class="kw">where
     </span>T: PlayerInterface + <span class="lifetime">&#39;static</span>,
 {
-    connection: OnceCell&lt;Connection&gt;,
-    <span class="attr">#[allow(clippy::type_complexity)]
-    </span>connection_init:
-        Mutex&lt;<span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>FnOnce() -&gt; <span class="prelude-ty">Result</span>&lt;ConnectionBuilder&lt;<span class="lifetime">&#39;static</span>&gt;&gt; + Send + Sync&gt;&gt;&gt;,
+    connection: Connection,
     imp: Arc&lt;T&gt;,
 }
 
@@ -1383,12 +1336,11 @@
 }
 
 <span class="macro">macro_rules! </span>insert_property {
-    (<span class="macro-nonterminal">$item</span>:ident, <span class="macro-nonterminal">$property_type</span>:ident, <span class="macro-nonterminal">$source</span>:ident =&gt; $(<span class="macro-nonterminal">$map</span>:ident, <span class="macro-nonterminal">$property</span>:ident, <span class="macro-nonterminal">$getter</span>:ident);<span class="kw-2">*</span>) =&gt; {
+    (<span class="macro-nonterminal">$item</span>:ident, <span class="macro-nonterminal">$property_type</span>:ident =&gt; $(<span class="macro-nonterminal">$map</span>:ident, <span class="macro-nonterminal">$property</span>:ident);<span class="kw-2">*</span>) =&gt; {
         <span class="kw">match </span><span class="macro-nonterminal">$item </span>{
             $(
-                <span class="macro-nonterminal">$property_type</span>::<span class="macro-nonterminal">$property </span>=&gt; {
-                    <span class="kw">let </span>value = Value::new(<span class="macro-nonterminal">$source</span>.imp.<span class="macro-nonterminal">$getter</span>().<span class="kw">await</span><span class="question-mark">?</span>);
-                    <span class="macro-nonterminal">$map</span>.insert(<span class="macro">stringify!</span>(<span class="macro-nonterminal">$property</span>), value);
+                <span class="macro-nonterminal">$property_type</span>::<span class="macro-nonterminal">$property</span>(val) =&gt; {
+                    <span class="macro-nonterminal">$map</span>.insert(<span class="macro">stringify!</span>(<span class="macro-nonterminal">$property</span>), Value::new(val));
                 }
             )*
         }
@@ -1403,8 +1355,6 @@
     /// implementation, `imp`, which must implement [`RootInterface`] and
     /// [`PlayerInterface`].
     ///
-    /// To start the connection, [`Server::init`] must be called.
-    ///
     /// The resulting bus name will be
     /// `org.mpris.MediaPlayer2.&lt;bus_name_suffix&gt;`, where
     /// `&lt;bus_name_suffix&gt;`must be a unique identifier, such as one based on a
@@ -1417,20 +1367,9 @@
     /// `[A-Z][a-z][0-9]_-`&quot; and &quot;must not begin with a digit&quot;.
     ///
     /// [`D-Bus specification`]: dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus
-    </span><span class="kw">pub fn </span>new(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="self">Self </span>{
-        <span class="self">Self</span>::new_inner(bus_name_suffix, imp, |builder, <span class="kw">_</span>| <span class="prelude-val">Ok</span>(builder))
-    }
-
-    <span class="doccomment">/// Initializes the connection.
-    ///
-    /// This is a no-op if the connection has already been initialized.
-    ///
-    /// This is also called automatically when emitting signals and properties
-    /// changed.
-    </span><span class="kw">pub async fn </span>init(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="self">self</span>.get_or_init_connection().<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(())
-    }
+    </span><span class="kw">pub async fn </span>new(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+        <span class="self">Self</span>::new_inner(bus_name_suffix, imp, |builder, <span class="kw">_</span>| <span class="prelude-val">Ok</span>(builder)).<span class="kw">await
+    </span>}
 
     <span class="doccomment">/// Returns a reference to the underlying implementation.
     </span><span class="attr">#[inline]
@@ -1441,9 +1380,10 @@
     <span class="doccomment">/// Returns a reference to the inner [`Connection`].
     ///
     /// If you needed to call this, consider filing an issue.
-    </span><span class="kw">pub async fn </span>connection(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span>Connection&gt; {
-        <span class="self">self</span>.get_or_init_connection().<span class="kw">await
-    </span>}
+    </span><span class="attr">#[inline]
+    </span><span class="kw">pub fn </span>connection(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Connection {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.connection
+    }
 
     <span class="doccomment">/// Emits the given signal.
     </span><span class="kw">pub async fn </span>emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: Signal) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
@@ -1468,36 +1408,36 @@
     /// interfaces respectively.
     </span><span class="kw">pub async fn </span>properties_changed(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        properties: <span class="kw">impl </span>Into&lt;BitFlags&lt;Property&gt;&gt;,
+        properties: <span class="kw">impl </span>IntoIterator&lt;Item = Property&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>root_changed = HashMap::new();
         <span class="kw">let </span><span class="kw-2">mut </span>player_changed = HashMap::new();
 
-        <span class="kw">for </span>property <span class="kw">in </span>properties.into().iter() {
+        <span class="kw">for </span>property <span class="kw">in </span>properties.into_iter() {
             <span class="macro">insert_property!</span>(
-                property, Property, <span class="self">self </span>=&gt;
-                root_changed, CanQuit, can_quit;
-                root_changed, Fullscreen, fullscreen;
-                root_changed, CanSetFullscreen, can_set_fullscreen;
-                root_changed, CanRaise, can_raise;
-                root_changed, HasTrackList, has_track_list;
-                root_changed, Identity, identity;
-                root_changed, DesktopEntry, desktop_entry;
-                root_changed, SupportedUriSchemes, supported_uri_schemes;
-                root_changed, SupportedMimeTypes, supported_mime_types;
-                player_changed, PlaybackStatus, playback_status;
-                player_changed, LoopStatus, loop_status;
-                player_changed, Rate, rate;
-                player_changed, Shuffle, shuffle;
-                player_changed, Metadata, metadata;
-                player_changed, Volume, volume;
-                player_changed, MinimumRate, minimum_rate;
-                player_changed, MaximumRate, maximum_rate;
-                player_changed, CanGoNext, can_go_next;
-                player_changed, CanGoPrevious, can_go_previous;
-                player_changed, CanPlay, can_play;
-                player_changed, CanPause, can_pause;
-                player_changed, CanSeek, can_seek
+                property, Property =&gt;
+                root_changed, CanQuit;
+                root_changed, Fullscreen;
+                root_changed, CanSetFullscreen;
+                root_changed, CanRaise;
+                root_changed, HasTrackList;
+                root_changed, Identity;
+                root_changed, DesktopEntry;
+                root_changed, SupportedUriSchemes;
+                root_changed, SupportedMimeTypes;
+                player_changed, PlaybackStatus;
+                player_changed, LoopStatus;
+                player_changed, Rate;
+                player_changed, Shuffle;
+                player_changed, Metadata;
+                player_changed, Volume;
+                player_changed, MinimumRate;
+                player_changed, MaximumRate;
+                player_changed, CanGoNext;
+                player_changed, CanGoPrevious;
+                player_changed, CanPlay;
+                player_changed, CanPause;
+                player_changed, CanSeek
             );
         }
 
@@ -1514,53 +1454,36 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn </span>new_inner(
+    <span class="kw">async fn </span>new_inner(
         bus_name_suffix: <span class="kw-2">&amp;</span>str,
         imp: T,
         builder_ext_func: <span class="kw">impl </span>FnOnce(ConnectionBuilder&lt;<span class="lifetime">&#39;_</span>&gt;, Arc&lt;T&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;ConnectionBuilder&lt;<span class="lifetime">&#39;_</span>&gt;&gt;
             + Send
             + Sync
             + <span class="lifetime">&#39;static</span>,
-    ) -&gt; <span class="self">Self </span>{
-        <span class="kw">let </span>bus_name = <span class="macro">format!</span>(<span class="string">&quot;org.mpris.MediaPlayer2.{}&quot;</span>, bus_name_suffix);
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="kw">let </span>imp = Arc::new(imp);
 
-        <span class="kw">let </span>imp_clone = Arc::clone(<span class="kw-2">&amp;</span>imp);
-        <span class="kw">let </span>connection_init = Box::new(|| {
-            <span class="kw">let </span>builder = ConnectionBuilder::session()<span class="question-mark">?
-                </span>.name(bus_name)<span class="question-mark">?
-                </span>.serve_at(
-                    OBJECT_PATH,
-                    RawRootInterface {
-                        imp: Arc::clone(<span class="kw-2">&amp;</span>imp_clone),
-                    },
-                )<span class="question-mark">?
-                </span>.serve_at(
-                    OBJECT_PATH,
-                    RawPlayerInterface {
-                        imp: Arc::clone(<span class="kw-2">&amp;</span>imp_clone),
-                    },
-                )<span class="question-mark">?</span>;
-            builder_ext_func(builder, imp_clone)
-        });
+        <span class="kw">let </span>connection_builder = ConnectionBuilder::session()<span class="question-mark">?
+            </span>.name(<span class="macro">format!</span>(<span class="string">&quot;org.mpris.MediaPlayer2.{}&quot;</span>, bus_name_suffix))<span class="question-mark">?
+            </span>.serve_at(
+                OBJECT_PATH,
+                RawRootInterface {
+                    imp: Arc::clone(<span class="kw-2">&amp;</span>imp),
+                },
+            )<span class="question-mark">?
+            </span>.serve_at(
+                OBJECT_PATH,
+                RawPlayerInterface {
+                    imp: Arc::clone(<span class="kw-2">&amp;</span>imp),
+                },
+            )<span class="question-mark">?</span>;
+        <span class="kw">let </span>connection = builder_ext_func(connection_builder, Arc::clone(<span class="kw-2">&amp;</span>imp))<span class="question-mark">?
+            </span>.build()
+            .<span class="kw">await</span><span class="question-mark">?</span>;
 
-        <span class="self">Self </span>{
-            connection: OnceCell::new(),
-            connection_init: Mutex::new(<span class="prelude-val">Some</span>(connection_init)),
-            imp,
-        }
+        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{ connection, imp })
     }
-
-    <span class="kw">async fn </span>get_or_init_connection(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw-2">&amp;</span>Connection&gt; {
-        <span class="self">self</span>.connection
-            .get_or_try_init(|| <span class="kw">async </span>{
-                <span class="comment">// Safety: connection only initialized once
-                </span><span class="kw">let </span>connection_init = <span class="self">self</span>.connection_init.lock().unwrap().take().unwrap();
-                <span class="kw">let </span>connection = connection_init()<span class="question-mark">?</span>.build().<span class="kw">await</span><span class="question-mark">?</span>;
-                <span class="prelude-val">Ok</span>(connection)
-            })
-            .<span class="kw">await
-    </span>}
 
     <span class="kw">async fn </span>properties_changed_inner&lt;I&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -1585,18 +1508,17 @@
     <span class="kw">where
         </span>I: Interface,
     {
-        <span class="kw">let </span>connection = <span class="self">self</span>.get_or_init_connection().<span class="kw">await</span><span class="question-mark">?</span>;
-
         <span class="comment">// FIXME Hold a lock to the interface until the signal is emitted.
         // This is a workaround for `Invalid client serial` errors.
         // See https://github.com/flatpak/xdg-dbus-proxy/issues/46
-        </span><span class="kw">let </span>iface_ref = connection
+        </span><span class="kw">let </span>iface_ref = <span class="self">self
+            </span>.connection
             .object_server()
             .interface::&lt;<span class="kw">_</span>, I&gt;(OBJECT_PATH)
             .<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="kw">let </span>_guard = iface_ref.get_mut().<span class="kw">await</span>;
 
-        connection
+        <span class="self">self</span>.connection
             .emit_signal(
                 <span class="prelude-val">None</span>::&lt;BusName&lt;<span class="lifetime">&#39;_</span>&gt;&gt;,
                 OBJECT_PATH,
@@ -1617,11 +1539,12 @@
     /// to [`RootInterface`] and [`PlayerInterface`].
     ///
     /// See also [`Server::new`].
-    </span><span class="kw">pub fn </span>new_with_track_list(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">pub async fn </span>new_with_track_list(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="self">Self</span>::new_inner(bus_name_suffix, imp, |builder, imp| {
             builder.serve_at(OBJECT_PATH, RawTrackListInterface { imp })
         })
-    }
+        .<span class="kw">await
+    </span>}
 
     <span class="doccomment">/// Emits the given signal on the `TrackList` interface.
     </span><span class="kw">pub async fn </span>track_list_emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: TrackListSignal) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
@@ -1665,19 +1588,18 @@
     /// properties as defined by the spec.
     </span><span class="kw">pub async fn </span>track_list_properties_changed(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        properties: <span class="kw">impl </span>Into&lt;BitFlags&lt;TrackListProperty&gt;&gt;,
+        properties: <span class="kw">impl </span>IntoIterator&lt;Item = TrackListProperty&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>changed = HashMap::new();
         <span class="kw">let </span><span class="kw-2">mut </span>invalidated = Vec::new();
 
-        <span class="kw">for </span>property <span class="kw">in </span>properties.into().iter() {
+        <span class="kw">for </span>property <span class="kw">in </span>properties.into_iter() {
             <span class="kw">match </span>property {
                 TrackListProperty::Tracks =&gt; {
-                    <span class="comment">// The new value must not be sent according to the spec.
-                    </span>invalidated.push(<span class="string">&quot;Tracks&quot;</span>);
+                    invalidated.push(<span class="string">&quot;Tracks&quot;</span>);
                 }
-                TrackListProperty::CanEditTracks =&gt; {
-                    <span class="kw">let </span>value = Value::new(<span class="self">self</span>.imp.can_edit_tracks().<span class="kw">await</span><span class="question-mark">?</span>);
+                TrackListProperty::CanEditTracks(can_edit_tracks) =&gt; {
+                    <span class="kw">let </span>value = Value::new(can_edit_tracks);
                     changed.insert(<span class="string">&quot;CanEditTracks&quot;</span>, value);
                 }
             }
@@ -1701,11 +1623,12 @@
     /// to [`RootInterface`] and [`PlayerInterface`].
     ///
     /// See also [`Server::new`].
-    </span><span class="kw">pub fn </span>new_with_playlists(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">pub async fn </span>new_with_playlists(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="self">Self</span>::new_inner(bus_name_suffix, imp, |builder, imp| {
             builder.serve_at(OBJECT_PATH, RawPlaylistsInterface { imp })
         })
-    }
+        .<span class="kw">await
+    </span>}
 
     <span class="doccomment">/// Emits the given signal on the `Playlists` interface.
     </span><span class="kw">pub async fn </span>playlists_emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: PlaylistsSignal) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
@@ -1725,16 +1648,16 @@
     /// properties as defined by the spec.
     </span><span class="kw">pub async fn </span>playlists_properties_changed(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        properties: <span class="kw">impl </span>Into&lt;BitFlags&lt;PlaylistsProperty&gt;&gt;,
+        properties: <span class="kw">impl </span>IntoIterator&lt;Item = PlaylistsProperty&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>changed = HashMap::new();
 
-        <span class="kw">for </span>property <span class="kw">in </span>properties.into().iter() {
+        <span class="kw">for </span>property <span class="kw">in </span>properties.into_iter() {
             <span class="macro">insert_property!</span>(
-                property, PlaylistsProperty, <span class="self">self </span>=&gt;
-                changed, PlaylistCount, playlist_count;
-                changed, Orderings, orderings;
-                changed, ActivePlaylist, active_playlist
+                property, PlaylistsProperty =&gt;
+                changed, PlaylistCount;
+                changed, Orderings;
+                changed, ActivePlaylist
             );
         }
 
@@ -1757,7 +1680,7 @@
     /// [`PlayerInterface`].
     ///
     /// See also [`Server::new`].
-    </span><span class="kw">pub fn </span>new_with_all(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">pub async fn </span>new_with_all(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="self">Self</span>::new_inner(bus_name_suffix, imp, |builder, imp| {
             builder
                 .serve_at(
@@ -1768,7 +1691,8 @@
                 )<span class="question-mark">?
                 </span>.serve_at(OBJECT_PATH, RawPlaylistsInterface { imp })
         })
-    }
+        .<span class="kw">await
+    </span>}
 }
 
 <span class="attr">#[cfg(test)]
