@@ -105,9 +105,7 @@
 
     <span class="comment">// Run event handler task
     </span><span class="kw">let </span>task = player.run();
-    async_std::task::spawn_local(<span class="kw">async move </span>{
-        task.<span class="kw">await</span>;
-    });
+    async_std::task::spawn_local(task);
 
     <span class="comment">// Update `CanPlay` property and emit `PropertiesChanged` signal for it
     </span>player.set_can_play(<span class="bool-val">false</span>).<span class="kw">await</span><span class="question-mark">?</span>;
