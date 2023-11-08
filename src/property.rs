@@ -1,37 +1,37 @@
-use enumflags2::bitflags;
+use crate::{
+    LoopStatus, MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus, PlaylistOrdering, Volume,
+};
 
 /// Used for emitting `PropertiesChanged` signals on
 /// [`Server::properties_changed`] and [`LocalServer::properties_changed`].
 ///
 /// [`Server::properties_changed`]: crate::Server::properties_changed
 /// [`LocalServer::properties_changed`]: crate::LocalServer::properties_changed
-#[bitflags]
-#[repr(u32)]
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum Property {
-    CanQuit,
-    Fullscreen,
-    CanSetFullscreen,
-    CanRaise,
-    HasTrackList,
-    Identity,
-    DesktopEntry,
-    SupportedUriSchemes,
-    SupportedMimeTypes,
-    PlaybackStatus,
-    LoopStatus,
-    Rate,
-    Shuffle,
-    Metadata,
-    Volume,
+    CanQuit(bool),
+    Fullscreen(bool),
+    CanSetFullscreen(bool),
+    CanRaise(bool),
+    HasTrackList(bool),
+    Identity(String),
+    DesktopEntry(String),
+    SupportedUriSchemes(Vec<String>),
+    SupportedMimeTypes(Vec<String>),
+    PlaybackStatus(PlaybackStatus),
+    LoopStatus(LoopStatus),
+    Rate(PlaybackRate),
+    Shuffle(bool),
+    Metadata(Metadata),
+    Volume(Volume),
     // Position (must use `Rate` property together with `Seeked` signal instead)
-    MinimumRate,
-    MaximumRate,
-    CanGoNext,
-    CanGoPrevious,
-    CanPlay,
-    CanPause,
-    CanSeek,
+    MinimumRate(PlaybackRate),
+    MaximumRate(PlaybackRate),
+    CanGoNext(bool),
+    CanGoPrevious(bool),
+    CanPlay(bool),
+    CanPause(bool),
+    CanSeek(bool),
     // CanControl (not expected to change)
 }
 
@@ -44,12 +44,11 @@ pub enum Property {
 /// [`LocalServer::track_list_properties_changed`]: crate::LocalServer::track_list_properties_changed
 /// [`TrackListInterface`]: crate::TrackListInterface
 /// [`LocalTrackListInterface`]: crate::LocalTrackListInterface
-#[bitflags]
-#[repr(u32)]
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum TrackListProperty {
+    // The new value must not be sent according to the spec.
     Tracks,
-    CanEditTracks,
+    CanEditTracks(bool),
 }
 
 /// Used for emitting `PropertiesChanged` signals on
@@ -61,11 +60,9 @@ pub enum TrackListProperty {
 /// [`LocalServer::playlists_properties_changed`]: crate::LocalServer::playlists_properties_changed
 /// [`PlaylistsInterface`]: crate::PlaylistsInterface
 /// [`LocalPlaylistsInterface`]: crate::LocalPlaylistsInterface
-#[bitflags]
-#[repr(u32)]
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum PlaylistsProperty {
-    PlaylistCount,
-    Orderings,
-    ActivePlaylist,
+    PlaylistCount(u32),
+    Orderings(Vec<PlaylistOrdering>),
+    ActivePlaylist(MaybePlaylist),
 }

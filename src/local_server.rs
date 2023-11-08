@@ -9,7 +9,6 @@ use std::{
 };
 
 use async_trait::async_trait;
-use enumflags2::BitFlags;
 use futures_channel::{mpsc, oneshot};
 use futures_util::{FutureExt, StreamExt};
 use zbus::{fdo, Connection, Result};
@@ -74,6 +73,18 @@ enum PlayerAction {
     CanControl(oneshot::Sender<fdo::Result<bool>>),
 }
 
+enum TrackListAction {
+    // Methods
+    GetTracksMetadata(Vec<TrackId>, oneshot::Sender<fdo::Result<Vec<Metadata>>>),
+    AddTrack(Uri, TrackId, bool, oneshot::Sender<fdo::Result<()>>),
+    RemoveTrack(TrackId, oneshot::Sender<fdo::Result<()>>),
+    GoTo(TrackId, oneshot::Sender<fdo::Result<()>>),
+
+    // Properties
+    Tracks(oneshot::Sender<fdo::Result<Vec<TrackId>>>),
+    CanEditTracks(oneshot::Sender<fdo::Result<bool>>),
+}
+
 enum PlaylistsAction {
     // Methods
     ActivatePlaylist(PlaylistId, oneshot::Sender<fdo::Result<()>>),
@@ -89,18 +100,6 @@ enum PlaylistsAction {
     PlaylistCount(oneshot::Sender<fdo::Result<u32>>),
     Orderings(oneshot::Sender<fdo::Result<Vec<PlaylistOrdering>>>),
     ActivePlaylist(oneshot::Sender<fdo::Result<MaybePlaylist>>),
-}
-
-enum TrackListAction {
-    // Methods
-    GetTracksMetadata(Vec<TrackId>, oneshot::Sender<fdo::Result<Vec<Metadata>>>),
-    AddTrack(Uri, TrackId, bool, oneshot::Sender<fdo::Result<()>>),
-    RemoveTrack(TrackId, oneshot::Sender<fdo::Result<()>>),
-    GoTo(TrackId, oneshot::Sender<fdo::Result<()>>),
-
-    // Properties
-    Tracks(oneshot::Sender<fdo::Result<Vec<TrackId>>>),
-    CanEditTracks(oneshot::Sender<fdo::Result<bool>>),
 }
 
 enum Action {
@@ -628,7 +627,7 @@ where
     #[inline]
     pub async fn properties_changed(
         &self,
-        properties: impl Into<BitFlags<Property>>,
+        properties: impl IntoIterator<Item = Property>,
     ) -> Result<()> {
         self.inner.properties_changed(properties).await
     }
@@ -888,7 +887,7 @@ where
     #[inline]
     pub async fn track_list_properties_changed(
         &self,
-        properties: impl Into<BitFlags<TrackListProperty>>,
+        properties: impl IntoIterator<Item = TrackListProperty>,
     ) -> Result<()> {
         self.inner.track_list_properties_changed(properties).await
     }
@@ -970,7 +969,7 @@ where
     #[inline]
     pub async fn playlists_properties_changed(
         &self,
-        properties: impl Into<BitFlags<PlaylistsProperty>>,
+        properties: impl IntoIterator<Item = PlaylistsProperty>,
     ) -> Result<()> {
         self.inner.playlists_properties_changed(properties).await
     }

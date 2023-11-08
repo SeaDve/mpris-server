@@ -1,6 +1,5 @@
 use std::{collections::HashMap, fmt, sync::Arc};
 
-use enumflags2::BitFlags;
 use serde::Serialize;
 use zbus::{
     dbus_interface, fdo,
@@ -368,12 +367,11 @@ where
 }
 
 macro_rules! insert_property {
-    ($item:ident, $property_type:ident, $source:ident => $($map:ident, $property:ident, $getter:ident);*) => {
+    ($item:ident, $property_type:ident => $($map:ident, $property:ident);*) => {
         match $item {
             $(
-                $property_type::$property => {
-                    let value = Value::new($source.imp.$getter().await?);
-                    $map.insert(stringify!($property), value);
+                $property_type::$property(val) => {
+                    $map.insert(stringify!($property), Value::new(val));
                 }
             )*
         }
@@ -441,36 +439,36 @@ where
     /// interfaces respectively.
     pub async fn properties_changed(
         &self,
-        properties: impl Into<BitFlags<Property>>,
+        properties: impl IntoIterator<Item = Property>,
     ) -> Result<()> {
         let mut root_changed = HashMap::new();
         let mut player_changed = HashMap::new();
 
-        for property in properties.into().iter() {
+        for property in properties.into_iter() {
             insert_property!(
-                property, Property, self =>
-                root_changed, CanQuit, can_quit;
-                root_changed, Fullscreen, fullscreen;
-                root_changed, CanSetFullscreen, can_set_fullscreen;
-                root_changed, CanRaise, can_raise;
-                root_changed, HasTrackList, has_track_list;
-                root_changed, Identity, identity;
-                root_changed, DesktopEntry, desktop_entry;
-                root_changed, SupportedUriSchemes, supported_uri_schemes;
-                root_changed, SupportedMimeTypes, supported_mime_types;
-                player_changed, PlaybackStatus, playback_status;
-                player_changed, LoopStatus, loop_status;
-                player_changed, Rate, rate;
-                player_changed, Shuffle, shuffle;
-                player_changed, Metadata, metadata;
-                player_changed, Volume, volume;
-                player_changed, MinimumRate, minimum_rate;
-                player_changed, MaximumRate, maximum_rate;
-                player_changed, CanGoNext, can_go_next;
-                player_changed, CanGoPrevious, can_go_previous;
-                player_changed, CanPlay, can_play;
-                player_changed, CanPause, can_pause;
-                player_changed, CanSeek, can_seek
+                property, Property =>
+                root_changed, CanQuit;
+                root_changed, Fullscreen;
+                root_changed, CanSetFullscreen;
+                root_changed, CanRaise;
+                root_changed, HasTrackList;
+                root_changed, Identity;
+                root_changed, DesktopEntry;
+                root_changed, SupportedUriSchemes;
+                root_changed, SupportedMimeTypes;
+                player_changed, PlaybackStatus;
+                player_changed, LoopStatus;
+                player_changed, Rate;
+                player_changed, Shuffle;
+                player_changed, Metadata;
+                player_changed, Volume;
+                player_changed, MinimumRate;
+                player_changed, MaximumRate;
+                player_changed, CanGoNext;
+                player_changed, CanGoPrevious;
+                player_changed, CanPlay;
+                player_changed, CanPause;
+                player_changed, CanSeek
             );
         }
 
@@ -621,19 +619,18 @@ where
     /// properties as defined by the spec.
     pub async fn track_list_properties_changed(
         &self,
-        properties: impl Into<BitFlags<TrackListProperty>>,
+        properties: impl IntoIterator<Item = TrackListProperty>,
     ) -> Result<()> {
         let mut changed = HashMap::new();
         let mut invalidated = Vec::new();
 
-        for property in properties.into().iter() {
+        for property in properties.into_iter() {
             match property {
                 TrackListProperty::Tracks => {
-                    // The new value must not be sent according to the spec.
                     invalidated.push("Tracks");
                 }
-                TrackListProperty::CanEditTracks => {
-                    let value = Value::new(self.imp.can_edit_tracks().await?);
+                TrackListProperty::CanEditTracks(can_edit_tracks) => {
+                    let value = Value::new(can_edit_tracks);
                     changed.insert("CanEditTracks", value);
                 }
             }
@@ -682,16 +679,16 @@ where
     /// properties as defined by the spec.
     pub async fn playlists_properties_changed(
         &self,
-        properties: impl Into<BitFlags<PlaylistsProperty>>,
+        properties: impl IntoIterator<Item = PlaylistsProperty>,
     ) -> Result<()> {
         let mut changed = HashMap::new();
 
-        for property in properties.into().iter() {
+        for property in properties.into_iter() {
             insert_property!(
-                property, PlaylistsProperty, self =>
-                changed, PlaylistCount, playlist_count;
-                changed, Orderings, orderings;
-                changed, ActivePlaylist, active_playlist
+                property, PlaylistsProperty =>
+                changed, PlaylistCount;
+                changed, Orderings;
+                changed, ActivePlaylist
             );
         }
 

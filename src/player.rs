@@ -384,7 +384,9 @@ impl Player {
         }
 
         self.server.imp().can_quit.set(can_quit);
-        self.server.properties_changed(Property::CanQuit).await
+        self.server
+            .properties_changed([Property::CanQuit(can_quit)])
+            .await
     }
 
     pub fn fullscreen(&self) -> bool {
@@ -397,7 +399,9 @@ impl Player {
         }
 
         self.server.imp().fullscreen.set(fullscreen);
-        self.server.properties_changed(Property::Fullscreen).await
+        self.server
+            .properties_changed([Property::Fullscreen(fullscreen)])
+            .await
     }
 
     pub fn can_set_fullscreen(&self) -> bool {
@@ -411,7 +415,7 @@ impl Player {
 
         self.server.imp().can_set_fullscreen.set(can_set_fullscreen);
         self.server
-            .properties_changed(Property::CanSetFullscreen)
+            .properties_changed([Property::CanSetFullscreen(can_set_fullscreen)])
             .await
     }
 
@@ -425,7 +429,9 @@ impl Player {
         }
 
         self.server.imp().can_raise.set(can_raise);
-        self.server.properties_changed(Property::CanRaise).await
+        self.server
+            .properties_changed([Property::CanRaise(can_raise)])
+            .await
     }
 
     pub fn has_track_list(&self) -> bool {
@@ -438,7 +444,9 @@ impl Player {
         }
 
         self.server.imp().has_track_list.set(has_track_list);
-        self.server.properties_changed(Property::HasTrackList).await
+        self.server
+            .properties_changed([Property::HasTrackList(has_track_list)])
+            .await
     }
 
     pub fn identity(&self) -> Ref<'_, String> {
@@ -452,8 +460,10 @@ impl Player {
             return Ok(());
         }
 
-        self.server.imp().identity.replace(identity);
-        self.server.properties_changed(Property::Identity).await
+        self.server.imp().identity.replace(identity.clone());
+        self.server
+            .properties_changed([Property::Identity(identity)])
+            .await
     }
 
     pub fn desktop_entry(&self) -> Ref<'_, String> {
@@ -467,8 +477,13 @@ impl Player {
             return Ok(());
         }
 
-        self.server.imp().desktop_entry.replace(desktop_entry);
-        self.server.properties_changed(Property::DesktopEntry).await
+        self.server
+            .imp()
+            .desktop_entry
+            .replace(desktop_entry.clone());
+        self.server
+            .properties_changed([Property::DesktopEntry(desktop_entry)])
+            .await
     }
 
     pub fn supported_uri_schemes(&self) -> Ref<'_, Vec<String>> {
@@ -482,7 +497,7 @@ impl Player {
         let supported_uri_schemes = supported_uri_schemes
             .into_iter()
             .map(|i| i.into())
-            .collect();
+            .collect::<Vec<_>>();
 
         if *self.supported_uri_schemes() == supported_uri_schemes {
             return Ok(());
@@ -491,9 +506,9 @@ impl Player {
         self.server
             .imp()
             .supported_uri_schemes
-            .replace(supported_uri_schemes);
+            .replace(supported_uri_schemes.clone());
         self.server
-            .properties_changed(Property::SupportedUriSchemes)
+            .properties_changed([Property::SupportedUriSchemes(supported_uri_schemes)])
             .await
     }
 
@@ -505,7 +520,10 @@ impl Player {
         &self,
         supported_mime_types: impl IntoIterator<Item = impl Into<String>>,
     ) -> Result<()> {
-        let supported_mime_types = supported_mime_types.into_iter().map(|i| i.into()).collect();
+        let supported_mime_types = supported_mime_types
+            .into_iter()
+            .map(|i| i.into())
+            .collect::<Vec<_>>();
 
         if *self.supported_mime_types() == supported_mime_types {
             return Ok(());
@@ -514,9 +532,9 @@ impl Player {
         self.server
             .imp()
             .supported_mime_types
-            .replace(supported_mime_types);
+            .replace(supported_mime_types.clone());
         self.server
-            .properties_changed(Property::SupportedMimeTypes)
+            .properties_changed([Property::SupportedMimeTypes(supported_mime_types)])
             .await
     }
 
@@ -619,7 +637,7 @@ impl Player {
 
         self.server.imp().playback_status.set(playback_status);
         self.server
-            .properties_changed(Property::PlaybackStatus)
+            .properties_changed([Property::PlaybackStatus(playback_status)])
             .await
     }
 
@@ -633,7 +651,9 @@ impl Player {
         }
 
         self.server.imp().loop_status.set(loop_status);
-        self.server.properties_changed(Property::LoopStatus).await
+        self.server
+            .properties_changed([Property::LoopStatus(loop_status)])
+            .await
     }
 
     pub fn rate(&self) -> PlaybackRate {
@@ -646,7 +666,7 @@ impl Player {
         }
 
         self.server.imp().rate.set(rate);
-        self.server.properties_changed(Property::Rate).await
+        self.server.properties_changed([Property::Rate(rate)]).await
     }
 
     pub fn shuffle(&self) -> bool {
@@ -659,7 +679,9 @@ impl Player {
         }
 
         self.server.imp().shuffle.set(shuffle);
-        self.server.properties_changed(Property::Shuffle).await
+        self.server
+            .properties_changed([Property::Shuffle(shuffle)])
+            .await
     }
 
     pub fn metadata(&self) -> Ref<'_, Metadata> {
@@ -671,8 +693,10 @@ impl Player {
             return Ok(());
         }
 
-        self.server.imp().metadata.replace(metadata);
-        self.server.properties_changed(Property::Metadata).await
+        self.server.imp().metadata.replace(metadata.clone());
+        self.server
+            .properties_changed([Property::Metadata(metadata)])
+            .await
     }
 
     pub fn volume(&self) -> Volume {
@@ -685,7 +709,9 @@ impl Player {
         }
 
         self.server.imp().volume.set(volume);
-        self.server.properties_changed(Property::Volume).await
+        self.server
+            .properties_changed([Property::Volume(volume)])
+            .await
     }
 
     pub fn position(&self) -> Time {
@@ -707,7 +733,9 @@ impl Player {
         }
 
         self.server.imp().minimum_rate.set(minimum_rate);
-        self.server.properties_changed(Property::MinimumRate).await
+        self.server
+            .properties_changed([Property::MinimumRate(minimum_rate)])
+            .await
     }
 
     pub fn maximum_rate(&self) -> PlaybackRate {
@@ -720,7 +748,9 @@ impl Player {
         }
 
         self.server.imp().maximum_rate.set(maximum_rate);
-        self.server.properties_changed(Property::MaximumRate).await
+        self.server
+            .properties_changed([Property::MaximumRate(maximum_rate)])
+            .await
     }
 
     pub fn can_go_next(&self) -> bool {
@@ -733,7 +763,9 @@ impl Player {
         }
 
         self.server.imp().can_go_next.set(can_go_next);
-        self.server.properties_changed(Property::CanGoNext).await
+        self.server
+            .properties_changed([Property::CanGoNext(can_go_next)])
+            .await
     }
 
     pub fn can_go_previous(&self) -> bool {
@@ -747,7 +779,7 @@ impl Player {
 
         self.server.imp().can_go_previous.set(can_go_previous);
         self.server
-            .properties_changed(Property::CanGoPrevious)
+            .properties_changed([Property::CanGoPrevious(can_go_previous)])
             .await
     }
 
@@ -761,7 +793,9 @@ impl Player {
         }
 
         self.server.imp().can_play.set(can_play);
-        self.server.properties_changed(Property::CanPlay).await
+        self.server
+            .properties_changed([Property::CanPlay(can_play)])
+            .await
     }
 
     pub fn can_pause(&self) -> bool {
@@ -774,7 +808,9 @@ impl Player {
         }
 
         self.server.imp().can_pause.set(can_pause);
-        self.server.properties_changed(Property::CanPause).await
+        self.server
+            .properties_changed([Property::CanPause(can_pause)])
+            .await
     }
 
     pub fn can_seek(&self) -> bool {
@@ -787,7 +823,9 @@ impl Player {
         }
 
         self.server.imp().can_seek.set(can_seek);
-        self.server.properties_changed(Property::CanSeek).await
+        self.server
+            .properties_changed([Property::CanSeek(can_seek)])
+            .await
     }
 
     /// This can only be set on construct.

@@ -73,7 +73,12 @@ async fn main() -> Result<()> {
     let server = Server::new("com.my.Application", MyPlayer).await?;
 
     // Emit `PropertiesChanged` signal for `CanSeek` and `Metadata` properties
-    server.properties_changed(Property::CanSeek | Property::Metadata).await?;
+    server
+        .properties_changed([
+            Property::CanSeek(false),
+            Property::Metadata(Metadata::new()),
+        ])
+        .await?;
 
     // Emit `Seeked` signal
     server

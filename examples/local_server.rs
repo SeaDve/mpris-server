@@ -304,7 +304,10 @@ async fn main() -> Result<()> {
 
     // Emit `PropertiesChanged` signal for `CanSeek` and `Metadata` properties
     server
-        .properties_changed(Property::CanSeek | Property::Metadata)
+        .properties_changed([
+            Property::CanSeek(false),
+            Property::Metadata(Metadata::new()),
+        ])
         .await?;
 
     // Emit `Seeked` signal
