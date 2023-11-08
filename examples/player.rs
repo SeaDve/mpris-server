@@ -30,7 +30,7 @@ async fn main() -> Result<()> {
     // Run event handler task
     let task = player.run();
     async_std::task::spawn_local(async move {
-        task.await.unwrap();
+        task.await;
     });
 
     // Update `CanPlay` property and emit `PropertiesChanged` signal for it

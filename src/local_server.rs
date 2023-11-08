@@ -485,7 +485,7 @@ where
     }
 }
 
-type TaskInner = Pin<Box<dyn Future<Output = Result<()>>>>;
+type TaskInner = Pin<Box<dyn Future<Output = ()>>>;
 
 /// A task that runs [`LocalServer`]'s event handler until the server
 /// and this task is dropped.
@@ -507,12 +507,12 @@ impl fmt::Debug for LocalServerRunTask {
 }
 
 impl Future for LocalServerRunTask {
-    type Output = Result<()>;
+    type Output = ();
 
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         match self.inner.as_mut() {
             Some(inner) => inner.poll_unpin(cx),
-            None => Poll::Ready(Ok(())),
+            None => Poll::Ready(()),
         }
     }
 }
@@ -833,7 +833,6 @@ where
         let imp_clone = Rc::clone(&imp);
         let runner = Box::pin(async move {
             runner_func(rx, imp_clone).await;
-            Ok(())
         });
 
         Ok(Self {

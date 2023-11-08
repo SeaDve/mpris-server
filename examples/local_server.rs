@@ -299,7 +299,7 @@ async fn main() -> Result<()> {
     // requests in the local thread.
     let task = server.run();
     async_std::task::spawn_local(async move {
-        task.await.unwrap();
+        task.await;
     });
 
     // Emit `PropertiesChanged` signal for `CanSeek` and `Metadata` properties
