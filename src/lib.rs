@@ -3,8 +3,6 @@
 #![doc = include_str!("../README.md")]
 
 // TODO:
-// * Remove MaybePlaylist and just use Option<Playlist>
-// * Be explicit on the values on PropertiesChanged signals
 // * Document the rest of public interface
 // * Access Server from interfaces
 // * Don't let `dbus_interface` emit properties changed signal internally
@@ -78,7 +76,7 @@ pub use crate::{
     metadata::{DateTime, Metadata},
     playback_status::PlaybackStatus,
     player::Player,
-    playlist::{MaybePlaylist, Playlist},
+    playlist::Playlist,
     playlist_ordering::PlaylistOrdering,
     property::{PlaylistsProperty, Property, TrackListProperty},
     server::Server,
@@ -1164,7 +1162,7 @@ macro_rules! define_iface {
             /// [`playlists_properties_changed`]: Server::playlists_properties_changed
             /// [`ActivatePlaylist`]: Self::activate_playlist
             #[doc(alias = "ActivePlaylist")]
-            async fn active_playlist(&self) -> fdo::Result<MaybePlaylist>;
+            async fn active_playlist(&self) -> fdo::Result<Option<Playlist>>;
         }
     };
 }

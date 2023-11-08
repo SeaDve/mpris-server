@@ -9,10 +9,10 @@ use zbus::{
 };
 
 use crate::{
-    LoopStatus, MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, Playlist,
-    PlaylistId, PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, PlaylistsSignal, Property,
-    RootInterface, Signal, Time, TrackId, TrackListInterface, TrackListProperty, TrackListSignal,
-    Uri, Volume,
+    playlist::MaybePlaylist, LoopStatus, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface,
+    Playlist, PlaylistId, PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, PlaylistsSignal,
+    Property, RootInterface, Signal, Time, TrackId, TrackListInterface, TrackListProperty,
+    TrackListSignal, Uri, Volume,
 };
 
 const OBJECT_PATH: ObjectPath<'static> =
@@ -335,7 +335,7 @@ where
 
     #[dbus_interface(property)]
     async fn active_playlist(&self) -> fdo::Result<MaybePlaylist> {
-        self.imp.active_playlist().await
+        self.imp.active_playlist().await.map(MaybePlaylist::from)
     }
 }
 
@@ -630,8 +630,7 @@ where
                     invalidated.push("Tracks");
                 }
                 TrackListProperty::CanEditTracks(can_edit_tracks) => {
-                    let value = Value::new(can_edit_tracks);
-                    changed.insert("CanEditTracks", value);
+                    changed.insert("CanEditTracks", Value::new(can_edit_tracks));
                 }
             }
         }
@@ -684,12 +683,20 @@ where
         let mut changed = HashMap::new();
 
         for property in properties.into_iter() {
-            insert_property!(
-                property, PlaylistsProperty =>
-                changed, PlaylistCount;
-                changed, Orderings;
-                changed, ActivePlaylist
-            );
+            match property {
+                PlaylistsProperty::PlaylistCount(playlist_count) => {
+                    changed.insert("PlaylistCount", Value::new(playlist_count));
+                }
+                PlaylistsProperty::Orderings(orderings) => {
+                    changed.insert("Orderings", Value::new(orderings));
+                }
+                PlaylistsProperty::ActivePlaylist(active_playlist) => {
+                    changed.insert(
+                        "ActivePlaylist",
+                        Value::new(MaybePlaylist::from(active_playlist)),
+                    );
+                }
+            }
         }
 
         if !changed.is_empty() {
@@ -960,7 +967,7 @@ mod tests {
             unreachable!()
         }
 
-        async fn active_playlist(&self) -> fdo::Result<MaybePlaylist> {
+        async fn active_playlist(&self) -> fdo::Result<Option<Playlist>> {
             unreachable!()
         }
     }

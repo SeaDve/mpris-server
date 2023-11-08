@@ -1,5 +1,5 @@
 use crate::{
-    LoopStatus, MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus, PlaylistOrdering, Volume,
+    LoopStatus, Metadata, PlaybackRate, PlaybackStatus, Playlist, PlaylistOrdering, Volume,
 };
 
 /// Used for emitting `PropertiesChanged` signals on
@@ -64,5 +64,5 @@ pub enum TrackListProperty {
 pub enum PlaylistsProperty {
     PlaylistCount(u32),
     Orderings(Vec<PlaylistOrdering>),
-    ActivePlaylist(MaybePlaylist),
+    ActivePlaylist(Option<Playlist>),
 }

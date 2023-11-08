@@ -4,8 +4,8 @@ use mpris_server::{
     async_trait,
     zbus::{fdo, Result},
     LocalPlayerInterface, LocalPlaylistsInterface, LocalRootInterface, LocalServer,
-    LocalTrackListInterface, LoopStatus, MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus,
-    Playlist, PlaylistId, PlaylistOrdering, Property, Signal, Time, TrackId, Uri, Volume,
+    LocalTrackListInterface, LoopStatus, Metadata, PlaybackRate, PlaybackStatus, Playlist,
+    PlaylistId, PlaylistOrdering, Property, Signal, Time, TrackId, Uri, Volume,
 };
 
 pub struct Player;
@@ -285,9 +285,9 @@ impl LocalPlaylistsInterface for Player {
         Ok(vec![])
     }
 
-    async fn active_playlist(&self) -> fdo::Result<MaybePlaylist> {
+    async fn active_playlist(&self) -> fdo::Result<Option<Playlist>> {
         println!("ActivePlaylist");
-        Ok(None.into())
+        Ok(None)
     }
 }
 

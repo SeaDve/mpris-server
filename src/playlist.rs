@@ -4,9 +4,6 @@ use zbus::zvariant::{ObjectPath, Type, Value};
 use crate::{PlaylistId, Uri};
 
 /// A data structure describing a playlist.
-///
-/// See [`MaybePlaylist`] for a data structure that may or may not contain a
-/// playlist.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Type)]
 pub struct Playlist {
     /// A unique identifier for the playlist.
@@ -17,16 +14,6 @@ pub struct Playlist {
     pub name: String,
     /// The URI of an (optional) icon.
     pub icon: Uri,
-}
-
-impl From<MaybePlaylist> for Option<Playlist> {
-    fn from(mp: MaybePlaylist) -> Self {
-        if mp.valid {
-            Some(mp.playlist)
-        } else {
-            None
-        }
-    }
 }
 
 impl<'a> From<Playlist> for Value<'a> {
@@ -45,7 +32,7 @@ impl<'a> From<Playlist> for Value<'a> {
 /// </details>
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Type)]
 #[doc(alias = "Maybe_Playlist")]
-pub struct MaybePlaylist {
+pub(crate) struct MaybePlaylist {
     /// Whether this structure refers to a valid playlist.
     valid: bool,
     /// The playlist, providing `valid` is true, otherwise undefined.
@@ -57,51 +44,21 @@ pub struct MaybePlaylist {
     playlist: Playlist,
 }
 
-impl MaybePlaylist {
-    /// Construct a valid `MaybePlaylist` from the given playlist.
-    pub fn just(playlist: Playlist) -> Self {
-        Self {
-            valid: true,
-            playlist,
-        }
-    }
-
-    /// Construct a `MaybePlaylist` that contains invalid/no playlist.
-    ///
-    /// The playlist ID will be set to "/", and the name and icon will be empty.
-    pub fn nothing() -> Self {
-        Self {
-            valid: false,
-            playlist: Playlist {
-                id: ObjectPath::from_static_str_unchecked("/").into(),
-                name: String::new(),
-                icon: Uri::new(),
-            },
-        }
-    }
-
-    /// Returns [Some] if this structure contains a valid playlist, otherwise
-    /// [None].
-    pub fn get(&self) -> Option<&Playlist> {
-        if self.valid {
-            Some(&self.playlist)
-        } else {
-            None
-        }
-    }
-}
-
-impl From<Playlist> for MaybePlaylist {
-    fn from(playlist: Playlist) -> Self {
-        Self::just(playlist)
-    }
-}
-
 impl From<Option<Playlist>> for MaybePlaylist {
-    fn from(opt: Option<Playlist>) -> Self {
-        match opt {
-            Some(playlist) => Self::just(playlist),
-            None => Self::nothing(),
+    fn from(playlist: Option<Playlist>) -> Self {
+        match playlist {
+            Some(playlist) => Self {
+                valid: true,
+                playlist,
+            },
+            None => Self {
+                valid: false,
+                playlist: Playlist {
+                    id: ObjectPath::from_static_str_unchecked("/").into(),
+                    name: String::new(),
+                    icon: Uri::new(),
+                },
+            },
         }
     }
 }

@@ -3,9 +3,9 @@ use std::future;
 use mpris_server::{
     async_trait,
     zbus::{fdo, Result},
-    LoopStatus, MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, Playlist,
-    PlaylistId, PlaylistOrdering, PlaylistsInterface, Property, RootInterface, Server, Signal,
-    Time, TrackId, TrackListInterface, Uri, Volume,
+    LoopStatus, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, Playlist, PlaylistId,
+    PlaylistOrdering, PlaylistsInterface, Property, RootInterface, Server, Signal, Time, TrackId,
+    TrackListInterface, Uri, Volume,
 };
 
 pub struct Player;
@@ -285,9 +285,9 @@ impl PlaylistsInterface for Player {
         Ok(vec![])
     }
 
-    async fn active_playlist(&self) -> fdo::Result<MaybePlaylist> {
+    async fn active_playlist(&self) -> fdo::Result<Option<Playlist>> {
         println!("ActivePlaylist");
-        Ok(None.into())
+        Ok(None)
     }
 }
 

@@ -14,11 +14,10 @@ use futures_util::{FutureExt, StreamExt};
 use zbus::{fdo, Connection, Result};
 
 use crate::{
-    LocalPlayerInterface, LocalPlaylistsInterface, LocalTrackListInterface, LoopStatus,
-    MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, Playlist, PlaylistId,
-    PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, PlaylistsSignal, Property,
-    RootInterface, Server, Signal, Time, TrackId, TrackListInterface, TrackListProperty,
-    TrackListSignal, Uri, Volume,
+    LocalPlayerInterface, LocalPlaylistsInterface, LocalTrackListInterface, LoopStatus, Metadata,
+    PlaybackRate, PlaybackStatus, PlayerInterface, Playlist, PlaylistId, PlaylistOrdering,
+    PlaylistsInterface, PlaylistsProperty, PlaylistsSignal, Property, RootInterface, Server,
+    Signal, Time, TrackId, TrackListInterface, TrackListProperty, TrackListSignal, Uri, Volume,
 };
 
 enum RootAction {
@@ -99,7 +98,7 @@ enum PlaylistsAction {
     // Properties
     PlaylistCount(oneshot::Sender<fdo::Result<u32>>),
     Orderings(oneshot::Sender<fdo::Result<Vec<PlaylistOrdering>>>),
-    ActivePlaylist(oneshot::Sender<fdo::Result<MaybePlaylist>>),
+    ActivePlaylist(oneshot::Sender<fdo::Result<Option<Playlist>>>),
 }
 
 enum Action {
@@ -477,7 +476,7 @@ where
         rx.await.unwrap()
     }
 
-    async fn active_playlist(&self) -> fdo::Result<MaybePlaylist> {
+    async fn active_playlist(&self) -> fdo::Result<Option<Playlist>> {
         let (tx, rx) = oneshot::channel();
         self.send_playlists(PlaylistsAction::ActivePlaylist(tx));
         rx.await.unwrap()
