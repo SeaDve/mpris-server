@@ -1036,7 +1036,6 @@
 <a href="#1036" id="1036">1036</a>
 <a href="#1037" id="1037">1037</a>
 <a href="#1038" id="1038">1038</a>
-<a href="#1039" id="1039">1039</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{
     cell::RefCell,
     fmt,
@@ -1053,11 +1052,10 @@
 <span class="kw">use </span>zbus::{fdo, Connection, <span class="prelude-ty">Result</span>};
 
 <span class="kw">use crate</span>::{
-    LocalPlayerInterface, LocalPlaylistsInterface, LocalTrackListInterface, LoopStatus,
-    MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, Playlist, PlaylistId,
-    PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, PlaylistsSignal, Property,
-    RootInterface, Server, Signal, Time, TrackId, TrackListInterface, TrackListProperty,
-    TrackListSignal, Uri, Volume,
+    LocalPlayerInterface, LocalPlaylistsInterface, LocalTrackListInterface, LoopStatus, Metadata,
+    PlaybackRate, PlaybackStatus, PlayerInterface, Playlist, PlaylistId, PlaylistOrdering,
+    PlaylistsInterface, PlaylistsProperty, PlaylistsSignal, Property, RootInterface, Server,
+    Signal, Time, TrackId, TrackListInterface, TrackListProperty, TrackListSignal, Uri, Volume,
 };
 
 <span class="kw">enum </span>RootAction {
@@ -1138,7 +1136,7 @@
     <span class="comment">// Properties
     </span>PlaylistCount(oneshot::Sender&lt;fdo::Result&lt;u32&gt;&gt;),
     Orderings(oneshot::Sender&lt;fdo::Result&lt;Vec&lt;PlaylistOrdering&gt;&gt;&gt;),
-    ActivePlaylist(oneshot::Sender&lt;fdo::Result&lt;MaybePlaylist&gt;&gt;),
+    ActivePlaylist(oneshot::Sender&lt;fdo::Result&lt;<span class="prelude-ty">Option</span>&lt;Playlist&gt;&gt;&gt;),
 }
 
 <span class="kw">enum </span>Action {
@@ -1516,7 +1514,7 @@
         rx.<span class="kw">await</span>.unwrap()
     }
 
-    <span class="kw">async fn </span>active_playlist(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;MaybePlaylist&gt; {
+    <span class="kw">async fn </span>active_playlist(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<span class="prelude-ty">Option</span>&lt;Playlist&gt;&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
         <span class="self">self</span>.send_playlists(PlaylistsAction::ActivePlaylist(tx));
         rx.<span class="kw">await</span>.unwrap()

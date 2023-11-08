@@ -1220,15 +1220,11 @@
 <a href="#1220" id="1220">1220</a>
 <a href="#1221" id="1221">1221</a>
 <a href="#1222" id="1222">1222</a>
-<a href="#1223" id="1223">1223</a>
-<a href="#1224" id="1224">1224</a>
 </pre></div><pre class="rust"><code><span class="attr">#![warn(rust_2018_idioms, missing_debug_implementations)]
 #![deny(rustdoc::broken_intra_doc_links)]
 #![doc = <span class="macro">include_str!</span>(<span class="string">&quot;../README.md&quot;</span>)]
 
 </span><span class="comment">// TODO:
-// * Remove MaybePlaylist and just use Option&lt;Playlist&gt;
-// * Be explicit on the values on PropertiesChanged signals
 // * Document the rest of public interface
 // * Access Server from interfaces
 // * Don&#39;t let `dbus_interface` emit properties changed signal internally
@@ -1302,7 +1298,7 @@
     metadata::{DateTime, Metadata},
     playback_status::PlaybackStatus,
     player::Player,
-    playlist::{MaybePlaylist, Playlist},
+    playlist::Playlist,
     playlist_ordering::PlaylistOrdering,
     property::{PlaylistsProperty, Property, TrackListProperty},
     server::Server,
@@ -2388,7 +2384,7 @@
             /// [`playlists_properties_changed`]: Server::playlists_properties_changed
             /// [`ActivatePlaylist`]: Self::activate_playlist
             </span><span class="attr">#[doc(alias = <span class="string">&quot;ActivePlaylist&quot;</span>)]
-            </span><span class="kw">async fn </span>active_playlist(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;MaybePlaylist&gt;;
+            </span><span class="kw">async fn </span>active_playlist(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<span class="prelude-ty">Option</span>&lt;Playlist&gt;&gt;;
         }
     };
 }

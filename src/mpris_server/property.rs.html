@@ -67,7 +67,7 @@
 <a href="#67" id="67">67</a>
 <a href="#68" id="68">68</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
-    LoopStatus, MaybePlaylist, Metadata, PlaybackRate, PlaybackStatus, PlaylistOrdering, Volume,
+    LoopStatus, Metadata, PlaybackRate, PlaybackStatus, Playlist, PlaylistOrdering, Volume,
 };
 
 <span class="doccomment">/// Used for emitting `PropertiesChanged` signals on
@@ -132,6 +132,6 @@
 </span><span class="kw">pub enum </span>PlaylistsProperty {
     PlaylistCount(u32),
     Orderings(Vec&lt;PlaylistOrdering&gt;),
-    ActivePlaylist(MaybePlaylist),
+    ActivePlaylist(<span class="prelude-ty">Option</span>&lt;Playlist&gt;),
 }
 </code></pre></div></section></main></body></html>
