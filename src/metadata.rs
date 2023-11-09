@@ -58,18 +58,6 @@ impl Metadata {
         MetadataBuilder { m: Metadata::new() }
     }
 
-    /// Inserts a key-value pair into the metadata.
-    ///
-    /// This will overwrite any existing value for the given key and will return
-    /// the old value, if any.
-    pub fn insert(
-        &mut self,
-        key: impl Into<String>,
-        value: impl Into<Value<'static>>,
-    ) -> Option<Value<'static>> {
-        self.0.insert(key.into(), value.into())
-    }
-
     /// Returns the value corresponding to the key and convert it to `V`.
     pub fn get<'v, V>(&'v self, key: &str) -> Option<zvariant::Result<&'v V>>
     where
@@ -84,10 +72,21 @@ impl Metadata {
         self.0.get(key)
     }
 
-    /// Removes the key from the metadata, returning the value at the key if the
-    /// key was previously in the metadata.
-    pub fn remove(&mut self, key: &str) -> Option<Value<'static>> {
-        self.0.remove(key)
+    /// Sets the value for the given key, overwriting any existing value.
+    ///
+    /// If the given value is `None`, the key is removed from the metadata,
+    /// if any.
+    pub fn set(&mut self, key: &str, value: Option<impl Into<Value<'static>>>) {
+        self.set_value(key, value.map(|value| value.into()))
+    }
+
+    /// Like [`Metadata::set`], but takes a [`Value`] instead of a generic type.
+    pub fn set_value(&mut self, key: &str, value: Option<Value<'static>>) {
+        if let Some(value) = value {
+            self.0.insert(key.into(), value);
+        } else {
+            self.0.remove(key);
+        }
     }
 
     /// A unique identity for this track within the context of an
@@ -109,11 +108,7 @@ impl Metadata {
     /// D-Bus object at that path; this specification says nothing about
     /// what interfaces such an object may implement.
     pub fn set_trackid(&mut self, trackid: Option<impl Into<TrackId>>) {
-        if let Some(trackid) = trackid {
-            self.insert("mpris:trackid", trackid.into());
-        } else {
-            self.remove("mpris:trackid");
-        }
+        self.set("mpris:trackid", trackid.map(|trackid| trackid.into()))
     }
 
     /// The duration of the track.
@@ -123,11 +118,7 @@ impl Metadata {
 
     /// Sets the duration of the track.
     pub fn set_length(&mut self, length: Option<Time>) {
-        if let Some(length) = length {
-            self.insert("mpris:length", length);
-        } else {
-            self.remove("mpris:length");
-        }
+        self.set("mpris:length", length)
     }
 
     /// The location of an image representing the track or album.
@@ -143,11 +134,7 @@ impl Metadata {
     /// Clients should not assume this will continue to exist when
     /// the media player stops giving out the URL.
     pub fn set_art_url(&mut self, art_url: Option<impl Into<Uri>>) {
-        if let Some(art_url) = art_url {
-            self.insert("mpris:artUrl", art_url.into());
-        } else {
-            self.remove("mpris:artUrl");
-        }
+        self.set("mpris:artUrl", art_url.map(|art_url| art_url.into()));
     }
 
     /// The album name.
@@ -157,11 +144,7 @@ impl Metadata {
 
     /// Sets the album name.
     pub fn set_album(&mut self, album: Option<impl Into<String>>) {
-        if let Some(album) = album {
-            self.insert("xesam:album", album.into());
-        } else {
-            self.remove("xesam:album");
-        }
+        self.set("xesam:album", album.map(|album| album.into()));
     }
 
     /// The album artist(s).
@@ -174,17 +157,15 @@ impl Metadata {
         &mut self,
         album_artist: Option<impl IntoIterator<Item = impl Into<String>>>,
     ) {
-        if let Some(album_artist) = album_artist {
-            self.insert(
-                "xesam:albumArtist",
+        self.set(
+            "xesam:albumArtist",
+            album_artist.map(|album_artist| {
                 album_artist
                     .into_iter()
                     .map(|i| i.into())
-                    .collect::<Vec<_>>(),
-            );
-        } else {
-            self.remove("xesam:albumArtist");
-        }
+                    .collect::<Vec<_>>()
+            }),
+        );
     }
 
     /// The track artist(s).
@@ -194,14 +175,10 @@ impl Metadata {
 
     /// Sets the track artist(s).
     pub fn set_artist(&mut self, artist: Option<impl IntoIterator<Item = impl Into<String>>>) {
-        if let Some(artist) = artist {
-            self.insert(
-                "xesam:artist",
-                artist.into_iter().map(|i| i.into()).collect::<Vec<_>>(),
-            );
-        } else {
-            self.remove("xesam:artist");
-        }
+        self.set(
+            "xesam:artist",
+            artist.map(|artist| artist.into_iter().map(|i| i.into()).collect::<Vec<_>>()),
+        );
     }
 
     /// The track lyrics.
@@ -211,11 +188,7 @@ impl Metadata {
 
     /// Sets the track lyrics.
     pub fn set_lyrics(&mut self, lyrics: Option<impl Into<String>>) {
-        if let Some(lyrics) = lyrics {
-            self.insert("xesam:asText", lyrics.into());
-        } else {
-            self.remove("xesam:asText");
-        }
+        self.set("xesam:asText", lyrics.map(|lyrics| lyrics.into()));
     }
 
     /// The speed of the music, in beats per minute.
@@ -225,11 +198,7 @@ impl Metadata {
 
     /// Sets the speed of the music, in beats per minute.
     pub fn set_audio_bpm(&mut self, audio_bpm: Option<i32>) {
-        if let Some(audio_bpm) = audio_bpm {
-            self.insert("xesam:audioBPM", audio_bpm);
-        } else {
-            self.remove("xesam:audioBPM");
-        }
+        self.set("xesam:audioBPM", audio_bpm);
     }
 
     /// An automatically-generated rating, based on things such
@@ -243,11 +212,7 @@ impl Metadata {
     /// as how often it has been played. This should be in the
     /// range 0.0 to 1.0.
     pub fn set_auto_rating(&mut self, auto_rating: Option<f64>) {
-        if let Some(auto_rating) = auto_rating {
-            self.insert("xesam:autoRating", auto_rating);
-        } else {
-            self.remove("xesam:autoRating");
-        }
+        self.set("xesam:autoRating", auto_rating);
     }
 
     /// A (list of) freeform comment(s).
@@ -257,14 +222,10 @@ impl Metadata {
 
     /// Sets a (list of) freeform comment(s).
     pub fn set_comment(&mut self, comment: Option<impl IntoIterator<Item = impl Into<String>>>) {
-        if let Some(comment) = comment {
-            self.insert(
-                "xesam:comment",
-                comment.into_iter().map(|i| i.into()).collect::<Vec<_>>(),
-            );
-        } else {
-            self.remove("xesam:comment");
-        }
+        self.set(
+            "xesam:comment",
+            comment.map(|comment| comment.into_iter().map(|i| i.into()).collect::<Vec<_>>()),
+        );
     }
 
     /// The composer(s) of the track.
@@ -274,14 +235,10 @@ impl Metadata {
 
     /// Sets the composer(s) of the track.
     pub fn set_composer(&mut self, composer: Option<impl IntoIterator<Item = impl Into<String>>>) {
-        if let Some(composer) = composer {
-            self.insert(
-                "xesam:composer",
-                composer.into_iter().map(|i| i.into()).collect::<Vec<_>>(),
-            );
-        } else {
-            self.remove("xesam:composer");
-        }
+        self.set(
+            "xesam:composer",
+            composer.map(|composer| composer.into_iter().map(|i| i.into()).collect::<Vec<_>>()),
+        );
     }
 
     /// When the track was created. Usually only the year component
@@ -293,11 +250,10 @@ impl Metadata {
     /// Sets when the track was created. Usually only the year component
     /// will be useful.
     pub fn set_content_created(&mut self, content_created: Option<impl Into<DateTime>>) {
-        if let Some(content_created) = content_created {
-            self.insert("xesam:contentCreated", content_created.into());
-        } else {
-            self.remove("xesam:contentCreated");
-        }
+        self.set(
+            "xesam:contentCreated",
+            content_created.map(|content_created| content_created.into()),
+        );
     }
 
     /// The disc number on the album that this track is from.
@@ -307,11 +263,7 @@ impl Metadata {
 
     /// Sets the disc number on the album that this track is from.
     pub fn set_disc_number(&mut self, disc_number: Option<i32>) {
-        if let Some(disc_number) = disc_number {
-            self.insert("xesam:discNumber", disc_number);
-        } else {
-            self.remove("xesam:discNumber");
-        }
+        self.set("xesam:discNumber", disc_number);
     }
 
     /// When the track was first played.
@@ -321,11 +273,10 @@ impl Metadata {
 
     /// Sets when the track was first played.
     pub fn set_first_used(&mut self, first_used: Option<impl Into<DateTime>>) {
-        if let Some(first_used) = first_used {
-            self.insert("xesam:firstUsed", first_used.into());
-        } else {
-            self.remove("xesam:firstUsed");
-        }
+        self.set(
+            "xesam:firstUsed",
+            first_used.map(|first_used| first_used.into()),
+        );
     }
 
     /// The genre(s) of the track.
@@ -335,14 +286,10 @@ impl Metadata {
 
     /// Sets the genre(s) of the track.
     pub fn set_genre(&mut self, genre: Option<impl IntoIterator<Item = impl Into<String>>>) {
-        if let Some(genre) = genre {
-            self.insert(
-                "xesam:genre",
-                genre.into_iter().map(|i| i.into()).collect::<Vec<_>>(),
-            );
-        } else {
-            self.remove("xesam:genre");
-        }
+        self.set(
+            "xesam:genre",
+            genre.map(|genre| genre.into_iter().map(|i| i.into()).collect::<Vec<_>>()),
+        );
     }
 
     /// When the track was last played.
@@ -352,11 +299,10 @@ impl Metadata {
 
     /// Sets when the track was last played.
     pub fn set_last_used(&mut self, last_used: Option<impl Into<DateTime>>) {
-        if let Some(last_used) = last_used {
-            self.insert("xesam:lastUsed", last_used.into());
-        } else {
-            self.remove("xesam:lastUsed");
-        }
+        self.set(
+            "xesam:lastUsed",
+            last_used.map(|last_used| last_used.into()),
+        );
     }
 
     /// The lyricist(s) of the track.
@@ -366,14 +312,10 @@ impl Metadata {
 
     /// Sets the lyricist(s) of the track.
     pub fn set_lyricist(&mut self, lyricist: Option<impl IntoIterator<Item = impl Into<String>>>) {
-        if let Some(lyricist) = lyricist {
-            self.insert(
-                "xesam:lyricist",
-                lyricist.into_iter().map(|i| i.into()).collect::<Vec<_>>(),
-            );
-        } else {
-            self.remove("xesam:lyricist");
-        }
+        self.set(
+            "xesam:lyricist",
+            lyricist.map(|lyricist| lyricist.into_iter().map(|i| i.into()).collect::<Vec<_>>()),
+        );
     }
 
     /// The track title.
@@ -383,11 +325,7 @@ impl Metadata {
 
     /// Sets the track title.
     pub fn set_title(&mut self, title: Option<impl Into<String>>) {
-        if let Some(title) = title {
-            self.insert("xesam:title", title.into());
-        } else {
-            self.remove("xesam:title");
-        }
+        self.set("xesam:title", title.map(|title| title.into()));
     }
 
     /// The track number on the album disc.
@@ -397,11 +335,7 @@ impl Metadata {
 
     /// Sets the track number on the album disc.
     pub fn set_track_number(&mut self, track_number: Option<i32>) {
-        if let Some(track_number) = track_number {
-            self.insert("xesam:trackNumber", track_number);
-        } else {
-            self.remove("xesam:trackNumber");
-        }
+        self.set("xesam:trackNumber", track_number);
     }
 
     /// The location of the media file.
@@ -411,11 +345,7 @@ impl Metadata {
 
     /// Sets the location of the media file.
     pub fn set_url(&mut self, url: Option<impl Into<Uri>>) {
-        if let Some(url) = url {
-            self.insert("xesam:url", url.into());
-        } else {
-            self.remove("xesam:url");
-        }
+        self.set("xesam:url", url.map(|url| url.into()));
     }
 
     /// The number of times the track has been played.
@@ -425,11 +355,7 @@ impl Metadata {
 
     /// Sets the number of times the track has been played.
     pub fn set_use_count(&mut self, use_count: Option<i32>) {
-        if let Some(use_count) = use_count {
-            self.insert("xesam:useCount", use_count);
-        } else {
-            self.remove("xesam:useCount");
-        }
+        self.set("xesam:useCount", use_count);
     }
 
     /// A user-specified rating. This should be in the range 0.0 to 1.0.
@@ -439,11 +365,7 @@ impl Metadata {
 
     /// Sets a user-specified rating. This should be in the range 0.0 to 1.0.
     pub fn set_user_rating(&mut self, user_rating: Option<f64>) {
-        if let Some(user_rating) = user_rating {
-            self.insert("xesam:userRating", user_rating);
-        } else {
-            self.remove("xesam:userRating");
-        }
+        self.set("xesam:userRating", user_rating);
     }
 }
 
@@ -456,8 +378,8 @@ pub struct MetadataBuilder {
 
 impl MetadataBuilder {
     /// Sets a value for the given key.
-    pub fn other(mut self, key: impl Into<String>, value: impl Into<Value<'static>>) -> Self {
-        self.m.insert(key, value);
+    pub fn other(mut self, key: &str, value: impl Into<Value<'static>>) -> Self {
+        self.m.set(key, Some(value));
         self
     }
 
