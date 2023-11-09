@@ -80,7 +80,7 @@ impl Metadata {
         self.set_value(key, value.map(|value| value.into()))
     }
 
-    /// Like [`Metadata::set`], but takes a [`Value`] instead of a generic type.
+    /// Like [`Metadata::set`], but takes a [`enum@Value`] instead of a generic type.
     pub fn set_value(&mut self, key: &str, value: Option<Value<'static>>) {
         if let Some(value) = value {
             self.0.insert(key.into(), value);
