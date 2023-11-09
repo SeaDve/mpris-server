@@ -813,7 +813,7 @@ where
     ) -> Result<Self>
     where
         SR: Future<Output = Result<Server<InnerImp<T>>>>,
-        RR: Future<Output = ()>,
+        RR: Future<Output = ()> + 'static,
     {
         let (tx, rx) = mpsc::unbounded::<Action>();
 
@@ -827,11 +827,7 @@ where
         .await?;
 
         let imp = Rc::new(imp);
-
-        let imp_clone = Rc::clone(&imp);
-        let runner = Box::pin(async move {
-            runner_func(rx, imp_clone).await;
-        });
+        let runner = Box::pin(runner_func(rx, Rc::clone(&imp)));
 
         Ok(Self {
             inner,
