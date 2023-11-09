@@ -945,7 +945,7 @@ where
                         Action::Root(action) => Self::handle_root_action(&imp, action).await,
                         Action::Player(action) => Self::handle_player_action(&imp, action).await,
                         Action::Playlists(action) => {
-                            Self::handle_playlists_actions(&imp, action).await
+                            Self::handle_playlists_action(&imp, action).await
                         }
                         Action::TrackList(_) => unreachable!(),
                     }
@@ -973,7 +973,7 @@ where
         self.inner.playlists_properties_changed(properties).await
     }
 
-    async fn handle_playlists_actions(imp: &T, action: PlaylistsAction) {
+    async fn handle_playlists_action(imp: &T, action: PlaylistsAction) {
         match action {
             PlaylistsAction::ActivatePlaylist(playlist_id, sender) => {
                 let ret = imp.activate_playlist(playlist_id).await;
@@ -1024,7 +1024,7 @@ where
                         Action::Root(action) => Self::handle_root_action(&imp, action).await,
                         Action::Player(action) => Self::handle_player_action(&imp, action).await,
                         Action::Playlists(action) => {
-                            Self::handle_playlists_actions(&imp, action).await
+                            Self::handle_playlists_action(&imp, action).await
                         }
                         Action::TrackList(action) => {
                             Self::handle_track_list_action(&imp, action).await
