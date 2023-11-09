@@ -22,7 +22,7 @@ To implement these interfaces, this crate offers two flavors: you can either cre
 
 For more detailed examples, see also the [examples directory](https://github.com/SeaDve/mpris-server/tree/main/examples).
 
-There is also a real-word example of this library being used in [Mousai](https://github.com/SeaDve/Mousai), a music recognizer application for Linux.
+There is also a real-world example of this library being used in [Mousai](https://github.com/SeaDve/Mousai), a music recognizer application for Linux.
 
 ### Manual Implementation (via `Server` or `LocalServer`)
 
@@ -119,8 +119,7 @@ async fn main() -> Result<()> {
     });
 
     // Run event handler task
-    let task = player.run();
-    async_std::task::spawn_local(task);
+    async_std::task::spawn_local(player.run());
 
     // Update `CanPlay` property and emit `PropertiesChanged` signal for it
     player.set_can_play(false).await?;

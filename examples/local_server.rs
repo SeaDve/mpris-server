@@ -297,8 +297,7 @@ async fn main() -> Result<()> {
 
     // Unlike in `Server`, we have to call `run` here to handle incoming
     // requests in the local thread.
-    let task = server.run();
-    async_std::task::spawn_local(task);
+    async_std::task::spawn_local(server.run());
 
     // Emit `PropertiesChanged` signal for `CanSeek` and `Metadata` properties
     server
