@@ -72,20 +72,31 @@ impl Metadata {
         self.0.get(key)
     }
 
-    /// Sets the value for the given key, overwriting any existing value.
+    /// Sets the value for the given key and returns the previous value, if any.
     ///
     /// If the given value is `None`, the key is removed from the metadata,
     /// if any.
-    pub fn set(&mut self, key: &str, value: Option<impl Into<Value<'static>>>) {
+    pub fn set(
+        &mut self,
+        key: &str,
+        value: Option<impl Into<Value<'static>>>,
+    ) -> Option<Value<'static>> {
         self.set_value(key, value.map(|value| value.into()))
     }
 
-    /// Like [`Metadata::set`], but takes a [`enum@Value`] instead of a generic type.
-    pub fn set_value(&mut self, key: &str, value: Option<Value<'static>>) {
+    /// Sets the value for the given key and returns the previous value, if any.
+    ///
+    /// This behaves like [`Metadata::set`], but this takes a [`enum@Value`]
+    /// instead of a generic type.
+    pub fn set_value(
+        &mut self,
+        key: &str,
+        value: Option<Value<'static>>,
+    ) -> Option<Value<'static>> {
         if let Some(value) = value {
-            self.0.insert(key.into(), value);
+            self.0.insert(key.into(), value)
         } else {
-            self.0.remove(key);
+            self.0.remove(key)
         }
     }
 
@@ -108,7 +119,7 @@ impl Metadata {
     /// D-Bus object at that path; this specification says nothing about
     /// what interfaces such an object may implement.
     pub fn set_trackid(&mut self, trackid: Option<impl Into<TrackId>>) {
-        self.set("mpris:trackid", trackid.map(|trackid| trackid.into()))
+        self.set("mpris:trackid", trackid.map(|trackid| trackid.into()));
     }
 
     /// The duration of the track.
@@ -118,7 +129,7 @@ impl Metadata {
 
     /// Sets the duration of the track.
     pub fn set_length(&mut self, length: Option<Time>) {
-        self.set("mpris:length", length)
+        self.set("mpris:length", length);
     }
 
     /// The location of an image representing the track or album.
