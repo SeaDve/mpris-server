@@ -113,7 +113,7 @@ struct InnerImp<T> {
 
     // If we use `PhantomData<T>` and `T` is not `Send` and `Sync`, we get a compile error
     // when using `InnerImp` in the inner non-local `Server` as it requires `T` to be `Send`
-    // and `Sync`, which defeats the purpose of `local::Server`. So, we need to use `fn() -> T`
+    // and `Sync`, which defeats the purpose of `LocalServer`. So, we need to use `fn() -> T`
     // in `PhantomData` to preserve the type information without requiring `T` to be `Send`
     // and `Sync` for `InnerImp` to be `Send` and `Sync`.
     imp_ty: PhantomData<fn() -> T>,
