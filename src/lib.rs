@@ -1151,8 +1151,7 @@ macro_rules! define_iface {
             /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
             /// [`playlists_properties_changed`] must be emitted with the new value.
             ///
-            /// If there is no currently-active playlist, the structure's Valid field
-            /// will be **false**, and the playlist details are undefined.
+            /// If there is no currently-active playlist, this should return [`None`].
             ///
             /// Note that this may not have a value even after [`ActivatePlaylist`] is
             /// called with a valid playlist id as [`ActivatePlaylist`] implementations
