@@ -22,7 +22,7 @@ jobs:
           RUSTDOCFLAGS: --cfg docsrs
         with:
           command: doc
-          args: --package mpris-server --features "unstable" --no-deps
+          args: --package mpris-server --all-features --no-deps
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
