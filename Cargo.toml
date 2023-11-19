@@ -19,6 +19,9 @@ futures-util = { version = "0.3", default-features = false, features = ["std"] }
 serde = "1.0"
 zbus = "3.14"
 
+[features]
+unstable = []
+
 [dev-dependencies]
 async-std = { version = "1.12", features = ["attributes", "unstable"] }
 static_assertions = "1.1"

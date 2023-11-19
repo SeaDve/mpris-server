@@ -18,6 +18,12 @@ This library supports all the following interfaces as defined in the specificati
 
 To implement these interfaces, this crate offers two flavors: you can either create your own struct and implement `RootInterface` and `PlayerInterface` (or with optional `TrackListInterface` and `PlaylistsInterface`), or you can use the ready-to-use `Player` struct.
 
+## Optional Features
+
+| Feature    | Description                                  | Default |
+| ---------- | -------------------------------------------- | ------- |
+| `unstable` | Enables internal APIs and unstable features. | No      |
+
 ## Examples
 
 For more detailed examples, see also the [examples directory](https://github.com/SeaDve/mpris-server/tree/main/examples).

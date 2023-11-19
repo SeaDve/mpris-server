@@ -603,6 +603,7 @@ where
     /// Returns a reference to the inner [`Connection`].
     ///
     /// If you needed to call this, consider filing an issue.
+    #[cfg(feature = "unstable")]
     #[inline]
     pub fn connection(&self) -> &Connection {
         self.inner.connection()
