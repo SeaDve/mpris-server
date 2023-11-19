@@ -393,11 +393,11 @@ where
     ///
     /// * `org.mpris.MediaPlayer2.vlc.instance7389`
     ///
-    /// **Note:** According to the [`D-Bus specification`], the unique
+    /// **Note:** According to the [D-Bus specification], the unique
     /// identifier "must only contain  the ASCII characters
     /// `[A-Z][a-z][0-9]_-`" and "must not begin with a digit".
     ///
-    /// [`D-Bus specification`]: dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus
+    /// [D-Bus specification]: https://dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus
     pub async fn new(bus_name_suffix: &str, imp: T) -> Result<Self> {
         Self::new_inner(bus_name_suffix, imp, |builder, _| Ok(builder)).await
     }
