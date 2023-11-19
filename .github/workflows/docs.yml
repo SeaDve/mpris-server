@@ -19,7 +19,7 @@ jobs:
       - uses: actions-rs/cargo@v1
         env:
           RUSTFLAGS: --cfg docsrs
-          RUSTDOCFLAGS: --cfg docsrs
+          RUSTDOCFLAGS: --cfg docsrs --generate-link-to-definition
         with:
           command: doc
           args: --package mpris-server --all-features --no-deps
