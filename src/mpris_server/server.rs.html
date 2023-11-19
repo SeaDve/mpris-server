@@ -1371,11 +1371,11 @@
     ///
     /// * `org.mpris.MediaPlayer2.vlc.instance7389`
     ///
-    /// **Note:** According to the [`D-Bus specification`], the unique
+    /// **Note:** According to the [D-Bus specification], the unique
     /// identifier &quot;must only contain  the ASCII characters
     /// `[A-Z][a-z][0-9]_-`&quot; and &quot;must not begin with a digit&quot;.
     ///
-    /// [`D-Bus specification`]: dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus
+    /// [D-Bus specification]: https://dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus
     </span><span class="kw">pub async fn </span>new(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="self">Self</span>::new_inner(bus_name_suffix, imp, |builder, <span class="kw">_</span>| <span class="prelude-val">Ok</span>(builder)).<span class="kw">await
     </span>}
