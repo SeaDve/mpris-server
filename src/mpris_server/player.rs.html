@@ -1053,16 +1053,16 @@
 <a href="#1053" id="1053">1053</a>
 <a href="#1054" id="1054">1054</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{
-    cell::{Cell, Ref, RefCell},
-    rc::{Rc, Weak},
+    cell::{<a href="https://doc.rust-lang.org/nightly/core/cell/struct.Cell.html">Cell</a>, <a href="https://doc.rust-lang.org/nightly/core/cell/struct.Ref.html">Ref</a>, <a href="https://doc.rust-lang.org/nightly/core/cell/struct.RefCell.html">RefCell</a>},
+    rc::{<a href="https://doc.rust-lang.org/nightly/alloc/rc/struct.Rc.html">Rc</a>, <a href="https://doc.rust-lang.org/nightly/alloc/rc/struct.Weak.html">Weak</a>},
 };
 
-<span class="kw">use </span>async_trait::async_trait;
+<span class="kw">use </span><a href="../../mpris_server/attr.async_trait.html">async_trait::async_trait</a>;
 <span class="kw">use </span>zbus::{fdo, <span class="prelude-ty">Result</span>};
 
 <span class="kw">use crate</span>::{
-    LocalPlayerInterface, LocalRootInterface, LocalServer, LocalServerRunTask, LoopStatus,
-    Metadata, PlaybackRate, PlaybackStatus, Property, Signal, Time, TrackId, Volume,
+    <a href="lib.rs.html#1178-1184">LocalPlayerInterface</a>, <a href="lib.rs.html#1178-1184">LocalRootInterface</a>, <a href="local_server.rs.html#525-532">LocalServer</a>, <a href="local_server.rs.html#495-497">LocalServerRunTask</a>, <a href="loop_status.rs.html#9-17">LoopStatus</a>,
+    <a href="metadata.rs.html#36">Metadata</a>, <a href="lib.rs.html#1192">PlaybackRate</a>, <a href="playback_status.rs.html#9-16">PlaybackStatus</a>, <a href="property.rs.html#11-36">Property</a>, <a href="signal.rs.html#8-25">Signal</a>, <a href="time.rs.html#15">Time</a>, <a href="track_id.rs.html#32">TrackId</a>, <a href="lib.rs.html#1201">Volume</a>,
 };
 
 <span class="doccomment">/// Ready-to-use mutable *service*-side object that internally implements
@@ -1076,61 +1076,61 @@
 ///
 /// [`Server`]: crate::Server
 </span><span class="attr">#[derive(Debug)]
-</span><span class="kw">pub struct </span>Player {
-    server: Rc&lt;LocalServer&lt;State&gt;&gt;,
+</span><span class="kw">pub struct </span><a href="../../mpris_server/struct.Player.html">Player</a> {
+    server: Rc&lt;LocalServer&lt;<a href="#30-74">State</a>&gt;&gt;,
 }
 
 <span class="attr">#[allow(clippy::type_complexity)]
 </span><span class="kw">struct </span>State {
-    server: RefCell&lt;<span class="prelude-ty">Option</span>&lt;Weak&lt;LocalServer&lt;State&gt;&gt;&gt;&gt;,
+    server: RefCell&lt;<span class="prelude-ty">Option</span>&lt;Weak&lt;LocalServer&lt;<a href="#30-74">State</a>&gt;&gt;&gt;&gt;,
 
-    raise_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player)&gt;&gt;&gt;,
-    quit_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player)&gt;&gt;&gt;,
-    set_fullscreen_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player, bool)&gt;&gt;&gt;, <span class="comment">// Property
-    </span>can_quit: Cell&lt;bool&gt;,
-    fullscreen: Cell&lt;bool&gt;,
-    can_set_fullscreen: Cell&lt;bool&gt;,
-    can_raise: Cell&lt;bool&gt;,
-    has_track_list: Cell&lt;bool&gt;,
-    identity: RefCell&lt;String&gt;,
-    desktop_entry: RefCell&lt;String&gt;,
-    supported_uri_schemes: RefCell&lt;Vec&lt;String&gt;&gt;,
-    supported_mime_types: RefCell&lt;Vec&lt;String&gt;&gt;,
+    raise_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>)&gt;&gt;&gt;,
+    quit_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>)&gt;&gt;&gt;,
+    set_fullscreen_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>, <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>)&gt;&gt;&gt;, <span class="comment">// Property
+    </span>can_quit: Cell&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;,
+    fullscreen: Cell&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;,
+    can_set_fullscreen: Cell&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;,
+    can_raise: Cell&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;,
+    has_track_list: Cell&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;,
+    identity: RefCell&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;,
+    desktop_entry: RefCell&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;,
+    supported_uri_schemes: RefCell&lt;Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;,
+    supported_mime_types: RefCell&lt;Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;,
 
-    next_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player)&gt;&gt;&gt;,
-    previous_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player)&gt;&gt;&gt;,
-    pause_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player)&gt;&gt;&gt;,
-    play_pause_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player)&gt;&gt;&gt;,
-    stop_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player)&gt;&gt;&gt;,
-    play_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player)&gt;&gt;&gt;,
-    seek_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player, Time)&gt;&gt;&gt;,
-    set_position_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player, <span class="kw-2">&amp;</span>TrackId, Time)&gt;&gt;&gt;,
-    open_uri_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player, <span class="kw-2">&amp;</span>str)&gt;&gt;&gt;,
-    set_loop_status_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player, LoopStatus)&gt;&gt;&gt;, <span class="comment">// Property
-    </span>set_rate_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player, PlaybackRate)&gt;&gt;&gt;,      <span class="comment">// Property
-    </span>set_shuffle_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player, bool)&gt;&gt;&gt;,           <span class="comment">// Property
-    </span>set_volume_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>Player, Volume)&gt;&gt;&gt;,          <span class="comment">// Property
-    </span>playback_status: Cell&lt;PlaybackStatus&gt;,
-    loop_status: Cell&lt;LoopStatus&gt;,
-    rate: Cell&lt;PlaybackRate&gt;,
-    shuffle: Cell&lt;bool&gt;,
-    metadata: RefCell&lt;Metadata&gt;,
-    volume: Cell&lt;Volume&gt;,
-    position: Cell&lt;Time&gt;,
-    minimum_rate: Cell&lt;PlaybackRate&gt;,
-    maximum_rate: Cell&lt;PlaybackRate&gt;,
-    can_go_next: Cell&lt;bool&gt;,
-    can_go_previous: Cell&lt;bool&gt;,
-    can_play: Cell&lt;bool&gt;,
-    can_pause: Cell&lt;bool&gt;,
-    can_seek: Cell&lt;bool&gt;,
-    can_control: Cell&lt;bool&gt;,
+    next_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>)&gt;&gt;&gt;,
+    previous_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>)&gt;&gt;&gt;,
+    pause_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>)&gt;&gt;&gt;,
+    play_pause_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>)&gt;&gt;&gt;,
+    stop_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>)&gt;&gt;&gt;,
+    play_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>)&gt;&gt;&gt;,
+    seek_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>, <a href="time.rs.html#15">Time</a>)&gt;&gt;&gt;,
+    set_position_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>, <span class="kw-2">&amp;</span><a href="track_id.rs.html#32">TrackId</a>, <a href="time.rs.html#15">Time</a>)&gt;&gt;&gt;,
+    open_uri_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>, <span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>)&gt;&gt;&gt;,
+    set_loop_status_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>, <a href="loop_status.rs.html#9-17">LoopStatus</a>)&gt;&gt;&gt;, <span class="comment">// Property
+    </span>set_rate_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>, <a href="lib.rs.html#1192">PlaybackRate</a>)&gt;&gt;&gt;,      <span class="comment">// Property
+    </span>set_shuffle_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>, <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>)&gt;&gt;&gt;,           <span class="comment">// Property
+    </span>set_volume_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>, <a href="lib.rs.html#1201">Volume</a>)&gt;&gt;&gt;,          <span class="comment">// Property
+    </span>playback_status: Cell&lt;<a href="playback_status.rs.html#9-16">PlaybackStatus</a>&gt;,
+    loop_status: Cell&lt;<a href="loop_status.rs.html#9-17">LoopStatus</a>&gt;,
+    rate: Cell&lt;<a href="lib.rs.html#1192">PlaybackRate</a>&gt;,
+    shuffle: Cell&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;,
+    metadata: RefCell&lt;<a href="metadata.rs.html#36">Metadata</a>&gt;,
+    volume: Cell&lt;<a href="lib.rs.html#1201">Volume</a>&gt;,
+    position: Cell&lt;<a href="time.rs.html#15">Time</a>&gt;,
+    minimum_rate: Cell&lt;<a href="lib.rs.html#1192">PlaybackRate</a>&gt;,
+    maximum_rate: Cell&lt;<a href="lib.rs.html#1192">PlaybackRate</a>&gt;,
+    can_go_next: Cell&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;,
+    can_go_previous: Cell&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;,
+    can_play: Cell&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;,
+    can_pause: Cell&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;,
+    can_seek: Cell&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;,
+    can_control: Cell&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;,
 }
 
-<span class="kw">impl </span>State {
-    <span class="kw">fn </span>player(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Player {
-        Player {
-            server: <span class="self">self
+<span class="kw">impl </span><a href="#30-74">State</a> {
+    <span class="kw">fn </span>player(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="#25-27">Player</a> {
+        <a href="#25-27">Player</a> {
+            server: <span class="self"><a href="#77">self</a>
                 </span>.server
                 .borrow()
                 .as_ref()
@@ -1142,239 +1142,239 @@
 }
 
 <span class="attr">#[async_trait(<span class="question-mark">?</span>Send)]
-</span><span class="kw">impl </span>LocalRootInterface <span class="kw">for </span>State {
-    <span class="kw">async fn </span>raise(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
-        <span class="kw">let </span>player = <span class="self">self</span>.player();
+</span><span class="kw">impl </span><a href="lib.rs.html#1178-1184">LocalRootInterface</a> <span class="kw">for </span><a href="#30-74">State</a> {
+    <span class="kw">async fn </span>raise(<span class="kw-2">&amp;</span><a class="self" href="#92">self</a>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>player = <a class="self" href="#92">self</a>.<a href="#77-87">player</a>();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.raise_cbs.borrow().iter() {
             cb(<span class="kw-2">&amp;</span>player);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>quit(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
-        <span class="kw">let </span>player = <span class="self">self</span>.player();
+    <span class="kw">async fn </span>quit(<span class="kw-2">&amp;</span><a class="self" href="#100">self</a>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>player = <a class="self" href="#100">self</a>.<a href="#77-87">player</a>();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.quit_cbs.borrow().iter() {
             cb(<span class="kw-2">&amp;</span>player);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>can_quit(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.can_quit.get())
+    <span class="kw">async fn </span>can_quit(<span class="kw-2">&amp;</span><a class="self" href="#108">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#108">self</a>.can_quit.get())
     }
 
-    <span class="kw">async fn </span>fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.fullscreen.get())
+    <span class="kw">async fn </span>fullscreen(<span class="kw-2">&amp;</span><a class="self" href="#112">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#112">self</a>.fullscreen.get())
     }
 
-    <span class="kw">async fn </span>set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>, fullscreen: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="kw">let </span>player = <span class="self">self</span>.player();
+    <span class="kw">async fn </span>set_fullscreen(<span class="kw-2">&amp;</span><a class="self" href="#116">self</a>, <a href="#116">fullscreen</a>: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="kw">let </span>player = <a class="self" href="#116">self</a>.<a href="#77-87">player</a>();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.set_fullscreen_cbs.borrow().iter() {
             cb(<span class="kw-2">&amp;</span>player, fullscreen);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>can_set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.can_set_fullscreen.get())
+    <span class="kw">async fn </span>can_set_fullscreen(<span class="kw-2">&amp;</span><a class="self" href="#124">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#124">self</a>.can_set_fullscreen.get())
     }
 
-    <span class="kw">async fn </span>can_raise(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.can_raise.get())
+    <span class="kw">async fn </span>can_raise(<span class="kw-2">&amp;</span><a class="self" href="#128">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#128">self</a>.can_raise.get())
     }
 
-    <span class="kw">async fn </span>has_track_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.has_track_list.get())
+    <span class="kw">async fn </span>has_track_list(<span class="kw-2">&amp;</span><a class="self" href="#132">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#132">self</a>.has_track_list.get())
     }
 
-    <span class="kw">async fn </span>identity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;String&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.identity.borrow().clone())
+    <span class="kw">async fn </span>identity(<span class="kw-2">&amp;</span><a class="self" href="#136">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#136">self</a>.identity.borrow().<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>())
     }
 
-    <span class="kw">async fn </span>desktop_entry(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;String&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.desktop_entry.borrow().clone())
+    <span class="kw">async fn </span>desktop_entry(<span class="kw-2">&amp;</span><a class="self" href="#140">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#140">self</a>.desktop_entry.borrow().<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>())
     }
 
-    <span class="kw">async fn </span>supported_uri_schemes(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;String&gt;&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.supported_uri_schemes.borrow().clone())
+    <span class="kw">async fn </span>supported_uri_schemes(<span class="kw-2">&amp;</span><a class="self" href="#144">self</a>) -&gt; fdo::Result&lt;Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#144">self</a>.supported_uri_schemes.borrow().<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>())
     }
 
-    <span class="kw">async fn </span>supported_mime_types(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;String&gt;&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.supported_mime_types.borrow().clone())
+    <span class="kw">async fn </span>supported_mime_types(<span class="kw-2">&amp;</span><a class="self" href="#148">self</a>) -&gt; fdo::Result&lt;Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#148">self</a>.supported_mime_types.borrow().<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>())
     }
 }
 
 <span class="attr">#[async_trait(<span class="question-mark">?</span>Send)]
-</span><span class="kw">impl </span>LocalPlayerInterface <span class="kw">for </span>State {
-    <span class="kw">async fn </span>next(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
-        <span class="kw">let </span>player = <span class="self">self</span>.player();
+</span><span class="kw">impl </span><a href="lib.rs.html#1178-1184">LocalPlayerInterface</a> <span class="kw">for </span><a href="#30-74">State</a> {
+    <span class="kw">async fn </span>next(<span class="kw-2">&amp;</span><a class="self" href="#155">self</a>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>player = <a class="self" href="#155">self</a>.<a href="#77-87">player</a>();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.next_cbs.borrow().iter() {
             cb(<span class="kw-2">&amp;</span>player);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>previous(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
-        <span class="kw">let </span>player = <span class="self">self</span>.player();
+    <span class="kw">async fn </span>previous(<span class="kw-2">&amp;</span><a class="self" href="#163">self</a>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>player = <a class="self" href="#163">self</a>.<a href="#77-87">player</a>();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.previous_cbs.borrow().iter() {
             cb(<span class="kw-2">&amp;</span>player);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>pause(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
-        <span class="kw">let </span>player = <span class="self">self</span>.player();
+    <span class="kw">async fn </span>pause(<span class="kw-2">&amp;</span><a class="self" href="#171">self</a>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>player = <a class="self" href="#171">self</a>.<a href="#77-87">player</a>();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.pause_cbs.borrow().iter() {
             cb(<span class="kw-2">&amp;</span>player);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>play_pause(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
-        <span class="kw">let </span>player = <span class="self">self</span>.player();
+    <span class="kw">async fn </span>play_pause(<span class="kw-2">&amp;</span><a class="self" href="#179">self</a>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>player = <a class="self" href="#179">self</a>.<a href="#77-87">player</a>();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.play_pause_cbs.borrow().iter() {
             cb(<span class="kw-2">&amp;</span>player);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>stop(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
-        <span class="kw">let </span>player = <span class="self">self</span>.player();
+    <span class="kw">async fn </span>stop(<span class="kw-2">&amp;</span><a class="self" href="#187">self</a>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>player = <a class="self" href="#187">self</a>.<a href="#77-87">player</a>();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.stop_cbs.borrow().iter() {
             cb(<span class="kw-2">&amp;</span>player);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>play(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
-        <span class="kw">let </span>player = <span class="self">self</span>.player();
+    <span class="kw">async fn </span>play(<span class="kw-2">&amp;</span><a class="self" href="#195">self</a>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>player = <a class="self" href="#195">self</a>.<a href="#77-87">player</a>();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.play_cbs.borrow().iter() {
             cb(<span class="kw-2">&amp;</span>player);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>seek(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: Time) -&gt; fdo::Result&lt;()&gt; {
-        <span class="kw">let </span>player = <span class="self">self</span>.player();
+    <span class="kw">async fn </span>seek(<span class="kw-2">&amp;</span><a class="self" href="#203">self</a>, <a href="#203">offset</a>: <a href="time.rs.html#15">Time</a>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>player = <a class="self" href="#203">self</a>.<a href="#77-87">player</a>();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.seek_cbs.borrow().iter() {
             cb(<span class="kw-2">&amp;</span>player, offset);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId, position: Time) -&gt; fdo::Result&lt;()&gt; {
-        <span class="kw">let </span>player = <span class="self">self</span>.player();
+    <span class="kw">async fn </span>set_position(<span class="kw-2">&amp;</span><a class="self" href="#211">self</a>, <a href="#211">track_id</a>: <a href="track_id.rs.html#32">TrackId</a>, <a href="#211">position</a>: <a href="time.rs.html#15">Time</a>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>player = <a class="self" href="#211">self</a>.<a href="#77-87">player</a>();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.set_position_cbs.borrow().iter() {
             cb(<span class="kw-2">&amp;</span>player, <span class="kw-2">&amp;</span>track_id, position);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>open_uri(<span class="kw-2">&amp;</span><span class="self">self</span>, uri: String) -&gt; fdo::Result&lt;()&gt; {
-        <span class="kw">let </span>player = <span class="self">self</span>.player();
+    <span class="kw">async fn </span>open_uri(<span class="kw-2">&amp;</span><a class="self" href="#219">self</a>, <a href="#219">uri</a>: <a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>player = <a class="self" href="#219">self</a>.<a href="#77-87">player</a>();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.open_uri_cbs.borrow().iter() {
             cb(<span class="kw-2">&amp;</span>player, <span class="kw-2">&amp;</span>uri);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>playback_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackStatus&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.playback_status.get())
+    <span class="kw">async fn </span>playback_status(<span class="kw-2">&amp;</span><a class="self" href="#227">self</a>) -&gt; fdo::Result&lt;<a href="playback_status.rs.html#9-16">PlaybackStatus</a>&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#227">self</a>.playback_status.get())
     }
 
-    <span class="kw">async fn </span>loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;LoopStatus&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.loop_status.get())
+    <span class="kw">async fn </span>loop_status(<span class="kw-2">&amp;</span><a class="self" href="#231">self</a>) -&gt; fdo::Result&lt;<a href="loop_status.rs.html#9-17">LoopStatus</a>&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#231">self</a>.loop_status.get())
     }
 
-    <span class="kw">async fn </span>set_loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>, loop_status: LoopStatus) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="kw">let </span>player = <span class="self">self</span>.player();
+    <span class="kw">async fn </span>set_loop_status(<span class="kw-2">&amp;</span><a class="self" href="#235">self</a>, <a href="#235">loop_status</a>: <a href="loop_status.rs.html#9-17">LoopStatus</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="kw">let </span>player = <a class="self" href="#235">self</a>.<a href="#77-87">player</a>();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.set_loop_status_cbs.borrow().iter() {
             cb(<span class="kw-2">&amp;</span>player, loop_status);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackRate&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.rate.get())
+    <span class="kw">async fn </span>rate(<span class="kw-2">&amp;</span><a class="self" href="#243">self</a>) -&gt; fdo::Result&lt;<a href="lib.rs.html#1192">PlaybackRate</a>&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#243">self</a>.rate.get())
     }
 
-    <span class="kw">async fn </span>set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, rate: PlaybackRate) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="kw">let </span>player = <span class="self">self</span>.player();
+    <span class="kw">async fn </span>set_rate(<span class="kw-2">&amp;</span><a class="self" href="#247">self</a>, <a href="#247">rate</a>: <a href="lib.rs.html#1192">PlaybackRate</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="kw">let </span>player = <a class="self" href="#247">self</a>.<a href="#77-87">player</a>();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.set_rate_cbs.borrow().iter() {
             cb(<span class="kw-2">&amp;</span>player, rate);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.shuffle.get())
+    <span class="kw">async fn </span>shuffle(<span class="kw-2">&amp;</span><a class="self" href="#255">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#255">self</a>.shuffle.get())
     }
 
-    <span class="kw">async fn </span>set_shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>, shuffle: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="kw">let </span>player = <span class="self">self</span>.player();
+    <span class="kw">async fn </span>set_shuffle(<span class="kw-2">&amp;</span><a class="self" href="#259">self</a>, <a href="#259">shuffle</a>: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="kw">let </span>player = <a class="self" href="#259">self</a>.<a href="#77-87">player</a>();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.set_shuffle_cbs.borrow().iter() {
             cb(<span class="kw-2">&amp;</span>player, shuffle);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>metadata(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Metadata&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.metadata.borrow().clone())
+    <span class="kw">async fn </span>metadata(<span class="kw-2">&amp;</span><a class="self" href="#267">self</a>) -&gt; fdo::Result&lt;<a href="metadata.rs.html#36">Metadata</a>&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#267">self</a>.metadata.borrow().<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>())
     }
 
-    <span class="kw">async fn </span>volume(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Volume&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.volume.get())
+    <span class="kw">async fn </span>volume(<span class="kw-2">&amp;</span><a class="self" href="#271">self</a>) -&gt; fdo::Result&lt;<a href="lib.rs.html#1201">Volume</a>&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#271">self</a>.volume.get())
     }
 
-    <span class="kw">async fn </span>set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, volume: Volume) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="kw">let </span>player = <span class="self">self</span>.player();
+    <span class="kw">async fn </span>set_volume(<span class="kw-2">&amp;</span><a class="self" href="#275">self</a>, <a href="#275">volume</a>: <a href="lib.rs.html#1201">Volume</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="kw">let </span>player = <a class="self" href="#275">self</a>.<a href="#77-87">player</a>();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.set_volume_cbs.borrow().iter() {
             cb(<span class="kw-2">&amp;</span>player, volume);
         }
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Time&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.position.get())
+    <span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><a class="self" href="#283">self</a>) -&gt; fdo::Result&lt;<a href="time.rs.html#15">Time</a>&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#283">self</a>.position.get())
     }
 
-    <span class="kw">async fn </span>minimum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackRate&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.minimum_rate.get())
+    <span class="kw">async fn </span>minimum_rate(<span class="kw-2">&amp;</span><a class="self" href="#287">self</a>) -&gt; fdo::Result&lt;<a href="lib.rs.html#1192">PlaybackRate</a>&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#287">self</a>.minimum_rate.get())
     }
 
-    <span class="kw">async fn </span>maximum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackRate&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.maximum_rate.get())
+    <span class="kw">async fn </span>maximum_rate(<span class="kw-2">&amp;</span><a class="self" href="#291">self</a>) -&gt; fdo::Result&lt;<a href="lib.rs.html#1192">PlaybackRate</a>&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#291">self</a>.maximum_rate.get())
     }
 
-    <span class="kw">async fn </span>can_go_next(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.can_go_next.get())
+    <span class="kw">async fn </span>can_go_next(<span class="kw-2">&amp;</span><a class="self" href="#295">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#295">self</a>.can_go_next.get())
     }
 
-    <span class="kw">async fn </span>can_go_previous(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.can_go_previous.get())
+    <span class="kw">async fn </span>can_go_previous(<span class="kw-2">&amp;</span><a class="self" href="#299">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#299">self</a>.can_go_previous.get())
     }
 
-    <span class="kw">async fn </span>can_play(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.can_play.get())
+    <span class="kw">async fn </span>can_play(<span class="kw-2">&amp;</span><a class="self" href="#303">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#303">self</a>.can_play.get())
     }
 
-    <span class="kw">async fn </span>can_pause(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.can_pause.get())
+    <span class="kw">async fn </span>can_pause(<span class="kw-2">&amp;</span><a class="self" href="#307">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#307">self</a>.can_pause.get())
     }
 
-    <span class="kw">async fn </span>can_seek(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.can_seek.get())
+    <span class="kw">async fn </span>can_seek(<span class="kw-2">&amp;</span><a class="self" href="#311">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#311">self</a>.can_seek.get())
     }
 
-    <span class="kw">async fn </span>can_control(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.can_control.get())
+    <span class="kw">async fn </span>can_control(<span class="kw-2">&amp;</span><a class="self" href="#315">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
+        <span class="prelude-val">Ok</span>(<a class="self" href="#315">self</a>.can_control.get())
     }
 }
 
-<span class="kw">impl </span>Player {
-    <span class="kw">pub fn </span>builder(bus_name_suffix: <span class="kw-2">&amp;</span>str) -&gt; PlayerBuilder {
-        PlayerBuilder {
-            bus_name_suffix: bus_name_suffix.to_string(),
+<span class="kw">impl </span><a href="#25-27">Player</a> {
+    <span class="kw">pub fn </span>builder(bus_name_suffix: <span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a href="#840-866">PlayerBuilder</a> {
+        <a href="#840-866">PlayerBuilder</a> {
+            bus_name_suffix: <a href="#321">bus_name_suffix</a>.<a href="https://doc.rust-lang.org/nightly/alloc/string/trait.ToString.html">to_string</a>(),
             can_quit: <span class="bool-val">false</span>,
             fullscreen: <span class="bool-val">false</span>,
             can_set_fullscreen: <span class="bool-val">false</span>,
@@ -1384,8 +1384,8 @@
             desktop_entry: String::new(),
             supported_uri_schemes: Vec::new(),
             supported_mime_types: Vec::new(),
-            playback_status: PlaybackStatus::Stopped,
-            loop_status: LoopStatus::None,
+            playback_status: <a href="playback_status.rs.html#15">PlaybackStatus::Stopped</a>,
+            loop_status: <a href="loop_status.rs.html#11">LoopStatus::None</a>,
             rate: <span class="number">1.0</span>,
             shuffle: <span class="bool-val">false</span>,
             metadata: Metadata::new(),
@@ -1408,31 +1408,31 @@
     /// The task must be awaited as soon as possible after creating the player.
     ///
     /// The returned task is no-op if the player&#39;s server has been ran before.
-    </span><span class="kw">pub fn </span>run(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; LocalServerRunTask {
-        <span class="self">self</span>.server.run()
+    </span><span class="kw">pub fn </span>run(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="local_server.rs.html#495-497">LocalServerRunTask</a> {
+        <a class="self" href="#357">self</a>.server.<a href="local_server.rs.html#591-595">run</a>()
     }
 
     <span class="kw">pub fn </span>connect_raise(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>) + <span class="lifetime">&#39;static</span>) {
-        <span class="self">self</span>.server.imp().raise_cbs.borrow_mut().push(Box::new(cb));
+        <a class="self" href="#361">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().raise_cbs.borrow_mut().push(Box::new(<a href="#361">cb</a>));
     }
 
     <span class="kw">pub fn </span>connect_quit(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>) + <span class="lifetime">&#39;static</span>) {
-        <span class="self">self</span>.server.imp().quit_cbs.borrow_mut().push(Box::new(cb));
+        <a class="self" href="#365">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().quit_cbs.borrow_mut().push(Box::new(<a href="#365">cb</a>));
     }
 
-    <span class="kw">pub fn </span>connect_set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, bool) + <span class="lifetime">&#39;static</span>) {
-        <span class="self">self</span>.server
-            .imp()
+    <span class="kw">pub fn </span>connect_set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) + <span class="lifetime">&#39;static</span>) {
+        <a class="self" href="#369">self</a>.server
+            .<a href="local_server.rs.html#599-601">imp</a>()
             .set_fullscreen_cbs
             .borrow_mut()
-            .push(Box::new(cb));
+            .push(Box::new(<a href="#369">cb</a>));
     }
 
-    <span class="kw">pub fn </span>can_quit(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.server.imp().can_quit.get()
+    <span class="kw">pub fn </span>can_quit(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a> {
+        <a class="self" href="#377">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().can_quit.get()
     }
 
-    <span class="kw">pub async fn </span>set_can_quit(<span class="kw-2">&amp;</span><span class="self">self</span>, can_quit: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_can_quit(<span class="kw-2">&amp;</span><span class="self">self</span>, can_quit: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.can_quit() == can_quit {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1443,11 +1443,11 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.server.imp().fullscreen.get()
+    <span class="kw">pub fn </span>fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a> {
+        <a class="self" href="#392">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().fullscreen.get()
     }
 
-    <span class="kw">pub async fn </span>set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>, fullscreen: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>, fullscreen: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.fullscreen() == fullscreen {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1458,11 +1458,11 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>can_set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.server.imp().can_set_fullscreen.get()
+    <span class="kw">pub fn </span>can_set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a> {
+        <a class="self" href="#407">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().can_set_fullscreen.get()
     }
 
-    <span class="kw">pub async fn </span>set_can_set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>, can_set_fullscreen: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_can_set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>, can_set_fullscreen: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.can_set_fullscreen() == can_set_fullscreen {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1473,11 +1473,11 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>can_raise(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.server.imp().can_raise.get()
+    <span class="kw">pub fn </span>can_raise(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a> {
+        <a class="self" href="#422">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().can_raise.get()
     }
 
-    <span class="kw">pub async fn </span>set_can_raise(<span class="kw-2">&amp;</span><span class="self">self</span>, can_raise: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_can_raise(<span class="kw-2">&amp;</span><span class="self">self</span>, can_raise: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.can_raise() == can_raise {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1488,11 +1488,11 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>has_track_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.server.imp().has_track_list.get()
+    <span class="kw">pub fn </span>has_track_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a> {
+        <a class="self" href="#437">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().has_track_list.get()
     }
 
-    <span class="kw">pub async fn </span>set_has_track_list(<span class="kw-2">&amp;</span><span class="self">self</span>, has_track_list: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_has_track_list(<span class="kw-2">&amp;</span><span class="self">self</span>, has_track_list: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.has_track_list() == has_track_list {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1503,11 +1503,11 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>identity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Ref&lt;<span class="lifetime">&#39;_</span>, String&gt; {
-        <span class="self">self</span>.server.imp().identity.borrow()
+    <span class="kw">pub fn </span>identity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Ref&lt;<span class="lifetime">&#39;_</span>, <a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt; {
+        <a class="self" href="#452">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().identity.borrow()
     }
 
-    <span class="kw">pub async fn </span>set_identity(<span class="kw-2">&amp;</span><span class="self">self</span>, identity: <span class="kw">impl </span>Into&lt;String&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_identity(<span class="kw-2">&amp;</span><span class="self">self</span>, identity: <span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span>identity = identity.into();
 
         <span class="kw">if </span><span class="kw-2">*</span><span class="self">self</span>.identity() == identity {
@@ -1520,11 +1520,11 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>desktop_entry(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Ref&lt;<span class="lifetime">&#39;_</span>, String&gt; {
-        <span class="self">self</span>.server.imp().desktop_entry.borrow()
+    <span class="kw">pub fn </span>desktop_entry(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Ref&lt;<span class="lifetime">&#39;_</span>, <a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt; {
+        <a class="self" href="#469">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().desktop_entry.borrow()
     }
 
-    <span class="kw">pub async fn </span>set_desktop_entry(<span class="kw-2">&amp;</span><span class="self">self</span>, desktop_entry: <span class="kw">impl </span>Into&lt;String&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_desktop_entry(<span class="kw-2">&amp;</span><span class="self">self</span>, desktop_entry: <span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span>desktop_entry = desktop_entry.into();
 
         <span class="kw">if </span><span class="kw-2">*</span><span class="self">self</span>.desktop_entry() == desktop_entry {
@@ -1540,13 +1540,13 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>supported_uri_schemes(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Ref&lt;<span class="lifetime">&#39;_</span>, Vec&lt;String&gt;&gt; {
-        <span class="self">self</span>.server.imp().supported_uri_schemes.borrow()
+    <span class="kw">pub fn </span>supported_uri_schemes(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Ref&lt;<span class="lifetime">&#39;_</span>, Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt; {
+        <a class="self" href="#489">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().supported_uri_schemes.borrow()
     }
 
     <span class="kw">pub async fn </span>set_supported_uri_schemes(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        supported_uri_schemes: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;String&gt;&gt;,
+        supported_uri_schemes: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span>supported_uri_schemes = supported_uri_schemes
             .into_iter()
@@ -1566,13 +1566,13 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>supported_mime_types(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Ref&lt;<span class="lifetime">&#39;_</span>, Vec&lt;String&gt;&gt; {
-        <span class="self">self</span>.server.imp().supported_mime_types.borrow()
+    <span class="kw">pub fn </span>supported_mime_types(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Ref&lt;<span class="lifetime">&#39;_</span>, Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt; {
+        <a class="self" href="#515">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().supported_mime_types.borrow()
     }
 
     <span class="kw">pub async fn </span>set_supported_mime_types(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        supported_mime_types: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;String&gt;&gt;,
+        supported_mime_types: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span>supported_mime_types = supported_mime_types
             .into_iter()
@@ -1593,98 +1593,98 @@
     </span>}
 
     <span class="kw">pub fn </span>connect_next(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>) + <span class="lifetime">&#39;static</span>) {
-        <span class="self">self</span>.server.imp().next_cbs.borrow_mut().push(Box::new(cb));
+        <a class="self" href="#541">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().next_cbs.borrow_mut().push(Box::new(<a href="#541">cb</a>));
     }
 
     <span class="kw">pub fn </span>connect_previous(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>) + <span class="lifetime">&#39;static</span>) {
-        <span class="self">self</span>.server
-            .imp()
+        <a class="self" href="#545">self</a>.server
+            .<a href="local_server.rs.html#599-601">imp</a>()
             .previous_cbs
             .borrow_mut()
-            .push(Box::new(cb));
+            .push(Box::new(<a href="#545">cb</a>));
     }
 
     <span class="kw">pub fn </span>connect_pause(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>) + <span class="lifetime">&#39;static</span>) {
-        <span class="self">self</span>.server.imp().pause_cbs.borrow_mut().push(Box::new(cb));
+        <a class="self" href="#553">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().pause_cbs.borrow_mut().push(Box::new(<a href="#553">cb</a>));
     }
 
     <span class="kw">pub fn </span>connect_play_pause(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>) + <span class="lifetime">&#39;static</span>) {
-        <span class="self">self</span>.server
-            .imp()
+        <a class="self" href="#557">self</a>.server
+            .<a href="local_server.rs.html#599-601">imp</a>()
             .play_pause_cbs
             .borrow_mut()
-            .push(Box::new(cb));
+            .push(Box::new(<a href="#557">cb</a>));
     }
 
     <span class="kw">pub fn </span>connect_stop(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>) + <span class="lifetime">&#39;static</span>) {
-        <span class="self">self</span>.server.imp().stop_cbs.borrow_mut().push(Box::new(cb));
+        <a class="self" href="#565">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().stop_cbs.borrow_mut().push(Box::new(<a href="#565">cb</a>));
     }
 
     <span class="kw">pub fn </span>connect_play(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>) + <span class="lifetime">&#39;static</span>) {
-        <span class="self">self</span>.server.imp().play_cbs.borrow_mut().push(Box::new(cb));
+        <a class="self" href="#569">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().play_cbs.borrow_mut().push(Box::new(<a href="#569">cb</a>));
     }
 
-    <span class="kw">pub fn </span>connect_seek(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, Time) + <span class="lifetime">&#39;static</span>) {
-        <span class="self">self</span>.server.imp().seek_cbs.borrow_mut().push(Box::new(cb));
+    <span class="kw">pub fn </span>connect_seek(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, <a href="time.rs.html#15">Time</a>) + <span class="lifetime">&#39;static</span>) {
+        <a class="self" href="#573">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().seek_cbs.borrow_mut().push(Box::new(<a href="#573">cb</a>));
     }
 
-    <span class="kw">pub fn </span>connect_set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, <span class="kw-2">&amp;</span>TrackId, Time) + <span class="lifetime">&#39;static</span>) {
-        <span class="self">self</span>.server
-            .imp()
+    <span class="kw">pub fn </span>connect_set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, <span class="kw-2">&amp;</span><a href="track_id.rs.html#32">TrackId</a>, <a href="time.rs.html#15">Time</a>) + <span class="lifetime">&#39;static</span>) {
+        <a class="self" href="#577">self</a>.server
+            .<a href="local_server.rs.html#599-601">imp</a>()
             .set_position_cbs
             .borrow_mut()
-            .push(Box::new(cb));
+            .push(Box::new(<a href="#577">cb</a>));
     }
 
-    <span class="kw">pub fn </span>connect_open_uri(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, <span class="kw-2">&amp;</span>str) + <span class="lifetime">&#39;static</span>) {
-        <span class="self">self</span>.server
-            .imp()
+    <span class="kw">pub fn </span>connect_open_uri(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, <span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) + <span class="lifetime">&#39;static</span>) {
+        <a class="self" href="#585">self</a>.server
+            .<a href="local_server.rs.html#599-601">imp</a>()
             .open_uri_cbs
             .borrow_mut()
-            .push(Box::new(cb));
+            .push(Box::new(<a href="#585">cb</a>));
     }
 
-    <span class="kw">pub fn </span>connect_set_loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, LoopStatus) + <span class="lifetime">&#39;static</span>) {
-        <span class="self">self</span>.server
-            .imp()
+    <span class="kw">pub fn </span>connect_set_loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, <a href="loop_status.rs.html#9-17">LoopStatus</a>) + <span class="lifetime">&#39;static</span>) {
+        <a class="self" href="#593">self</a>.server
+            .<a href="local_server.rs.html#599-601">imp</a>()
             .set_loop_status_cbs
             .borrow_mut()
-            .push(Box::new(cb));
+            .push(Box::new(<a href="#593">cb</a>));
     }
 
-    <span class="kw">pub fn </span>connect_set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, PlaybackRate) + <span class="lifetime">&#39;static</span>) {
-        <span class="self">self</span>.server
-            .imp()
+    <span class="kw">pub fn </span>connect_set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, <a href="lib.rs.html#1192">PlaybackRate</a>) + <span class="lifetime">&#39;static</span>) {
+        <a class="self" href="#601">self</a>.server
+            .<a href="local_server.rs.html#599-601">imp</a>()
             .set_rate_cbs
             .borrow_mut()
-            .push(Box::new(cb));
+            .push(Box::new(<a href="#601">cb</a>));
     }
 
-    <span class="kw">pub fn </span>connect_set_shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, bool) + <span class="lifetime">&#39;static</span>) {
-        <span class="self">self</span>.server
-            .imp()
+    <span class="kw">pub fn </span>connect_set_shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) + <span class="lifetime">&#39;static</span>) {
+        <a class="self" href="#609">self</a>.server
+            .<a href="local_server.rs.html#599-601">imp</a>()
             .set_shuffle_cbs
             .borrow_mut()
-            .push(Box::new(cb));
+            .push(Box::new(<a href="#609">cb</a>));
     }
 
-    <span class="kw">pub fn </span>connect_set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, Volume) + <span class="lifetime">&#39;static</span>) {
-        <span class="self">self</span>.server
-            .imp()
+    <span class="kw">pub fn </span>connect_set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, <a href="lib.rs.html#1201">Volume</a>) + <span class="lifetime">&#39;static</span>) {
+        <a class="self" href="#617">self</a>.server
+            .<a href="local_server.rs.html#599-601">imp</a>()
             .set_volume_cbs
             .borrow_mut()
-            .push(Box::new(cb));
+            .push(Box::new(<a href="#617">cb</a>));
     }
 
-    <span class="kw">pub async fn </span>seeked(<span class="kw-2">&amp;</span><span class="self">self</span>, position: Time) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>seeked(<span class="kw-2">&amp;</span><span class="self">self</span>, position: <a href="time.rs.html#15">Time</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.server.emit(Signal::Seeked { position }).<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>playback_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PlaybackStatus {
-        <span class="self">self</span>.server.imp().playback_status.get()
+    <span class="kw">pub fn </span>playback_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="playback_status.rs.html#9-16">PlaybackStatus</a> {
+        <a class="self" href="#629">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().playback_status.get()
     }
 
-    <span class="kw">pub async fn </span>set_playback_status(<span class="kw-2">&amp;</span><span class="self">self</span>, playback_status: PlaybackStatus) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_playback_status(<span class="kw-2">&amp;</span><span class="self">self</span>, playback_status: <a href="playback_status.rs.html#9-16">PlaybackStatus</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.playback_status() == playback_status {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1695,11 +1695,11 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; LoopStatus {
-        <span class="self">self</span>.server.imp().loop_status.get()
+    <span class="kw">pub fn </span>loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="loop_status.rs.html#9-17">LoopStatus</a> {
+        <a class="self" href="#644">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().loop_status.get()
     }
 
-    <span class="kw">pub async fn </span>set_loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>, loop_status: LoopStatus) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>, loop_status: <a href="loop_status.rs.html#9-17">LoopStatus</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.loop_status() == loop_status {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1710,11 +1710,11 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PlaybackRate {
-        <span class="self">self</span>.server.imp().rate.get()
+    <span class="kw">pub fn </span>rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="lib.rs.html#1192">PlaybackRate</a> {
+        <a class="self" href="#659">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().rate.get()
     }
 
-    <span class="kw">pub async fn </span>set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, rate: PlaybackRate) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, rate: <a href="lib.rs.html#1192">PlaybackRate</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.rate() == rate {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1723,11 +1723,11 @@
         <span class="self">self</span>.server.properties_changed([Property::Rate(rate)]).<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.server.imp().shuffle.get()
+    <span class="kw">pub fn </span>shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a> {
+        <a class="self" href="#672">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().shuffle.get()
     }
 
-    <span class="kw">pub async fn </span>set_shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>, shuffle: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>, shuffle: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.shuffle() == shuffle {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1738,11 +1738,11 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>metadata(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Ref&lt;<span class="lifetime">&#39;_</span>, Metadata&gt; {
-        <span class="self">self</span>.server.imp().metadata.borrow()
+    <span class="kw">pub fn </span>metadata(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Ref&lt;<span class="lifetime">&#39;_</span>, <a href="metadata.rs.html#36">Metadata</a>&gt; {
+        <a class="self" href="#687">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().metadata.borrow()
     }
 
-    <span class="kw">pub async fn </span>set_metadata(<span class="kw-2">&amp;</span><span class="self">self</span>, metadata: Metadata) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_metadata(<span class="kw-2">&amp;</span><span class="self">self</span>, metadata: <a href="metadata.rs.html#36">Metadata</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="kw-2">*</span><span class="self">self</span>.metadata() == metadata {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1753,11 +1753,11 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>volume(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Volume {
-        <span class="self">self</span>.server.imp().volume.get()
+    <span class="kw">pub fn </span>volume(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="lib.rs.html#1201">Volume</a> {
+        <a class="self" href="#702">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().volume.get()
     }
 
-    <span class="kw">pub async fn </span>set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, volume: Volume) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, volume: <a href="lib.rs.html#1201">Volume</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.volume() == volume {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1768,20 +1768,20 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Time {
-        <span class="self">self</span>.server.imp().position.get()
+    <span class="kw">pub fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="time.rs.html#15">Time</a> {
+        <a class="self" href="#717">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().position.get()
     }
 
     <span class="doccomment">/// This does not emit `PropertiesChanged` signal.
-    </span><span class="kw">pub fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, position: Time) {
-        <span class="self">self</span>.server.imp().position.set(position);
+    </span><span class="kw">pub fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, position: <a href="time.rs.html#15">Time</a>) {
+        <a class="self" href="#722">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().position.set(<a href="#722">position</a>);
     }
 
-    <span class="kw">pub fn </span>minimum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PlaybackRate {
-        <span class="self">self</span>.server.imp().minimum_rate.get()
+    <span class="kw">pub fn </span>minimum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="lib.rs.html#1192">PlaybackRate</a> {
+        <a class="self" href="#726">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().minimum_rate.get()
     }
 
-    <span class="kw">pub async fn </span>set_minimum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, minimum_rate: PlaybackRate) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_minimum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, minimum_rate: <a href="lib.rs.html#1192">PlaybackRate</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.minimum_rate() == minimum_rate {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1792,11 +1792,11 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>maximum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PlaybackRate {
-        <span class="self">self</span>.server.imp().maximum_rate.get()
+    <span class="kw">pub fn </span>maximum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="lib.rs.html#1192">PlaybackRate</a> {
+        <a class="self" href="#741">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().maximum_rate.get()
     }
 
-    <span class="kw">pub async fn </span>set_maximum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, maximum_rate: PlaybackRate) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_maximum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, maximum_rate: <a href="lib.rs.html#1192">PlaybackRate</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.maximum_rate() == maximum_rate {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1807,11 +1807,11 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>can_go_next(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.server.imp().can_go_next.get()
+    <span class="kw">pub fn </span>can_go_next(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a> {
+        <a class="self" href="#756">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().can_go_next.get()
     }
 
-    <span class="kw">pub async fn </span>set_can_go_next(<span class="kw-2">&amp;</span><span class="self">self</span>, can_go_next: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_can_go_next(<span class="kw-2">&amp;</span><span class="self">self</span>, can_go_next: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.can_go_next() == can_go_next {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1822,11 +1822,11 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>can_go_previous(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.server.imp().can_go_previous.get()
+    <span class="kw">pub fn </span>can_go_previous(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a> {
+        <a class="self" href="#771">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().can_go_previous.get()
     }
 
-    <span class="kw">pub async fn </span>set_can_go_previous(<span class="kw-2">&amp;</span><span class="self">self</span>, can_go_previous: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_can_go_previous(<span class="kw-2">&amp;</span><span class="self">self</span>, can_go_previous: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.can_go_previous() == can_go_previous {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1837,11 +1837,11 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>can_play(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.server.imp().can_play.get()
+    <span class="kw">pub fn </span>can_play(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a> {
+        <a class="self" href="#786">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().can_play.get()
     }
 
-    <span class="kw">pub async fn </span>set_can_play(<span class="kw-2">&amp;</span><span class="self">self</span>, can_play: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_can_play(<span class="kw-2">&amp;</span><span class="self">self</span>, can_play: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.can_play() == can_play {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1852,11 +1852,11 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>can_pause(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.server.imp().can_pause.get()
+    <span class="kw">pub fn </span>can_pause(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a> {
+        <a class="self" href="#801">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().can_pause.get()
     }
 
-    <span class="kw">pub async fn </span>set_can_pause(<span class="kw-2">&amp;</span><span class="self">self</span>, can_pause: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_can_pause(<span class="kw-2">&amp;</span><span class="self">self</span>, can_pause: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.can_pause() == can_pause {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1867,11 +1867,11 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>can_seek(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.server.imp().can_seek.get()
+    <span class="kw">pub fn </span>can_seek(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a> {
+        <a class="self" href="#816">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().can_seek.get()
     }
 
-    <span class="kw">pub async fn </span>set_can_seek(<span class="kw-2">&amp;</span><span class="self">self</span>, can_seek: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_can_seek(<span class="kw-2">&amp;</span><span class="self">self</span>, can_seek: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.can_seek() == can_seek {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1883,174 +1883,174 @@
     </span>}
 
     <span class="doccomment">/// This can only be set on construct.
-    </span><span class="kw">pub fn </span>can_control(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="self">self</span>.server.imp().can_control.get()
+    </span><span class="kw">pub fn </span>can_control(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a> {
+        <a class="self" href="#832">self</a>.server.<a href="local_server.rs.html#599-601">imp</a>().can_control.get()
     }
 }
 
 <span class="doccomment">/// A builder used to create [`Player`].
 </span><span class="attr">#[derive(Debug)]
 #[must_use = <span class="string">&quot;must call `build()` to finish building the player&quot;</span>]
-</span><span class="kw">pub struct </span>PlayerBuilder {
-    bus_name_suffix: String,
-    can_quit: bool,
-    fullscreen: bool,
-    can_set_fullscreen: bool,
-    can_raise: bool,
-    has_track_list: bool,
-    identity: String,
-    desktop_entry: String,
-    supported_uri_schemes: Vec&lt;String&gt;,
-    supported_mime_types: Vec&lt;String&gt;,
-    playback_status: PlaybackStatus,
-    loop_status: LoopStatus,
-    rate: PlaybackRate,
-    shuffle: bool,
-    metadata: Metadata,
-    volume: Volume,
-    position: Time,
-    minimum_rate: PlaybackRate,
-    maximum_rate: PlaybackRate,
-    can_go_next: bool,
-    can_go_previous: bool,
-    can_play: bool,
-    can_pause: bool,
-    can_seek: bool,
-    can_control: bool,
+</span><span class="kw">pub struct </span><a href="../../mpris_server/builder/struct.PlayerBuilder.html">PlayerBuilder</a> {
+    bus_name_suffix: <a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>,
+    can_quit: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    fullscreen: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    can_set_fullscreen: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    can_raise: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    has_track_list: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    identity: <a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>,
+    desktop_entry: <a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>,
+    supported_uri_schemes: Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;,
+    supported_mime_types: Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;,
+    playback_status: <a href="playback_status.rs.html#9-16">PlaybackStatus</a>,
+    loop_status: <a href="loop_status.rs.html#9-17">LoopStatus</a>,
+    rate: <a href="lib.rs.html#1192">PlaybackRate</a>,
+    shuffle: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    metadata: <a href="metadata.rs.html#36">Metadata</a>,
+    volume: <a href="lib.rs.html#1201">Volume</a>,
+    position: <a href="time.rs.html#15">Time</a>,
+    minimum_rate: <a href="lib.rs.html#1192">PlaybackRate</a>,
+    maximum_rate: <a href="lib.rs.html#1192">PlaybackRate</a>,
+    can_go_next: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    can_go_previous: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    can_play: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    can_pause: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    can_seek: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    can_control: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
 }
 
-<span class="kw">impl </span>PlayerBuilder {
-    <span class="kw">pub fn </span>can_quit(<span class="kw-2">mut </span><span class="self">self</span>, can_quit: bool) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.can_quit = can_quit;
-        <span class="self">self
+<span class="kw">impl </span><a href="#840-866">PlayerBuilder</a> {
+    <span class="kw">pub fn </span>can_quit(<span class="kw-2">mut </span><span class="self">self</span>, can_quit: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#869">self</a>.can_quit = <a href="#869">can_quit</a>;
+        <span class="self"><a href="#869">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>fullscreen(<span class="kw-2">mut </span><span class="self">self</span>, fullscreen: bool) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.fullscreen = fullscreen;
-        <span class="self">self
+    <span class="kw">pub fn </span>fullscreen(<span class="kw-2">mut </span><span class="self">self</span>, fullscreen: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#874">self</a>.fullscreen = <a href="#874">fullscreen</a>;
+        <span class="self"><a href="#874">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>can_set_fullscreen(<span class="kw-2">mut </span><span class="self">self</span>, can_set_fullscreen: bool) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.can_set_fullscreen = can_set_fullscreen;
-        <span class="self">self
+    <span class="kw">pub fn </span>can_set_fullscreen(<span class="kw-2">mut </span><span class="self">self</span>, can_set_fullscreen: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#879">self</a>.can_set_fullscreen = <a href="#879">can_set_fullscreen</a>;
+        <span class="self"><a href="#879">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>can_raise(<span class="kw-2">mut </span><span class="self">self</span>, can_raise: bool) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.can_raise = can_raise;
-        <span class="self">self
+    <span class="kw">pub fn </span>can_raise(<span class="kw-2">mut </span><span class="self">self</span>, can_raise: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#884">self</a>.can_raise = <a href="#884">can_raise</a>;
+        <span class="self"><a href="#884">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>has_track_list(<span class="kw-2">mut </span><span class="self">self</span>, has_track_list: bool) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.has_track_list = has_track_list;
-        <span class="self">self
+    <span class="kw">pub fn </span>has_track_list(<span class="kw-2">mut </span><span class="self">self</span>, has_track_list: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#889">self</a>.has_track_list = <a href="#889">has_track_list</a>;
+        <span class="self"><a href="#889">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>identity(<span class="kw-2">mut </span><span class="self">self</span>, identity: <span class="kw">impl </span>Into&lt;String&gt;) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.identity = identity.into();
-        <span class="self">self
+    <span class="kw">pub fn </span>identity(<span class="kw-2">mut </span><span class="self">self</span>, identity: <span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#894">self</a>.identity = <a href="#894">identity</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html">into</a>();
+        <span class="self"><a href="#894">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>desktop_entry(<span class="kw-2">mut </span><span class="self">self</span>, desktop_entry: <span class="kw">impl </span>Into&lt;String&gt;) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.desktop_entry = desktop_entry.into();
-        <span class="self">self
+    <span class="kw">pub fn </span>desktop_entry(<span class="kw-2">mut </span><span class="self">self</span>, desktop_entry: <span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#899">self</a>.desktop_entry = <a href="#899">desktop_entry</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html">into</a>();
+        <span class="self"><a href="#899">self</a>
     </span>}
 
     <span class="kw">pub fn </span>supported_uri_schemes(
         <span class="kw-2">mut </span><span class="self">self</span>,
-        supported_uri_schemes: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;String&gt;&gt;,
+        supported_uri_schemes: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;,
     ) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.supported_uri_schemes = supported_uri_schemes
-            .into_iter()
-            .map(|i| i.into())
-            .collect();
-        <span class="self">self
+        <a class="self" href="#905">self</a>.supported_uri_schemes = <a href="#906">supported_uri_schemes</a>
+            .<a href="https://doc.rust-lang.org/nightly/core/iter/traits/collect/trait.IntoIterator.html">into_iter</a>()
+            .<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html">map</a>(|i| <a href="#910">i</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html">into</a>())
+            .<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html">collect</a>();
+        <span class="self"><a href="#905">self</a>
     </span>}
 
     <span class="kw">pub fn </span>supported_mime_types(
         <span class="kw-2">mut </span><span class="self">self</span>,
-        supported_mime_types: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;String&gt;&gt;,
+        supported_mime_types: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;,
     ) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.supported_mime_types = supported_mime_types.into_iter().map(|i| i.into()).collect();
-        <span class="self">self
+        <a class="self" href="#916">self</a>.supported_mime_types = <a href="#917">supported_mime_types</a>.<a href="https://doc.rust-lang.org/nightly/core/iter/traits/collect/trait.IntoIterator.html">into_iter</a>().<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html">map</a>(|i| <a href="#919">i</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html">into</a>()).<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html">collect</a>();
+        <span class="self"><a href="#916">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>playback_status(<span class="kw-2">mut </span><span class="self">self</span>, playback_status: PlaybackStatus) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.playback_status = playback_status;
-        <span class="self">self
+    <span class="kw">pub fn </span>playback_status(<span class="kw-2">mut </span><span class="self">self</span>, playback_status: <a href="playback_status.rs.html#9-16">PlaybackStatus</a>) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#923">self</a>.playback_status = <a href="#923">playback_status</a>;
+        <span class="self"><a href="#923">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>loop_status(<span class="kw-2">mut </span><span class="self">self</span>, loop_status: LoopStatus) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.loop_status = loop_status;
-        <span class="self">self
+    <span class="kw">pub fn </span>loop_status(<span class="kw-2">mut </span><span class="self">self</span>, loop_status: <a href="loop_status.rs.html#9-17">LoopStatus</a>) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#928">self</a>.loop_status = <a href="#928">loop_status</a>;
+        <span class="self"><a href="#928">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>rate(<span class="kw-2">mut </span><span class="self">self</span>, rate: PlaybackRate) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.rate = rate;
-        <span class="self">self
+    <span class="kw">pub fn </span>rate(<span class="kw-2">mut </span><span class="self">self</span>, rate: <a href="lib.rs.html#1192">PlaybackRate</a>) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#933">self</a>.rate = <a href="#933">rate</a>;
+        <span class="self"><a href="#933">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>shuffle(<span class="kw-2">mut </span><span class="self">self</span>, shuffle: bool) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.shuffle = shuffle;
-        <span class="self">self
+    <span class="kw">pub fn </span>shuffle(<span class="kw-2">mut </span><span class="self">self</span>, shuffle: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#938">self</a>.shuffle = <a href="#938">shuffle</a>;
+        <span class="self"><a href="#938">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>metadata(<span class="kw-2">mut </span><span class="self">self</span>, metadata: Metadata) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.metadata = metadata;
-        <span class="self">self
+    <span class="kw">pub fn </span>metadata(<span class="kw-2">mut </span><span class="self">self</span>, metadata: <a href="metadata.rs.html#36">Metadata</a>) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#943">self</a>.metadata = <a href="#943">metadata</a>;
+        <span class="self"><a href="#943">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>volume(<span class="kw-2">mut </span><span class="self">self</span>, volume: Volume) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.volume = volume;
-        <span class="self">self
+    <span class="kw">pub fn </span>volume(<span class="kw-2">mut </span><span class="self">self</span>, volume: <a href="lib.rs.html#1201">Volume</a>) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#948">self</a>.volume = <a href="#948">volume</a>;
+        <span class="self"><a href="#948">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>position(<span class="kw-2">mut </span><span class="self">self</span>, position: Time) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.position = position;
-        <span class="self">self
+    <span class="kw">pub fn </span>position(<span class="kw-2">mut </span><span class="self">self</span>, position: <a href="time.rs.html#15">Time</a>) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#953">self</a>.position = <a href="#953">position</a>;
+        <span class="self"><a href="#953">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>minimum_rate(<span class="kw-2">mut </span><span class="self">self</span>, minimum_rate: PlaybackRate) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.minimum_rate = minimum_rate;
-        <span class="self">self
+    <span class="kw">pub fn </span>minimum_rate(<span class="kw-2">mut </span><span class="self">self</span>, minimum_rate: <a href="lib.rs.html#1192">PlaybackRate</a>) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#958">self</a>.minimum_rate = <a href="#958">minimum_rate</a>;
+        <span class="self"><a href="#958">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>maximum_rate(<span class="kw-2">mut </span><span class="self">self</span>, maximum_rate: PlaybackRate) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.maximum_rate = maximum_rate;
-        <span class="self">self
+    <span class="kw">pub fn </span>maximum_rate(<span class="kw-2">mut </span><span class="self">self</span>, maximum_rate: <a href="lib.rs.html#1192">PlaybackRate</a>) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#963">self</a>.maximum_rate = <a href="#963">maximum_rate</a>;
+        <span class="self"><a href="#963">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>can_go_next(<span class="kw-2">mut </span><span class="self">self</span>, can_go_next: bool) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.can_go_next = can_go_next;
-        <span class="self">self
+    <span class="kw">pub fn </span>can_go_next(<span class="kw-2">mut </span><span class="self">self</span>, can_go_next: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#968">self</a>.can_go_next = <a href="#968">can_go_next</a>;
+        <span class="self"><a href="#968">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>can_go_previous(<span class="kw-2">mut </span><span class="self">self</span>, can_go_previous: bool) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.can_go_previous = can_go_previous;
-        <span class="self">self
+    <span class="kw">pub fn </span>can_go_previous(<span class="kw-2">mut </span><span class="self">self</span>, can_go_previous: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#973">self</a>.can_go_previous = <a href="#973">can_go_previous</a>;
+        <span class="self"><a href="#973">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>can_play(<span class="kw-2">mut </span><span class="self">self</span>, can_play: bool) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.can_play = can_play;
-        <span class="self">self
+    <span class="kw">pub fn </span>can_play(<span class="kw-2">mut </span><span class="self">self</span>, can_play: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#978">self</a>.can_play = <a href="#978">can_play</a>;
+        <span class="self"><a href="#978">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>can_pause(<span class="kw-2">mut </span><span class="self">self</span>, can_pause: bool) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.can_pause = can_pause;
-        <span class="self">self
+    <span class="kw">pub fn </span>can_pause(<span class="kw-2">mut </span><span class="self">self</span>, can_pause: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#983">self</a>.can_pause = <a href="#983">can_pause</a>;
+        <span class="self"><a href="#983">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>can_seek(<span class="kw-2">mut </span><span class="self">self</span>, can_seek: bool) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.can_seek = can_seek;
-        <span class="self">self
+    <span class="kw">pub fn </span>can_seek(<span class="kw-2">mut </span><span class="self">self</span>, can_seek: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#988">self</a>.can_seek = <a href="#988">can_seek</a>;
+        <span class="self"><a href="#988">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>can_control(<span class="kw-2">mut </span><span class="self">self</span>, can_control: bool) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.can_control = can_control;
-        <span class="self">self
+    <span class="kw">pub fn </span>can_control(<span class="kw-2">mut </span><span class="self">self</span>, can_control: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#993">self</a>.can_control = <a href="#993">can_control</a>;
+        <span class="self"><a href="#993">self</a>
     </span>}
 
     <span class="attr">#[must_use = <span class="string">&quot;building player is usually expensive and is not expected to have side effects&quot;</span>]
-    </span><span class="kw">pub async fn </span>build(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Player&gt; {
+    </span><span class="kw">pub async fn </span>build(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;<a href="#25-27">Player</a>&gt; {
         <span class="kw">let </span>server = Rc::new(
             LocalServer::new(
                 <span class="kw-2">&amp;</span><span class="self">self</span>.bus_name_suffix,

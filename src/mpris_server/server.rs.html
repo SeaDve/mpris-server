@@ -976,9 +976,9 @@
 <a href="#976" id="976">976</a>
 <a href="#977" id="977">977</a>
 <a href="#978" id="978">978</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>std::{collections::HashMap, fmt, sync::Arc};
+</pre></div><pre class="rust"><code><span class="kw">use </span>std::{<a href="https://doc.rust-lang.org/nightly/std/collections/hash/map/struct.HashMap.html">collections::HashMap</a>, <a href="https://doc.rust-lang.org/nightly/alloc/fmt/index.html">fmt</a>, <a href="https://doc.rust-lang.org/nightly/alloc/sync/struct.Arc.html">sync::Arc</a>};
 
-<span class="kw">use </span>serde::Serialize;
+<span class="kw">use </span><a href="https://docs.rs/serde_derive/1.0.192/serde_derive/derive.Serialize.html">serde::Serialize</a>;
 <span class="kw">use </span>zbus::{
     dbus_interface, fdo,
     names::BusName,
@@ -987,10 +987,10 @@
 };
 
 <span class="kw">use crate</span>::{
-    playlist::MaybePlaylist, LoopStatus, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface,
-    Playlist, PlaylistId, PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, PlaylistsSignal,
-    Property, RootInterface, Signal, Time, TrackId, TrackListInterface, TrackListProperty,
-    TrackListSignal, Uri, Volume,
+    <a href="playlist.rs.html#35-45">playlist::MaybePlaylist</a>, <a href="loop_status.rs.html#9-17">LoopStatus</a>, <a href="metadata.rs.html#36">Metadata</a>, <a href="lib.rs.html#1192">PlaybackRate</a>, <a href="playback_status.rs.html#9-16">PlaybackStatus</a>, <a href="lib.rs.html#1170-1176">PlayerInterface</a>,
+    <a href="playlist.rs.html#8-17">Playlist</a>, <a href="lib.rs.html#1216">PlaylistId</a>, <a href="playlist_ordering.rs.html#18-29">PlaylistOrdering</a>, <a href="lib.rs.html#1170-1176">PlaylistsInterface</a>, <a href="property.rs.html#64-68">PlaylistsProperty</a>, <a href="signal.rs.html#123-140">PlaylistsSignal</a>,
+    <a href="property.rs.html#11-36">Property</a>, <a href="lib.rs.html#1170-1176">RootInterface</a>, <a href="signal.rs.html#8-25">Signal</a>, <a href="time.rs.html#15">Time</a>, <a href="track_id.rs.html#32">TrackId</a>, <a href="lib.rs.html#1170-1176">TrackListInterface</a>, <a href="property.rs.html#48-52">TrackListProperty</a>,
+    <a href="signal.rs.html#36-112">TrackListSignal</a>, <a href="lib.rs.html#1222">Uri</a>, <a href="lib.rs.html#1201">Volume</a>,
 };
 
 <span class="kw">const </span>OBJECT_PATH: ObjectPath&lt;<span class="lifetime">&#39;static</span>&gt; =
@@ -1003,7 +1003,7 @@
 <span class="attr">#[dbus_interface(name = <span class="string">&quot;org.mpris.MediaPlayer2&quot;</span>)]
 </span><span class="kw">impl</span>&lt;T&gt; RawRootInterface&lt;T&gt;
 <span class="kw">where
-    </span>T: RootInterface + <span class="lifetime">&#39;static</span>,
+    </span>T: <a href="lib.rs.html#1170-1176">RootInterface</a> + <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">async fn </span>raise(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
         <span class="self">self</span>.imp.raise().<span class="kw">await
@@ -1014,52 +1014,52 @@
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>can_quit(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+    </span><span class="kw">async fn </span>can_quit(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
         <span class="self">self</span>.imp.can_quit().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+    </span><span class="kw">async fn </span>fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
         <span class="self">self</span>.imp.fullscreen().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>, fullscreen: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    </span><span class="kw">async fn </span>set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>, fullscreen: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.imp.set_fullscreen(fullscreen).<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>can_set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+    </span><span class="kw">async fn </span>can_set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
         <span class="self">self</span>.imp.can_set_fullscreen().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>can_raise(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+    </span><span class="kw">async fn </span>can_raise(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
         <span class="self">self</span>.imp.can_raise().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>has_track_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+    </span><span class="kw">async fn </span>has_track_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
         <span class="self">self</span>.imp.has_track_list().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>identity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;String&gt; {
+    </span><span class="kw">async fn </span>identity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt; {
         <span class="self">self</span>.imp.identity().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>desktop_entry(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;String&gt; {
+    </span><span class="kw">async fn </span>desktop_entry(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt; {
         <span class="self">self</span>.imp.desktop_entry().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>supported_uri_schemes(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;String&gt;&gt; {
+    </span><span class="kw">async fn </span>supported_uri_schemes(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt; {
         <span class="self">self</span>.imp.supported_uri_schemes().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>supported_mime_types(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;String&gt;&gt; {
+    </span><span class="kw">async fn </span>supported_mime_types(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt; {
         <span class="self">self</span>.imp.supported_mime_types().<span class="kw">await
     </span>}
 }
@@ -1071,7 +1071,7 @@
 <span class="attr">#[dbus_interface(name = <span class="string">&quot;org.mpris.MediaPlayer2.Player&quot;</span>)]
 </span><span class="kw">impl</span>&lt;T&gt; RawPlayerInterface&lt;T&gt;
 <span class="kw">where
-    </span>T: PlayerInterface + <span class="lifetime">&#39;static</span>,
+    </span>T: <a href="lib.rs.html#1170-1176">PlayerInterface</a> + <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">async fn </span>next(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
         <span class="self">self</span>.imp.next().<span class="kw">await
@@ -1097,113 +1097,113 @@
         <span class="self">self</span>.imp.play().<span class="kw">await
     </span>}
 
-    <span class="kw">async fn </span>seek(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: Time) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>seek(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: <a href="time.rs.html#15">Time</a>) -&gt; fdo::Result&lt;()&gt; {
         <span class="self">self</span>.imp.seek(offset).<span class="kw">await
     </span>}
 
-    <span class="kw">async fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId, position: Time) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: <a href="track_id.rs.html#32">TrackId</a>, position: <a href="time.rs.html#15">Time</a>) -&gt; fdo::Result&lt;()&gt; {
         <span class="self">self</span>.imp.set_position(track_id, position).<span class="kw">await
     </span>}
 
-    <span class="kw">async fn </span>open_uri(<span class="kw-2">&amp;</span><span class="self">self</span>, uri: String) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>open_uri(<span class="kw-2">&amp;</span><span class="self">self</span>, uri: <a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>) -&gt; fdo::Result&lt;()&gt; {
         <span class="self">self</span>.imp.open_uri(uri).<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(signal)]
-    </span><span class="kw">async fn </span>seeked(ctxt: <span class="kw-2">&amp;</span>SignalContext&lt;<span class="lifetime">&#39;_</span>&gt;, position: Time) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
+    </span><span class="kw">async fn </span>seeked(ctxt: <span class="kw-2">&amp;</span>SignalContext&lt;<span class="lifetime">&#39;_</span>&gt;, position: <a href="time.rs.html#15">Time</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>playback_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackStatus&gt; {
+    </span><span class="kw">async fn </span>playback_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="playback_status.rs.html#9-16">PlaybackStatus</a>&gt; {
         <span class="self">self</span>.imp.playback_status().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;LoopStatus&gt; {
+    </span><span class="kw">async fn </span>loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="loop_status.rs.html#9-17">LoopStatus</a>&gt; {
         <span class="self">self</span>.imp.loop_status().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>set_loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>, loop_status: LoopStatus) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    </span><span class="kw">async fn </span>set_loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>, loop_status: <a href="loop_status.rs.html#9-17">LoopStatus</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.imp.set_loop_status(loop_status).<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackRate&gt; {
+    </span><span class="kw">async fn </span>rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="lib.rs.html#1192">PlaybackRate</a>&gt; {
         <span class="self">self</span>.imp.rate().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, rate: PlaybackRate) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    </span><span class="kw">async fn </span>set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, rate: <a href="lib.rs.html#1192">PlaybackRate</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.imp.set_rate(rate).<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+    </span><span class="kw">async fn </span>shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
         <span class="self">self</span>.imp.shuffle().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>set_shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>, shuffle: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    </span><span class="kw">async fn </span>set_shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>, shuffle: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.imp.set_shuffle(shuffle).<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>metadata(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Metadata&gt; {
+    </span><span class="kw">async fn </span>metadata(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="metadata.rs.html#36">Metadata</a>&gt; {
         <span class="self">self</span>.imp.metadata().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>volume(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Volume&gt; {
+    </span><span class="kw">async fn </span>volume(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="lib.rs.html#1201">Volume</a>&gt; {
         <span class="self">self</span>.imp.volume().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, volume: Volume) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    </span><span class="kw">async fn </span>set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, volume: <a href="lib.rs.html#1201">Volume</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.imp.set_volume(volume).<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Time&gt; {
+    </span><span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="time.rs.html#15">Time</a>&gt; {
         <span class="self">self</span>.imp.position().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>minimum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackRate&gt; {
+    </span><span class="kw">async fn </span>minimum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="lib.rs.html#1192">PlaybackRate</a>&gt; {
         <span class="self">self</span>.imp.minimum_rate().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>maximum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackRate&gt; {
+    </span><span class="kw">async fn </span>maximum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="lib.rs.html#1192">PlaybackRate</a>&gt; {
         <span class="self">self</span>.imp.maximum_rate().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>can_go_next(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+    </span><span class="kw">async fn </span>can_go_next(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
         <span class="self">self</span>.imp.can_go_next().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>can_go_previous(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+    </span><span class="kw">async fn </span>can_go_previous(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
         <span class="self">self</span>.imp.can_go_previous().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>can_play(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+    </span><span class="kw">async fn </span>can_play(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
         <span class="self">self</span>.imp.can_play().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>can_pause(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+    </span><span class="kw">async fn </span>can_pause(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
         <span class="self">self</span>.imp.can_pause().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>can_seek(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+    </span><span class="kw">async fn </span>can_seek(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
         <span class="self">self</span>.imp.can_seek().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>can_control(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+    </span><span class="kw">async fn </span>can_control(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
         <span class="self">self</span>.imp.can_control().<span class="kw">await
     </span>}
 }
@@ -1215,60 +1215,60 @@
 <span class="attr">#[dbus_interface(name = <span class="string">&quot;org.mpris.MediaPlayer2.TrackList&quot;</span>)]
 </span><span class="kw">impl</span>&lt;T&gt; RawTrackListInterface&lt;T&gt;
 <span class="kw">where
-    </span>T: TrackListInterface + <span class="lifetime">&#39;static</span>,
+    </span>T: <a href="lib.rs.html#1170-1176">TrackListInterface</a> + <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">async fn </span>get_tracks_metadata(<span class="kw-2">&amp;</span><span class="self">self</span>, track_ids: Vec&lt;TrackId&gt;) -&gt; fdo::Result&lt;Vec&lt;Metadata&gt;&gt; {
+    <span class="kw">async fn </span>get_tracks_metadata(<span class="kw-2">&amp;</span><span class="self">self</span>, track_ids: Vec&lt;<a href="track_id.rs.html#32">TrackId</a>&gt;) -&gt; fdo::Result&lt;Vec&lt;<a href="metadata.rs.html#36">Metadata</a>&gt;&gt; {
         <span class="self">self</span>.imp.get_tracks_metadata(track_ids).<span class="kw">await
     </span>}
 
     <span class="kw">async fn </span>add_track(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        uri: Uri,
-        after_track: TrackId,
-        set_as_current: bool,
+        uri: <a href="lib.rs.html#1222">Uri</a>,
+        after_track: <a href="track_id.rs.html#32">TrackId</a>,
+        set_as_current: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
     ) -&gt; fdo::Result&lt;()&gt; {
         <span class="self">self</span>.imp.add_track(uri, after_track, set_as_current).<span class="kw">await
     </span>}
 
-    <span class="kw">async fn </span>remove_track(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>remove_track(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: <a href="track_id.rs.html#32">TrackId</a>) -&gt; fdo::Result&lt;()&gt; {
         <span class="self">self</span>.imp.remove_track(track_id).<span class="kw">await
     </span>}
 
-    <span class="kw">async fn </span>go_to(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>go_to(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: <a href="track_id.rs.html#32">TrackId</a>) -&gt; fdo::Result&lt;()&gt; {
         <span class="self">self</span>.imp.go_to(track_id).<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(signal)]
     </span><span class="kw">async fn </span>track_list_replaced(
         ctxt: <span class="kw-2">&amp;</span>SignalContext&lt;<span class="lifetime">&#39;_</span>&gt;,
-        tracks: Vec&lt;TrackId&gt;,
-        current_track: TrackId,
+        tracks: Vec&lt;<a href="track_id.rs.html#32">TrackId</a>&gt;,
+        current_track: <a href="track_id.rs.html#32">TrackId</a>,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
 
     <span class="attr">#[dbus_interface(signal)]
     </span><span class="kw">async fn </span>track_added(
         ctxt: <span class="kw-2">&amp;</span>SignalContext&lt;<span class="lifetime">&#39;_</span>&gt;,
-        metadata: Metadata,
-        after_track: TrackId,
+        metadata: <a href="metadata.rs.html#36">Metadata</a>,
+        after_track: <a href="track_id.rs.html#32">TrackId</a>,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
 
     <span class="attr">#[dbus_interface(signal)]
-    </span><span class="kw">async fn </span>track_removed(ctxt: <span class="kw-2">&amp;</span>SignalContext&lt;<span class="lifetime">&#39;_</span>&gt;, track_id: TrackId) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
+    </span><span class="kw">async fn </span>track_removed(ctxt: <span class="kw-2">&amp;</span>SignalContext&lt;<span class="lifetime">&#39;_</span>&gt;, track_id: <a href="track_id.rs.html#32">TrackId</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
 
     <span class="attr">#[dbus_interface(signal)]
     </span><span class="kw">async fn </span>track_metadata_changed(
         ctxt: <span class="kw-2">&amp;</span>SignalContext&lt;<span class="lifetime">&#39;_</span>&gt;,
-        track_id: TrackId,
-        metadata: Metadata,
+        track_id: <a href="track_id.rs.html#32">TrackId</a>,
+        metadata: <a href="metadata.rs.html#36">Metadata</a>,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>tracks(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;TrackId&gt;&gt; {
+    </span><span class="kw">async fn </span>tracks(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;<a href="track_id.rs.html#32">TrackId</a>&gt;&gt; {
         <span class="self">self</span>.imp.tracks().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>can_edit_tracks(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+    </span><span class="kw">async fn </span>can_edit_tracks(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
         <span class="self">self</span>.imp.can_edit_tracks().<span class="kw">await
     </span>}
 }
@@ -1280,39 +1280,39 @@
 <span class="attr">#[dbus_interface(name = <span class="string">&quot;org.mpris.MediaPlayer2.Playlists&quot;</span>)]
 </span><span class="kw">impl</span>&lt;T&gt; RawPlaylistsInterface&lt;T&gt;
 <span class="kw">where
-    </span>T: PlaylistsInterface + <span class="lifetime">&#39;static</span>,
+    </span>T: <a href="lib.rs.html#1170-1176">PlaylistsInterface</a> + <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">async fn </span>activate_playlist(<span class="kw-2">&amp;</span><span class="self">self</span>, playlist_id: PlaylistId) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>activate_playlist(<span class="kw-2">&amp;</span><span class="self">self</span>, playlist_id: <a href="lib.rs.html#1216">PlaylistId</a>) -&gt; fdo::Result&lt;()&gt; {
         <span class="self">self</span>.imp.activate_playlist(playlist_id).<span class="kw">await
     </span>}
 
     <span class="kw">async fn </span>get_playlists(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        index: u32,
-        max_count: u32,
-        order: PlaylistOrdering,
-        reverse_order: bool,
-    ) -&gt; fdo::Result&lt;Vec&lt;Playlist&gt;&gt; {
+        index: <a href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+        max_count: <a href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+        order: <a href="playlist_ordering.rs.html#18-29">PlaylistOrdering</a>,
+        reverse_order: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    ) -&gt; fdo::Result&lt;Vec&lt;<a href="playlist.rs.html#8-17">Playlist</a>&gt;&gt; {
         <span class="self">self</span>.imp
             .get_playlists(index, max_count, order, reverse_order)
             .<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(signal)]
-    </span><span class="kw">async fn </span>playlist_changed(ctxt: <span class="kw-2">&amp;</span>SignalContext&lt;<span class="lifetime">&#39;_</span>&gt;, playlist: Playlist) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
+    </span><span class="kw">async fn </span>playlist_changed(ctxt: <span class="kw-2">&amp;</span>SignalContext&lt;<span class="lifetime">&#39;_</span>&gt;, playlist: <a href="playlist.rs.html#8-17">Playlist</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>playlist_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;u32&gt; {
+    </span><span class="kw">async fn </span>playlist_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>&gt; {
         <span class="self">self</span>.imp.playlist_count().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>orderings(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;PlaylistOrdering&gt;&gt; {
+    </span><span class="kw">async fn </span>orderings(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;<a href="playlist_ordering.rs.html#18-29">PlaylistOrdering</a>&gt;&gt; {
         <span class="self">self</span>.imp.orderings().<span class="kw">await
     </span>}
 
     <span class="attr">#[dbus_interface(property)]
-    </span><span class="kw">async fn </span>active_playlist(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;MaybePlaylist&gt; {
+    </span><span class="kw">async fn </span>active_playlist(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<a href="playlist.rs.html#35-45">MaybePlaylist</a>&gt; {
         <span class="self">self</span>.imp.active_playlist().<span class="kw">await</span>.map(MaybePlaylist::from)
     }
 }
@@ -1327,20 +1327,20 @@
 /// manually using [`Server::properties_changed`],
 /// [`Server::track_list_properties_changed`], or
 /// [`Server::playlists_properties_changed`], when they changed internally.
-</span><span class="kw">pub struct </span>Server&lt;T&gt;
+</span><span class="kw">pub struct </span><a href="../../mpris_server/struct.Server.html">Server</a>&lt;T&gt;
 <span class="kw">where
-    </span>T: PlayerInterface + <span class="lifetime">&#39;static</span>,
+    </span>T: <a href="lib.rs.html#1170-1176">PlayerInterface</a> + <span class="lifetime">&#39;static</span>,
 {
     connection: Connection,
     imp: Arc&lt;T&gt;,
 }
 
-<span class="kw">impl</span>&lt;T&gt; fmt::Debug <span class="kw">for </span>Server&lt;T&gt;
+<span class="kw">impl</span>&lt;T&gt; <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html">fmt::Debug</a> <span class="kw">for </span>Server&lt;T&gt;
 <span class="kw">where
-    </span>T: PlayerInterface + <span class="lifetime">&#39;static</span>,
+    </span>T: <a href="lib.rs.html#1170-1176">PlayerInterface</a> + <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
-        f.debug_struct(<span class="string">&quot;Server&quot;</span>).finish()
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <a href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html">fmt::Result</a> {
+        <a href="#364">f</a>.debug_struct(<span class="string">&quot;Server&quot;</span>).finish()
     }
 }
 
@@ -1358,7 +1358,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; Server&lt;T&gt;
 <span class="kw">where
-    </span>T: PlayerInterface + <span class="lifetime">&#39;static</span>,
+    </span>T: <a href="lib.rs.html#1170-1176">PlayerInterface</a> + <span class="lifetime">&#39;static</span>,
 {
     <span class="doccomment">/// Creates a new [`Server`] with the given bus name suffix and
     /// implementation, `imp`, which must implement [`RootInterface`] and
@@ -1376,14 +1376,14 @@
     /// `[A-Z][a-z][0-9]_-`&quot; and &quot;must not begin with a digit&quot;.
     ///
     /// [D-Bus specification]: https://dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus
-    </span><span class="kw">pub async fn </span>new(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+    </span><span class="kw">pub async fn </span>new(bus_name_suffix: <span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="self">Self</span>::new_inner(bus_name_suffix, imp, |builder, <span class="kw">_</span>| <span class="prelude-val">Ok</span>(builder)).<span class="kw">await
     </span>}
 
     <span class="doccomment">/// Returns a reference to the underlying implementation.
     </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>imp(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>T {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.imp
+        <span class="kw-2">&amp;</span><a class="self" href="#407">self</a>.imp
     }
 
     <span class="doccomment">/// Returns a reference to the inner [`Connection`].
@@ -1393,11 +1393,11 @@
     #[cfg_attr(docsrs, doc(cfg(feature = <span class="string">&quot;unstable&quot;</span>)))]
     #[inline]
     </span><span class="kw">pub fn </span>connection(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Connection {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.connection
+        <span class="kw-2">&amp;</span><a class="self" href="#417">self</a>.connection
     }
 
     <span class="doccomment">/// Emits the given signal.
-    </span><span class="kw">pub async fn </span>emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: Signal) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    </span><span class="kw">pub async fn </span>emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: <a href="signal.rs.html#8-25">Signal</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">match </span>signal {
             Signal::Seeked { position } =&gt; {
                 <span class="self">self</span>.emit_inner::&lt;RawPlayerInterface&lt;T&gt;&gt;(<span class="string">&quot;Seeked&quot;</span>, <span class="kw-2">&amp;</span>(position,))
@@ -1419,7 +1419,7 @@
     /// interfaces respectively.
     </span><span class="kw">pub async fn </span>properties_changed(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        properties: <span class="kw">impl </span>IntoIterator&lt;Item = Property&gt;,
+        properties: <span class="kw">impl </span>IntoIterator&lt;Item = <a href="property.rs.html#11-36">Property</a>&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>root_changed = HashMap::new();
         <span class="kw">let </span><span class="kw-2">mut </span>player_changed = HashMap::new();
@@ -1466,11 +1466,11 @@
     }
 
     <span class="kw">async fn </span>new_inner(
-        bus_name_suffix: <span class="kw-2">&amp;</span>str,
+        bus_name_suffix: <span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>,
         imp: T,
         builder_ext_func: <span class="kw">impl </span>FnOnce(ConnectionBuilder&lt;<span class="lifetime">&#39;_</span>&gt;, Arc&lt;T&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;ConnectionBuilder&lt;<span class="lifetime">&#39;_</span>&gt;&gt;
-            + Send
-            + Sync
+            + <a href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html">Send</a>
+            + <a href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html">Sync</a>
             + <span class="lifetime">&#39;static</span>,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="kw">let </span>imp = Arc::new(imp);
@@ -1498,8 +1498,8 @@
 
     <span class="kw">async fn </span>properties_changed_inner&lt;I&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        changed_properties: HashMap&lt;<span class="kw-2">&amp;</span>str, Value&lt;<span class="lifetime">&#39;_</span>&gt;&gt;,
-        invalidated_properties: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>str],
+        changed_properties: HashMap&lt;<span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, Value&lt;<span class="lifetime">&#39;_</span>&gt;&gt;,
+        invalidated_properties: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>],
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;
     <span class="kw">where
         </span>I: Interface,
@@ -1513,8 +1513,8 @@
 
     <span class="kw">async fn </span>emit_inner&lt;I&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        signal_name: <span class="kw-2">&amp;</span>str,
-        body: <span class="kw-2">&amp;</span>(<span class="kw">impl </span>Serialize + DynamicType),
+        signal_name: <span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>,
+        body: <span class="kw-2">&amp;</span>(<span class="kw">impl </span><a href="https://docs.rs/serde/1.0.192/serde/ser/trait.Serialize.html">Serialize</a> + DynamicType),
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;
     <span class="kw">where
         </span>I: Interface,
@@ -1543,14 +1543,14 @@
 
 <span class="kw">impl</span>&lt;T&gt; Server&lt;T&gt;
 <span class="kw">where
-    </span>T: TrackListInterface + <span class="lifetime">&#39;static</span>,
+    </span>T: <a href="lib.rs.html#1170-1176">TrackListInterface</a> + <span class="lifetime">&#39;static</span>,
 {
     <span class="doccomment">/// Creates a new [`Server`] with the given bus name suffix and
     /// implementation, which must implement [`TrackListInterface`] in addition
     /// to [`RootInterface`] and [`PlayerInterface`].
     ///
     /// See also [`Server::new`].
-    </span><span class="kw">pub async fn </span>new_with_track_list(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+    </span><span class="kw">pub async fn </span>new_with_track_list(bus_name_suffix: <span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="self">Self</span>::new_inner(bus_name_suffix, imp, |builder, imp| {
             builder.serve_at(OBJECT_PATH, RawTrackListInterface { imp })
         })
@@ -1558,7 +1558,7 @@
     </span>}
 
     <span class="doccomment">/// Emits the given signal on the `TrackList` interface.
-    </span><span class="kw">pub async fn </span>track_list_emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: TrackListSignal) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    </span><span class="kw">pub async fn </span>track_list_emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: <a href="signal.rs.html#36-112">TrackListSignal</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">match </span>signal {
             TrackListSignal::TrackListReplaced {
                 tracks,
@@ -1599,7 +1599,7 @@
     /// properties as defined by the spec.
     </span><span class="kw">pub async fn </span>track_list_properties_changed(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        properties: <span class="kw">impl </span>IntoIterator&lt;Item = TrackListProperty&gt;,
+        properties: <span class="kw">impl </span>IntoIterator&lt;Item = <a href="property.rs.html#48-52">TrackListProperty</a>&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>changed = HashMap::new();
         <span class="kw">let </span><span class="kw-2">mut </span>invalidated = Vec::new();
@@ -1626,14 +1626,14 @@
 
 <span class="kw">impl</span>&lt;T&gt; Server&lt;T&gt;
 <span class="kw">where
-    </span>T: PlaylistsInterface + <span class="lifetime">&#39;static</span>,
+    </span>T: <a href="lib.rs.html#1170-1176">PlaylistsInterface</a> + <span class="lifetime">&#39;static</span>,
 {
     <span class="doccomment">/// Creates a new [`Server`] with the given bus name suffix and
     /// implementation, which must implement [`PlaylistsInterface`] in addition
     /// to [`RootInterface`] and [`PlayerInterface`].
     ///
     /// See also [`Server::new`].
-    </span><span class="kw">pub async fn </span>new_with_playlists(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+    </span><span class="kw">pub async fn </span>new_with_playlists(bus_name_suffix: <span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="self">Self</span>::new_inner(bus_name_suffix, imp, |builder, imp| {
             builder.serve_at(OBJECT_PATH, RawPlaylistsInterface { imp })
         })
@@ -1641,7 +1641,7 @@
     </span>}
 
     <span class="doccomment">/// Emits the given signal on the `Playlists` interface.
-    </span><span class="kw">pub async fn </span>playlists_emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: PlaylistsSignal) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    </span><span class="kw">pub async fn </span>playlists_emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: <a href="signal.rs.html#123-140">PlaylistsSignal</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">match </span>signal {
             PlaylistsSignal::PlaylistChanged { playlist } =&gt; {
                 <span class="self">self</span>.emit_inner::&lt;RawPlaylistsInterface&lt;T&gt;&gt;(<span class="string">&quot;PlaylistChanged&quot;</span>, <span class="kw-2">&amp;</span>(playlist,))
@@ -1658,7 +1658,7 @@
     /// properties as defined by the spec.
     </span><span class="kw">pub async fn </span>playlists_properties_changed(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        properties: <span class="kw">impl </span>IntoIterator&lt;Item = PlaylistsProperty&gt;,
+        properties: <span class="kw">impl </span>IntoIterator&lt;Item = <a href="property.rs.html#64-68">PlaylistsProperty</a>&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>changed = HashMap::new();
 
@@ -1690,7 +1690,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; Server&lt;T&gt;
 <span class="kw">where
-    </span>T: TrackListInterface + PlaylistsInterface + <span class="lifetime">&#39;static</span>,
+    </span>T: <a href="lib.rs.html#1170-1176">TrackListInterface</a> + <a href="lib.rs.html#1170-1176">PlaylistsInterface</a> + <span class="lifetime">&#39;static</span>,
 {
     <span class="doccomment">/// Creates a new [`Server`] with the given bus name suffix and
     /// implementation, which must implement [`TrackListInterface`] and
@@ -1698,7 +1698,7 @@
     /// [`PlayerInterface`].
     ///
     /// See also [`Server::new`].
-    </span><span class="kw">pub async fn </span>new_with_all(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+    </span><span class="kw">pub async fn </span>new_with_all(bus_name_suffix: <span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="self">Self</span>::new_inner(bus_name_suffix, imp, |builder, imp| {
             builder
                 .serve_at(

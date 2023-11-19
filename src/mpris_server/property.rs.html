@@ -67,7 +67,7 @@
 <a href="#67" id="67">67</a>
 <a href="#68" id="68">68</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
-    LoopStatus, Metadata, PlaybackRate, PlaybackStatus, Playlist, PlaylistOrdering, Volume,
+    <a href="loop_status.rs.html#9-17">LoopStatus</a>, <a href="metadata.rs.html#36">Metadata</a>, <a href="lib.rs.html#1192">PlaybackRate</a>, <a href="playback_status.rs.html#9-16">PlaybackStatus</a>, <a href="playlist.rs.html#8-17">Playlist</a>, <a href="playlist_ordering.rs.html#18-29">PlaylistOrdering</a>, <a href="lib.rs.html#1201">Volume</a>,
 };
 
 <span class="doccomment">/// Used for emitting `PropertiesChanged` signals on
@@ -76,30 +76,30 @@
 /// [`Server::properties_changed`]: crate::Server::properties_changed
 /// [`LocalServer::properties_changed`]: crate::LocalServer::properties_changed
 </span><span class="attr">#[derive(Clone, Debug, PartialEq)]
-</span><span class="kw">pub enum </span>Property {
-    CanQuit(bool),
-    Fullscreen(bool),
-    CanSetFullscreen(bool),
-    CanRaise(bool),
-    HasTrackList(bool),
-    Identity(String),
-    DesktopEntry(String),
-    SupportedUriSchemes(Vec&lt;String&gt;),
-    SupportedMimeTypes(Vec&lt;String&gt;),
-    PlaybackStatus(PlaybackStatus),
-    LoopStatus(LoopStatus),
-    Rate(PlaybackRate),
-    Shuffle(bool),
-    Metadata(Metadata),
-    Volume(Volume),
+</span><span class="kw">pub enum </span><a href="../../mpris_server/enum.Property.html">Property</a> {
+    CanQuit(<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>),
+    Fullscreen(<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>),
+    CanSetFullscreen(<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>),
+    CanRaise(<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>),
+    HasTrackList(<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>),
+    Identity(<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>),
+    DesktopEntry(<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>),
+    SupportedUriSchemes(Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;),
+    SupportedMimeTypes(Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;),
+    PlaybackStatus(<a href="playback_status.rs.html#9-16">PlaybackStatus</a>),
+    LoopStatus(<a href="loop_status.rs.html#9-17">LoopStatus</a>),
+    Rate(<a href="lib.rs.html#1192">PlaybackRate</a>),
+    Shuffle(<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>),
+    Metadata(<a href="metadata.rs.html#36">Metadata</a>),
+    Volume(<a href="lib.rs.html#1201">Volume</a>),
     <span class="comment">// Position (must use `Rate` property together with `Seeked` signal instead)
-    </span>MinimumRate(PlaybackRate),
-    MaximumRate(PlaybackRate),
-    CanGoNext(bool),
-    CanGoPrevious(bool),
-    CanPlay(bool),
-    CanPause(bool),
-    CanSeek(bool),
+    </span>MinimumRate(<a href="lib.rs.html#1192">PlaybackRate</a>),
+    MaximumRate(<a href="lib.rs.html#1192">PlaybackRate</a>),
+    CanGoNext(<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>),
+    CanGoPrevious(<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>),
+    CanPlay(<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>),
+    CanPause(<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>),
+    CanSeek(<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>),
     <span class="comment">// CanControl (not expected to change)
 </span>}
 
@@ -113,10 +113,10 @@
 /// [`TrackListInterface`]: crate::TrackListInterface
 /// [`LocalTrackListInterface`]: crate::LocalTrackListInterface
 </span><span class="attr">#[derive(Clone, Debug, PartialEq, Eq)]
-</span><span class="kw">pub enum </span>TrackListProperty {
+</span><span class="kw">pub enum </span><a href="../../mpris_server/enum.TrackListProperty.html">TrackListProperty</a> {
     <span class="comment">// The new value must not be sent according to the spec.
     </span>Tracks,
-    CanEditTracks(bool),
+    CanEditTracks(<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>),
 }
 
 <span class="doccomment">/// Used for emitting `PropertiesChanged` signals on
@@ -129,9 +129,9 @@
 /// [`PlaylistsInterface`]: crate::PlaylistsInterface
 /// [`LocalPlaylistsInterface`]: crate::LocalPlaylistsInterface
 </span><span class="attr">#[derive(Clone, Debug, PartialEq, Eq)]
-</span><span class="kw">pub enum </span>PlaylistsProperty {
-    PlaylistCount(u32),
-    Orderings(Vec&lt;PlaylistOrdering&gt;),
-    ActivePlaylist(<span class="prelude-ty">Option</span>&lt;Playlist&gt;),
+</span><span class="kw">pub enum </span><a href="../../mpris_server/enum.PlaylistsProperty.html">PlaylistsProperty</a> {
+    PlaylistCount(<a href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>),
+    Orderings(Vec&lt;<a href="playlist_ordering.rs.html#18-29">PlaylistOrdering</a>&gt;),
+    ActivePlaylist(<span class="prelude-ty">Option</span>&lt;<a href="playlist.rs.html#8-17">Playlist</a>&gt;),
 }
 </code></pre></div></section></main></body></html>

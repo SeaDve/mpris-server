@@ -1035,25 +1035,25 @@
 <a href="#1035" id="1035">1035</a>
 <a href="#1036" id="1036">1036</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{
-    cell::RefCell,
-    fmt,
-    future::Future,
+    <a href="https://doc.rust-lang.org/nightly/core/cell/struct.RefCell.html">cell::RefCell</a>,
+    <a href="https://doc.rust-lang.org/nightly/alloc/fmt/index.html">fmt</a>,
+    <a href="https://doc.rust-lang.org/nightly/core/future/future/trait.Future.html">future::Future</a>,
     marker::PhantomData,
-    pin::Pin,
-    rc::Rc,
-    task::{Context, Poll},
+    <a href="https://doc.rust-lang.org/nightly/core/pin/struct.Pin.html">pin::Pin</a>,
+    <a href="https://doc.rust-lang.org/nightly/alloc/rc/struct.Rc.html">rc::Rc</a>,
+    task::{<a href="https://doc.rust-lang.org/nightly/core/task/wake/struct.Context.html">Context</a>, <a href="https://doc.rust-lang.org/nightly/core/task/poll/enum.Poll.html">Poll</a>},
 };
 
-<span class="kw">use </span>async_trait::async_trait;
+<span class="kw">use </span><a href="../../mpris_server/attr.async_trait.html">async_trait::async_trait</a>;
 <span class="kw">use </span>futures_channel::{mpsc, oneshot};
 <span class="kw">use </span>futures_util::{FutureExt, StreamExt};
 <span class="kw">use </span>zbus::{fdo, Connection, <span class="prelude-ty">Result</span>};
 
 <span class="kw">use crate</span>::{
-    LocalPlayerInterface, LocalPlaylistsInterface, LocalTrackListInterface, LoopStatus, Metadata,
-    PlaybackRate, PlaybackStatus, PlayerInterface, Playlist, PlaylistId, PlaylistOrdering,
-    PlaylistsInterface, PlaylistsProperty, PlaylistsSignal, Property, RootInterface, Server,
-    Signal, Time, TrackId, TrackListInterface, TrackListProperty, TrackListSignal, Uri, Volume,
+    <a href="lib.rs.html#1178-1184">LocalPlayerInterface</a>, <a href="lib.rs.html#1178-1184">LocalPlaylistsInterface</a>, <a href="lib.rs.html#1178-1184">LocalTrackListInterface</a>, <a href="loop_status.rs.html#9-17">LoopStatus</a>, <a href="metadata.rs.html#36">Metadata</a>,
+    <a href="lib.rs.html#1192">PlaybackRate</a>, <a href="playback_status.rs.html#9-16">PlaybackStatus</a>, <a href="lib.rs.html#1170-1176">PlayerInterface</a>, <a href="playlist.rs.html#8-17">Playlist</a>, <a href="lib.rs.html#1216">PlaylistId</a>, <a href="playlist_ordering.rs.html#18-29">PlaylistOrdering</a>,
+    <a href="lib.rs.html#1170-1176">PlaylistsInterface</a>, <a href="property.rs.html#64-68">PlaylistsProperty</a>, <a href="signal.rs.html#123-140">PlaylistsSignal</a>, <a href="property.rs.html#11-36">Property</a>, <a href="lib.rs.html#1170-1176">RootInterface</a>, <a href="server.rs.html#352-358">Server</a>,
+    <a href="signal.rs.html#8-25">Signal</a>, <a href="time.rs.html#15">Time</a>, <a href="track_id.rs.html#32">TrackId</a>, <a href="lib.rs.html#1170-1176">TrackListInterface</a>, <a href="property.rs.html#48-52">TrackListProperty</a>, <a href="signal.rs.html#36-112">TrackListSignal</a>, <a href="lib.rs.html#1222">Uri</a>, <a href="lib.rs.html#1201">Volume</a>,
 };
 
 <span class="kw">enum </span>RootAction {
@@ -1062,16 +1062,16 @@
     Quit(oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
 
     <span class="comment">// `org.mpris.MediaPlayer2` Properties
-    </span>CanQuit(oneshot::Sender&lt;fdo::Result&lt;bool&gt;&gt;),
-    Fullscreen(oneshot::Sender&lt;fdo::Result&lt;bool&gt;&gt;),
-    SetFullscreen(bool, oneshot::Sender&lt;<span class="prelude-ty">Result</span>&lt;()&gt;&gt;),
-    CanSetFullScreen(oneshot::Sender&lt;fdo::Result&lt;bool&gt;&gt;),
-    CanRaise(oneshot::Sender&lt;fdo::Result&lt;bool&gt;&gt;),
-    HasTrackList(oneshot::Sender&lt;fdo::Result&lt;bool&gt;&gt;),
-    Identity(oneshot::Sender&lt;fdo::Result&lt;String&gt;&gt;),
-    DesktopEntry(oneshot::Sender&lt;fdo::Result&lt;String&gt;&gt;),
-    SupportedUriSchemes(oneshot::Sender&lt;fdo::Result&lt;Vec&lt;String&gt;&gt;&gt;),
-    SupportedMimeTypes(oneshot::Sender&lt;fdo::Result&lt;Vec&lt;String&gt;&gt;&gt;),
+    </span>CanQuit(oneshot::Sender&lt;fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;&gt;),
+    Fullscreen(oneshot::Sender&lt;fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;&gt;),
+    SetFullscreen(<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>, oneshot::Sender&lt;<span class="prelude-ty">Result</span>&lt;()&gt;&gt;),
+    CanSetFullScreen(oneshot::Sender&lt;fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;&gt;),
+    CanRaise(oneshot::Sender&lt;fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;&gt;),
+    HasTrackList(oneshot::Sender&lt;fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;&gt;),
+    Identity(oneshot::Sender&lt;fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;),
+    DesktopEntry(oneshot::Sender&lt;fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;),
+    SupportedUriSchemes(oneshot::Sender&lt;fdo::Result&lt;Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;&gt;),
+    SupportedMimeTypes(oneshot::Sender&lt;fdo::Result&lt;Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;&gt;),
 }
 
 <span class="kw">enum </span>PlayerAction {
@@ -1082,70 +1082,70 @@
     PlayPause(oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
     Stop(oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
     Play(oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
-    Seek(Time, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
-    SetPosition(TrackId, Time, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
-    OpenUri(String, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
+    Seek(<a href="time.rs.html#15">Time</a>, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
+    SetPosition(<a href="track_id.rs.html#32">TrackId</a>, <a href="time.rs.html#15">Time</a>, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
+    OpenUri(<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
 
     <span class="comment">// Properties
-    </span>PlaybackStatus(oneshot::Sender&lt;fdo::Result&lt;PlaybackStatus&gt;&gt;),
-    LoopStatus(oneshot::Sender&lt;fdo::Result&lt;LoopStatus&gt;&gt;),
-    SetLoopStatus(LoopStatus, oneshot::Sender&lt;<span class="prelude-ty">Result</span>&lt;()&gt;&gt;),
-    Rate(oneshot::Sender&lt;fdo::Result&lt;PlaybackRate&gt;&gt;),
-    SetRate(PlaybackRate, oneshot::Sender&lt;<span class="prelude-ty">Result</span>&lt;()&gt;&gt;),
-    Shuffle(oneshot::Sender&lt;fdo::Result&lt;bool&gt;&gt;),
-    SetShuffle(bool, oneshot::Sender&lt;<span class="prelude-ty">Result</span>&lt;()&gt;&gt;),
-    Metadata(oneshot::Sender&lt;fdo::Result&lt;Metadata&gt;&gt;),
-    Volume(oneshot::Sender&lt;fdo::Result&lt;Volume&gt;&gt;),
-    SetVolume(Volume, oneshot::Sender&lt;<span class="prelude-ty">Result</span>&lt;()&gt;&gt;),
-    Position(oneshot::Sender&lt;fdo::Result&lt;Time&gt;&gt;),
-    MinimumRate(oneshot::Sender&lt;fdo::Result&lt;PlaybackRate&gt;&gt;),
-    MaximumRate(oneshot::Sender&lt;fdo::Result&lt;PlaybackRate&gt;&gt;),
-    CanGoNext(oneshot::Sender&lt;fdo::Result&lt;bool&gt;&gt;),
-    CanGoPrevious(oneshot::Sender&lt;fdo::Result&lt;bool&gt;&gt;),
-    CanPlay(oneshot::Sender&lt;fdo::Result&lt;bool&gt;&gt;),
-    CanPause(oneshot::Sender&lt;fdo::Result&lt;bool&gt;&gt;),
-    CanSeek(oneshot::Sender&lt;fdo::Result&lt;bool&gt;&gt;),
-    CanControl(oneshot::Sender&lt;fdo::Result&lt;bool&gt;&gt;),
+    </span>PlaybackStatus(oneshot::Sender&lt;fdo::Result&lt;<a href="playback_status.rs.html#9-16">PlaybackStatus</a>&gt;&gt;),
+    LoopStatus(oneshot::Sender&lt;fdo::Result&lt;<a href="loop_status.rs.html#9-17">LoopStatus</a>&gt;&gt;),
+    SetLoopStatus(<a href="loop_status.rs.html#9-17">LoopStatus</a>, oneshot::Sender&lt;<span class="prelude-ty">Result</span>&lt;()&gt;&gt;),
+    Rate(oneshot::Sender&lt;fdo::Result&lt;<a href="lib.rs.html#1192">PlaybackRate</a>&gt;&gt;),
+    SetRate(<a href="lib.rs.html#1192">PlaybackRate</a>, oneshot::Sender&lt;<span class="prelude-ty">Result</span>&lt;()&gt;&gt;),
+    Shuffle(oneshot::Sender&lt;fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;&gt;),
+    SetShuffle(<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>, oneshot::Sender&lt;<span class="prelude-ty">Result</span>&lt;()&gt;&gt;),
+    Metadata(oneshot::Sender&lt;fdo::Result&lt;<a href="metadata.rs.html#36">Metadata</a>&gt;&gt;),
+    Volume(oneshot::Sender&lt;fdo::Result&lt;<a href="lib.rs.html#1201">Volume</a>&gt;&gt;),
+    SetVolume(<a href="lib.rs.html#1201">Volume</a>, oneshot::Sender&lt;<span class="prelude-ty">Result</span>&lt;()&gt;&gt;),
+    Position(oneshot::Sender&lt;fdo::Result&lt;<a href="time.rs.html#15">Time</a>&gt;&gt;),
+    MinimumRate(oneshot::Sender&lt;fdo::Result&lt;<a href="lib.rs.html#1192">PlaybackRate</a>&gt;&gt;),
+    MaximumRate(oneshot::Sender&lt;fdo::Result&lt;<a href="lib.rs.html#1192">PlaybackRate</a>&gt;&gt;),
+    CanGoNext(oneshot::Sender&lt;fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;&gt;),
+    CanGoPrevious(oneshot::Sender&lt;fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;&gt;),
+    CanPlay(oneshot::Sender&lt;fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;&gt;),
+    CanPause(oneshot::Sender&lt;fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;&gt;),
+    CanSeek(oneshot::Sender&lt;fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;&gt;),
+    CanControl(oneshot::Sender&lt;fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;&gt;),
 }
 
 <span class="kw">enum </span>TrackListAction {
     <span class="comment">// Methods
-    </span>GetTracksMetadata(Vec&lt;TrackId&gt;, oneshot::Sender&lt;fdo::Result&lt;Vec&lt;Metadata&gt;&gt;&gt;),
-    AddTrack(Uri, TrackId, bool, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
-    RemoveTrack(TrackId, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
-    GoTo(TrackId, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
+    </span>GetTracksMetadata(Vec&lt;<a href="track_id.rs.html#32">TrackId</a>&gt;, oneshot::Sender&lt;fdo::Result&lt;Vec&lt;<a href="metadata.rs.html#36">Metadata</a>&gt;&gt;&gt;),
+    AddTrack(<a href="lib.rs.html#1222">Uri</a>, <a href="track_id.rs.html#32">TrackId</a>, <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
+    RemoveTrack(<a href="track_id.rs.html#32">TrackId</a>, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
+    GoTo(<a href="track_id.rs.html#32">TrackId</a>, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
 
     <span class="comment">// Properties
-    </span>Tracks(oneshot::Sender&lt;fdo::Result&lt;Vec&lt;TrackId&gt;&gt;&gt;),
-    CanEditTracks(oneshot::Sender&lt;fdo::Result&lt;bool&gt;&gt;),
+    </span>Tracks(oneshot::Sender&lt;fdo::Result&lt;Vec&lt;<a href="track_id.rs.html#32">TrackId</a>&gt;&gt;&gt;),
+    CanEditTracks(oneshot::Sender&lt;fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;&gt;),
 }
 
 <span class="kw">enum </span>PlaylistsAction {
     <span class="comment">// Methods
-    </span>ActivatePlaylist(PlaylistId, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
+    </span>ActivatePlaylist(<a href="lib.rs.html#1216">PlaylistId</a>, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
     GetPlaylists(
-        u32,
-        u32,
-        PlaylistOrdering,
-        bool,
-        oneshot::Sender&lt;fdo::Result&lt;Vec&lt;Playlist&gt;&gt;&gt;,
+        <a href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+        <a href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+        <a href="playlist_ordering.rs.html#18-29">PlaylistOrdering</a>,
+        <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+        oneshot::Sender&lt;fdo::Result&lt;Vec&lt;<a href="playlist.rs.html#8-17">Playlist</a>&gt;&gt;&gt;,
     ),
 
     <span class="comment">// Properties
-    </span>PlaylistCount(oneshot::Sender&lt;fdo::Result&lt;u32&gt;&gt;),
-    Orderings(oneshot::Sender&lt;fdo::Result&lt;Vec&lt;PlaylistOrdering&gt;&gt;&gt;),
-    ActivePlaylist(oneshot::Sender&lt;fdo::Result&lt;<span class="prelude-ty">Option</span>&lt;Playlist&gt;&gt;&gt;),
+    </span>PlaylistCount(oneshot::Sender&lt;fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>&gt;&gt;),
+    Orderings(oneshot::Sender&lt;fdo::Result&lt;Vec&lt;<a href="playlist_ordering.rs.html#18-29">PlaylistOrdering</a>&gt;&gt;&gt;),
+    ActivePlaylist(oneshot::Sender&lt;fdo::Result&lt;<span class="prelude-ty">Option</span>&lt;<a href="playlist.rs.html#8-17">Playlist</a>&gt;&gt;&gt;),
 }
 
 <span class="kw">enum </span>Action {
-    Root(RootAction),
-    Player(PlayerAction),
-    TrackList(TrackListAction),
-    Playlists(PlaylistsAction),
+    Root(<a href="#23-39">RootAction</a>),
+    Player(<a href="#41-73">PlayerAction</a>),
+    TrackList(<a href="#75-85">TrackListAction</a>),
+    Playlists(<a href="#87-102">PlaylistsAction</a>),
 }
 
 <span class="kw">struct </span>InnerImp&lt;T&gt; {
-    tx: mpsc::UnboundedSender&lt;Action&gt;,
+    tx: mpsc::UnboundedSender&lt;<a href="#104-109">Action</a>&gt;,
 
     <span class="comment">// If we use `PhantomData&lt;T&gt;` and `T` is not `Send` and `Sync`, we get a compile error
     // when using `InnerImp` in the inner non-local `Server` as it requires `T` to be `Send`
@@ -1156,365 +1156,365 @@
 }
 
 <span class="kw">impl</span>&lt;T&gt; InnerImp&lt;T&gt; {
-    <span class="kw">fn </span>send_root(<span class="kw-2">&amp;</span><span class="self">self</span>, action: RootAction) {
-        <span class="self">self</span>.tx.unbounded_send(Action::Root(action)).unwrap();
+    <span class="kw">fn </span>send_root(<span class="kw-2">&amp;</span><span class="self">self</span>, action: <a href="#23-39">RootAction</a>) {
+        <a class="self" href="#123">self</a>.tx.unbounded_send(<a href="#105">Action::Root</a>(<a href="#123">action</a>)).unwrap();
     }
 
-    <span class="kw">fn </span>send_player(<span class="kw-2">&amp;</span><span class="self">self</span>, action: PlayerAction) {
-        <span class="self">self</span>.tx.unbounded_send(Action::Player(action)).unwrap();
+    <span class="kw">fn </span>send_player(<span class="kw-2">&amp;</span><span class="self">self</span>, action: <a href="#41-73">PlayerAction</a>) {
+        <a class="self" href="#127">self</a>.tx.unbounded_send(<a href="#106">Action::Player</a>(<a href="#127">action</a>)).unwrap();
     }
 
-    <span class="kw">fn </span>send_track_list(<span class="kw-2">&amp;</span><span class="self">self</span>, action: TrackListAction) {
-        <span class="self">self</span>.tx.unbounded_send(Action::TrackList(action)).unwrap();
+    <span class="kw">fn </span>send_track_list(<span class="kw-2">&amp;</span><span class="self">self</span>, action: <a href="#75-85">TrackListAction</a>) {
+        <a class="self" href="#131">self</a>.tx.unbounded_send(<a href="#107">Action::TrackList</a>(<a href="#131">action</a>)).unwrap();
     }
 
-    <span class="kw">fn </span>send_playlists(<span class="kw-2">&amp;</span><span class="self">self</span>, action: PlaylistsAction) {
-        <span class="self">self</span>.tx.unbounded_send(Action::Playlists(action)).unwrap();
-    }
-}
-
-<span class="attr">#[async_trait]
-</span><span class="kw">impl</span>&lt;T&gt; RootInterface <span class="kw">for </span>InnerImp&lt;T&gt; {
-    <span class="kw">async fn </span>raise(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_root(RootAction::Raise(tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>quit(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_root(RootAction::Quit(tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>can_quit(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_root(RootAction::CanQuit(tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_root(RootAction::Fullscreen(tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>, fullscreen: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_root(RootAction::SetFullscreen(fullscreen, tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>can_set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_root(RootAction::CanSetFullScreen(tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>can_raise(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_root(RootAction::CanRaise(tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>has_track_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_root(RootAction::HasTrackList(tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>identity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;String&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_root(RootAction::Identity(tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>desktop_entry(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;String&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_root(RootAction::DesktopEntry(tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>supported_uri_schemes(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;String&gt;&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_root(RootAction::SupportedUriSchemes(tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>supported_mime_types(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;String&gt;&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_root(RootAction::SupportedMimeTypes(tx));
-        rx.<span class="kw">await</span>.unwrap()
+    <span class="kw">fn </span>send_playlists(<span class="kw-2">&amp;</span><span class="self">self</span>, action: <a href="#87-102">PlaylistsAction</a>) {
+        <a class="self" href="#135">self</a>.tx.unbounded_send(<a href="#108">Action::Playlists</a>(<a href="#135">action</a>)).unwrap();
     }
 }
 
 <span class="attr">#[async_trait]
-</span><span class="kw">impl</span>&lt;T&gt; PlayerInterface <span class="kw">for </span>InnerImp&lt;T&gt; {
-    <span class="kw">async fn </span>next(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
+</span><span class="kw">impl</span>&lt;T&gt; <a href="lib.rs.html#1170-1176">RootInterface</a> <span class="kw">for </span>InnerImp&lt;T&gt; {
+    <span class="kw">async fn </span>raise(<span class="kw-2">&amp;</span><a class="self" href="#142">self</a>) -&gt; fdo::Result&lt;()&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::Next(tx));
+        <a class="self" href="#142">self</a>.<a href="#123-125">send_root</a>(<a href="#25">RootAction::Raise</a>(<a href="#143">tx</a>));
         rx.<span class="kw">await</span>.unwrap()
     }
 
-    <span class="kw">async fn </span>previous(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>quit(<span class="kw-2">&amp;</span><a class="self" href="#148">self</a>) -&gt; fdo::Result&lt;()&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::Previous(tx));
+        <a class="self" href="#148">self</a>.<a href="#123-125">send_root</a>(<a href="#26">RootAction::Quit</a>(<a href="#149">tx</a>));
         rx.<span class="kw">await</span>.unwrap()
     }
 
-    <span class="kw">async fn </span>pause(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>can_quit(<span class="kw-2">&amp;</span><a class="self" href="#154">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::Pause(tx));
+        <a class="self" href="#154">self</a>.<a href="#123-125">send_root</a>(<a href="#29">RootAction::CanQuit</a>(<a href="#155">tx</a>));
         rx.<span class="kw">await</span>.unwrap()
     }
 
-    <span class="kw">async fn </span>play_pause(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>fullscreen(<span class="kw-2">&amp;</span><a class="self" href="#160">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::PlayPause(tx));
+        <a class="self" href="#160">self</a>.<a href="#123-125">send_root</a>(<a href="#30">RootAction::Fullscreen</a>(<a href="#161">tx</a>));
         rx.<span class="kw">await</span>.unwrap()
     }
 
-    <span class="kw">async fn </span>stop(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>set_fullscreen(<span class="kw-2">&amp;</span><a class="self" href="#166">self</a>, <a href="#166">fullscreen</a>: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::Stop(tx));
+        <a class="self" href="#166">self</a>.<a href="#123-125">send_root</a>(<a href="#31">RootAction::SetFullscreen</a>(<a href="#166">fullscreen</a>, <a href="#167">tx</a>));
         rx.<span class="kw">await</span>.unwrap()
     }
 
-    <span class="kw">async fn </span>play(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>can_set_fullscreen(<span class="kw-2">&amp;</span><a class="self" href="#172">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::Play(tx));
+        <a class="self" href="#172">self</a>.<a href="#123-125">send_root</a>(<a href="#32">RootAction::CanSetFullScreen</a>(<a href="#173">tx</a>));
         rx.<span class="kw">await</span>.unwrap()
     }
 
-    <span class="kw">async fn </span>seek(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: Time) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>can_raise(<span class="kw-2">&amp;</span><a class="self" href="#178">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::Seek(offset, tx));
+        <a class="self" href="#178">self</a>.<a href="#123-125">send_root</a>(<a href="#33">RootAction::CanRaise</a>(<a href="#179">tx</a>));
         rx.<span class="kw">await</span>.unwrap()
     }
 
-    <span class="kw">async fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId, position: Time) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>has_track_list(<span class="kw-2">&amp;</span><a class="self" href="#184">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::SetPosition(track_id, position, tx));
+        <a class="self" href="#184">self</a>.<a href="#123-125">send_root</a>(<a href="#34">RootAction::HasTrackList</a>(<a href="#185">tx</a>));
         rx.<span class="kw">await</span>.unwrap()
     }
 
-    <span class="kw">async fn </span>open_uri(<span class="kw-2">&amp;</span><span class="self">self</span>, uri: String) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>identity(<span class="kw-2">&amp;</span><a class="self" href="#190">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::OpenUri(uri, tx));
+        <a class="self" href="#190">self</a>.<a href="#123-125">send_root</a>(<a href="#35">RootAction::Identity</a>(<a href="#191">tx</a>));
         rx.<span class="kw">await</span>.unwrap()
     }
 
-    <span class="kw">async fn </span>playback_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackStatus&gt; {
+    <span class="kw">async fn </span>desktop_entry(<span class="kw-2">&amp;</span><a class="self" href="#196">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::PlaybackStatus(tx));
+        <a class="self" href="#196">self</a>.<a href="#123-125">send_root</a>(<a href="#36">RootAction::DesktopEntry</a>(<a href="#197">tx</a>));
         rx.<span class="kw">await</span>.unwrap()
     }
 
-    <span class="kw">async fn </span>loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;LoopStatus&gt; {
+    <span class="kw">async fn </span>supported_uri_schemes(<span class="kw-2">&amp;</span><a class="self" href="#202">self</a>) -&gt; fdo::Result&lt;Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::LoopStatus(tx));
+        <a class="self" href="#202">self</a>.<a href="#123-125">send_root</a>(<a href="#37">RootAction::SupportedUriSchemes</a>(<a href="#203">tx</a>));
         rx.<span class="kw">await</span>.unwrap()
     }
 
-    <span class="kw">async fn </span>set_loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>, loop_status: LoopStatus) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">async fn </span>supported_mime_types(<span class="kw-2">&amp;</span><a class="self" href="#208">self</a>) -&gt; fdo::Result&lt;Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::SetLoopStatus(loop_status, tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackRate&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::Rate(tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, rate: PlaybackRate) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::SetRate(rate, tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::Shuffle(tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>set_shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>, shuffle: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::SetShuffle(shuffle, tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>metadata(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Metadata&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::Metadata(tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>volume(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Volume&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::Volume(tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, volume: Volume) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::SetVolume(volume, tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Time&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::Position(tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>minimum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackRate&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::MinimumRate(tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>maximum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackRate&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::MaximumRate(tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>can_go_next(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::CanGoNext(tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>can_go_previous(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::CanGoPrevious(tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>can_play(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::CanPlay(tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>can_pause(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::CanPause(tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>can_seek(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::CanSeek(tx));
-        rx.<span class="kw">await</span>.unwrap()
-    }
-
-    <span class="kw">async fn </span>can_control(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
-        <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_player(PlayerAction::CanControl(tx));
+        <a class="self" href="#208">self</a>.<a href="#123-125">send_root</a>(<a href="#38">RootAction::SupportedMimeTypes</a>(<a href="#209">tx</a>));
         rx.<span class="kw">await</span>.unwrap()
     }
 }
 
 <span class="attr">#[async_trait]
-</span><span class="kw">impl</span>&lt;T&gt; TrackListInterface <span class="kw">for </span>InnerImp&lt;T&gt;
+</span><span class="kw">impl</span>&lt;T&gt; <a href="lib.rs.html#1170-1176">PlayerInterface</a> <span class="kw">for </span>InnerImp&lt;T&gt; {
+    <span class="kw">async fn </span>next(<span class="kw-2">&amp;</span><a class="self" href="#217">self</a>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#217">self</a>.<a href="#127-129">send_player</a>(<a href="#43">PlayerAction::Next</a>(<a href="#218">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>previous(<span class="kw-2">&amp;</span><a class="self" href="#223">self</a>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#223">self</a>.<a href="#127-129">send_player</a>(<a href="#44">PlayerAction::Previous</a>(<a href="#224">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>pause(<span class="kw-2">&amp;</span><a class="self" href="#229">self</a>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#229">self</a>.<a href="#127-129">send_player</a>(<a href="#45">PlayerAction::Pause</a>(<a href="#230">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>play_pause(<span class="kw-2">&amp;</span><a class="self" href="#235">self</a>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#235">self</a>.<a href="#127-129">send_player</a>(<a href="#46">PlayerAction::PlayPause</a>(<a href="#236">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>stop(<span class="kw-2">&amp;</span><a class="self" href="#241">self</a>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#241">self</a>.<a href="#127-129">send_player</a>(<a href="#47">PlayerAction::Stop</a>(<a href="#242">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>play(<span class="kw-2">&amp;</span><a class="self" href="#247">self</a>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#247">self</a>.<a href="#127-129">send_player</a>(<a href="#48">PlayerAction::Play</a>(<a href="#248">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>seek(<span class="kw-2">&amp;</span><a class="self" href="#253">self</a>, <a href="#253">offset</a>: <a href="time.rs.html#15">Time</a>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#253">self</a>.<a href="#127-129">send_player</a>(<a href="#49">PlayerAction::Seek</a>(<a href="#253">offset</a>, <a href="#254">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>set_position(<span class="kw-2">&amp;</span><a class="self" href="#259">self</a>, <a href="#259">track_id</a>: <a href="track_id.rs.html#32">TrackId</a>, <a href="#259">position</a>: <a href="time.rs.html#15">Time</a>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#259">self</a>.<a href="#127-129">send_player</a>(<a href="#50">PlayerAction::SetPosition</a>(<a href="#259">track_id</a>, <a href="#259">position</a>, <a href="#260">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>open_uri(<span class="kw-2">&amp;</span><a class="self" href="#265">self</a>, <a href="#265">uri</a>: <a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>) -&gt; fdo::Result&lt;()&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#265">self</a>.<a href="#127-129">send_player</a>(<a href="#51">PlayerAction::OpenUri</a>(<a href="#265">uri</a>, <a href="#266">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>playback_status(<span class="kw-2">&amp;</span><a class="self" href="#271">self</a>) -&gt; fdo::Result&lt;<a href="playback_status.rs.html#9-16">PlaybackStatus</a>&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#271">self</a>.<a href="#127-129">send_player</a>(<a href="#54">PlayerAction::PlaybackStatus</a>(<a href="#272">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>loop_status(<span class="kw-2">&amp;</span><a class="self" href="#277">self</a>) -&gt; fdo::Result&lt;<a href="loop_status.rs.html#9-17">LoopStatus</a>&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#277">self</a>.<a href="#127-129">send_player</a>(<a href="#55">PlayerAction::LoopStatus</a>(<a href="#278">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>set_loop_status(<span class="kw-2">&amp;</span><a class="self" href="#283">self</a>, <a href="#283">loop_status</a>: <a href="loop_status.rs.html#9-17">LoopStatus</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#283">self</a>.<a href="#127-129">send_player</a>(<a href="#56">PlayerAction::SetLoopStatus</a>(<a href="#283">loop_status</a>, <a href="#284">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>rate(<span class="kw-2">&amp;</span><a class="self" href="#289">self</a>) -&gt; fdo::Result&lt;<a href="lib.rs.html#1192">PlaybackRate</a>&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#289">self</a>.<a href="#127-129">send_player</a>(<a href="#57">PlayerAction::Rate</a>(<a href="#290">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>set_rate(<span class="kw-2">&amp;</span><a class="self" href="#295">self</a>, <a href="#295">rate</a>: <a href="lib.rs.html#1192">PlaybackRate</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#295">self</a>.<a href="#127-129">send_player</a>(<a href="#58">PlayerAction::SetRate</a>(<a href="#295">rate</a>, <a href="#296">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>shuffle(<span class="kw-2">&amp;</span><a class="self" href="#301">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#301">self</a>.<a href="#127-129">send_player</a>(<a href="#59">PlayerAction::Shuffle</a>(<a href="#302">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>set_shuffle(<span class="kw-2">&amp;</span><a class="self" href="#307">self</a>, <a href="#307">shuffle</a>: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#307">self</a>.<a href="#127-129">send_player</a>(<a href="#60">PlayerAction::SetShuffle</a>(<a href="#307">shuffle</a>, <a href="#308">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>metadata(<span class="kw-2">&amp;</span><a class="self" href="#313">self</a>) -&gt; fdo::Result&lt;<a href="metadata.rs.html#36">Metadata</a>&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#313">self</a>.<a href="#127-129">send_player</a>(<a href="#61">PlayerAction::Metadata</a>(<a href="#314">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>volume(<span class="kw-2">&amp;</span><a class="self" href="#319">self</a>) -&gt; fdo::Result&lt;<a href="lib.rs.html#1201">Volume</a>&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#319">self</a>.<a href="#127-129">send_player</a>(<a href="#62">PlayerAction::Volume</a>(<a href="#320">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>set_volume(<span class="kw-2">&amp;</span><a class="self" href="#325">self</a>, <a href="#325">volume</a>: <a href="lib.rs.html#1201">Volume</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#325">self</a>.<a href="#127-129">send_player</a>(<a href="#63">PlayerAction::SetVolume</a>(<a href="#325">volume</a>, <a href="#326">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><a class="self" href="#331">self</a>) -&gt; fdo::Result&lt;<a href="time.rs.html#15">Time</a>&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#331">self</a>.<a href="#127-129">send_player</a>(<a href="#64">PlayerAction::Position</a>(<a href="#332">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>minimum_rate(<span class="kw-2">&amp;</span><a class="self" href="#337">self</a>) -&gt; fdo::Result&lt;<a href="lib.rs.html#1192">PlaybackRate</a>&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#337">self</a>.<a href="#127-129">send_player</a>(<a href="#65">PlayerAction::MinimumRate</a>(<a href="#338">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>maximum_rate(<span class="kw-2">&amp;</span><a class="self" href="#343">self</a>) -&gt; fdo::Result&lt;<a href="lib.rs.html#1192">PlaybackRate</a>&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#343">self</a>.<a href="#127-129">send_player</a>(<a href="#66">PlayerAction::MaximumRate</a>(<a href="#344">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>can_go_next(<span class="kw-2">&amp;</span><a class="self" href="#349">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#349">self</a>.<a href="#127-129">send_player</a>(<a href="#67">PlayerAction::CanGoNext</a>(<a href="#350">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>can_go_previous(<span class="kw-2">&amp;</span><a class="self" href="#355">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#355">self</a>.<a href="#127-129">send_player</a>(<a href="#68">PlayerAction::CanGoPrevious</a>(<a href="#356">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>can_play(<span class="kw-2">&amp;</span><a class="self" href="#361">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#361">self</a>.<a href="#127-129">send_player</a>(<a href="#69">PlayerAction::CanPlay</a>(<a href="#362">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>can_pause(<span class="kw-2">&amp;</span><a class="self" href="#367">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#367">self</a>.<a href="#127-129">send_player</a>(<a href="#70">PlayerAction::CanPause</a>(<a href="#368">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>can_seek(<span class="kw-2">&amp;</span><a class="self" href="#373">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#373">self</a>.<a href="#127-129">send_player</a>(<a href="#71">PlayerAction::CanSeek</a>(<a href="#374">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+
+    <span class="kw">async fn </span>can_control(<span class="kw-2">&amp;</span><a class="self" href="#379">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
+        <span class="kw">let </span>(tx, rx) = oneshot::channel();
+        <a class="self" href="#379">self</a>.<a href="#127-129">send_player</a>(<a href="#72">PlayerAction::CanControl</a>(<a href="#380">tx</a>));
+        rx.<span class="kw">await</span>.unwrap()
+    }
+}
+
+<span class="attr">#[async_trait]
+</span><span class="kw">impl</span>&lt;T&gt; <a href="lib.rs.html#1170-1176">TrackListInterface</a> <span class="kw">for </span>InnerImp&lt;T&gt;
 <span class="kw">where
-    </span>T: LocalTrackListInterface,
+    </span>T: <a href="lib.rs.html#1178-1184">LocalTrackListInterface</a>,
 {
-    <span class="kw">async fn </span>get_tracks_metadata(<span class="kw-2">&amp;</span><span class="self">self</span>, track_ids: Vec&lt;TrackId&gt;) -&gt; fdo::Result&lt;Vec&lt;Metadata&gt;&gt; {
+    <span class="kw">async fn </span>get_tracks_metadata(<span class="kw-2">&amp;</span><a class="self" href="#391">self</a>, <a href="#391">track_ids</a>: Vec&lt;<a href="track_id.rs.html#32">TrackId</a>&gt;) -&gt; fdo::Result&lt;Vec&lt;<a href="metadata.rs.html#36">Metadata</a>&gt;&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_track_list(TrackListAction::GetTracksMetadata(track_ids, tx));
+        <a class="self" href="#391">self</a>.<a href="#131-133">send_track_list</a>(<a href="#77">TrackListAction::GetTracksMetadata</a>(<a href="#391">track_ids</a>, <a href="#392">tx</a>));
         rx.<span class="kw">await</span>.unwrap()
     }
 
     <span class="kw">async fn </span>add_track(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        uri: Uri,
-        after_track: TrackId,
-        set_as_current: bool,
+        <span class="kw-2">&amp;</span><a class="self" href="#398">self</a>,
+        <a href="#399">uri</a>: <a href="lib.rs.html#1222">Uri</a>,
+        <a href="#400">after_track</a>: <a href="track_id.rs.html#32">TrackId</a>,
+        <a href="#401">set_as_current</a>: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
     ) -&gt; fdo::Result&lt;()&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_track_list(TrackListAction::AddTrack(
-            uri,
-            after_track,
-            set_as_current,
-            tx,
+        <a class="self" href="#398">self</a>.<a href="#131-133">send_track_list</a>(<a href="#78">TrackListAction::AddTrack</a>(
+            <a href="#399">uri</a>,
+            <a href="#400">after_track</a>,
+            <a href="#401">set_as_current</a>,
+            <a href="#403">tx</a>,
         ));
         rx.<span class="kw">await</span>.unwrap()
     }
 
-    <span class="kw">async fn </span>remove_track(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>remove_track(<span class="kw-2">&amp;</span><a class="self" href="#413">self</a>, <a href="#413">track_id</a>: <a href="track_id.rs.html#32">TrackId</a>) -&gt; fdo::Result&lt;()&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_track_list(TrackListAction::RemoveTrack(track_id, tx));
+        <a class="self" href="#413">self</a>.<a href="#131-133">send_track_list</a>(<a href="#79">TrackListAction::RemoveTrack</a>(<a href="#413">track_id</a>, <a href="#414">tx</a>));
         rx.<span class="kw">await</span>.unwrap()
     }
 
-    <span class="kw">async fn </span>go_to(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>go_to(<span class="kw-2">&amp;</span><a class="self" href="#419">self</a>, <a href="#419">track_id</a>: <a href="track_id.rs.html#32">TrackId</a>) -&gt; fdo::Result&lt;()&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_track_list(TrackListAction::GoTo(track_id, tx));
+        <a class="self" href="#419">self</a>.<a href="#131-133">send_track_list</a>(<a href="#80">TrackListAction::GoTo</a>(<a href="#419">track_id</a>, <a href="#420">tx</a>));
         rx.<span class="kw">await</span>.unwrap()
     }
 
-    <span class="kw">async fn </span>tracks(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;TrackId&gt;&gt; {
+    <span class="kw">async fn </span>tracks(<span class="kw-2">&amp;</span><a class="self" href="#425">self</a>) -&gt; fdo::Result&lt;Vec&lt;<a href="track_id.rs.html#32">TrackId</a>&gt;&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_track_list(TrackListAction::Tracks(tx));
+        <a class="self" href="#425">self</a>.<a href="#131-133">send_track_list</a>(<a href="#83">TrackListAction::Tracks</a>(<a href="#426">tx</a>));
         rx.<span class="kw">await</span>.unwrap()
     }
 
-    <span class="kw">async fn </span>can_edit_tracks(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
+    <span class="kw">async fn </span>can_edit_tracks(<span class="kw-2">&amp;</span><a class="self" href="#431">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_track_list(TrackListAction::CanEditTracks(tx));
+        <a class="self" href="#431">self</a>.<a href="#131-133">send_track_list</a>(<a href="#84">TrackListAction::CanEditTracks</a>(<a href="#432">tx</a>));
         rx.<span class="kw">await</span>.unwrap()
     }
 }
 
 <span class="attr">#[async_trait]
-</span><span class="kw">impl</span>&lt;T&gt; PlaylistsInterface <span class="kw">for </span>InnerImp&lt;T&gt;
+</span><span class="kw">impl</span>&lt;T&gt; <a href="lib.rs.html#1170-1176">PlaylistsInterface</a> <span class="kw">for </span>InnerImp&lt;T&gt;
 <span class="kw">where
-    </span>T: LocalPlaylistsInterface,
+    </span>T: <a href="lib.rs.html#1178-1184">LocalPlaylistsInterface</a>,
 {
-    <span class="kw">async fn </span>activate_playlist(<span class="kw-2">&amp;</span><span class="self">self</span>, playlist_id: PlaylistId) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>activate_playlist(<span class="kw-2">&amp;</span><a class="self" href="#443">self</a>, <a href="#443">playlist_id</a>: <a href="lib.rs.html#1216">PlaylistId</a>) -&gt; fdo::Result&lt;()&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_playlists(PlaylistsAction::ActivatePlaylist(playlist_id, tx));
+        <a class="self" href="#443">self</a>.<a href="#135-137">send_playlists</a>(<a href="#89">PlaylistsAction::ActivatePlaylist</a>(<a href="#443">playlist_id</a>, <a href="#444">tx</a>));
         rx.<span class="kw">await</span>.unwrap()
     }
 
     <span class="kw">async fn </span>get_playlists(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        index: u32,
-        max_count: u32,
-        order: PlaylistOrdering,
-        reverse_order: bool,
-    ) -&gt; fdo::Result&lt;Vec&lt;Playlist&gt;&gt; {
+        <span class="kw-2">&amp;</span><a class="self" href="#450">self</a>,
+        <a href="#451">index</a>: <a href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+        <a href="#452">max_count</a>: <a href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+        <a href="#453">order</a>: <a href="playlist_ordering.rs.html#18-29">PlaylistOrdering</a>,
+        <a href="#454">reverse_order</a>: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    ) -&gt; fdo::Result&lt;Vec&lt;<a href="playlist.rs.html#8-17">Playlist</a>&gt;&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_playlists(PlaylistsAction::GetPlaylists(
-            index,
-            max_count,
-            order,
-            reverse_order,
-            tx,
+        <a class="self" href="#450">self</a>.<a href="#135-137">send_playlists</a>(<a href="#90-96">PlaylistsAction::GetPlaylists</a>(
+            <a href="#451">index</a>,
+            <a href="#452">max_count</a>,
+            <a href="#453">order</a>,
+            <a href="#454">reverse_order</a>,
+            <a href="#456">tx</a>,
         ));
         rx.<span class="kw">await</span>.unwrap()
     }
 
-    <span class="kw">async fn </span>playlist_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;u32&gt; {
+    <span class="kw">async fn </span>playlist_count(<span class="kw-2">&amp;</span><a class="self" href="#467">self</a>) -&gt; fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_playlists(PlaylistsAction::PlaylistCount(tx));
+        <a class="self" href="#467">self</a>.<a href="#135-137">send_playlists</a>(<a href="#99">PlaylistsAction::PlaylistCount</a>(<a href="#468">tx</a>));
         rx.<span class="kw">await</span>.unwrap()
     }
 
-    <span class="kw">async fn </span>orderings(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;PlaylistOrdering&gt;&gt; {
+    <span class="kw">async fn </span>orderings(<span class="kw-2">&amp;</span><a class="self" href="#473">self</a>) -&gt; fdo::Result&lt;Vec&lt;<a href="playlist_ordering.rs.html#18-29">PlaylistOrdering</a>&gt;&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_playlists(PlaylistsAction::Orderings(tx));
+        <a class="self" href="#473">self</a>.<a href="#135-137">send_playlists</a>(<a href="#100">PlaylistsAction::Orderings</a>(<a href="#474">tx</a>));
         rx.<span class="kw">await</span>.unwrap()
     }
 
-    <span class="kw">async fn </span>active_playlist(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<span class="prelude-ty">Option</span>&lt;Playlist&gt;&gt; {
+    <span class="kw">async fn </span>active_playlist(<span class="kw-2">&amp;</span><a class="self" href="#479">self</a>) -&gt; fdo::Result&lt;<span class="prelude-ty">Option</span>&lt;<a href="playlist.rs.html#8-17">Playlist</a>&gt;&gt; {
         <span class="kw">let </span>(tx, rx) = oneshot::channel();
-        <span class="self">self</span>.send_playlists(PlaylistsAction::ActivePlaylist(tx));
+        <a class="self" href="#479">self</a>.<a href="#135-137">send_playlists</a>(<a href="#101">PlaylistsAction::ActivePlaylist</a>(<a href="#480">tx</a>));
         rx.<span class="kw">await</span>.unwrap()
     }
 }
@@ -1528,24 +1528,24 @@
 ///
 /// See [`LocalServer::run`] for more information.
 </span><span class="attr">#[must_use = <span class="string">&quot;futures do nothing unless you `.await` or poll them&quot;</span>]
-</span><span class="kw">pub struct </span>LocalServerRunTask {
-    inner: <span class="prelude-ty">Option</span>&lt;TaskInner&gt;,
+</span><span class="kw">pub struct </span><a href="../../mpris_server/struct.LocalServerRunTask.html">LocalServerRunTask</a> {
+    inner: <span class="prelude-ty">Option</span>&lt;<a href="#486">TaskInner</a>&gt;,
 }
 
-<span class="kw">impl </span>fmt::Debug <span class="kw">for </span>LocalServerRunTask {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
-        f.debug_struct(<span class="string">&quot;LocalServerRunTask&quot;</span>)
-            .field(<span class="string">&quot;has_inner&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.inner.is_some())
+<span class="kw">impl </span><a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html">fmt::Debug</a> <span class="kw">for </span><a href="#495-497">LocalServerRunTask</a> {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <a href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html">fmt::Result</a> {
+        <a href="#500">f</a>.debug_struct(<span class="string">&quot;LocalServerRunTask&quot;</span>)
+            .field(<span class="string">&quot;has_inner&quot;</span>, <span class="kw-2">&amp;</span><a class="self" href="#500">self</a>.inner.is_some())
             .finish()
     }
 }
 
-<span class="kw">impl </span>Future <span class="kw">for </span>LocalServerRunTask {
+<span class="kw">impl </span><a href="https://doc.rust-lang.org/nightly/core/future/future/trait.Future.html">Future</a> <span class="kw">for </span><a href="#495-497">LocalServerRunTask</a> {
     <span class="kw">type </span>Output = ();
 
     <span class="kw">fn </span>poll(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;<span class="self">Self</span>::Output&gt; {
-        <span class="kw">match </span><span class="self">self</span>.inner.as_mut() {
-            <span class="prelude-val">Some</span>(inner) =&gt; inner.poll_unpin(cx),
+        <span class="kw">match </span><a class="self" href="#510">self</a>.inner.as_mut() {
+            <span class="prelude-val">Some</span>(inner) =&gt; <a href="#512">inner</a>.poll_unpin(<a href="#510">cx</a>),
             <span class="prelude-val">None </span>=&gt; Poll::Ready(()),
         }
     }
@@ -1558,27 +1558,27 @@
 /// because [`LocalServer`] has an overhead of sending messages across threads.
 ///
 /// For more information, see [`Server`] documentations.
-</span><span class="kw">pub struct </span>LocalServer&lt;T&gt;
+</span><span class="kw">pub struct </span><a href="../../mpris_server/struct.LocalServer.html">LocalServer</a>&lt;T&gt;
 <span class="kw">where
-    </span>T: LocalPlayerInterface + <span class="lifetime">&#39;static</span>,
+    </span>T: <a href="lib.rs.html#1178-1184">LocalPlayerInterface</a> + <span class="lifetime">&#39;static</span>,
 {
     inner: Server&lt;InnerImp&lt;T&gt;&gt;,
     imp: Rc&lt;T&gt;,
-    runner: RefCell&lt;<span class="prelude-ty">Option</span>&lt;TaskInner&gt;&gt;,
+    runner: RefCell&lt;<span class="prelude-ty">Option</span>&lt;<a href="#486">TaskInner</a>&gt;&gt;,
 }
 
-<span class="kw">impl</span>&lt;T&gt; fmt::Debug <span class="kw">for </span>LocalServer&lt;T&gt;
+<span class="kw">impl</span>&lt;T&gt; <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html">fmt::Debug</a> <span class="kw">for </span>LocalServer&lt;T&gt;
 <span class="kw">where
-    </span>T: LocalPlayerInterface + <span class="lifetime">&#39;static</span>,
+    </span>T: <a href="lib.rs.html#1178-1184">LocalPlayerInterface</a> + <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
-        f.debug_struct(<span class="string">&quot;LocalServer&quot;</span>).finish()
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <a href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html">fmt::Result</a> {
+        <a href="#538">f</a>.debug_struct(<span class="string">&quot;LocalServer&quot;</span>).finish()
     }
 }
 
 <span class="kw">impl</span>&lt;T&gt; LocalServer&lt;T&gt;
 <span class="kw">where
-    </span>T: LocalPlayerInterface + <span class="lifetime">&#39;static</span>,
+    </span>T: <a href="lib.rs.html#1178-1184">LocalPlayerInterface</a> + <span class="lifetime">&#39;static</span>,
 {
     <span class="doccomment">/// Creates a new [`LocalServer`] with the given bus name suffix and
     /// implementation, `imp`, which must implement [`LocalRootInterface`] and
@@ -1600,7 +1600,7 @@
     ///
     /// [`LocalRootInterface`]: crate::LocalRootInterface
     /// [D-Bus specification]: https://dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus
-    </span><span class="kw">pub async fn </span>new(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+    </span><span class="kw">pub async fn </span>new(bus_name_suffix: <span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="self">Self</span>::new_inner(
             bus_name_suffix,
             imp,
@@ -1624,16 +1624,16 @@
     /// The task must be awaited as soon as possible after creating the server.
     ///
     /// The returned task is no-op if the server has been ran before.
-    </span><span class="kw">pub fn </span>run(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; LocalServerRunTask {
-        LocalServerRunTask {
-            inner: <span class="self">self</span>.runner.take(),
+    </span><span class="kw">pub fn </span>run(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="#495-497">LocalServerRunTask</a> {
+        <a href="#495-497">LocalServerRunTask</a> {
+            inner: <a class="self" href="#591">self</a>.runner.take(),
         }
     }
 
     <span class="doccomment">/// Returns a reference to the underlying implementation.
     </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>imp(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>T {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.imp
+        <span class="kw-2">&amp;</span><a class="self" href="#599">self</a>.imp
     }
 
     <span class="doccomment">/// Returns a reference to the inner [`Connection`].
@@ -1643,12 +1643,12 @@
     #[cfg_attr(docsrs, doc(cfg(feature = <span class="string">&quot;unstable&quot;</span>)))]
     #[inline]
     </span><span class="kw">pub fn </span>connection(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Connection {
-        <span class="self">self</span>.inner.connection()
+        <a class="self" href="#609">self</a>.inner.<a href="server.rs.html#417-419">connection</a>()
     }
 
     <span class="doccomment">/// Emits the given signal.
     </span><span class="attr">#[inline]
-    </span><span class="kw">pub async fn </span>emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: Signal) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    </span><span class="kw">pub async fn </span>emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: <a href="signal.rs.html#8-25">Signal</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.inner.emit(signal).<span class="kw">await
     </span>}
 
@@ -1664,12 +1664,12 @@
     </span><span class="attr">#[inline]
     </span><span class="kw">pub async fn </span>properties_changed(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        properties: <span class="kw">impl </span>IntoIterator&lt;Item = Property&gt;,
+        properties: <span class="kw">impl </span>IntoIterator&lt;Item = <a href="property.rs.html#11-36">Property</a>&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.inner.properties_changed(properties).<span class="kw">await
     </span>}
 
-    <span class="kw">async fn </span>handle_root_action(imp: <span class="kw-2">&amp;</span>T, action: RootAction) {
+    <span class="kw">async fn </span>handle_root_action(imp: <span class="kw-2">&amp;</span>T, action: <a href="#23-39">RootAction</a>) {
         <span class="kw">match </span>action {
             <span class="comment">// Methods
             </span>RootAction::Raise(sender) =&gt; {
@@ -1724,7 +1724,7 @@
         }
     }
 
-    <span class="kw">async fn </span>handle_player_action(imp: <span class="kw-2">&amp;</span>T, action: PlayerAction) {
+    <span class="kw">async fn </span>handle_player_action(imp: <span class="kw-2">&amp;</span>T, action: <a href="#41-73">PlayerAction</a>) {
         <span class="kw">match </span>action {
             <span class="comment">// Methods
             </span>PlayerAction::Next(sender) =&gt; {
@@ -1844,10 +1844,10 @@
     }
 
     <span class="kw">async fn </span>new_inner&lt;<span class="lifetime">&#39;a</span>, SR, RR&gt;(
-        bus_name_suffix: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+        bus_name_suffix: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>,
         imp: T,
-        server_func: <span class="kw">impl </span>FnOnce(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str, InnerImp&lt;T&gt;) -&gt; SR + <span class="lifetime">&#39;static</span>,
-        runner_func: <span class="kw">impl </span>FnOnce(mpsc::UnboundedReceiver&lt;Action&gt;, Rc&lt;T&gt;) -&gt; RR + <span class="lifetime">&#39;static</span>,
+        server_func: <span class="kw">impl </span>FnOnce(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, InnerImp&lt;T&gt;) -&gt; SR + <span class="lifetime">&#39;static</span>,
+        runner_func: <span class="kw">impl </span>FnOnce(mpsc::UnboundedReceiver&lt;<a href="#104-109">Action</a>&gt;, Rc&lt;T&gt;) -&gt; RR + <span class="lifetime">&#39;static</span>,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt;
     <span class="kw">where
         </span>SR: Future&lt;Output = <span class="prelude-ty">Result</span>&lt;Server&lt;InnerImp&lt;T&gt;&gt;&gt;&gt;,
@@ -1877,7 +1877,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; LocalServer&lt;T&gt;
 <span class="kw">where
-    </span>T: LocalTrackListInterface + <span class="lifetime">&#39;static</span>,
+    </span>T: <a href="lib.rs.html#1178-1184">LocalTrackListInterface</a> + <span class="lifetime">&#39;static</span>,
 {
     <span class="doccomment">/// Creates a new [`LocalServer`] with the given bus name suffix and
     /// implementation, which must implement [`TrackListInterface`] in addition
@@ -1886,7 +1886,7 @@
     /// See also [`LocalServer::new`].
     ///
     /// [`LocalRootInterface`]: crate::LocalRootInterface
-    </span><span class="kw">pub async fn </span>new_with_track_list(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+    </span><span class="kw">pub async fn </span>new_with_track_list(bus_name_suffix: <span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="self">Self</span>::new_inner(
             bus_name_suffix,
             imp,
@@ -1909,7 +1909,7 @@
 
     <span class="doccomment">/// Emits the given signal on the `TrackList` interface.
     </span><span class="attr">#[inline]
-    </span><span class="kw">pub async fn </span>track_list_emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: TrackListSignal) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    </span><span class="kw">pub async fn </span>track_list_emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: <a href="signal.rs.html#36-112">TrackListSignal</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.inner.track_list_emit(signal).<span class="kw">await
     </span>}
 
@@ -1920,12 +1920,12 @@
     </span><span class="attr">#[inline]
     </span><span class="kw">pub async fn </span>track_list_properties_changed(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        properties: <span class="kw">impl </span>IntoIterator&lt;Item = TrackListProperty&gt;,
+        properties: <span class="kw">impl </span>IntoIterator&lt;Item = <a href="property.rs.html#48-52">TrackListProperty</a>&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.inner.track_list_properties_changed(properties).<span class="kw">await
     </span>}
 
-    <span class="kw">async fn </span>handle_track_list_action(imp: <span class="kw-2">&amp;</span>T, action: TrackListAction) {
+    <span class="kw">async fn </span>handle_track_list_action(imp: <span class="kw-2">&amp;</span>T, action: <a href="#75-85">TrackListAction</a>) {
         <span class="kw">match </span>action {
             <span class="comment">// Methods
             </span>TrackListAction::GetTracksMetadata(track_ids, sender) =&gt; {
@@ -1959,7 +1959,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; LocalServer&lt;T&gt;
 <span class="kw">where
-    </span>T: LocalPlaylistsInterface + <span class="lifetime">&#39;static</span>,
+    </span>T: <a href="lib.rs.html#1178-1184">LocalPlaylistsInterface</a> + <span class="lifetime">&#39;static</span>,
 {
     <span class="doccomment">/// Creates a new [`LocalServer`] with the given bus name suffix and
     /// implementation, which must implement [`LocalPlaylistsInterface`] in
@@ -1968,7 +1968,7 @@
     /// See also [`LocalServer::new`].
     ///
     /// [`LocalRootInterface`]: crate::LocalRootInterface
-    </span><span class="kw">pub async fn </span>new_with_playlists(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+    </span><span class="kw">pub async fn </span>new_with_playlists(bus_name_suffix: <span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="self">Self</span>::new_inner(
             bus_name_suffix,
             imp,
@@ -1991,7 +1991,7 @@
 
     <span class="doccomment">/// Emits the given signal on the `Playlists` interface.
     </span><span class="attr">#[inline]
-    </span><span class="kw">pub async fn </span>playlists_emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: PlaylistsSignal) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    </span><span class="kw">pub async fn </span>playlists_emit(<span class="kw-2">&amp;</span><span class="self">self</span>, signal: <a href="signal.rs.html#123-140">PlaylistsSignal</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.inner.playlists_emit(signal).<span class="kw">await
     </span>}
 
@@ -2002,12 +2002,12 @@
     </span><span class="attr">#[inline]
     </span><span class="kw">pub async fn </span>playlists_properties_changed(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        properties: <span class="kw">impl </span>IntoIterator&lt;Item = PlaylistsProperty&gt;,
+        properties: <span class="kw">impl </span>IntoIterator&lt;Item = <a href="property.rs.html#64-68">PlaylistsProperty</a>&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.inner.playlists_properties_changed(properties).<span class="kw">await
     </span>}
 
-    <span class="kw">async fn </span>handle_playlists_action(imp: <span class="kw-2">&amp;</span>T, action: PlaylistsAction) {
+    <span class="kw">async fn </span>handle_playlists_action(imp: <span class="kw-2">&amp;</span>T, action: <a href="#87-102">PlaylistsAction</a>) {
         <span class="kw">match </span>action {
             PlaylistsAction::ActivatePlaylist(playlist_id, sender) =&gt; {
                 <span class="kw">let </span>ret = imp.activate_playlist(playlist_id).<span class="kw">await</span>;
@@ -2037,7 +2037,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; LocalServer&lt;T&gt;
 <span class="kw">where
-    </span>T: LocalTrackListInterface + LocalPlaylistsInterface + <span class="lifetime">&#39;static</span>,
+    </span>T: <a href="lib.rs.html#1178-1184">LocalTrackListInterface</a> + <a href="lib.rs.html#1178-1184">LocalPlaylistsInterface</a> + <span class="lifetime">&#39;static</span>,
 {
     <span class="doccomment">/// Creates a new [`LocalServer`] with the given bus name suffix and
     /// implementation, which must implement [`LocalTrackListInterface`] and
@@ -2047,7 +2047,7 @@
     /// See also [`LocalServer::new`].
     ///
     /// [`LocalRootInterface`]: crate::LocalRootInterface
-    </span><span class="kw">pub async fn </span>new_with_all(bus_name_suffix: <span class="kw-2">&amp;</span>str, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+    </span><span class="kw">pub async fn </span>new_with_all(bus_name_suffix: <span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, imp: T) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         <span class="self">Self</span>::new_inner(
             bus_name_suffix,
             imp,

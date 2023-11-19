@@ -79,27 +79,27 @@
 <a href="#79" id="79">79</a>
 <a href="#80" id="80">80</a>
 <a href="#81" id="81">81</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>serde::Serialize;
+</pre></div><pre class="rust"><code><span class="kw">use </span><a href="https://docs.rs/serde_derive/1.0.192/serde_derive/derive.Serialize.html">serde::Serialize</a>;
 <span class="kw">use </span>zbus::zvariant::{ObjectPath, Type, Value};
 
-<span class="kw">use crate</span>::{PlaylistId, Uri};
+<span class="kw">use crate</span>::{<a href="lib.rs.html#1216">PlaylistId</a>, <a href="lib.rs.html#1222">Uri</a>};
 
 <span class="doccomment">/// A data structure describing a playlist.
 </span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Serialize, Type)]
-</span><span class="kw">pub struct </span>Playlist {
+</span><span class="kw">pub struct </span><a href="#8-17">Playlist</a> {
     <span class="doccomment">/// A unique identifier for the playlist.
     ///
     /// This should remain the same if the playlist is renamed.
-    </span><span class="kw">pub </span>id: PlaylistId,
+    </span><span class="kw">pub </span>id: <a href="lib.rs.html#1216">PlaylistId</a>,
     <span class="doccomment">/// The name of the playlist, typically given by the user.
-    </span><span class="kw">pub </span>name: String,
+    </span><span class="kw">pub </span>name: <a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>,
     <span class="doccomment">/// The URI of an (optional) icon.
-    </span><span class="kw">pub </span>icon: Uri,
+    </span><span class="kw">pub </span>icon: <a href="lib.rs.html#1222">Uri</a>,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; From&lt;Playlist&gt; <span class="kw">for </span>Value&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">fn </span>from(p: Playlist) -&gt; <span class="self">Self </span>{
-        Value::from((p.id, p.name, p.icon))
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; From&lt;<a href="#8-17">Playlist</a>&gt; <span class="kw">for </span>Value&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">fn </span>from(p: <a href="#8-17">Playlist</a>) -&gt; <span class="self">Self </span>{
+        Value::from((<a href="#20">p</a>.id, <a href="#20">p</a>.name, <a href="#20">p</a>.icon))
     }
 }
 
@@ -113,29 +113,29 @@
 /// &lt;/details&gt;
 </span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Serialize, Type)]
 #[doc(alias = <span class="string">&quot;Maybe_Playlist&quot;</span>)]
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>MaybePlaylist {
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span><a href="#35-45">MaybePlaylist</a> {
     <span class="doccomment">/// Whether this structure refers to a valid playlist.
-    </span>valid: bool,
+    </span>valid: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
     <span class="doccomment">/// The playlist, providing `valid` is true, otherwise undefined.
     ///
     /// When constructing this type, it should be noted that the playlist ID
     /// must be a valid object path, or D-Bus implementations may reject it.
     /// This is true even when Valid is false. It is suggested that &quot;/&quot; is
     /// used as the playlist ID in this case.
-    </span>playlist: Playlist,
+    </span>playlist: <a href="#8-17">Playlist</a>,
 }
 
-<span class="kw">impl </span>From&lt;<span class="prelude-ty">Option</span>&lt;Playlist&gt;&gt; <span class="kw">for </span>MaybePlaylist {
-    <span class="kw">fn </span>from(playlist: <span class="prelude-ty">Option</span>&lt;Playlist&gt;) -&gt; <span class="self">Self </span>{
-        <span class="kw">match </span>playlist {
+<span class="kw">impl </span>From&lt;<span class="prelude-ty">Option</span>&lt;<a href="#8-17">Playlist</a>&gt;&gt; <span class="kw">for </span><a href="#35-45">MaybePlaylist</a> {
+    <span class="kw">fn </span>from(playlist: <span class="prelude-ty">Option</span>&lt;<a href="#8-17">Playlist</a>&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span><a href="#48">playlist</a> {
             <span class="prelude-val">Some</span>(playlist) =&gt; <span class="self">Self </span>{
                 valid: <span class="bool-val">true</span>,
-                playlist,
+                <a href="#50">playlist</a>,
             },
             <span class="prelude-val">None </span>=&gt; <span class="self">Self </span>{
                 valid: <span class="bool-val">false</span>,
-                playlist: Playlist {
-                    id: ObjectPath::from_static_str_unchecked(<span class="string">&quot;/&quot;</span>).into(),
+                playlist: <a href="#8-17">Playlist</a> {
+                    id: ObjectPath::from_static_str_unchecked(<span class="string">&quot;/&quot;</span>).<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html">into</a>(),
                     name: String::new(),
                     icon: Uri::new(),
                 },
@@ -144,9 +144,9 @@
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; From&lt;MaybePlaylist&gt; <span class="kw">for </span>Value&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">fn </span>from(mp: MaybePlaylist) -&gt; <span class="self">Self </span>{
-        Value::from((mp.valid, mp.playlist))
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; From&lt;<a href="#35-45">MaybePlaylist</a>&gt; <span class="kw">for </span>Value&lt;<span class="lifetime">&#39;a</span>&gt; {
+    <span class="kw">fn </span>from(mp: <a href="#35-45">MaybePlaylist</a>) -&gt; <span class="self">Self </span>{
+        Value::from((<a href="#67">mp</a>.valid, <a href="#67">mp</a>.playlist))
     }
 }
 

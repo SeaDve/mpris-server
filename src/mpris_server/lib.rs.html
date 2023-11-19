@@ -1235,25 +1235,25 @@
 // * Add public `test` method to check if interface is implemented correctly
 // * Avoid clones in `Metadata` getters
 
-</span><span class="kw">mod </span>local_server;
-<span class="kw">mod </span>loop_status;
-<span class="kw">mod </span>metadata;
-<span class="kw">mod </span>playback_status;
-<span class="kw">mod </span>player;
-<span class="kw">mod </span>playlist;
-<span class="kw">mod </span>playlist_ordering;
-<span class="kw">mod </span>property;
-<span class="kw">mod </span>server;
-<span class="kw">mod </span>signal;
-<span class="kw">mod </span>time;
-<span class="kw">mod </span>track_id;
+</span><span class="kw">mod </span><a href="local_server.rs.html#1-1036">local_server</a>;
+<span class="kw">mod </span><a href="loop_status.rs.html#1-59">loop_status</a>;
+<span class="kw">mod </span><a href="metadata.rs.html#1-555">metadata</a>;
+<span class="kw">mod </span><a href="playback_status.rs.html#1-39">playback_status</a>;
+<span class="kw">mod </span><a href="player.rs.html#1-1054">player</a>;
+<span class="kw">mod </span><a href="playlist.rs.html#1-81">playlist</a>;
+<span class="kw">mod </span><a href="playlist_ordering.rs.html#1-54">playlist_ordering</a>;
+<span class="kw">mod </span><a href="property.rs.html#1-68">property</a>;
+<span class="kw">mod </span><a href="server.rs.html#1-978">server</a>;
+<span class="kw">mod </span><a href="signal.rs.html#1-140">signal</a>;
+<span class="kw">mod </span><a href="time.rs.html#1-364">time</a>;
+<span class="kw">mod </span><a href="track_id.rs.html#1-117">track_id</a>;
 
 <span class="doccomment">/// This contains the definitions of builder-pattern structs.
 ///
 /// The `builder` methods on the objects must be used instead to construct
 /// these builder-pattern structs.
-</span><span class="kw">pub mod </span>builder {
-    <span class="kw">pub use crate</span>::{metadata::MetadataBuilder, player::PlayerBuilder};
+</span><span class="kw">pub mod </span><a href="../../mpris_server/builder/index.html">builder</a> {
+    <span class="kw">pub use crate</span>::{<a href="metadata.rs.html#386-388">metadata::MetadataBuilder</a>, <a href="player.rs.html#840-866">player::PlayerBuilder</a>};
 }
 
 <span class="doccomment">/// Retrofits support for `async fn` in trait impls and declarations.
@@ -1289,23 +1289,23 @@
 ///     // Other methods...
 /// }
 /// ```
-</span><span class="kw">pub use </span>async_trait::async_trait;
+</span><span class="kw">pub use </span><a href="../../mpris_server/attr.async_trait.html">async_trait::async_trait</a>;
 <span class="kw">pub use </span>zbus;
 <span class="kw">use </span>zbus::{fdo, zvariant::OwnedObjectPath, <span class="prelude-ty">Result</span>};
 
 <span class="kw">pub use crate</span>::{
-    local_server::{LocalServer, LocalServerRunTask},
-    loop_status::LoopStatus,
-    metadata::{DateTime, Metadata},
-    playback_status::PlaybackStatus,
-    player::Player,
-    playlist::Playlist,
-    playlist_ordering::PlaylistOrdering,
-    property::{PlaylistsProperty, Property, TrackListProperty},
-    server::Server,
-    signal::{PlaylistsSignal, Signal, TrackListSignal},
-    time::Time,
-    track_id::TrackId,
+    local_server::{<a href="local_server.rs.html#525-532">LocalServer</a>, <a href="local_server.rs.html#495-497">LocalServerRunTask</a>},
+    <a href="loop_status.rs.html#9-17">loop_status::LoopStatus</a>,
+    metadata::{<a href="metadata.rs.html#17">DateTime</a>, <a href="metadata.rs.html#36">Metadata</a>},
+    <a href="playback_status.rs.html#9-16">playback_status::PlaybackStatus</a>,
+    <a href="player.rs.html#25-27">player::Player</a>,
+    <a href="playlist.rs.html#8-17">playlist::Playlist</a>,
+    <a href="playlist_ordering.rs.html#18-29">playlist_ordering::PlaylistOrdering</a>,
+    property::{<a href="property.rs.html#64-68">PlaylistsProperty</a>, <a href="property.rs.html#11-36">Property</a>, <a href="property.rs.html#48-52">TrackListProperty</a>},
+    <a href="server.rs.html#352-358">server::Server</a>,
+    signal::{<a href="signal.rs.html#123-140">PlaylistsSignal</a>, <a href="signal.rs.html#8-25">Signal</a>, <a href="signal.rs.html#36-112">TrackListSignal</a>},
+    <a href="time.rs.html#15">time::Time</a>,
+    <a href="track_id.rs.html#32">track_id::TrackId</a>,
 };
 
 <span class="macro">macro_rules! </span>define_iface {
@@ -2389,20 +2389,20 @@
     };
 }
 
-<span class="macro">define_iface!</span>(
+<a class="macro" href="#89-1168">define_iface!</a>(
     <span class="attr">#[async_trait]</span>,
-    RootInterface: Send + Sync extra_docs <span class="string">&quot;&quot;</span>,
-    PlayerInterface extra_docs <span class="string">&quot;&quot;</span>,
-    TrackListInterface extra_docs <span class="string">&quot;&quot;</span>,
-    PlaylistsInterface extra_docs <span class="string">&quot;&quot;
+    <a href="#1170-1176">RootInterface</a>: <a href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html">Send</a> + <a href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html">Sync</a> extra_docs <span class="string">&quot;&quot;</span>,
+    <a href="#1170-1176">PlayerInterface</a> extra_docs <span class="string">&quot;&quot;</span>,
+    <a href="../../mpris_server/trait.TrackListInterface.html">TrackListInterface</a> extra_docs <span class="string">&quot;&quot;</span>,
+    <a href="../../mpris_server/trait.PlaylistsInterface.html">PlaylistsInterface</a> extra_docs <span class="string">&quot;&quot;
 </span>);
 
-<span class="macro">define_iface!</span>(
+<a class="macro" href="#89-1168">define_iface!</a>(
     <span class="attr">#[async_trait(<span class="question-mark">?</span>Send)]</span>,
-    LocalRootInterface extra_docs <span class="string">&quot;Local version of [`RootInterface`] to be used with [`LocalServer`].&quot;</span>,
-    LocalPlayerInterface extra_docs <span class="string">&quot;Local version of [`PlayerInterface`] to be used with [`LocalServer`].&quot;</span>,
-    LocalTrackListInterface extra_docs <span class="string">&quot;Local version of [`TrackListInterface`] to be used with [`LocalServer`].&quot;</span>,
-    LocalPlaylistsInterface  extra_docs <span class="string">&quot;Local version of [`PlaylistsInterface`] to be used with [`LocalServer`].&quot;
+    <a href="#1178-1184">LocalRootInterface</a> extra_docs <span class="string">&quot;Local version of [`RootInterface`] to be used with [`LocalServer`].&quot;</span>,
+    <a href="#1178-1184">LocalPlayerInterface</a> extra_docs <span class="string">&quot;Local version of [`PlayerInterface`] to be used with [`LocalServer`].&quot;</span>,
+    <a href="../../mpris_server/trait.LocalTrackListInterface.html">LocalTrackListInterface</a> extra_docs <span class="string">&quot;Local version of [`TrackListInterface`] to be used with [`LocalServer`].&quot;</span>,
+    <a href="../../mpris_server/trait.LocalPlaylistsInterface.html">LocalPlaylistsInterface</a>  extra_docs <span class="string">&quot;Local version of [`PlaylistsInterface`] to be used with [`LocalServer`].&quot;
 </span>);
 
 <span class="doccomment">/// A playback rate.
@@ -2411,7 +2411,7 @@
 /// is happening at half speed, while 1.5 means that 1.5 seconds of
 /// &quot;track time&quot; is consumed every second.
 </span><span class="attr">#[doc(alias = <span class="string">&quot;Playback_Rate&quot;</span>)]
-</span><span class="kw">pub type </span>PlaybackRate = f64;
+</span><span class="kw">pub type </span><a href="../../mpris_server/type.PlaybackRate.html">PlaybackRate</a> = <a href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>;
 
 <span class="doccomment">/// Audio volume level.
 ///
@@ -2420,7 +2420,7 @@
 ///
 /// Note that the volume may be higher than 1.0, although generally
 /// clients should not attempt to set it above 1.0.
-</span><span class="kw">pub type </span>Volume = f64;
+</span><span class="kw">pub type </span><a href="../../mpris_server/type.Volume.html">Volume</a> = <a href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>;
 
 <span class="doccomment">/// Unique playlist identifier.
 ///
@@ -2435,11 +2435,11 @@
 ///
 /// &lt;/details&gt;
 </span><span class="attr">#[doc(alias = <span class="string">&quot;Playlist_Id&quot;</span>)]
-</span><span class="kw">pub type </span>PlaylistId = OwnedObjectPath;
+</span><span class="kw">pub type </span><a href="../../mpris_server/type.PlaylistId.html">PlaylistId</a> = OwnedObjectPath;
 
 <span class="doccomment">/// A unique resource identifier.
 ///
 /// URIs should be sent as (UTF-8) strings. Local files should use the
 /// &quot;file://&quot; schema.
-</span><span class="kw">pub type </span>Uri = String;
+</span><span class="kw">pub type </span><a href="../../mpris_server/type.Uri.html">Uri</a> = <a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>;
 </code></pre></div></section></main></body></html>

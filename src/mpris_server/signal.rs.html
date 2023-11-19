@@ -138,14 +138,14 @@
 <a href="#138" id="138">138</a>
 <a href="#139" id="139">139</a>
 <a href="#140" id="140">140</a>
-</pre></div><pre class="rust"><code><span class="kw">use crate</span>::{Metadata, Playlist, Time, TrackId};
+</pre></div><pre class="rust"><code><span class="kw">use crate</span>::{<a href="metadata.rs.html#36">Metadata</a>, <a href="playlist.rs.html#8-17">Playlist</a>, <a href="time.rs.html#15">Time</a>, <a href="track_id.rs.html#32">TrackId</a>};
 
 <span class="doccomment">/// Used for emitting signals on [`Server::emit`] and [`LocalServer::emit`].
 ///
 /// [`Server::emit`]: crate::Server::emit
 /// [`LocalServer::emit`]: crate::LocalServer::emit
 </span><span class="attr">#[derive(Debug)]
-</span><span class="kw">pub enum </span>Signal {
+</span><span class="kw">pub enum </span><a href="../../mpris_server/enum.Signal.html">Signal</a> {
     <span class="doccomment">/// Indicates that the track position has changed in a way that is
     /// inconsistent with the current playing state.
     ///
@@ -160,7 +160,7 @@
     /// to Playing, and 0 when going from Stopped to Playing.
     </span>Seeked {
         <span class="doccomment">/// The new position.
-        </span>position: Time,
+        </span>position: <a href="time.rs.html#15">Time</a>,
     },
 }
 
@@ -173,7 +173,7 @@
 /// [`TrackListInterface`]: crate::TrackListInterface
 /// [`LocalTrackListInterface`]: crate::LocalTrackListInterface
 </span><span class="attr">#[derive(Debug)]
-</span><span class="kw">pub enum </span>TrackListSignal {
+</span><span class="kw">pub enum </span><a href="../../mpris_server/enum.TrackListSignal.html">TrackListSignal</a> {
     <span class="doccomment">/// Indicates that the entire tracklist has been replaced.
     ///
     /// It is left up to the implementation to decide when a change to the track
@@ -184,7 +184,7 @@
     /// [`TrackRemoved`]: TrackListSignal::TrackRemoved
     </span>TrackListReplaced {
         <span class="doccomment">/// The new content of the tracklist.
-        </span>tracks: Vec&lt;TrackId&gt;,
+        </span>tracks: Vec&lt;<a href="track_id.rs.html#32">TrackId</a>&gt;,
         <span class="doccomment">/// The identifier of the track to be considered as current.
         ///
         /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`] indicates that there
@@ -197,7 +197,7 @@
         /// [`mpris:trackid`]: crate::Metadata::trackid
         /// [`Metadata`]: crate::PlayerInterface::metadata
         /// [`Player interface`]: crate::PlayerInterface
-        </span>current_track: TrackId,
+        </span>current_track: <a href="track_id.rs.html#32">TrackId</a>,
     },
     <span class="doccomment">/// Indicates that a track has been added to the track list.
     </span>TrackAdded {
@@ -206,13 +206,13 @@
         /// This must include a [`mpris:trackid`] entry.
         ///
         /// [`mpris:trackid`]: crate::Metadata::trackid
-        </span>metadata: Metadata,
+        </span>metadata: <a href="metadata.rs.html#36">Metadata</a>,
         <span class="doccomment">/// The identifier of the track after which the new track was inserted.
         /// The path [`/org/mpris/MediaPlayer2/TrackList/NoTrack`] indicates
         /// that the track was inserted at the start of the track list.
         ///
         /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`]: crate::TrackId::NO_TRACK
-        </span>after_track: TrackId,
+        </span>after_track: <a href="track_id.rs.html#32">TrackId</a>,
     },
     <span class="doccomment">/// Indicates that a track has been removed from the track list.
     </span>TrackRemoved {
@@ -222,7 +222,7 @@
         /// for this argument.
         ///
         /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`]: crate::TrackId::NO_TRACK
-        </span>track_id: TrackId,
+        </span>track_id: <a href="track_id.rs.html#32">TrackId</a>,
     },
     <span class="doccomment">/// Indicates that the metadata of a track in the tracklist has changed.
     ///
@@ -240,14 +240,14 @@
         /// for this argument.
         ///
         /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`]: crate::TrackId::NO_TRACK
-        </span>track_id: TrackId,
+        </span>track_id: <a href="track_id.rs.html#32">TrackId</a>,
         <span class="doccomment">/// The new track metadata.
         ///
         /// This must include a [`mpris:trackid`] entry. If the track id has
         /// changed, this will be the new value.
         ///
         /// [`mpris:trackid`]: crate::Metadata::trackid
-        </span>metadata: Metadata,
+        </span>metadata: <a href="metadata.rs.html#36">Metadata</a>,
     },
 }
 
@@ -260,7 +260,7 @@
 /// [`PlaylistsInterface`]: crate::PlaylistsInterface
 /// [`LocalPlaylistsInterface`]: crate::LocalPlaylistsInterface
 </span><span class="attr">#[derive(Debug)]
-</span><span class="kw">pub enum </span>PlaylistsSignal {
+</span><span class="kw">pub enum </span><a href="../../mpris_server/enum.PlaylistsSignal.html">PlaylistsSignal</a> {
     <span class="doccomment">/// Indicates that either the Name or Icon attribute of a playlist has
     /// changed.
     ///
@@ -275,7 +275,7 @@
     /// &lt;/details&gt;
     </span>PlaylistChanged {
         <span class="doccomment">/// The playlist which details have changed.
-        </span>playlist: Playlist,
+        </span>playlist: <a href="playlist.rs.html#8-17">Playlist</a>,
     },
 }
 </code></pre></div></section></main></body></html>
