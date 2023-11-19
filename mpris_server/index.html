@@ -13,7 +13,10 @@
 <li><a href="https://specifications.freedesktop.org/mpris-spec/2.2/Playlists_Interface.html">org.mpris.MediaPlayer2.Playlists</a></li>
 </ul>
 <p>To implement these interfaces, this crate offers two flavors: you can either create your own struct and implement <code>RootInterface</code> and <code>PlayerInterface</code> (or with optional <code>TrackListInterface</code> and <code>PlaylistsInterface</code>), or you can use the ready-to-use <code>Player</code> struct.</p>
-<h3 id="examples"><a href="#examples">Examples</a></h3>
+<h3 id="optional-features"><a href="#optional-features">Optional Features</a></h3><div><table><thead><tr><th>Feature</th><th>Description</th><th>Default</th></tr></thead><tbody>
+<tr><td><code>unstable</code></td><td>Enables internal APIs and unstable features.</td><td>No</td></tr>
+</tbody></table>
+</div><h3 id="examples"><a href="#examples">Examples</a></h3>
 <p>For more detailed examples, see also the <a href="https://github.com/SeaDve/mpris-server/tree/main/examples">examples directory</a>.</p>
 <p>There is also a real-world example of this library being used in <a href="https://github.com/SeaDve/Mousai">Mousai</a>, a music recognizer application for Linux.</p>
 <h4 id="manual-implementation-via-server-or-localserver"><a href="#manual-implementation-via-server-or-localserver">Manual Implementation (via <code>Server</code> or <code>LocalServer</code>)</a></h4>

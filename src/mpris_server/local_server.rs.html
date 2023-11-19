@@ -1032,6 +1032,7 @@
 <a href="#1032" id="1032">1032</a>
 <a href="#1033" id="1033">1033</a>
 <a href="#1034" id="1034">1034</a>
+<a href="#1035" id="1035">1035</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{
     cell::RefCell,
     fmt,
@@ -1637,7 +1638,8 @@
     <span class="doccomment">/// Returns a reference to the inner [`Connection`].
     ///
     /// If you needed to call this, consider filing an issue.
-    </span><span class="attr">#[inline]
+    </span><span class="attr">#[cfg(feature = <span class="string">&quot;unstable&quot;</span>)]
+    #[inline]
     </span><span class="kw">pub fn </span>connection(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Connection {
         <span class="self">self</span>.inner.connection()
     }

@@ -974,6 +974,7 @@
 <a href="#974" id="974">974</a>
 <a href="#975" id="975">975</a>
 <a href="#976" id="976">976</a>
+<a href="#977" id="977">977</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{collections::HashMap, fmt, sync::Arc};
 
 <span class="kw">use </span>serde::Serialize;
@@ -1387,7 +1388,8 @@
     <span class="doccomment">/// Returns a reference to the inner [`Connection`].
     ///
     /// If you needed to call this, consider filing an issue.
-    </span><span class="attr">#[inline]
+    </span><span class="attr">#[cfg(feature = <span class="string">&quot;unstable&quot;</span>)]
+    #[inline]
     </span><span class="kw">pub fn </span>connection(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Connection {
         <span class="kw-2">&amp;</span><span class="self">self</span>.connection
     }
