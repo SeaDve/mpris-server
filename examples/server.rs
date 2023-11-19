@@ -306,7 +306,7 @@ async fn main() -> Result<()> {
     let _server = Server::new_with_playlists("Test.ApplicationWithPlaylists", Player).await?;
 
     // Create a server that exports all interfaces.
-    let server = Server::new_with_all("Test.ApplicationWithTrackListAndPlaylists", Player).await?;
+    let server = Server::newwith_all("Test.ApplicationWithTrackListAndPlaylists", Player).await?;
 
     // Emit `PropertiesChanged` signal for `CanSeek` and `Metadata` properties
     server
