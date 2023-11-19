@@ -412,6 +412,7 @@ where
     ///
     /// If you needed to call this, consider filing an issue.
     #[cfg(feature = "unstable")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
     #[inline]
     pub fn connection(&self) -> &Connection {
         &self.connection

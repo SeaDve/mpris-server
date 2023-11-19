@@ -17,6 +17,9 @@ jobs:
           toolchain: stable
           override: true
       - uses: actions-rs/cargo@v1
+        env:
+          RUSTFLAGS: --cfg docsrs
+          RUSTDOCFLAGS: --cfg docsrs
         with:
           command: doc
           args: --package mpris-server --features "unstable" --no-deps
