@@ -17,7 +17,7 @@ async fn main() -> Result<()> {
         println!("PlayPause");
     });
 
-    // Handle `Play` method call
+    // Handle `Previous` method call
     player.connect_previous(|_player| {
         println!("Previous");
     });
