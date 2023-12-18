@@ -522,19 +522,13 @@ impl Future for LocalServerRunTask {
 /// because [`LocalServer`] has an overhead of sending messages across threads.
 ///
 /// For more information, see [`Server`] documentations.
-pub struct LocalServer<T>
-where
-    T: LocalPlayerInterface + 'static,
-{
+pub struct LocalServer<T> {
     inner: Server<InnerImp<T>>,
     imp: Rc<T>,
     runner: RefCell<Option<TaskInner>>,
 }
 
-impl<T> fmt::Debug for LocalServer<T>
-where
-    T: LocalPlayerInterface + 'static,
-{
+impl<T> fmt::Debug for LocalServer<T> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("LocalServer").finish()
     }
@@ -1033,4 +1027,17 @@ where
         )
         .await
     }
+}
+
+#[cfg(test)]
+mod tests {
+    use static_assertions::{assert_impl_all, assert_not_impl_any};
+
+    use super::LocalServer;
+
+    #[allow(dead_code)]
+    pub struct TestPlayer;
+
+    assert_not_impl_any!(LocalServer<TestPlayer>: Send, Sync);
+    assert_impl_all!(LocalServer<TestPlayer>: Unpin);
 }
