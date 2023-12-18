@@ -1220,3 +1220,18 @@ pub type PlaylistId = OwnedObjectPath;
 /// URIs should be sent as (UTF-8) strings. Local files should use the
 /// "file://" schema.
 pub type Uri = String;
+
+#[cfg(test)]
+mod tests {
+    use static_assertions::assert_trait_sub_all;
+
+    use super::*;
+
+    assert_trait_sub_all!(PlayerInterface: RootInterface);
+    assert_trait_sub_all!(TrackListInterface: PlayerInterface, RootInterface);
+    assert_trait_sub_all!(PlaylistsInterface: PlayerInterface, RootInterface);
+
+    assert_trait_sub_all!(LocalPlayerInterface: LocalRootInterface);
+    assert_trait_sub_all!(LocalTrackListInterface: LocalPlayerInterface, LocalRootInterface);
+    assert_trait_sub_all!(LocalPlaylistsInterface: LocalPlayerInterface, LocalRootInterface);
+}
