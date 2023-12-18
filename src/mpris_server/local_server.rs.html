@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/local_server.rs`."><title>local_server.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="mpris_server" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (5facb422f 2023-11-28)" data-channel="nightly" data-search-js="search-56a624991a76cfad.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/local_server.rs`."><title>local_server.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-804b98a1284a310a.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="mpris_server" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (6a6287132 2023-12-17)" data-channel="nightly" data-search-js="search-2b6ce74ff89ae146.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../static.files/src-script-39ed315d46fb705f.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-305769736d49e732.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-feafe1bb7466e4bd.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1034,6 +1035,13 @@
 <a href="#1034" id="1034">1034</a>
 <a href="#1035" id="1035">1035</a>
 <a href="#1036" id="1036">1036</a>
+<a href="#1037" id="1037">1037</a>
+<a href="#1038" id="1038">1038</a>
+<a href="#1039" id="1039">1039</a>
+<a href="#1040" id="1040">1040</a>
+<a href="#1041" id="1041">1041</a>
+<a href="#1042" id="1042">1042</a>
+<a href="#1043" id="1043">1043</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{
     <a href="https://doc.rust-lang.org/nightly/core/cell/struct.RefCell.html">cell::RefCell</a>,
     <a href="https://doc.rust-lang.org/nightly/alloc/fmt/index.html">fmt</a>,
@@ -1052,7 +1060,7 @@
 <span class="kw">use crate</span>::{
     <a href="lib.rs.html#1178-1184">LocalPlayerInterface</a>, <a href="lib.rs.html#1178-1184">LocalPlaylistsInterface</a>, <a href="lib.rs.html#1178-1184">LocalTrackListInterface</a>, <a href="loop_status.rs.html#9-17">LoopStatus</a>, <a href="metadata.rs.html#36">Metadata</a>,
     <a href="lib.rs.html#1192">PlaybackRate</a>, <a href="playback_status.rs.html#9-16">PlaybackStatus</a>, <a href="lib.rs.html#1170-1176">PlayerInterface</a>, <a href="playlist.rs.html#8-17">Playlist</a>, <a href="lib.rs.html#1216">PlaylistId</a>, <a href="playlist_ordering.rs.html#18-29">PlaylistOrdering</a>,
-    <a href="lib.rs.html#1170-1176">PlaylistsInterface</a>, <a href="property.rs.html#64-68">PlaylistsProperty</a>, <a href="signal.rs.html#123-140">PlaylistsSignal</a>, <a href="property.rs.html#11-36">Property</a>, <a href="lib.rs.html#1170-1176">RootInterface</a>, <a href="server.rs.html#352-358">Server</a>,
+    <a href="lib.rs.html#1170-1176">PlaylistsInterface</a>, <a href="property.rs.html#64-68">PlaylistsProperty</a>, <a href="signal.rs.html#123-140">PlaylistsSignal</a>, <a href="property.rs.html#11-36">Property</a>, <a href="lib.rs.html#1170-1176">RootInterface</a>, <a href="server.rs.html#352-355">Server</a>,
     <a href="signal.rs.html#8-25">Signal</a>, <a href="time.rs.html#15">Time</a>, <a href="track_id.rs.html#32">TrackId</a>, <a href="lib.rs.html#1170-1176">TrackListInterface</a>, <a href="property.rs.html#48-52">TrackListProperty</a>, <a href="signal.rs.html#36-112">TrackListSignal</a>, <a href="lib.rs.html#1222">Uri</a>, <a href="lib.rs.html#1201">Volume</a>,
 };
 
@@ -1521,21 +1529,21 @@
 
 <span class="kw">type </span>TaskInner = Pin&lt;Box&lt;<span class="kw">dyn </span>Future&lt;Output = ()&gt;&gt;&gt;;
 
-<span class="doccomment">/// A task that runs [`LocalServer`]&#39;s event handler until the server
+<span class="doccomment">/// A task that runs [`LocalServer`]'s event handler until the server
 /// and this task is dropped.
 ///
 /// This must be awaited as soon as possible after creating the server.
 ///
 /// See [`LocalServer::run`] for more information.
-</span><span class="attr">#[must_use = <span class="string">&quot;futures do nothing unless you `.await` or poll them&quot;</span>]
+</span><span class="attr">#[must_use = <span class="string">"futures do nothing unless you `.await` or poll them"</span>]
 </span><span class="kw">pub struct </span><a href="../../mpris_server/struct.LocalServerRunTask.html">LocalServerRunTask</a> {
     inner: <span class="prelude-ty">Option</span>&lt;<a href="#486">TaskInner</a>&gt;,
 }
 
 <span class="kw">impl </span><a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html">fmt::Debug</a> <span class="kw">for </span><a href="#495-497">LocalServerRunTask</a> {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <a href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html">fmt::Result</a> {
-        <a href="#500">f</a>.debug_struct(<span class="string">&quot;LocalServerRunTask&quot;</span>)
-            .field(<span class="string">&quot;has_inner&quot;</span>, <span class="kw-2">&amp;</span><a class="self" href="#500">self</a>.inner.is_some())
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; <a href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html">fmt::Result</a> {
+        <a href="#500">f</a>.debug_struct(<span class="string">"LocalServerRunTask"</span>)
+            .field(<span class="string">"has_inner"</span>, <span class="kw-2">&amp;</span><a class="self" href="#500">self</a>.inner.is_some())
             .finish()
     }
 }
@@ -1543,7 +1551,7 @@
 <span class="kw">impl </span><a href="https://doc.rust-lang.org/nightly/core/future/future/trait.Future.html">Future</a> <span class="kw">for </span><a href="#495-497">LocalServerRunTask</a> {
     <span class="kw">type </span>Output = ();
 
-    <span class="kw">fn </span>poll(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;<span class="self">Self</span>::Output&gt; {
+    <span class="kw">fn </span>poll(<span class="kw-2">mut </span><span class="self">self</span>: Pin&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt;, cx: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">'_</span>&gt;) -&gt; Poll&lt;<span class="self">Self</span>::Output&gt; {
         <span class="kw">match </span><a class="self" href="#510">self</a>.inner.as_mut() {
             <span class="prelude-val">Some</span>(inner) =&gt; <a href="#512">inner</a>.poll_unpin(<a href="#510">cx</a>),
             <span class="prelude-val">None </span>=&gt; Poll::Ready(()),
@@ -1551,34 +1559,28 @@
     }
 }
 
-<span class="doccomment">/// Local version of [`Server`] that doesn&#39;t require `T` to be `Send` and
+<span class="doccomment">/// Local version of [`Server`] that doesn't require `T` to be `Send` and
 /// `Sync`.
 ///
 /// If your type is already `Send` and `Sync`, consider using [`Server`] instead
 /// because [`LocalServer`] has an overhead of sending messages across threads.
 ///
 /// For more information, see [`Server`] documentations.
-</span><span class="kw">pub struct </span><a href="../../mpris_server/struct.LocalServer.html">LocalServer</a>&lt;T&gt;
-<span class="kw">where
-    </span>T: <a href="lib.rs.html#1178-1184">LocalPlayerInterface</a> + <span class="lifetime">&#39;static</span>,
-{
+</span><span class="kw">pub struct </span><a href="../../mpris_server/struct.LocalServer.html">LocalServer</a>&lt;T&gt; {
     inner: Server&lt;InnerImp&lt;T&gt;&gt;,
     imp: Rc&lt;T&gt;,
     runner: RefCell&lt;<span class="prelude-ty">Option</span>&lt;<a href="#486">TaskInner</a>&gt;&gt;,
 }
 
-<span class="kw">impl</span>&lt;T&gt; <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html">fmt::Debug</a> <span class="kw">for </span>LocalServer&lt;T&gt;
-<span class="kw">where
-    </span>T: <a href="lib.rs.html#1178-1184">LocalPlayerInterface</a> + <span class="lifetime">&#39;static</span>,
-{
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <a href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html">fmt::Result</a> {
-        <a href="#538">f</a>.debug_struct(<span class="string">&quot;LocalServer&quot;</span>).finish()
+<span class="kw">impl</span>&lt;T&gt; <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html">fmt::Debug</a> <span class="kw">for </span>LocalServer&lt;T&gt; {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; <a href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html">fmt::Result</a> {
+        <a href="#532">f</a>.debug_struct(<span class="string">"LocalServer"</span>).finish()
     }
 }
 
 <span class="kw">impl</span>&lt;T&gt; LocalServer&lt;T&gt;
 <span class="kw">where
-    </span>T: <a href="lib.rs.html#1178-1184">LocalPlayerInterface</a> + <span class="lifetime">&#39;static</span>,
+    </span>T: <a href="lib.rs.html#1178-1184">LocalPlayerInterface</a> + <span class="lifetime">'static</span>,
 {
     <span class="doccomment">/// Creates a new [`LocalServer`] with the given bus name suffix and
     /// implementation, `imp`, which must implement [`LocalRootInterface`] and
@@ -1595,8 +1597,8 @@
     /// * `org.mpris.MediaPlayer2.vlc.instance7389`
     ///
     /// **Note:** According to the [D-Bus specification], the unique
-    /// identifier &quot;must only contain  the ASCII characters
-    /// `[A-Z][a-z][0-9]_-`&quot; and &quot;must not begin with a digit&quot;.
+    /// identifier "must only contain  the ASCII characters
+    /// `[A-Z][a-z][0-9]_-`" and "must not begin with a digit".
     ///
     /// [`LocalRootInterface`]: crate::LocalRootInterface
     /// [D-Bus specification]: https://dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus
@@ -1626,24 +1628,24 @@
     /// The returned task is no-op if the server has been ran before.
     </span><span class="kw">pub fn </span>run(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="#495-497">LocalServerRunTask</a> {
         <a href="#495-497">LocalServerRunTask</a> {
-            inner: <a class="self" href="#591">self</a>.runner.take(),
+            inner: <a class="self" href="#585">self</a>.runner.take(),
         }
     }
 
     <span class="doccomment">/// Returns a reference to the underlying implementation.
     </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>imp(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>T {
-        <span class="kw-2">&amp;</span><a class="self" href="#599">self</a>.imp
+        <span class="kw-2">&amp;</span><a class="self" href="#593">self</a>.imp
     }
 
     <span class="doccomment">/// Returns a reference to the inner [`Connection`].
     ///
     /// If you needed to call this, consider filing an issue.
-    </span><span class="attr">#[cfg(feature = <span class="string">&quot;unstable&quot;</span>)]
-    #[cfg_attr(docsrs, doc(cfg(feature = <span class="string">&quot;unstable&quot;</span>)))]
+    </span><span class="attr">#[cfg(feature = <span class="string">"unstable"</span>)]
+    #[cfg_attr(docsrs, doc(cfg(feature = <span class="string">"unstable"</span>)))]
     #[inline]
     </span><span class="kw">pub fn </span>connection(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Connection {
-        <a class="self" href="#609">self</a>.inner.<a href="server.rs.html#417-419">connection</a>()
+        <a class="self" href="#603">self</a>.inner.<a href="server.rs.html#411-413">connection</a>()
     }
 
     <span class="doccomment">/// Emits the given signal.
@@ -1843,15 +1845,15 @@
         }
     }
 
-    <span class="kw">async fn </span>new_inner&lt;<span class="lifetime">&#39;a</span>, SR, RR&gt;(
-        bus_name_suffix: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>,
+    <span class="kw">async fn </span>new_inner&lt;<span class="lifetime">'a</span>, SR, RR&gt;(
+        bus_name_suffix: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>,
         imp: T,
-        server_func: <span class="kw">impl </span>FnOnce(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, InnerImp&lt;T&gt;) -&gt; SR + <span class="lifetime">&#39;static</span>,
-        runner_func: <span class="kw">impl </span>FnOnce(mpsc::UnboundedReceiver&lt;<a href="#104-109">Action</a>&gt;, Rc&lt;T&gt;) -&gt; RR + <span class="lifetime">&#39;static</span>,
+        server_func: <span class="kw">impl </span>FnOnce(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, InnerImp&lt;T&gt;) -&gt; SR + <span class="lifetime">'static</span>,
+        runner_func: <span class="kw">impl </span>FnOnce(mpsc::UnboundedReceiver&lt;<a href="#104-109">Action</a>&gt;, Rc&lt;T&gt;) -&gt; RR + <span class="lifetime">'static</span>,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt;
     <span class="kw">where
         </span>SR: Future&lt;Output = <span class="prelude-ty">Result</span>&lt;Server&lt;InnerImp&lt;T&gt;&gt;&gt;&gt;,
-        RR: Future&lt;Output = ()&gt; + <span class="lifetime">&#39;static</span>,
+        RR: Future&lt;Output = ()&gt; + <span class="lifetime">'static</span>,
     {
         <span class="kw">let </span>(tx, rx) = mpsc::unbounded::&lt;Action&gt;();
 
@@ -1877,7 +1879,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; LocalServer&lt;T&gt;
 <span class="kw">where
-    </span>T: <a href="lib.rs.html#1178-1184">LocalTrackListInterface</a> + <span class="lifetime">&#39;static</span>,
+    </span>T: <a href="lib.rs.html#1178-1184">LocalTrackListInterface</a> + <span class="lifetime">'static</span>,
 {
     <span class="doccomment">/// Creates a new [`LocalServer`] with the given bus name suffix and
     /// implementation, which must implement [`TrackListInterface`] in addition
@@ -1959,7 +1961,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; LocalServer&lt;T&gt;
 <span class="kw">where
-    </span>T: <a href="lib.rs.html#1178-1184">LocalPlaylistsInterface</a> + <span class="lifetime">&#39;static</span>,
+    </span>T: <a href="lib.rs.html#1178-1184">LocalPlaylistsInterface</a> + <span class="lifetime">'static</span>,
 {
     <span class="doccomment">/// Creates a new [`LocalServer`] with the given bus name suffix and
     /// implementation, which must implement [`LocalPlaylistsInterface`] in
@@ -2037,7 +2039,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; LocalServer&lt;T&gt;
 <span class="kw">where
-    </span>T: <a href="lib.rs.html#1178-1184">LocalTrackListInterface</a> + <a href="lib.rs.html#1178-1184">LocalPlaylistsInterface</a> + <span class="lifetime">&#39;static</span>,
+    </span>T: <a href="lib.rs.html#1178-1184">LocalTrackListInterface</a> + <a href="lib.rs.html#1178-1184">LocalPlaylistsInterface</a> + <span class="lifetime">'static</span>,
 {
     <span class="doccomment">/// Creates a new [`LocalServer`] with the given bus name suffix and
     /// implementation, which must implement [`LocalTrackListInterface`] and
@@ -2069,5 +2071,18 @@
         )
         .<span class="kw">await
     </span>}
+}
+
+<span class="attr">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use </span>static_assertions::{assert_impl_all, assert_not_impl_any};
+
+    <span class="kw">use </span><span class="kw">super</span>::LocalServer;
+
+    <span class="attr">#[allow(dead_code)]
+    </span><span class="kw">pub struct </span>TestPlayer;
+
+    <span class="macro">assert_not_impl_any!</span>(LocalServer&lt;TestPlayer&gt;: Send, Sync);
+    <span class="macro">assert_impl_all!</span>(LocalServer&lt;TestPlayer&gt;: Unpin);
 }
 </code></pre></div></section></main></body></html>

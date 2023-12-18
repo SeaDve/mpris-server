@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/track_id.rs`."><title>track_id.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="mpris_server" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (5facb422f 2023-11-28)" data-channel="nightly" data-search-js="search-56a624991a76cfad.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/track_id.rs`."><title>track_id.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-804b98a1284a310a.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="mpris_server" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (6a6287132 2023-12-17)" data-channel="nightly" data-search-js="search-2b6ce74ff89ae146.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../static.files/src-script-39ed315d46fb705f.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-305769736d49e732.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-feafe1bb7466e4bd.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -133,7 +134,7 @@
 /// Media players may not use any paths starting with /org/mpris unless
 /// explicitly allowed by this specification. Such paths are intended to
 /// have special meaning, such as /org/mpris/MediaPlayer2/TrackList/NoTrack
-/// to indicate &quot;no track&quot;.
+/// to indicate "no track".
 ///
 /// &lt;details&gt;&lt;summary&gt;Rationale&lt;/summary&gt;
 ///
@@ -145,54 +146,54 @@
 /// &lt;/details&gt;
 </span><span class="attr">#[derive(Debug, Default, Clone, PartialEq, Eq, Hash, Serialize, Type)]
 #[serde(transparent)]
-#[doc(alias = <span class="string">&quot;Track_Id&quot;</span>)]
-</span><span class="kw">pub struct </span><a href="#32">TrackId</a>(ObjectPath&lt;<span class="lifetime">&#39;static</span>&gt;);
+#[doc(alias = <span class="string">"Track_Id"</span>)]
+</span><span class="kw">pub struct </span><a href="#32">TrackId</a>(ObjectPath&lt;<span class="lifetime">'static</span>&gt;);
 
 <span class="kw">impl </span><a href="#32">TrackId</a> {
-    <span class="doccomment">/// A special track ID to indicate &quot;no track&quot;.
+    <span class="doccomment">/// A special track ID to indicate "no track".
     </span><span class="kw">pub const </span>NO_TRACK: <a href="#32">TrackId</a> = <a href="#32">TrackId</a>(ObjectPath::from_static_str_unchecked(
-        <span class="string">&quot;/org/mpris/MediaPlayer2/TrackList/NoTrack&quot;</span>,
+        <span class="string">"/org/mpris/MediaPlayer2/TrackList/NoTrack"</span>,
     ));
 
     <span class="doccomment">/// Returns the track ID as an [`ObjectPath`].
-    </span><span class="kw">pub fn </span>into_inner(<span class="self">self</span>) -&gt; ObjectPath&lt;<span class="lifetime">&#39;static</span>&gt; {
+    </span><span class="kw">pub fn </span>into_inner(<span class="self">self</span>) -&gt; ObjectPath&lt;<span class="lifetime">'static</span>&gt; {
         <a class="self" href="#41">self</a>.<span class="number">0
     </span>}
 }
 
 <span class="kw">impl </span><a href="https://doc.rust-lang.org/nightly/core/ops/deref/trait.Deref.html">ops::Deref</a> <span class="kw">for </span><a href="#32">TrackId</a> {
-    <span class="kw">type </span>Target = ObjectPath&lt;<span class="lifetime">&#39;static</span>&gt;;
+    <span class="kw">type </span>Target = ObjectPath&lt;<span class="lifetime">'static</span>&gt;;
 
     <span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Target {
         <span class="kw-2">&amp;</span><a class="self" href="#49">self</a>.<span class="number">0
     </span>}
 }
 
-<span class="kw">impl </span>From&lt;<a href="#32">TrackId</a>&gt; <span class="kw">for </span>ObjectPath&lt;<span class="lifetime">&#39;static</span>&gt; {
+<span class="kw">impl </span>From&lt;<a href="#32">TrackId</a>&gt; <span class="kw">for </span>ObjectPath&lt;<span class="lifetime">'static</span>&gt; {
     <span class="kw">fn </span>from(o: <a href="#32">TrackId</a>) -&gt; <span class="self">Self </span>{
         <a href="#55">o</a>.<a href="#41-43">into_inner</a>()
     }
 }
 
-<span class="kw">impl </span>From&lt;<a href="#32">TrackId</a>&gt; <span class="kw">for </span>Value&lt;<span class="lifetime">&#39;static</span>&gt; {
+<span class="kw">impl </span>From&lt;<a href="#32">TrackId</a>&gt; <span class="kw">for </span>Value&lt;<span class="lifetime">'static</span>&gt; {
     <span class="kw">fn </span>from(o: <a href="#32">TrackId</a>) -&gt; <span class="self">Self </span>{
         <a href="#61">o</a>.<a href="#41-43">into_inner</a>().<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html">into</a>()
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;unowned</span>, <span class="lifetime">&#39;owned</span>: <span class="lifetime">&#39;unowned</span>&gt; From&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;owned </span><a href="#32">TrackId</a>&gt; <span class="kw">for </span>ObjectPath&lt;<span class="lifetime">&#39;unowned</span>&gt; {
-    <span class="kw">fn </span>from(o: <span class="kw-2">&amp;</span><span class="lifetime">&#39;owned </span><a href="#32">TrackId</a>) -&gt; <span class="self">Self </span>{
+<span class="kw">impl</span>&lt;<span class="lifetime">'unowned</span>, <span class="lifetime">'owned</span>: <span class="lifetime">'unowned</span>&gt; From&lt;<span class="kw-2">&amp;</span><span class="lifetime">'owned </span><a href="#32">TrackId</a>&gt; <span class="kw">for </span>ObjectPath&lt;<span class="lifetime">'unowned</span>&gt; {
+    <span class="kw">fn </span>from(o: <span class="kw-2">&amp;</span><span class="lifetime">'owned </span><a href="#32">TrackId</a>) -&gt; <span class="self">Self </span>{
         ObjectPath::from_str_unchecked(<a href="#67">o</a>.as_str())
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; From&lt;ObjectPath&lt;<span class="lifetime">&#39;a</span>&gt;&gt; <span class="kw">for </span><a href="#32">TrackId</a> {
-    <span class="kw">fn </span>from(o: ObjectPath&lt;<span class="lifetime">&#39;a</span>&gt;) -&gt; <span class="self">Self </span>{
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; From&lt;ObjectPath&lt;<span class="lifetime">'a</span>&gt;&gt; <span class="kw">for </span><a href="#32">TrackId</a> {
+    <span class="kw">fn </span>from(o: ObjectPath&lt;<span class="lifetime">'a</span>&gt;) -&gt; <span class="self">Self </span>{
         <a href="#32">TrackId</a>(<a href="#73">o</a>.into_owned())
     }
 }
 
-<span class="kw">impl </span>TryFrom&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;_ </span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt; <span class="kw">for </span><a href="#32">TrackId</a> {
+<span class="kw">impl </span>TryFrom&lt;<span class="kw-2">&amp;</span><span class="lifetime">'_ </span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt; <span class="kw">for </span><a href="#32">TrackId</a> {
     <span class="kw">type </span>Error = Error;
 
     <span class="kw">fn </span>try_from(value: <span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
@@ -208,18 +209,18 @@
     }
 }
 
-<span class="kw">impl </span>TryFrom&lt;Value&lt;<span class="lifetime">&#39;_</span>&gt;&gt; <span class="kw">for </span><a href="#32">TrackId</a> {
+<span class="kw">impl </span>TryFrom&lt;Value&lt;<span class="lifetime">'_</span>&gt;&gt; <span class="kw">for </span><a href="#32">TrackId</a> {
     <span class="kw">type </span>Error = Error;
 
-    <span class="kw">fn </span>try_from(value: Value&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
+    <span class="kw">fn </span>try_from(value: Value&lt;<span class="lifetime">'_</span>&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>&gt; {
         ObjectPath::try_from(<a href="#97">value</a>).map(|o| <span class="self">Self</span>(<a href="#98">o</a>.to_owned()))
     }
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;de</span>&gt; Deserialize&lt;<span class="lifetime">&#39;de</span>&gt; <span class="kw">for </span><a href="#32">TrackId</a> {
+<span class="kw">impl</span>&lt;<span class="lifetime">'de</span>&gt; Deserialize&lt;<span class="lifetime">'de</span>&gt; <span class="kw">for </span><a href="#32">TrackId</a> {
     <span class="kw">fn </span>deserialize&lt;D&gt;(deserializer: D) -&gt; core::result::Result&lt;<span class="self">Self</span>, D::Error&gt;
     <span class="kw">where
-        </span>D: Deserializer&lt;<span class="lifetime">&#39;de</span>&gt;,
+        </span>D: Deserializer&lt;<span class="lifetime">'de</span>&gt;,
     {
         String::deserialize(<a href="#103">deserializer</a>)
             .and_then(|s| ObjectPath::try_from(<a href="#108">s</a>).map_err(|e| <a href="https://docs.rs/serde/1.0.193/serde/de/trait.Error.html">de::Error::custom</a>(<a href="#108">e</a>.<a href="https://doc.rust-lang.org/nightly/alloc/string/trait.ToString.html">to_string</a>())))
@@ -228,7 +229,7 @@
 }
 
 <span class="kw">impl </span><a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html">fmt::Display</a> <span class="kw">for </span><a href="#32">TrackId</a> {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; <a href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html">fmt::Result</a> {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; <a href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html">fmt::Result</a> {
         <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html">fmt::Display::fmt</a>(<span class="kw-2">&amp;</span><a class="self" href="#114">self</a>.as_str(), <a href="#114">f</a>)
     }
 }

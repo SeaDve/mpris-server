@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-9ee3a5e31a2afa3e.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="mpris_server" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (5facb422f 2023-11-28)" data-channel="nightly" data-search-js="search-56a624991a76cfad.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-804b98a1284a310a.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="mpris_server" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (6a6287132 2023-12-17)" data-channel="nightly" data-search-js="search-2b6ce74ff89ae146.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../static.files/src-script-39ed315d46fb705f.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-305769736d49e732.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-feafe1bb7466e4bd.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1223,19 +1224,19 @@
 </pre></div><pre class="rust"><code><span class="attr">#![cfg_attr(docsrs, feature(doc_cfg))]
 #![warn(rust_2018_idioms, missing_debug_implementations)]
 #![deny(rustdoc::broken_intra_doc_links)]
-#![doc = <span class="macro">include_str!</span>(<span class="string">&quot;../README.md&quot;</span>)]
+#![doc = <span class="macro">include_str!</span>(<span class="string">"../README.md"</span>)]
 
 </span><span class="comment">// TODO:
 // * Document the rest of public interface
 // * Access Server from interfaces
-// * Don&#39;t let `dbus_interface` emit properties changed signal internally
+// * Don't let `dbus_interface` emit properties changed signal internally
 // * Replace `DateTime` and `Uri` with proper types
 // * Add sensible default method impls on `*Interface` traits
 // * Profile if inlining is worth it
 // * Add public `test` method to check if interface is implemented correctly
 // * Avoid clones in `Metadata` getters
 
-</span><span class="kw">mod </span><a href="local_server.rs.html#1-1036">local_server</a>;
+</span><span class="kw">mod </span><a href="local_server.rs.html#1-1043">local_server</a>;
 <span class="kw">mod </span><a href="loop_status.rs.html#1-59">loop_status</a>;
 <span class="kw">mod </span><a href="metadata.rs.html#1-555">metadata</a>;
 <span class="kw">mod </span><a href="playback_status.rs.html#1-39">playback_status</a>;
@@ -1243,7 +1244,7 @@
 <span class="kw">mod </span><a href="playlist.rs.html#1-81">playlist</a>;
 <span class="kw">mod </span><a href="playlist_ordering.rs.html#1-54">playlist_ordering</a>;
 <span class="kw">mod </span><a href="property.rs.html#1-68">property</a>;
-<span class="kw">mod </span><a href="server.rs.html#1-978">server</a>;
+<span class="kw">mod </span><a href="server.rs.html#1-742">server</a>;
 <span class="kw">mod </span><a href="signal.rs.html#1-140">signal</a>;
 <span class="kw">mod </span><a href="time.rs.html#1-364">time</a>;
 <span class="kw">mod </span><a href="track_id.rs.html#1-117">track_id</a>;
@@ -1272,7 +1273,7 @@
 /// #[async_trait]
 /// impl RootInterface for MyPlayer {
 ///     async fn identity(&amp;self) -&gt; fdo::Result&lt;String&gt; {
-///         Ok(&quot;MyPlayer&quot;.into())
+///         Ok("MyPlayer".into())
 ///     }
 ///
 ///     // Other methods...
@@ -1283,7 +1284,7 @@
 /// #[async_trait(?Send)]
 /// impl LocalRootInterface for MyLocalPlayer {
 ///     async fn identity(&amp;self) -&gt; fdo::Result&lt;String&gt; {
-///         Ok(&quot;MyLocalPlayer&quot;.into())
+///         Ok("MyLocalPlayer".into())
 ///     }
 ///
 ///     // Other methods...
@@ -1294,7 +1295,7 @@
 <span class="kw">use </span>zbus::{fdo, zvariant::OwnedObjectPath, <span class="prelude-ty">Result</span>};
 
 <span class="kw">pub use crate</span>::{
-    local_server::{<a href="local_server.rs.html#525-532">LocalServer</a>, <a href="local_server.rs.html#495-497">LocalServerRunTask</a>},
+    local_server::{<a href="local_server.rs.html#525-529">LocalServer</a>, <a href="local_server.rs.html#495-497">LocalServerRunTask</a>},
     <a href="loop_status.rs.html#9-17">loop_status::LoopStatus</a>,
     metadata::{<a href="metadata.rs.html#17">DateTime</a>, <a href="metadata.rs.html#36">Metadata</a>},
     <a href="playback_status.rs.html#9-16">playback_status::PlaybackStatus</a>,
@@ -1302,7 +1303,7 @@
     <a href="playlist.rs.html#8-17">playlist::Playlist</a>,
     <a href="playlist_ordering.rs.html#18-29">playlist_ordering::PlaylistOrdering</a>,
     property::{<a href="property.rs.html#64-68">PlaylistsProperty</a>, <a href="property.rs.html#11-36">Property</a>, <a href="property.rs.html#48-52">TrackListProperty</a>},
-    <a href="server.rs.html#352-358">server::Server</a>,
+    <a href="server.rs.html#352-355">server::Server</a>,
     signal::{<a href="signal.rs.html#123-140">PlaylistsSignal</a>, <a href="signal.rs.html#8-25">Signal</a>, <a href="signal.rs.html#36-112">TrackListSignal</a>},
     <a href="time.rs.html#15">time::Time</a>,
     <a href="track_id.rs.html#32">track_id::TrackId</a>,
@@ -1315,13 +1316,13 @@
         <span class="macro-nonterminal">$track_list_iface_ident</span>:ident extra_docs <span class="macro-nonterminal">$extra_track_list_docs</span>:literal,
         <span class="macro-nonterminal">$playlists_iface_ident</span>:ident extra_docs <span class="macro-nonterminal">$extra_playlists_docs</span>:literal) =&gt; {
         <span class="attr">#[doc = <span class="macro-nonterminal">$extra_root_docs</span>]
-        #[doc = <span class="string">&quot;&quot;</span>]
+        #[doc = <span class="string">""</span>]
         </span><span class="doccomment">/// Used to implement [org.mpris.MediaPlayer2] interface.
         ///
         /// [org.mpris.MediaPlayer2]: https://specifications.freedesktop.org/mpris-spec/2.2/Media_Player.html
         </span><span class="attr">#[<span class="macro-nonterminal">$attr</span>]
         </span><span class="kw">pub trait </span><span class="macro-nonterminal">$root_iface_ident</span>$(: <span class="macro-nonterminal">$bound </span>$(+ <span class="macro-nonterminal">$other_bounds</span>)* )<span class="question-mark">?  </span>{
-            <span class="doccomment">/// Brings the media player&#39;s user interface to the front using any
+            <span class="doccomment">/// Brings the media player's user interface to the front using any
             /// appropriate mechanism available.
             ///
             /// The media player may be unable to control how its user interface is
@@ -1330,7 +1331,7 @@
             /// nothing.
             ///
             /// [`CanRaise`]: Self::can_raise
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;Raise&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"Raise"</span>)]
             </span><span class="kw">async fn </span>raise(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt;;
 
             <span class="doccomment">/// Causes the media player to stop running.
@@ -1347,7 +1348,7 @@
             /// If the media player does not have a UI, this should be implemented.
             ///
             /// [`CanQuit`]: Self::can_quit
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;Quit&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"Quit"</span>)]
             </span><span class="kw">async fn </span>quit(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt;;
 
             <span class="doccomment">/// Whether the player may be asked to quit.
@@ -1364,7 +1365,7 @@
             /// [`properties_changed`]: Server::properties_changed
             /// [`Quit`]: Self::quit
             /// [`NotSupported`]: fdo::Error::NotSupported
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;CanQuit&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"CanQuit"</span>)]
             </span><span class="kw">async fn </span>can_quit(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt;;
 
             <span class="doccomment">/// Whether the media player is occupying the fullscreen.
@@ -1400,7 +1401,7 @@
             ///
             /// [`properties_changed`]: Server::properties_changed
             /// [`CanSetFullscreen`]: Self::can_set_fullscreen
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;Fullscreen&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"Fullscreen"</span>)]
             </span><span class="kw">async fn </span>fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt;;
 
             <span class="doccomment">/// Sets whether the media player is occupying the fullscreen.
@@ -1408,7 +1409,7 @@
             /// See [`Fullscreen`] for more details.
             ///
             /// [`Fullscreen`]: Self::fullscreen
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;Fullscreen&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"Fullscreen"</span>)]
             </span><span class="kw">async fn </span>set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>, fullscreen: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
 
             <span class="doccomment">/// Whether the player may be asked to enter or leave fullscreen.
@@ -1440,7 +1441,7 @@
             ///
             /// [`properties_changed`]: Server::properties_changed
             /// [`Fullscreen`]: Self::fullscreen
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;CanSetFullscreen&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"CanSetFullscreen"</span>)]
             </span><span class="kw">async fn </span>can_set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt;;
 
             <span class="doccomment">/// Whether the media player may be asked to be raised.
@@ -1458,7 +1459,7 @@
             /// [`properties_changed`]: Server::properties_changed
             /// [`Raise`]: Self::raise
             /// [`NotSupported`]: fdo::Error::NotSupported
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;CanRaise&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"CanRaise"</span>)]
             </span><span class="kw">async fn </span>can_raise(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt;;
 
             <span class="doccomment">/// Indicates whether the `/org/mpris/MediaPlayer2` object implements the
@@ -1470,11 +1471,11 @@
             ///
             /// [`TrackList interface`]: TrackListInterface
             /// [`properties_changed`]: Server::properties_changed
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;HasTrackList&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"HasTrackList"</span>)]
             </span><span class="kw">async fn </span>has_track_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt;;
 
-            <span class="doccomment">/// A friendly name to identify the media player to users (eg: &quot;VLC media
-            /// player&quot;).
+            <span class="doccomment">/// A friendly name to identify the media player to users (eg: "VLC media
+            /// player").
             ///
             /// When this property changes, the
             /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
@@ -1483,11 +1484,11 @@
             /// This should usually match the name found in .desktop files
             ///
             /// [`properties_changed`]: Server::properties_changed
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;Identity&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"Identity"</span>)]
             </span><span class="kw">async fn </span>identity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;String&gt;;
 
             <span class="doccomment">/// The basename of an installed .desktop file which complies with the
-            /// [Desktop entry specification], with the &quot;.desktop&quot; extension stripped.
+            /// [Desktop entry specification], with the ".desktop" extension stripped.
             ///
             /// This property is *optional*. Clients should handle its absence
             /// gracefully.
@@ -1497,11 +1498,11 @@
             /// [`properties_changed`] must be emitted with the new value.
             ///
             /// Example: The desktop entry file is
-            /// &quot;/usr/share/applications/vlc.desktop&quot;, and this property contains &quot;vlc&quot;
+            /// "/usr/share/applications/vlc.desktop", and this property contains "vlc"
             ///
             /// [Desktop entry specification]: https://specifications.freedesktop.org/desktop-entry-spec/latest/
             /// [`properties_changed`]: Server::properties_changed
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;DesktopEntry&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"DesktopEntry"</span>)]
             </span><span class="kw">async fn </span>desktop_entry(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;String&gt;;
 
             <span class="doccomment">/// The URI schemes supported by the media player.
@@ -1511,8 +1512,8 @@
             /// [`properties_changed`] must be emitted with the new value.
             ///
             /// This can be viewed as protocols supported by the player in almost all
-            /// cases. Almost every media player will include support for the &quot;file&quot;
-            /// scheme. Other common schemes are &quot;http&quot; and &quot;rtsp&quot;.
+            /// cases. Almost every media player will include support for the "file"
+            /// scheme. Other common schemes are "http" and "rtsp".
             ///
             /// Note that URI schemes should be lower-case.
             ///
@@ -1525,7 +1526,7 @@
             ///
             /// [`properties_changed`]: Server::properties_changed
             /// [`Playlists interface`]: PlaylistsInterface
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;SupportedUriSchemes&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"SupportedUriSchemes"</span>)]
             </span><span class="kw">async fn </span>supported_uri_schemes(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;String&gt;&gt;;
 
             <span class="doccomment">/// The mime-types supported by the media player.
@@ -1546,19 +1547,19 @@
             ///
             /// [`properties_changed`]: Server::properties_changed
             /// [`Playlists interface`]: PlaylistsInterface
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;SupportedMimeTypes&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"SupportedMimeTypes"</span>)]
             </span><span class="kw">async fn </span>supported_mime_types(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;String&gt;&gt;;
         }
 
         <span class="attr">#[doc = <span class="macro-nonterminal">$extra_player_docs</span>]
-        #[doc = <span class="string">&quot;&quot;</span>]
+        #[doc = <span class="string">""</span>]
         </span><span class="doccomment">/// Used to implement [org.mpris.MediaPlayer2.Player] interface, which
         /// implements the methods for querying and providing basic control over what is
         /// currently playing.
         ///
         /// [org.mpris.MediaPlayer2.Player]: https://specifications.freedesktop.org/mpris-spec/2.2/Player_Interface.html
         </span><span class="attr">#[<span class="macro-nonterminal">$attr</span>]
-        #[doc(alias = <span class="string">&quot;org.mpris.MediaPlayer2.Player&quot;</span>)]
+        #[doc(alias = <span class="string">"org.mpris.MediaPlayer2.Player"</span>)]
         </span><span class="kw">pub trait </span><span class="macro-nonterminal">$player_iface_ident</span>: <span class="macro-nonterminal">$root_iface_ident </span>{
             <span class="doccomment">/// Skips to the next track in the tracklist.
             ///
@@ -1571,7 +1572,7 @@
             /// have no effect.
             ///
             /// [`CanGoNext`]: Self::can_go_next
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;Next&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"Next"</span>)]
             </span><span class="kw">async fn </span>next(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt;;
 
             <span class="doccomment">/// Skips to the previous track in the tracklist.
@@ -1585,7 +1586,7 @@
             /// have no effect.
             ///
             /// [`CanGoPrevious`]: Self::can_go_previous
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;Previous&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"Previous"</span>)]
             </span><span class="kw">async fn </span>previous(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt;;
 
             <span class="doccomment">/// Pauses playback.
@@ -1600,7 +1601,7 @@
             ///
             /// [`Play`]: Self::play
             /// [`CanPause`]: Self::can_pause
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;Pause&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"Pause"</span>)]
             </span><span class="kw">async fn </span>pause(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt;;
 
             <span class="doccomment">/// Pauses playback.
@@ -1613,7 +1614,7 @@
             /// no effect and raise an error.
             ///
             /// [`CanPause`]: Self::can_pause
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;PlayPause&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"PlayPause"</span>)]
             </span><span class="kw">async fn </span>play_pause(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt;;
 
             <span class="doccomment">/// Stops playback.
@@ -1627,7 +1628,7 @@
             /// have no effect and raise an error.
             ///
             /// [`CanControl`]: Self::can_control
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;Stop&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"Stop"</span>)]
             </span><span class="kw">async fn </span>stop(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt;;
 
             <span class="doccomment">/// Starts or resumes playback.
@@ -1642,7 +1643,7 @@
             /// no effect.
             ///
             /// [`CanPlay`]: Self::can_play
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;Play&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"Play"</span>)]
             </span><span class="kw">async fn </span>play(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt;;
 
             <span class="doccomment">/// Seeks forward in the current track by the specified offset in time.
@@ -1660,16 +1661,16 @@
             /// If the [`CanSeek`] property is **false**, this has no effect.
             ///
             /// [`CanSeek`]: Self::can_seek
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;Seek&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"Seek"</span>)]
             </span><span class="kw">async fn </span>seek(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: Time) -&gt; fdo::Result&lt;()&gt;;
 
             <span class="doccomment">/// Sets the current track position.
             ///
             /// # Parameters
             ///
-            /// * `track_id` - The currently playing track&#39;s identifier. If this does
+            /// * `track_id` - The currently playing track's identifier. If this does
             ///   not match the id of the currently-playing track, the call is ignored
-            ///   as &quot;stale&quot;. [`/org/mpris/MediaPlayer2/TrackList/NoTrack`] is not a
+            ///   as "stale". [`/org/mpris/MediaPlayer2/TrackList/NoTrack`] is not a
             ///   valid value for this argument.
             /// * `position` - The track position. This must be between 0 and
             ///   &lt;track_length&gt;.
@@ -1692,7 +1693,7 @@
             /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`]: TrackId::NO_TRACK
             /// [`CanSeek`]: Self::can_seek
             /// [`Position`]: Self::position
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;SetPosition&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"SetPosition"</span>)]
             </span><span class="kw">async fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId, position: Time) -&gt; fdo::Result&lt;()&gt;;
 
             <span class="doccomment">/// Opens the `uri` given as an argument
@@ -1727,7 +1728,7 @@
             /// [`TrackList interface`]: TrackListInterface
             /// [`TrackAdded`]: TrackListSignal::TrackAdded
             /// [`TrackListReplaced`]: TrackListSignal::TrackListReplaced
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;OpenUri&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"OpenUri"</span>)]
             </span><span class="kw">async fn </span>open_uri(<span class="kw-2">&amp;</span><span class="self">self</span>, uri: String) -&gt; fdo::Result&lt;()&gt;;
 
             <span class="doccomment">/// The current playback status.
@@ -1742,7 +1743,7 @@
             /// [`Playing`]: PlaybackStatus::Playing
             /// [`Paused`]: PlaybackStatus::Paused
             /// [`Stopped`]: PlaybackStatus::Stopped
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;PlaybackStatus&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"PlaybackStatus"</span>)]
             </span><span class="kw">async fn </span>playback_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackStatus&gt;;
 
             <span class="doccomment">/// The current loop / repeat status
@@ -1770,7 +1771,7 @@
             /// [`Track`]: LoopStatus::Track
             /// [`Playlist`]: LoopStatus::Playlist
             /// [`CanControl`]: Self::can_control
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;LoopStatus&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"LoopStatus"</span>)]
             </span><span class="kw">async fn </span>loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;LoopStatus&gt;;
 
             <span class="doccomment">/// Sets the current loop / repeat status
@@ -1778,7 +1779,7 @@
             /// See [`LoopStatus`] for more details.
             ///
             /// [`LoopStatus`]: Self::loop_status
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;LoopStatus&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"LoopStatus"</span>)]
             </span><span class="kw">async fn </span>set_loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>, loop_status: LoopStatus) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
 
             <span class="doccomment">/// The current playback rate.
@@ -1800,7 +1801,7 @@
             ///
             /// Not all values may be accepted by the media player. It is left to media
             /// player implementations to decide how to deal with values they cannot
-            /// use; they may either ignore them or pick a &quot;best fit&quot; value. Clients are
+            /// use; they may either ignore them or pick a "best fit" value. Clients are
             /// recommended to only use sensible fractions or multiples of 1 (eg: 0.5,
             /// 0.25, 1.5, 2.0, etc).
             ///
@@ -1817,7 +1818,7 @@
             /// [`MaximumRate`]: Self::maximum_rate
             /// [`PlaybackStatus`]: Self::playback_status
             /// [`Pause`]: Self::pause
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;Rate&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"Rate"</span>)]
             </span><span class="kw">async fn </span>rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackRate&gt;;
 
             <span class="doccomment">/// Sets the current playback rate.
@@ -1825,7 +1826,7 @@
             /// See [`Rate`] for more details.
             ///
             /// [`Rate`]: Self::rate
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;Rate&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"Rate"</span>)]
             </span><span class="kw">async fn </span>set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, rate: PlaybackRate) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
 
             <span class="doccomment">/// Whether playback is shuffled.
@@ -1846,7 +1847,7 @@
             ///
             /// [`properties_changed`]: Server::properties_changed
             /// [`CanControl`]: Self::can_control
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;Shuffle&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"Shuffle"</span>)]
             </span><span class="kw">async fn </span>shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt;;
 
             <span class="doccomment">/// Sets whether playback is shuffled.
@@ -1854,7 +1855,7 @@
             /// See [`Shuffle`] for more details.
             ///
             /// [`Shuffle`]: Self::shuffle
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;Shuffle&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"Shuffle"</span>)]
             </span><span class="kw">async fn </span>set_shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>, shuffle: bool) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
 
             <span class="doccomment">/// The metadata of the current element.
@@ -1869,7 +1870,7 @@
             ///
             /// [`properties_changed`]: Server::properties_changed
             /// [`mpris:trackid`]: Metadata::set_trackid
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;Metadata&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"Metadata"</span>)]
             </span><span class="kw">async fn </span>metadata(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Metadata&gt;;
 
             <span class="doccomment">/// The volume level.
@@ -1886,7 +1887,7 @@
             ///
             /// [`properties_changed`]: Server::properties_changed
             /// [`CanControl`]: Self::can_control
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;Volume&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"Volume"</span>)]
             </span><span class="kw">async fn </span>volume(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Volume&gt;;
 
             <span class="doccomment">/// Sets the volume level.
@@ -1894,7 +1895,7 @@
             /// See [`Volume`] for more details.
             ///
             /// [`Volume`]: Self::volume
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;Volume&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"Volume"</span>)]
             </span><span class="kw">async fn </span>set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, volume: Volume) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
 
             <span class="doccomment">/// The current track position, between 0 and the [`mpris:length`]
@@ -1920,7 +1921,7 @@
             /// [`CanSeek`]: Self::can_seek
             /// [`Rate`]: Self::rate
             /// [`Seeked`]: Signal::Seeked
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;Position&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"Position"</span>)]
             </span><span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Time&gt;;
 
             <span class="doccomment">/// The minimum value which the [`Rate`] property can take. Clients should
@@ -1937,7 +1938,7 @@
             ///
             /// [`Rate`]: Self::rate
             /// [`properties_changed`]: Server::properties_changed
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;MinimumRate&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"MinimumRate"</span>)]
             </span><span class="kw">async fn </span>minimum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackRate&gt;;
 
             <span class="doccomment">/// The maximum value which the [`Rate`] property can take. Clients should
@@ -1951,7 +1952,7 @@
             ///
             /// [`Rate`]: Self::rate
             /// [`properties_changed`]: Server::properties_changed
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;MaximumRate&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"MaximumRate"</span>)]
             </span><span class="kw">async fn </span>maximum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackRate&gt;;
 
             <span class="doccomment">/// Whether the client can call the [`Next`] method on this interface and
@@ -1977,7 +1978,7 @@
             /// [`Next`]: Self::next
             /// [`properties_changed`]: Server::properties_changed
             /// [`CanControl`]: Self::can_control
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;CanGoNext&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"CanGoNext"</span>)]
             </span><span class="kw">async fn </span>can_go_next(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt;;
 
             <span class="doccomment">/// Whether the client can call the [`Previous`] method on this interface
@@ -2003,7 +2004,7 @@
             /// [`Previous`]: Self::previous
             /// [`properties_changed`]: Server::properties_changed
             /// [`CanControl`]: Self::can_control
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;CanGoPrevious&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"CanGoPrevious"</span>)]
             </span><span class="kw">async fn </span>can_go_previous(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt;;
 
             <span class="doccomment">/// Whether playback can be started using [`Play`] or [`PlayPause`].
@@ -2012,7 +2013,7 @@
             /// `org.freedesktop.DBus.Properties.PropertiesChanged` signal via
             /// [`properties_changed`] must be emitted with the new value.
             ///
-            /// Note that this is related to whether there is a &quot;current track&quot;: the
+            /// Note that this is related to whether there is a "current track": the
             /// value should not depend on whether the track is currently paused or
             /// playing. In fact, if a track is currently playing (and [`CanControl`] is
             /// **true**), this should be **true**.
@@ -2022,7 +2023,7 @@
             /// &lt;details&gt;&lt;summary&gt;Rationale&lt;/summary&gt;
             ///
             /// Even when playback can generally be controlled, it may not be possible
-            /// to enter a &quot;playing&quot; state, for example if there is no &quot;current track&quot;.
+            /// to enter a "playing" state, for example if there is no "current track".
             ///
             /// &lt;/details&gt;
             ///
@@ -2030,7 +2031,7 @@
             /// [`PlayPause`]: Self::play_pause
             /// [`properties_changed`]: Server::properties_changed
             /// [`CanControl`]: Self::can_control
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;CanPlay&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"CanPlay"</span>)]
             </span><span class="kw">async fn </span>can_play(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt;;
 
             <span class="doccomment">/// Whether playback can be paused using [`Pause`] or [`PlayPause`].
@@ -2057,7 +2058,7 @@
             /// [`PlayPause`]: Self::play_pause
             /// [`properties_changed`]: Server::properties_changed
             /// [`CanControl`]: Self::can_control
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;CanPause&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"CanPause"</span>)]
             </span><span class="kw">async fn </span>can_pause(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt;;
 
             <span class="doccomment">/// Whether the client can control the playback position using [`Seek`] and
@@ -2080,7 +2081,7 @@
             /// [`SetPosition`]: Self::set_position
             /// [`properties_changed`]: Server::properties_changed
             /// [`CanControl`]: Self::can_control
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;CanSeek&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"CanSeek"</span>)]
             </span><span class="kw">async fn </span>can_seek(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt;;
 
             <span class="doccomment">/// Whether the media player may be controlled over this interface.
@@ -2106,17 +2107,17 @@
             /// &lt;/details&gt;
             ///
             /// [`properties_changed`]: Server::properties_changed
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;CanControl&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"CanControl"</span>)]
             </span><span class="kw">async fn </span>can_control(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt;;
         }
 
         <span class="attr">#[doc = <span class="macro-nonterminal">$extra_track_list_docs</span>]
-        #[doc = <span class="string">&quot;&quot;</span>]
+        #[doc = <span class="string">""</span>]
         </span><span class="doccomment">/// Used to implement [org.mpris.MediaPlayer2.TrackList] interface, which
         /// provides access to a short list of tracks which were recently played or will
         /// be played shortly. This is intended to provide context to the
         /// currently-playing track, rather than giving complete access to the media
-        /// player&#39;s playlist.
+        /// player's playlist.
         ///
         /// Example use cases are the list of tracks from the same album as the
         /// currently playing song or the [Rhythmbox] play queue.
@@ -2145,7 +2146,7 @@
         /// [Rhythmbox]: https://wiki.gnome.org/Apps/Rhythmbox
         /// [`TrackList interface`]: TrackListInterface
         </span><span class="attr">#[<span class="macro-nonterminal">$attr</span>]
-        #[doc(alias = <span class="string">&quot;org.mpris.MediaPlayer2.TrackList&quot;</span>)]
+        #[doc(alias = <span class="string">"org.mpris.MediaPlayer2.TrackList"</span>)]
         </span><span class="kw">pub trait </span><span class="macro-nonterminal">$track_list_iface_ident</span>: <span class="macro-nonterminal">$player_iface_ident </span>{
             <span class="doccomment">/// Gets all the metadata available for a set of tracks.
             ///
@@ -2162,7 +2163,7 @@
             /// within the scope of the tracklist.
             ///
             /// [`mpris:trackid`]: Metadata::set_trackid
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;GetTracksMetadata&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"GetTracksMetadata"</span>)]
             </span><span class="kw">async fn </span>get_tracks_metadata(
                 <span class="kw-2">&amp;</span><span class="self">self</span>,
                 track_ids: Vec&lt;TrackId&gt;,
@@ -2197,7 +2198,7 @@
             /// [`CanEditTracks`]: Self::can_edit_tracks
             /// [`TrackAdded`]: TrackListSignal::TrackAdded
             /// [`TrackListReplaced`]: TrackListSignal::TrackListReplaced
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;AddTrack&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"AddTrack"</span>)]
             </span><span class="kw">async fn </span>add_track(
                 <span class="kw-2">&amp;</span><span class="self">self</span>,
                 uri: Uri,
@@ -2225,7 +2226,7 @@
             /// [`CanEditTracks`]: Self::can_edit_tracks
             /// [`TrackRemoved`]: TrackListSignal::TrackRemoved
             /// [`TrackListReplaced`]: TrackListSignal::TrackListReplaced
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;RemoveTrack&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"RemoveTrack"</span>)]
             </span><span class="kw">async fn </span>remove_track(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId) -&gt; fdo::Result&lt;()&gt;;
 
             <span class="doccomment">/// Skip to the specified TrackId.
@@ -2238,13 +2239,13 @@
             ///
             /// If the track is not part of this tracklist, this has no effect.
             ///
-            /// If this object is not `/org/mpris/MediaPlayer2`, the current tracklist&#39;s
+            /// If this object is not `/org/mpris/MediaPlayer2`, the current tracklist's
             /// tracks should be replaced with the contents of this tracklist, and the
             /// [`TrackListReplaced`] signal should be fired from
             /// `/org/mpris/MediaPlayer2`.
             ///
             /// [`TrackListReplaced`]: TrackListSignal::TrackListReplaced
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;GoTo&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"GoTo"</span>)]
             </span><span class="kw">async fn </span>go_to(<span class="kw-2">&amp;</span><span class="self">self</span>, track_id: TrackId) -&gt; fdo::Result&lt;()&gt;;
 
             <span class="doccomment">/// An array which contains the identifier of each track in the tracklist,
@@ -2266,7 +2267,7 @@
             /// [`TrackAdded`]: TrackListSignal::TrackAdded
             /// [`TrackRemoved`]: TrackListSignal::TrackRemoved
             /// [`TrackListReplaced`]: TrackListSignal::TrackListReplaced
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;Tracks&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"Tracks"</span>)]
             </span><span class="kw">async fn </span>tracks(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;TrackId&gt;&gt;;
 
             <span class="doccomment">/// Whether tracks can be added to and removed from the tracklist.
@@ -2282,14 +2283,14 @@
             /// [`AddTrack`]: Self::add_track
             /// [`RemoveTrack`]: Self::remove_track
             /// [`NotSupported`]: fdo::Error::NotSupported
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;CanEditTracks&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"CanEditTracks"</span>)]
             </span><span class="kw">async fn </span>can_edit_tracks(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt;;
         }
 
         <span class="attr">#[doc = <span class="macro-nonterminal">$extra_playlists_docs</span>]
-        #[doc = <span class="string">&quot;&quot;</span>]
+        #[doc = <span class="string">""</span>]
         </span><span class="doccomment">/// Used to implement [org.mpris.MediaPlayer2.Playlists] interface, which
-        /// provides access to the media player&#39;s playlists.
+        /// provides access to the media player's playlists.
         ///
         /// Since D-Bus does not provide an easy way to check for what interfaces are
         /// exported on an object, clients should attempt to get one of the properties
@@ -2297,7 +2298,7 @@
         ///
         /// [org.mpris.MediaPlayer2.Playlists]: https://specifications.freedesktop.org/mpris-spec/2.2/Playlists_Interface.html
         </span><span class="attr">#[<span class="macro-nonterminal">$attr</span>]
-        #[doc(alias = <span class="string">&quot;org.mpris.MediaPlayer2.Playlists&quot;</span>)]
+        #[doc(alias = <span class="string">"org.mpris.MediaPlayer2.Playlists"</span>)]
         </span><span class="kw">pub trait </span><span class="macro-nonterminal">$playlists_iface_ident</span>: <span class="macro-nonterminal">$player_iface_ident </span>{
             <span class="doccomment">/// Starts playing the given playlist.
             ///
@@ -2312,9 +2313,9 @@
             /// It is up to the media player whether this completely replaces the
             /// current tracklist, or whether it is merely inserted into the tracklist
             /// and the first track starts. For example, if the media player is
-            /// operating in a &quot;jukebox&quot; mode, it may just append the playlist to the
+            /// operating in a "jukebox" mode, it may just append the playlist to the
             /// list of upcoming tracks, and skip to the first track in the playlist.
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;ActivatePlaylist&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"ActivatePlaylist"</span>)]
             </span><span class="kw">async fn </span>activate_playlist(<span class="kw-2">&amp;</span><span class="self">self</span>, playlist_id: PlaylistId) -&gt; fdo::Result&lt;()&gt;;
 
             <span class="doccomment">/// Gets a set of playlists.
@@ -2330,7 +2331,7 @@
             /// # Returns
             ///
             /// * `playlists` - A list of (at most `max_count`) playlists.
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;GetPlaylists&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"GetPlaylists"</span>)]
             </span><span class="kw">async fn </span>get_playlists(
                 <span class="kw-2">&amp;</span><span class="self">self</span>,
                 index: u32,
@@ -2346,7 +2347,7 @@
             /// [`playlists_properties_changed`] must be emitted with the new value.
             ///
             /// [`playlists_properties_changed`]: Server::playlists_properties_changed
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;PlaylistCount&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"PlaylistCount"</span>)]
             </span><span class="kw">async fn </span>playlist_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;u32&gt;;
 
             <span class="doccomment">/// The available orderings. At least one must be offered.
@@ -2359,13 +2360,13 @@
             ///
             /// Media players may not have access to all the data required for some
             /// orderings. For example, creation times are not available on UNIX
-            /// filesystems (don&#39;t let the ctime fool you!). On the other hand, clients
-            /// should have some way to get the &quot;most recent&quot; playlists.
+            /// filesystems (don't let the ctime fool you!). On the other hand, clients
+            /// should have some way to get the "most recent" playlists.
             ///
             /// &lt;/details&gt;
             ///
             /// [`playlists_properties_changed`]: Server::playlists_properties_changed
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;Orderings&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"Orderings"</span>)]
             </span><span class="kw">async fn </span>orderings(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;PlaylistOrdering&gt;&gt;;
 
             <span class="doccomment">/// The currently-active playlist.
@@ -2383,7 +2384,7 @@
             ///
             /// [`playlists_properties_changed`]: Server::playlists_properties_changed
             /// [`ActivatePlaylist`]: Self::activate_playlist
-            </span><span class="attr">#[doc(alias = <span class="string">&quot;ActivePlaylist&quot;</span>)]
+            </span><span class="attr">#[doc(alias = <span class="string">"ActivePlaylist"</span>)]
             </span><span class="kw">async fn </span>active_playlist(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;<span class="prelude-ty">Option</span>&lt;Playlist&gt;&gt;;
         }
     };
@@ -2391,26 +2392,26 @@
 
 <a class="macro" href="#89-1168">define_iface!</a>(
     <span class="attr">#[async_trait]</span>,
-    <a href="#1170-1176">RootInterface</a>: <a href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html">Send</a> + <a href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html">Sync</a> extra_docs <span class="string">&quot;&quot;</span>,
-    <a href="#1170-1176">PlayerInterface</a> extra_docs <span class="string">&quot;&quot;</span>,
-    <a href="../../mpris_server/trait.TrackListInterface.html">TrackListInterface</a> extra_docs <span class="string">&quot;&quot;</span>,
-    <a href="../../mpris_server/trait.PlaylistsInterface.html">PlaylistsInterface</a> extra_docs <span class="string">&quot;&quot;
+    <a href="#1170-1176">RootInterface</a>: <a href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html">Send</a> + <a href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html">Sync</a> extra_docs <span class="string">""</span>,
+    <a href="#1170-1176">PlayerInterface</a> extra_docs <span class="string">""</span>,
+    <a href="../../mpris_server/trait.TrackListInterface.html">TrackListInterface</a> extra_docs <span class="string">""</span>,
+    <a href="../../mpris_server/trait.PlaylistsInterface.html">PlaylistsInterface</a> extra_docs <span class="string">""
 </span>);
 
 <a class="macro" href="#89-1168">define_iface!</a>(
     <span class="attr">#[async_trait(<span class="question-mark">?</span>Send)]</span>,
-    <a href="#1178-1184">LocalRootInterface</a> extra_docs <span class="string">&quot;Local version of [`RootInterface`] to be used with [`LocalServer`].&quot;</span>,
-    <a href="#1178-1184">LocalPlayerInterface</a> extra_docs <span class="string">&quot;Local version of [`PlayerInterface`] to be used with [`LocalServer`].&quot;</span>,
-    <a href="../../mpris_server/trait.LocalTrackListInterface.html">LocalTrackListInterface</a> extra_docs <span class="string">&quot;Local version of [`TrackListInterface`] to be used with [`LocalServer`].&quot;</span>,
-    <a href="../../mpris_server/trait.LocalPlaylistsInterface.html">LocalPlaylistsInterface</a>  extra_docs <span class="string">&quot;Local version of [`PlaylistsInterface`] to be used with [`LocalServer`].&quot;
+    <a href="#1178-1184">LocalRootInterface</a> extra_docs <span class="string">"Local version of [`RootInterface`] to be used with [`LocalServer`]."</span>,
+    <a href="#1178-1184">LocalPlayerInterface</a> extra_docs <span class="string">"Local version of [`PlayerInterface`] to be used with [`LocalServer`]."</span>,
+    <a href="../../mpris_server/trait.LocalTrackListInterface.html">LocalTrackListInterface</a> extra_docs <span class="string">"Local version of [`TrackListInterface`] to be used with [`LocalServer`]."</span>,
+    <a href="../../mpris_server/trait.LocalPlaylistsInterface.html">LocalPlaylistsInterface</a>  extra_docs <span class="string">"Local version of [`PlaylistsInterface`] to be used with [`LocalServer`]."
 </span>);
 
 <span class="doccomment">/// A playback rate.
 ///
 /// This is a multiplier, so a value of 0.5 indicates that playback
 /// is happening at half speed, while 1.5 means that 1.5 seconds of
-/// &quot;track time&quot; is consumed every second.
-</span><span class="attr">#[doc(alias = <span class="string">&quot;Playback_Rate&quot;</span>)]
+/// "track time" is consumed every second.
+</span><span class="attr">#[doc(alias = <span class="string">"Playback_Rate"</span>)]
 </span><span class="kw">pub type </span><a href="../../mpris_server/type.PlaybackRate.html">PlaybackRate</a> = <a href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>;
 
 <span class="doccomment">/// Audio volume level.
@@ -2434,12 +2435,12 @@
 /// similar to `org.gnome.UPnP.MediaItem2`.
 ///
 /// &lt;/details&gt;
-</span><span class="attr">#[doc(alias = <span class="string">&quot;Playlist_Id&quot;</span>)]
+</span><span class="attr">#[doc(alias = <span class="string">"Playlist_Id"</span>)]
 </span><span class="kw">pub type </span><a href="../../mpris_server/type.PlaylistId.html">PlaylistId</a> = OwnedObjectPath;
 
 <span class="doccomment">/// A unique resource identifier.
 ///
 /// URIs should be sent as (UTF-8) strings. Local files should use the
-/// &quot;file://&quot; schema.
+/// "file://" schema.
 </span><span class="kw">pub type </span><a href="../../mpris_server/type.Uri.html">Uri</a> = <a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>;
 </code></pre></div></section></main></body></html>
