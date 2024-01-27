@@ -1,5 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/metadata.rs`."><title>metadata.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-804b98a1284a310a.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="mpris_server" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (6a6287132 2023-12-17)" data-channel="nightly" data-search-js="search-2b6ce74ff89ae146.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../static.files/src-script-39ed315d46fb705f.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-305769736d49e732.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-feafe1bb7466e4bd.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><div class="sidebar-resizer"></div>
-    <main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/metadata.rs`."><title>metadata.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-b1a3e7f8283b8434.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="mpris_server" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.0-nightly (5bd5d214e 2024-01-25)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../mpris_server/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -556,7 +557,7 @@
 <a href="#555" id="555">555</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{<a href="https://doc.rust-lang.org/nightly/std/collections/hash/map/struct.HashMap.html">collections::HashMap</a>, <a href="https://doc.rust-lang.org/nightly/alloc/fmt/index.html">fmt</a>};
 
-<span class="kw">use </span><a href="https://docs.rs/serde_derive/1.0.193/serde_derive/derive.Serialize.html">serde::Serialize</a>;
+<span class="kw">use </span><a href="https://docs.rs/serde_derive/1.0.196/serde_derive/derive.Serialize.html">serde::Serialize</a>;
 <span class="kw">use </span>zbus::zvariant::{<span class="self">self</span>, Type, Value};
 
 <span class="kw">use crate</span>::{<a href="time.rs.html#15">Time</a>, <a href="track_id.rs.html#32">TrackId</a>, <a href="lib.rs.html#1222">Uri</a>};
@@ -599,7 +600,7 @@
 
 <span class="kw">impl </span><a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html">Default</a> <span class="kw">for </span><a href="#36">Metadata</a> {
     <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-        <span class="self">Self</span>::new()
+        <a href="#52-54"><span class="self">Self</span>::new</a>()
     }
 }
 
@@ -611,7 +612,7 @@
 
     <span class="doccomment">/// Creates a new builder-pattern struct instance to construct [`Metadata`].
     </span><span class="kw">pub fn </span>builder() -&gt; <a href="#386-388">MetadataBuilder</a> {
-        <a href="#386-388">MetadataBuilder</a> { m: Metadata::new() }
+        <a href="#386-388">MetadataBuilder</a> { m: <a href="#52-54">Metadata::new</a>() }
     }
 
     <span class="doccomment">/// Returns the value corresponding to the key and convert it to `V`.
@@ -664,7 +665,7 @@
     /// D-Bus object at that path; this specification says nothing about
     /// what interfaces such an object may implement.
     </span><span class="kw">pub fn </span>trackid(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="track_id.rs.html#32">TrackId</a>&gt; {
-        <span class="self">self</span>.get_value(<span class="string">"mpris:trackid"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
+        <a class="self" href="#110">self</a>.<a href="#71-73">get_value</a>(<span class="string">"mpris:trackid"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
     }
 
     <span class="doccomment">/// Sets a unique identity for this track within the context of an
@@ -680,7 +681,7 @@
 
     <span class="doccomment">/// The duration of the track.
     </span><span class="kw">pub fn </span>length(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="time.rs.html#15">Time</a>&gt; {
-        <span class="self">self</span>.get_value(<span class="string">"mpris:length"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
+        <a class="self" href="#126">self</a>.<a href="#71-73">get_value</a>(<span class="string">"mpris:length"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
     }
 
     <span class="doccomment">/// Sets the duration of the track.
@@ -693,7 +694,7 @@
     /// Clients should not assume this will continue to exist when
     /// the media player stops giving out the URL.
     </span><span class="kw">pub fn </span>art_url(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="lib.rs.html#1222">Uri</a>&gt; {
-        <span class="self">self</span>.get_value(<span class="string">"mpris:artUrl"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
+        <a class="self" href="#139">self</a>.<a href="#71-73">get_value</a>(<span class="string">"mpris:artUrl"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
     }
 
     <span class="doccomment">/// Sets the location of an image representing the track or album.
@@ -706,7 +707,7 @@
 
     <span class="doccomment">/// The album name.
     </span><span class="kw">pub fn </span>album(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt; {
-        <span class="self">self</span>.get_value(<span class="string">"xesam:album"</span>)<span class="question-mark">?</span>.downcast_ref()
+        <a class="self" href="#152">self</a>.<a href="#71-73">get_value</a>(<span class="string">"xesam:album"</span>)<span class="question-mark">?</span>.downcast_ref()
     }
 
     <span class="doccomment">/// Sets the album name.
@@ -716,7 +717,7 @@
 
     <span class="doccomment">/// The album artist(s).
     </span><span class="kw">pub fn </span>album_artist(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt; {
-        <span class="self">self</span>.get_value(<span class="string">"xesam:albumArtist"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
+        <a class="self" href="#162">self</a>.<a href="#71-73">get_value</a>(<span class="string">"xesam:albumArtist"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
     }
 
     <span class="doccomment">/// Sets the album artist(s).
@@ -737,7 +738,7 @@
 
     <span class="doccomment">/// The track artist(s).
     </span><span class="kw">pub fn </span>artist(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt; {
-        <span class="self">self</span>.get_value(<span class="string">"xesam:artist"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
+        <a class="self" href="#183">self</a>.<a href="#71-73">get_value</a>(<span class="string">"xesam:artist"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
     }
 
     <span class="doccomment">/// Sets the track artist(s).
@@ -750,7 +751,7 @@
 
     <span class="doccomment">/// The track lyrics.
     </span><span class="kw">pub fn </span>lyrics(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt; {
-        <span class="self">self</span>.get_value(<span class="string">"xesam:asText"</span>)<span class="question-mark">?</span>.downcast_ref()
+        <a class="self" href="#196">self</a>.<a href="#71-73">get_value</a>(<span class="string">"xesam:asText"</span>)<span class="question-mark">?</span>.downcast_ref()
     }
 
     <span class="doccomment">/// Sets the track lyrics.
@@ -760,7 +761,7 @@
 
     <span class="doccomment">/// The speed of the music, in beats per minute.
     </span><span class="kw">pub fn </span>audio_bpm(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>&gt; {
-        <span class="self">self</span>.get_value(<span class="string">"xesam:audioBPM"</span>)<span class="question-mark">?</span>.downcast_ref().copied()
+        <a class="self" href="#206">self</a>.<a href="#71-73">get_value</a>(<span class="string">"xesam:audioBPM"</span>)<span class="question-mark">?</span>.downcast_ref().copied()
     }
 
     <span class="doccomment">/// Sets the speed of the music, in beats per minute.
@@ -772,7 +773,7 @@
     /// as how often it has been played. This should be in the
     /// range 0.0 to 1.0.
     </span><span class="kw">pub fn </span>auto_rating(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>&gt; {
-        <span class="self">self</span>.get_value(<span class="string">"xesam:autoRating"</span>)<span class="question-mark">?</span>.downcast_ref().copied()
+        <a class="self" href="#218">self</a>.<a href="#71-73">get_value</a>(<span class="string">"xesam:autoRating"</span>)<span class="question-mark">?</span>.downcast_ref().copied()
     }
 
     <span class="doccomment">/// Sets an automatically-generated rating, based on things such
@@ -784,7 +785,7 @@
 
     <span class="doccomment">/// A (list of) freeform comment(s).
     </span><span class="kw">pub fn </span>comment(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt; {
-        <span class="self">self</span>.get_value(<span class="string">"xesam:comment"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
+        <a class="self" href="#230">self</a>.<a href="#71-73">get_value</a>(<span class="string">"xesam:comment"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
     }
 
     <span class="doccomment">/// Sets a (list of) freeform comment(s).
@@ -797,7 +798,7 @@
 
     <span class="doccomment">/// The composer(s) of the track.
     </span><span class="kw">pub fn </span>composer(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt; {
-        <span class="self">self</span>.get_value(<span class="string">"xesam:composer"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
+        <a class="self" href="#243">self</a>.<a href="#71-73">get_value</a>(<span class="string">"xesam:composer"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
     }
 
     <span class="doccomment">/// Sets the composer(s) of the track.
@@ -811,7 +812,7 @@
     <span class="doccomment">/// When the track was created. Usually only the year component
     /// will be useful.
     </span><span class="kw">pub fn </span>content_created(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="#17">DateTime</a>&gt; {
-        <span class="self">self</span>.get_value(<span class="string">"xesam:contentCreated"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
+        <a class="self" href="#257">self</a>.<a href="#71-73">get_value</a>(<span class="string">"xesam:contentCreated"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
     }
 
     <span class="doccomment">/// Sets when the track was created. Usually only the year component
@@ -825,7 +826,7 @@
 
     <span class="doccomment">/// The disc number on the album that this track is from.
     </span><span class="kw">pub fn </span>disc_number(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>&gt; {
-        <span class="self">self</span>.get_value(<span class="string">"xesam:discNumber"</span>)<span class="question-mark">?</span>.downcast_ref().copied()
+        <a class="self" href="#271">self</a>.<a href="#71-73">get_value</a>(<span class="string">"xesam:discNumber"</span>)<span class="question-mark">?</span>.downcast_ref().copied()
     }
 
     <span class="doccomment">/// Sets the disc number on the album that this track is from.
@@ -835,7 +836,7 @@
 
     <span class="doccomment">/// When the track was first played.
     </span><span class="kw">pub fn </span>first_used(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="#17">DateTime</a>&gt; {
-        <span class="self">self</span>.get_value(<span class="string">"xesam:firstUsed"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
+        <a class="self" href="#281">self</a>.<a href="#71-73">get_value</a>(<span class="string">"xesam:firstUsed"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
     }
 
     <span class="doccomment">/// Sets when the track was first played.
@@ -848,7 +849,7 @@
 
     <span class="doccomment">/// The genre(s) of the track.
     </span><span class="kw">pub fn </span>genre(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt; {
-        <span class="self">self</span>.get_value(<span class="string">"xesam:genre"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
+        <a class="self" href="#294">self</a>.<a href="#71-73">get_value</a>(<span class="string">"xesam:genre"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
     }
 
     <span class="doccomment">/// Sets the genre(s) of the track.
@@ -861,7 +862,7 @@
 
     <span class="doccomment">/// When the track was last played.
     </span><span class="kw">pub fn </span>last_used(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="#17">DateTime</a>&gt; {
-        <span class="self">self</span>.get_value(<span class="string">"xesam:lastUsed"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
+        <a class="self" href="#307">self</a>.<a href="#71-73">get_value</a>(<span class="string">"xesam:lastUsed"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
     }
 
     <span class="doccomment">/// Sets when the track was last played.
@@ -874,7 +875,7 @@
 
     <span class="doccomment">/// The lyricist(s) of the track.
     </span><span class="kw">pub fn </span>lyricist(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt; {
-        <span class="self">self</span>.get_value(<span class="string">"xesam:lyricist"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
+        <a class="self" href="#320">self</a>.<a href="#71-73">get_value</a>(<span class="string">"xesam:lyricist"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
     }
 
     <span class="doccomment">/// Sets the lyricist(s) of the track.
@@ -887,7 +888,7 @@
 
     <span class="doccomment">/// The track title.
     </span><span class="kw">pub fn </span>title(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt; {
-        <span class="self">self</span>.get_value(<span class="string">"xesam:title"</span>)<span class="question-mark">?</span>.downcast_ref()
+        <a class="self" href="#333">self</a>.<a href="#71-73">get_value</a>(<span class="string">"xesam:title"</span>)<span class="question-mark">?</span>.downcast_ref()
     }
 
     <span class="doccomment">/// Sets the track title.
@@ -897,7 +898,7 @@
 
     <span class="doccomment">/// The track number on the album disc.
     </span><span class="kw">pub fn </span>track_number(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>&gt; {
-        <span class="self">self</span>.get_value(<span class="string">"xesam:trackNumber"</span>)<span class="question-mark">?</span>.downcast_ref().copied()
+        <a class="self" href="#343">self</a>.<a href="#71-73">get_value</a>(<span class="string">"xesam:trackNumber"</span>)<span class="question-mark">?</span>.downcast_ref().copied()
     }
 
     <span class="doccomment">/// Sets the track number on the album disc.
@@ -907,7 +908,7 @@
 
     <span class="doccomment">/// The location of the media file.
     </span><span class="kw">pub fn </span>url(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="lib.rs.html#1222">Uri</a>&gt; {
-        <span class="self">self</span>.get_value(<span class="string">"xesam:url"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
+        <a class="self" href="#353">self</a>.<a href="#71-73">get_value</a>(<span class="string">"xesam:url"</span>)<span class="question-mark">?</span>.<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html">clone</a>().downcast()
     }
 
     <span class="doccomment">/// Sets the location of the media file.
@@ -917,7 +918,7 @@
 
     <span class="doccomment">/// The number of times the track has been played.
     </span><span class="kw">pub fn </span>use_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>&gt; {
-        <span class="self">self</span>.get_value(<span class="string">"xesam:useCount"</span>)<span class="question-mark">?</span>.downcast_ref().copied()
+        <a class="self" href="#363">self</a>.<a href="#71-73">get_value</a>(<span class="string">"xesam:useCount"</span>)<span class="question-mark">?</span>.downcast_ref().copied()
     }
 
     <span class="doccomment">/// Sets the number of times the track has been played.
@@ -927,7 +928,7 @@
 
     <span class="doccomment">/// A user-specified rating. This should be in the range 0.0 to 1.0.
     </span><span class="kw">pub fn </span>user_rating(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>&gt; {
-        <span class="self">self</span>.get_value(<span class="string">"xesam:userRating"</span>)<span class="question-mark">?</span>.downcast_ref().copied()
+        <a class="self" href="#373">self</a>.<a href="#71-73">get_value</a>(<span class="string">"xesam:userRating"</span>)<span class="question-mark">?</span>.downcast_ref().copied()
     }
 
     <span class="doccomment">/// Sets a user-specified rating. This should be in the range 0.0 to 1.0.
