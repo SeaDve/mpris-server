@@ -17,14 +17,19 @@ use zbus::zvariant::{Type, Value};
 #[doc(alias = "Playlist_Ordering")]
 pub enum PlaylistOrdering {
     /// Alphabetical ordering by name, ascending.
+    #[serde(rename = "Alphabetical")]
     Alphabetical,
     /// Ordering by creation date, oldest first.
+    #[serde(rename = "Created")]
     CreationDate,
     /// Ordering by last modified date, oldest first.
+    #[serde(rename = "Modified")]
     ModifiedDate,
     /// Ordering by date of last playback, oldest first.
+    #[serde(rename = "Played")]
     LastPlayDate,
     /// A user-defined ordering.
+    #[serde(rename = "User")]
     UserDefined,
 }
 
