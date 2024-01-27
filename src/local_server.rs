@@ -9,7 +9,6 @@ use std::{
 };
 
 use async_channel::{Receiver, Sender};
-use async_trait::async_trait;
 use futures_channel::oneshot;
 use zbus::{fdo, Connection, Result};
 
@@ -137,7 +136,6 @@ impl<T> InnerImp<T> {
     }
 }
 
-#[async_trait]
 impl<T> RootInterface for InnerImp<T> {
     async fn raise(&self) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
@@ -213,7 +211,6 @@ impl<T> RootInterface for InnerImp<T> {
     }
 }
 
-#[async_trait]
 impl<T> PlayerInterface for InnerImp<T> {
     async fn next(&self) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
@@ -387,7 +384,6 @@ impl<T> PlayerInterface for InnerImp<T> {
     }
 }
 
-#[async_trait]
 impl<T> TrackListInterface for InnerImp<T>
 where
     T: LocalTrackListInterface,
@@ -444,7 +440,6 @@ where
     }
 }
 
-#[async_trait]
 impl<T> PlaylistsInterface for InnerImp<T>
 where
     T: LocalPlaylistsInterface,

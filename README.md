@@ -38,14 +38,12 @@ If you want to have more control, it is recommended to manually create your own 
 use std::future;
 
 use mpris_server::{
-    async_trait,
     zbus::{fdo, Result},
     Metadata, PlayerInterface, Property, RootInterface, Server, Signal, Time, Volume,
 };
 
 pub struct MyPlayer;
 
-#[async_trait]
 impl RootInterface for MyPlayer {
     async fn identity(&self) -> fdo::Result<String> {
         Ok("MyPlayer".into())
@@ -54,7 +52,6 @@ impl RootInterface for MyPlayer {
     // Other methods...
 }
 
-#[async_trait]
 impl PlayerInterface for MyPlayer {
     async fn set_volume(&self, volume: Volume) -> Result<()> {
         self.volume.set(volume);

@@ -3,7 +3,6 @@ use std::{
     rc::{Rc, Weak},
 };
 
-use async_trait::async_trait;
 use zbus::{fdo, Result};
 
 use crate::{
@@ -87,7 +86,6 @@ impl State {
     }
 }
 
-#[async_trait(?Send)]
 impl LocalRootInterface for State {
     async fn raise(&self) -> fdo::Result<()> {
         let player = self.player();
@@ -150,7 +148,6 @@ impl LocalRootInterface for State {
     }
 }
 
-#[async_trait(?Send)]
 impl LocalPlayerInterface for State {
     async fn next(&self) -> fdo::Result<()> {
         let player = self.player();

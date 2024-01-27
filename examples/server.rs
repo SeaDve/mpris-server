@@ -1,7 +1,6 @@
 use std::future;
 
 use mpris_server::{
-    async_trait,
     zbus::{fdo, Result},
     LoopStatus, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, Playlist, PlaylistId,
     PlaylistOrdering, PlaylistsInterface, Property, RootInterface, Server, Signal, Time, TrackId,
@@ -10,7 +9,6 @@ use mpris_server::{
 
 pub struct Player;
 
-#[async_trait]
 impl RootInterface for Player {
     async fn raise(&self) -> fdo::Result<()> {
         println!("Raise");
@@ -73,7 +71,6 @@ impl RootInterface for Player {
     }
 }
 
-#[async_trait]
 impl PlayerInterface for Player {
     async fn next(&self) -> fdo::Result<()> {
         println!("Next");
@@ -216,7 +213,6 @@ impl PlayerInterface for Player {
     }
 }
 
-#[async_trait]
 impl TrackListInterface for Player {
     async fn get_tracks_metadata(&self, track_ids: Vec<TrackId>) -> fdo::Result<Vec<Metadata>> {
         println!("GetTracksMetadata({:?})", track_ids);
@@ -254,7 +250,6 @@ impl TrackListInterface for Player {
     }
 }
 
-#[async_trait]
 impl PlaylistsInterface for Player {
     async fn activate_playlist(&self, playlist_id: PlaylistId) -> fdo::Result<()> {
         println!("ActivatePlaylist({})", playlist_id);
