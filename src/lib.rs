@@ -33,40 +33,6 @@ pub mod builder {
     pub use crate::{metadata::MetadataBuilder, player::PlayerBuilder};
 }
 
-/// Retrofits support for `async fn` in trait impls and declarations.
-///
-/// Any trait declaration or trait `impl` decorated with `#[async_trait]` or
-/// `#[async_trait(?Send)]` is retrofitted with support for `async fn`s:
-///
-/// # Examples
-///
-/// ```ignore
-/// use mpris_server::{async_trait, LocalRootInterface, RootInterface};
-/// use zbus::fdo;
-///
-/// struct MyPlayer;
-///
-/// #[async_trait]
-/// impl RootInterface for MyPlayer {
-///     async fn identity(&self) -> fdo::Result<String> {
-///         Ok("MyPlayer".into())
-///     }
-///
-///     // Other methods...
-/// }
-///
-/// struct MyLocalPlayer;
-///
-/// #[async_trait(?Send)]
-/// impl LocalRootInterface for MyLocalPlayer {
-///     async fn identity(&self) -> fdo::Result<String> {
-///         Ok("MyLocalPlayer".into())
-///     }
-///
-///     // Other methods...
-/// }
-/// ```
-pub use async_trait::async_trait;
 pub use zbus;
 use zbus::{fdo, zvariant::OwnedObjectPath, Result};
 
@@ -1167,7 +1133,7 @@ macro_rules! define_iface {
 }
 
 define_iface!(
-    #[async_trait],
+    #[trait_variant::make(Send + Sync)],
     RootInterface: Send + Sync extra_docs "",
     PlayerInterface extra_docs "",
     TrackListInterface extra_docs "",
@@ -1175,7 +1141,7 @@ define_iface!(
 );
 
 define_iface!(
-    #[async_trait(?Send)],
+    #[trait_variant::make],
     LocalRootInterface extra_docs "Local version of [`RootInterface`] to be used with [`LocalServer`].",
     LocalPlayerInterface extra_docs "Local version of [`PlayerInterface`] to be used with [`LocalServer`].",
     LocalTrackListInterface extra_docs "Local version of [`TrackListInterface`] to be used with [`LocalServer`].",
