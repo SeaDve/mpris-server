@@ -32,7 +32,7 @@ There is also a real-world example of this library being used in [Mousai](https:
 
 ### Manual Implementation (via `Server` or `LocalServer`)
 
-It is recommended to manually create your own implementation of the interfaces if you want to have more control. You can do this by creating your own struct and implementing the required interfaces, then passing your struct as implementation in `Server`. You can also use `LocalServer` and the local version of the interfaces if your struct can't be sent and shared across threads.
+If you want to have more control, it is recommended to manually create your own implementation of the interfaces. You can do this by creating your own struct and implementing the required interfaces, then passing your struct as implementation in `Server`. You can also use `LocalServer` and the local version of the interfaces if your struct can't be sent and shared across threads.
 
 ```rust,ignore
 use std::future;
