@@ -120,10 +120,7 @@ impl Metadata {
     /// D-Bus object at that path; this specification says nothing about
     /// what interfaces such an object may implement.
     pub fn trackid(&self) -> Option<TrackId> {
-        self.get_value("mpris:trackid")?
-            .try_clone()
-            .ok()
-            .and_then(|v| v.downcast().ok())
+        self.get_value("mpris:trackid")?.downcast_ref().ok()
     }
 
     /// Sets a unique identity for this track within the context of an
