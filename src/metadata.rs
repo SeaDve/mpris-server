@@ -155,10 +155,7 @@ impl Metadata {
     /// Clients should not assume this will continue to exist when
     /// the media player stops giving out the URL.
     pub fn art_url(&self) -> Option<Uri> {
-        self.get_value("mpris:artUrl")?
-            .try_clone()
-            .ok()
-            .and_then(|v| v.downcast().ok())
+        self.get_value("mpris:artUrl")?.downcast_ref().ok()
     }
 
     /// Sets the location of an image representing the track or album.
@@ -288,10 +285,7 @@ impl Metadata {
     /// When the track was created. Usually only the year component
     /// will be useful.
     pub fn content_created(&self) -> Option<DateTime> {
-        self.get_value("xesam:contentCreated")?
-            .try_clone()
-            .ok()
-            .and_then(|v| v.downcast().ok())
+        self.get_value("xesam:contentCreated")?.downcast_ref().ok()
     }
 
     /// Sets when the track was created. Usually only the year component
@@ -315,10 +309,7 @@ impl Metadata {
 
     /// When the track was first played.
     pub fn first_used(&self) -> Option<DateTime> {
-        self.get_value("xesam:firstUsed")?
-            .try_clone()
-            .ok()
-            .and_then(|v| v.downcast().ok())
+        self.get_value("xesam:firstUsed")?.downcast_ref().ok()
     }
 
     /// Sets when the track was first played.
@@ -347,10 +338,7 @@ impl Metadata {
 
     /// When the track was last played.
     pub fn last_used(&self) -> Option<DateTime> {
-        self.get_value("xesam:lastUsed")?
-            .try_clone()
-            .ok()
-            .and_then(|v| v.downcast().ok())
+        self.get_value("xesam:lastUsed")?.downcast_ref().ok()
     }
 
     /// Sets when the track was last played.
@@ -399,10 +387,7 @@ impl Metadata {
 
     /// The location of the media file.
     pub fn url(&self) -> Option<Uri> {
-        self.get_value("xesam:url")?
-            .try_clone()
-            .ok()
-            .and_then(|v| v.downcast().ok())
+        self.get_value("xesam:url")?.downcast_ref().ok()
     }
 
     /// Sets the location of the media file.
