@@ -928,7 +928,7 @@
         <span class="self">self</span>.imp.set_volume(volume).<span class="kw">await
     </span>}
 
-    <span class="attr">#[zbus(property)]
+    <span class="attr">#[zbus(property(emits_changed_signal = <span class="string">"false"</span>))]
     </span><span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Time&gt; {
         <span class="self">self</span>.imp.position().<span class="kw">await
     </span>}
@@ -968,7 +968,7 @@
         <span class="self">self</span>.imp.can_seek().<span class="kw">await
     </span>}
 
-    <span class="attr">#[zbus(property)]
+    <span class="attr">#[zbus(property(emits_changed_signal = <span class="string">"const"</span>))]
     </span><span class="kw">async fn </span>can_control(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
         <span class="self">self</span>.imp.can_control().<span class="kw">await
     </span>}
@@ -1028,7 +1028,7 @@
         metadata: <a href="metadata.rs.html#36">Metadata</a>,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
 
-    <span class="attr">#[zbus(property)]
+    <span class="attr">#[zbus(property(emits_changed_signal = <span class="string">"invalidates"</span>))]
     </span><span class="kw">async fn </span>tracks(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;TrackId&gt;&gt; {
         <span class="self">self</span>.imp.tracks().<span class="kw">await
     </span>}
