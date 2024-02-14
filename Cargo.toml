@@ -17,7 +17,7 @@ async-trait = "0.1"
 futures-channel = "0.3"
 futures-util = { version = "0.3", default-features = false, features = ["std"] }
 serde = "1.0"
-zbus = "3.14"
+zbus = "4.0"
 
 [dev-dependencies]
 async-std = { version = "1.12", features = ["attributes", "unstable"] }

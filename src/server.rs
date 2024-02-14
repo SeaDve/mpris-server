@@ -2,7 +2,7 @@ use std::{collections::HashMap, fmt, sync::Arc};
 
 use serde::Serialize;
 use zbus::{
-    dbus_interface, fdo,
+    fdo,
     names::BusName,
     zvariant::{DynamicType, ObjectPath, Value},
     Connection, ConnectionBuilder, Interface, Result, SignalContext,
@@ -22,7 +22,7 @@ struct RawRootInterface<T> {
     imp: Arc<T>,
 }
 
-#[dbus_interface(name = "org.mpris.MediaPlayer2")]
+#[zbus::interface(name = "org.mpris.MediaPlayer2")]
 impl<T> RawRootInterface<T>
 where
     T: RootInterface + 'static,
@@ -35,52 +35,52 @@ where
         self.imp.quit().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn can_quit(&self) -> fdo::Result<bool> {
         self.imp.can_quit().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn fullscreen(&self) -> fdo::Result<bool> {
         self.imp.fullscreen().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn set_fullscreen(&self, fullscreen: bool) -> Result<()> {
         self.imp.set_fullscreen(fullscreen).await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn can_set_fullscreen(&self) -> fdo::Result<bool> {
         self.imp.can_set_fullscreen().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn can_raise(&self) -> fdo::Result<bool> {
         self.imp.can_raise().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn has_track_list(&self) -> fdo::Result<bool> {
         self.imp.has_track_list().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn identity(&self) -> fdo::Result<String> {
         self.imp.identity().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn desktop_entry(&self) -> fdo::Result<String> {
         self.imp.desktop_entry().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn supported_uri_schemes(&self) -> fdo::Result<Vec<String>> {
         self.imp.supported_uri_schemes().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn supported_mime_types(&self) -> fdo::Result<Vec<String>> {
         self.imp.supported_mime_types().await
     }
@@ -90,7 +90,7 @@ struct RawPlayerInterface<T> {
     imp: Arc<T>,
 }
 
-#[dbus_interface(name = "org.mpris.MediaPlayer2.Player")]
+#[zbus::interface(name = "org.mpris.MediaPlayer2.Player")]
 impl<T> RawPlayerInterface<T>
 where
     T: PlayerInterface + 'static,
@@ -131,100 +131,100 @@ where
         self.imp.open_uri(uri).await
     }
 
-    #[dbus_interface(signal)]
+    #[zbus(signal)]
     async fn seeked(ctxt: &SignalContext<'_>, position: Time) -> Result<()>;
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn playback_status(&self) -> fdo::Result<PlaybackStatus> {
         self.imp.playback_status().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn loop_status(&self) -> fdo::Result<LoopStatus> {
         self.imp.loop_status().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn set_loop_status(&self, loop_status: LoopStatus) -> Result<()> {
         self.imp.set_loop_status(loop_status).await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn rate(&self) -> fdo::Result<PlaybackRate> {
         self.imp.rate().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn set_rate(&self, rate: PlaybackRate) -> Result<()> {
         self.imp.set_rate(rate).await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn shuffle(&self) -> fdo::Result<bool> {
         self.imp.shuffle().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn set_shuffle(&self, shuffle: bool) -> Result<()> {
         self.imp.set_shuffle(shuffle).await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn metadata(&self) -> fdo::Result<Metadata> {
         self.imp.metadata().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn volume(&self) -> fdo::Result<Volume> {
         self.imp.volume().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn set_volume(&self, volume: Volume) -> Result<()> {
         self.imp.set_volume(volume).await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn position(&self) -> fdo::Result<Time> {
         self.imp.position().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn minimum_rate(&self) -> fdo::Result<PlaybackRate> {
         self.imp.minimum_rate().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn maximum_rate(&self) -> fdo::Result<PlaybackRate> {
         self.imp.maximum_rate().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn can_go_next(&self) -> fdo::Result<bool> {
         self.imp.can_go_next().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn can_go_previous(&self) -> fdo::Result<bool> {
         self.imp.can_go_previous().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn can_play(&self) -> fdo::Result<bool> {
         self.imp.can_play().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn can_pause(&self) -> fdo::Result<bool> {
         self.imp.can_pause().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn can_seek(&self) -> fdo::Result<bool> {
         self.imp.can_seek().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn can_control(&self) -> fdo::Result<bool> {
         self.imp.can_control().await
     }
@@ -234,7 +234,7 @@ struct RawTrackListInterface<T> {
     imp: Arc<T>,
 }
 
-#[dbus_interface(name = "org.mpris.MediaPlayer2.TrackList")]
+#[zbus::interface(name = "org.mpris.MediaPlayer2.TrackList")]
 impl<T> RawTrackListInterface<T>
 where
     T: TrackListInterface + 'static,
@@ -260,36 +260,36 @@ where
         self.imp.go_to(track_id).await
     }
 
-    #[dbus_interface(signal)]
+    #[zbus(signal)]
     async fn track_list_replaced(
         ctxt: &SignalContext<'_>,
         tracks: Vec<TrackId>,
         current_track: TrackId,
     ) -> Result<()>;
 
-    #[dbus_interface(signal)]
+    #[zbus(signal)]
     async fn track_added(
         ctxt: &SignalContext<'_>,
         metadata: Metadata,
         after_track: TrackId,
     ) -> Result<()>;
 
-    #[dbus_interface(signal)]
+    #[zbus(signal)]
     async fn track_removed(ctxt: &SignalContext<'_>, track_id: TrackId) -> Result<()>;
 
-    #[dbus_interface(signal)]
+    #[zbus(signal)]
     async fn track_metadata_changed(
         ctxt: &SignalContext<'_>,
         track_id: TrackId,
         metadata: Metadata,
     ) -> Result<()>;
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn tracks(&self) -> fdo::Result<Vec<TrackId>> {
         self.imp.tracks().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn can_edit_tracks(&self) -> fdo::Result<bool> {
         self.imp.can_edit_tracks().await
     }
@@ -299,7 +299,7 @@ struct RawPlaylistsInterface<T> {
     imp: Arc<T>,
 }
 
-#[dbus_interface(name = "org.mpris.MediaPlayer2.Playlists")]
+#[zbus::interface(name = "org.mpris.MediaPlayer2.Playlists")]
 impl<T> RawPlaylistsInterface<T>
 where
     T: PlaylistsInterface + 'static,
@@ -320,20 +320,20 @@ where
             .await
     }
 
-    #[dbus_interface(signal)]
+    #[zbus(signal)]
     async fn playlist_changed(ctxt: &SignalContext<'_>, playlist: Playlist) -> Result<()>;
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn playlist_count(&self) -> fdo::Result<u32> {
         self.imp.playlist_count().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn orderings(&self) -> fdo::Result<Vec<PlaylistOrdering>> {
         self.imp.orderings().await
     }
 
-    #[dbus_interface(property)]
+    #[zbus(property)]
     async fn active_playlist(&self) -> fdo::Result<MaybePlaylist> {
         self.imp.active_playlist().await.map(MaybePlaylist::from)
     }

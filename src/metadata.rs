@@ -1,7 +1,7 @@
 use std::{collections::HashMap, fmt};
 
 use serde::Serialize;
-use zbus::zvariant::{self, Type, Value};
+use zbus::zvariant::{Error, Result, Type, Value};
 
 use crate::{Time, TrackId, Uri};
 
@@ -29,11 +29,23 @@ pub type DateTime = String;
 /// [`mpris:trackid`]: Metadata::set_trackid
 /// [`mpris:length`]: Metadata::set_length
 /// [`mpris:artUrl`]: Metadata::set_art_url
-#[derive(Clone, PartialEq, Serialize, Type)]
+#[derive(PartialEq, Serialize, Type)]
 #[serde(transparent)]
 #[zvariant(signature = "a{sv}")]
 #[doc(alias = "Metadata_Map")]
 pub struct Metadata(HashMap<String, Value<'static>>);
+
+impl Clone for Metadata {
+    fn clone(&self) -> Self {
+        // TODO Make this more efficient
+        Self(
+            self.0
+                .iter()
+                .map(|(k, v)| (k.clone(), v.try_clone().expect("metadata contained an fd")))
+                .collect::<HashMap<_, _>>(),
+        )
+    }
+}
 
 impl fmt::Debug for Metadata {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -59,12 +71,12 @@ impl Metadata {
     }
 
     /// Returns the value corresponding to the key and convert it to `V`.
-    pub fn get<'v, V>(&'v self, key: &str) -> Option<zvariant::Result<&'v V>>
+    pub fn get<'v, V>(&'v self, key: &str) -> Option<Result<&'v V>>
     where
         &'v V: TryFrom<&'v Value<'v>>,
+        <&'v V as TryFrom<&'v Value<'v>>>::Error: Into<Error>,
     {
-        self.get_value(key)
-            .map(|v| v.downcast_ref().ok_or(zvariant::Error::IncorrectType))
+        self.get_value(key).map(|v| v.downcast_ref())
     }
 
     /// Returns a reference to the value corresponding to the key.
@@ -108,7 +120,10 @@ impl Metadata {
     /// D-Bus object at that path; this specification says nothing about
     /// what interfaces such an object may implement.
     pub fn trackid(&self) -> Option<TrackId> {
-        self.get_value("mpris:trackid")?.clone().downcast()
+        self.get_value("mpris:trackid")?
+            .try_clone()
+            .ok()
+            .and_then(|v| v.downcast().ok())
     }
 
     /// Sets a unique identity for this track within the context of an
@@ -124,7 +139,10 @@ impl Metadata {
 
     /// The duration of the track.
     pub fn length(&self) -> Option<Time> {
-        self.get_value("mpris:length")?.clone().downcast()
+        self.get_value("mpris:length")?
+            .try_clone()
+            .ok()
+            .and_then(|v| v.downcast().ok())
     }
 
     /// Sets the duration of the track.
@@ -137,7 +155,10 @@ impl Metadata {
     /// Clients should not assume this will continue to exist when
     /// the media player stops giving out the URL.
     pub fn art_url(&self) -> Option<Uri> {
-        self.get_value("mpris:artUrl")?.clone().downcast()
+        self.get_value("mpris:artUrl")?
+            .try_clone()
+            .ok()
+            .and_then(|v| v.downcast().ok())
     }
 
     /// Sets the location of an image representing the track or album.
@@ -150,7 +171,7 @@ impl Metadata {
 
     /// The album name.
     pub fn album(&self) -> Option<&str> {
-        self.get_value("xesam:album")?.downcast_ref()
+        self.get_value("xesam:album")?.downcast_ref().ok()
     }
 
     /// Sets the album name.
@@ -160,7 +181,10 @@ impl Metadata {
 
     /// The album artist(s).
     pub fn album_artist(&self) -> Option<Vec<String>> {
-        self.get_value("xesam:albumArtist")?.clone().downcast()
+        self.get_value("xesam:albumArtist")?
+            .try_clone()
+            .ok()
+            .and_then(|v| v.downcast().ok())
     }
 
     /// Sets the album artist(s).
@@ -181,7 +205,10 @@ impl Metadata {
 
     /// The track artist(s).
     pub fn artist(&self) -> Option<Vec<String>> {
-        self.get_value("xesam:artist")?.clone().downcast()
+        self.get_value("xesam:artist")?
+            .try_clone()
+            .ok()
+            .and_then(|v| v.downcast().ok())
     }
 
     /// Sets the track artist(s).
@@ -194,7 +221,7 @@ impl Metadata {
 
     /// The track lyrics.
     pub fn lyrics(&self) -> Option<&str> {
-        self.get_value("xesam:asText")?.downcast_ref()
+        self.get_value("xesam:asText")?.downcast_ref().ok()
     }
 
     /// Sets the track lyrics.
@@ -204,7 +231,7 @@ impl Metadata {
 
     /// The speed of the music, in beats per minute.
     pub fn audio_bpm(&self) -> Option<i32> {
-        self.get_value("xesam:audioBPM")?.downcast_ref().copied()
+        self.get_value("xesam:audioBPM")?.downcast_ref().ok()
     }
 
     /// Sets the speed of the music, in beats per minute.
@@ -216,7 +243,7 @@ impl Metadata {
     /// as how often it has been played. This should be in the
     /// range 0.0 to 1.0.
     pub fn auto_rating(&self) -> Option<f64> {
-        self.get_value("xesam:autoRating")?.downcast_ref().copied()
+        self.get_value("xesam:autoRating")?.downcast_ref().ok()
     }
 
     /// Sets an automatically-generated rating, based on things such
@@ -228,7 +255,10 @@ impl Metadata {
 
     /// A (list of) freeform comment(s).
     pub fn comment(&self) -> Option<Vec<String>> {
-        self.get_value("xesam:comment")?.clone().downcast()
+        self.get_value("xesam:comment")?
+            .try_clone()
+            .ok()
+            .and_then(|v| v.downcast().ok())
     }
 
     /// Sets a (list of) freeform comment(s).
@@ -241,7 +271,10 @@ impl Metadata {
 
     /// The composer(s) of the track.
     pub fn composer(&self) -> Option<Vec<String>> {
-        self.get_value("xesam:composer")?.clone().downcast()
+        self.get_value("xesam:composer")?
+            .try_clone()
+            .ok()
+            .and_then(|v| v.downcast().ok())
     }
 
     /// Sets the composer(s) of the track.
@@ -255,7 +288,10 @@ impl Metadata {
     /// When the track was created. Usually only the year component
     /// will be useful.
     pub fn content_created(&self) -> Option<DateTime> {
-        self.get_value("xesam:contentCreated")?.clone().downcast()
+        self.get_value("xesam:contentCreated")?
+            .try_clone()
+            .ok()
+            .and_then(|v| v.downcast().ok())
     }
 
     /// Sets when the track was created. Usually only the year component
@@ -269,7 +305,7 @@ impl Metadata {
 
     /// The disc number on the album that this track is from.
     pub fn disc_number(&self) -> Option<i32> {
-        self.get_value("xesam:discNumber")?.downcast_ref().copied()
+        self.get_value("xesam:discNumber")?.downcast_ref().ok()
     }
 
     /// Sets the disc number on the album that this track is from.
@@ -279,7 +315,10 @@ impl Metadata {
 
     /// When the track was first played.
     pub fn first_used(&self) -> Option<DateTime> {
-        self.get_value("xesam:firstUsed")?.clone().downcast()
+        self.get_value("xesam:firstUsed")?
+            .try_clone()
+            .ok()
+            .and_then(|v| v.downcast().ok())
     }
 
     /// Sets when the track was first played.
@@ -292,7 +331,10 @@ impl Metadata {
 
     /// The genre(s) of the track.
     pub fn genre(&self) -> Option<Vec<String>> {
-        self.get_value("xesam:genre")?.clone().downcast()
+        self.get_value("xesam:genre")?
+            .try_clone()
+            .ok()
+            .and_then(|v| v.downcast().ok())
     }
 
     /// Sets the genre(s) of the track.
@@ -305,7 +347,10 @@ impl Metadata {
 
     /// When the track was last played.
     pub fn last_used(&self) -> Option<DateTime> {
-        self.get_value("xesam:lastUsed")?.clone().downcast()
+        self.get_value("xesam:lastUsed")?
+            .try_clone()
+            .ok()
+            .and_then(|v| v.downcast().ok())
     }
 
     /// Sets when the track was last played.
@@ -318,7 +363,10 @@ impl Metadata {
 
     /// The lyricist(s) of the track.
     pub fn lyricist(&self) -> Option<Vec<String>> {
-        self.get_value("xesam:lyricist")?.clone().downcast()
+        self.get_value("xesam:lyricist")?
+            .try_clone()
+            .ok()
+            .and_then(|v| v.downcast().ok())
     }
 
     /// Sets the lyricist(s) of the track.
@@ -331,7 +379,7 @@ impl Metadata {
 
     /// The track title.
     pub fn title(&self) -> Option<&str> {
-        self.get_value("xesam:title")?.downcast_ref()
+        self.get_value("xesam:title")?.downcast_ref().ok()
     }
 
     /// Sets the track title.
@@ -341,7 +389,7 @@ impl Metadata {
 
     /// The track number on the album disc.
     pub fn track_number(&self) -> Option<i32> {
-        self.get_value("xesam:trackNumber")?.downcast_ref().copied()
+        self.get_value("xesam:trackNumber")?.downcast_ref().ok()
     }
 
     /// Sets the track number on the album disc.
@@ -351,7 +399,10 @@ impl Metadata {
 
     /// The location of the media file.
     pub fn url(&self) -> Option<Uri> {
-        self.get_value("xesam:url")?.clone().downcast()
+        self.get_value("xesam:url")?
+            .try_clone()
+            .ok()
+            .and_then(|v| v.downcast().ok())
     }
 
     /// Sets the location of the media file.
@@ -361,7 +412,7 @@ impl Metadata {
 
     /// The number of times the track has been played.
     pub fn use_count(&self) -> Option<i32> {
-        self.get_value("xesam:useCount")?.downcast_ref().copied()
+        self.get_value("xesam:useCount")?.downcast_ref().ok()
     }
 
     /// Sets the number of times the track has been played.
@@ -371,7 +422,7 @@ impl Metadata {
 
     /// A user-specified rating. This should be in the range 0.0 to 1.0.
     pub fn user_rating(&self) -> Option<f64> {
-        self.get_value("xesam:userRating")?.downcast_ref().copied()
+        self.get_value("xesam:userRating")?.downcast_ref().ok()
     }
 
     /// Sets a user-specified rating. This should be in the range 0.0 to 1.0.
@@ -551,5 +602,77 @@ impl MetadataBuilder {
 impl<'a> From<Metadata> for Value<'a> {
     fn from(metainfo: Metadata) -> Self {
         Value::new(metainfo.0)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use zbus::zvariant::Str;
+
+    use super::*;
+
+    #[test]
+    fn clone() {
+        let original = Metadata::builder().trackid(TrackId::NO_TRACK).build();
+        assert_eq!(original, original.clone());
+    }
+
+    #[test]
+    fn builder_and_getter() {
+        let m = Metadata::builder()
+            .other("other", "value")
+            .trackid(TrackId::try_from("/io/github/seadve/Player/Track123").unwrap())
+            .length(Time::from_millis(2))
+            .art_url("file:///tmp/cover.jpg")
+            .album("The Album")
+            .album_artist(vec!["The Album Artist".to_string()])
+            .artist(vec!["The Artist".to_string()])
+            .lyrics("The lyrics")
+            .audio_bpm(120)
+            .auto_rating(0.5)
+            .comment(vec!["The comment".to_string()])
+            .composer(vec!["The Composer".to_string()])
+            .content_created("2021-01-01T00:00:00".to_string())
+            .disc_number(3)
+            .first_used("2021-01-01T00:00:00".to_string())
+            .genre(vec!["The Genre".to_string()])
+            .last_used("2021-01-01T00:00:00".to_string())
+            .lyricist(vec!["The Lyricist".to_string()])
+            .title("The Title")
+            .track_number(2)
+            .url("file:///tmp/track.mp3")
+            .use_count(1)
+            .user_rating(0.5)
+            .build();
+
+        assert_eq!(
+            m.get::<Str<'_>>("other"),
+            Some(Ok(&Str::from_static("value")))
+        );
+        assert_eq!(
+            m.trackid(),
+            Some(TrackId::try_from("/io/github/seadve/Player/Track123").unwrap())
+        );
+        assert_eq!(m.length(), Some(Time::from_millis(2)));
+        assert_eq!(m.art_url(), Some("file:///tmp/cover.jpg".into()));
+        assert_eq!(m.album(), Some("The Album"));
+        assert_eq!(m.album_artist(), Some(vec!["The Album Artist".to_string()]));
+        assert_eq!(m.artist(), Some(vec!["The Artist".to_string()]));
+        assert_eq!(m.lyrics(), Some("The lyrics"));
+        assert_eq!(m.audio_bpm(), Some(120));
+        assert_eq!(m.auto_rating(), Some(0.5));
+        assert_eq!(m.comment(), Some(vec!["The comment".to_string()]));
+        assert_eq!(m.composer(), Some(vec!["The Composer".to_string()]));
+        assert_eq!(m.content_created(), Some("2021-01-01T00:00:00".to_string()));
+        assert_eq!(m.disc_number(), Some(3));
+        assert_eq!(m.first_used(), Some("2021-01-01T00:00:00".to_string()));
+        assert_eq!(m.genre(), Some(vec!["The Genre".to_string()]));
+        assert_eq!(m.last_used(), Some("2021-01-01T00:00:00".to_string()));
+        assert_eq!(m.lyricist(), Some(vec!["The Lyricist".to_string()]));
+        assert_eq!(m.title(), Some("The Title"));
+        assert_eq!(m.track_number(), Some(2));
+        assert_eq!(m.url(), Some("file:///tmp/track.mp3".into()));
+        assert_eq!(m.use_count(), Some(1));
+        assert_eq!(m.user_rating(), Some(0.5));
     }
 }

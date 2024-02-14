@@ -1,7 +1,7 @@
 use std::{fmt, ops};
 
 use serde::{de, Deserialize, Deserializer, Serialize};
-use zbus::zvariant::{Error, ObjectPath, Result, Type, Value};
+use zbus::zvariant::{serialized::Format, Basic, Error, ObjectPath, Result, Type, Value};
 
 /// Unique track identifier.
 ///
@@ -43,6 +43,15 @@ impl TrackId {
     }
 }
 
+impl Basic for TrackId {
+    const SIGNATURE_CHAR: char = ObjectPath::SIGNATURE_CHAR;
+    const SIGNATURE_STR: &'static str = ObjectPath::SIGNATURE_STR;
+
+    fn alignment(format: Format) -> usize {
+        ObjectPath::alignment(format)
+    }
+}
+
 impl ops::Deref for TrackId {
     type Target = ObjectPath<'static>;
 
@@ -57,7 +66,7 @@ impl From<TrackId> for ObjectPath<'static> {
     }
 }
 
-impl From<TrackId> for Value<'static> {
+impl From<TrackId> for Value<'_> {
     fn from(o: TrackId) -> Self {
         o.into_inner().into()
     }
