@@ -742,6 +742,7 @@
 <a href="#740" id="740">740</a>
 <a href="#741" id="741">741</a>
 <a href="#742" id="742">742</a>
+<a href="#743" id="743">743</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{<a href="https://doc.rust-lang.org/nightly/std/collections/hash/map/struct.HashMap.html">collections::HashMap</a>, <a href="https://doc.rust-lang.org/nightly/alloc/fmt/index.html">fmt</a>, <a href="https://doc.rust-lang.org/nightly/alloc/sync/struct.Arc.html">sync::Arc</a>};
 
 <span class="kw">use </span><a href="https://docs.rs/serde_derive/1.0.196/serde_derive/derive.Serialize.html">serde::Serialize</a>;
@@ -753,10 +754,10 @@
 };
 
 <span class="kw">use crate</span>::{
-    <a href="playlist.rs.html#35-45">playlist::MaybePlaylist</a>, <a href="loop_status.rs.html#9-17">LoopStatus</a>, <a href="metadata.rs.html#36">Metadata</a>, <a href="lib.rs.html#1192">PlaybackRate</a>, <a href="playback_status.rs.html#9-16">PlaybackStatus</a>, <a href="lib.rs.html#1170-1176">PlayerInterface</a>,
-    <a href="playlist.rs.html#8-17">Playlist</a>, <a href="lib.rs.html#1216">PlaylistId</a>, <a href="playlist_ordering.rs.html#18-34">PlaylistOrdering</a>, <a href="lib.rs.html#1170-1176">PlaylistsInterface</a>, <a href="property.rs.html#64-68">PlaylistsProperty</a>, <a href="signal.rs.html#123-140">PlaylistsSignal</a>,
-    <a href="property.rs.html#11-36">Property</a>, <a href="lib.rs.html#1170-1176">RootInterface</a>, <a href="signal.rs.html#8-25">Signal</a>, <a href="time.rs.html#15">Time</a>, <a href="track_id.rs.html#32">TrackId</a>, <a href="lib.rs.html#1170-1176">TrackListInterface</a>, <a href="property.rs.html#48-52">TrackListProperty</a>,
-    <a href="signal.rs.html#36-112">TrackListSignal</a>, <a href="lib.rs.html#1222">Uri</a>, <a href="lib.rs.html#1201">Volume</a>,
+    <a href="playlist.rs.html#35-45">playlist::MaybePlaylist</a>, <a href="loop_status.rs.html#9-17">LoopStatus</a>, <a href="metadata.rs.html#36">Metadata</a>, <a href="lib.rs.html#1191">PlaybackRate</a>, <a href="playback_status.rs.html#9-16">PlaybackStatus</a>, <a href="lib.rs.html#1169-1175">PlayerInterface</a>,
+    <a href="playlist.rs.html#8-17">Playlist</a>, <a href="lib.rs.html#1215">PlaylistId</a>, <a href="playlist_ordering.rs.html#18-34">PlaylistOrdering</a>, <a href="lib.rs.html#1169-1175">PlaylistsInterface</a>, <a href="property.rs.html#64-68">PlaylistsProperty</a>, <a href="signal.rs.html#123-140">PlaylistsSignal</a>,
+    <a href="property.rs.html#11-36">Property</a>, <a href="lib.rs.html#1169-1175">RootInterface</a>, <a href="signal.rs.html#8-25">Signal</a>, <a href="time.rs.html#15">Time</a>, <a href="track_id.rs.html#32">TrackId</a>, <a href="lib.rs.html#1169-1175">TrackListInterface</a>, <a href="property.rs.html#48-52">TrackListProperty</a>,
+    <a href="signal.rs.html#36-112">TrackListSignal</a>, <a href="lib.rs.html#1221">Uri</a>, <a href="lib.rs.html#1200">Volume</a>,
 };
 
 <span class="kw">const </span>OBJECT_PATH: ObjectPath&lt;<span class="lifetime">'static</span>&gt; =
@@ -769,7 +770,7 @@
 <span class="attr">#[zbus::interface(name = <span class="string">"org.mpris.MediaPlayer2"</span>)]
 </span><span class="kw">impl</span>&lt;T&gt; RawRootInterface&lt;T&gt;
 <span class="kw">where
-    </span>T: <a href="lib.rs.html#1170-1176">RootInterface</a> + <span class="lifetime">'static</span>,
+    </span>T: <a href="lib.rs.html#1169-1175">RootInterface</a> + <span class="lifetime">'static</span>,
 {
     <span class="kw">async fn </span>raise(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
         <span class="self">self</span>.imp.raise().<span class="kw">await
@@ -837,7 +838,7 @@
 <span class="attr">#[zbus::interface(name = <span class="string">"org.mpris.MediaPlayer2.Player"</span>)]
 </span><span class="kw">impl</span>&lt;T&gt; RawPlayerInterface&lt;T&gt;
 <span class="kw">where
-    </span>T: <a href="lib.rs.html#1170-1176">PlayerInterface</a> + <span class="lifetime">'static</span>,
+    </span>T: <a href="lib.rs.html#1169-1175">PlayerInterface</a> + <span class="lifetime">'static</span>,
 {
     <span class="kw">async fn </span>next(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
         <span class="self">self</span>.imp.next().<span class="kw">await
@@ -899,7 +900,7 @@
     </span>}
 
     <span class="attr">#[zbus(property)]
-    </span><span class="kw">async fn </span>set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, rate: <a href="lib.rs.html#1192">PlaybackRate</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    </span><span class="kw">async fn </span>set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, rate: <a href="lib.rs.html#1191">PlaybackRate</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.imp.set_rate(rate).<span class="kw">await
     </span>}
 
@@ -924,7 +925,7 @@
     </span>}
 
     <span class="attr">#[zbus(property)]
-    </span><span class="kw">async fn </span>set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, volume: <a href="lib.rs.html#1201">Volume</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    </span><span class="kw">async fn </span>set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, volume: <a href="lib.rs.html#1200">Volume</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.imp.set_volume(volume).<span class="kw">await
     </span>}
 
@@ -968,7 +969,8 @@
         <span class="self">self</span>.imp.can_seek().<span class="kw">await
     </span>}
 
-    <span class="attr">#[zbus(property(emits_changed_signal = <span class="string">"const"</span>))]
+    <span class="comment">// FIXME This should have been "const", but it is "false" in the spec.
+    </span><span class="attr">#[zbus(property(emits_changed_signal = <span class="string">"false"</span>))]
     </span><span class="kw">async fn </span>can_control(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
         <span class="self">self</span>.imp.can_control().<span class="kw">await
     </span>}
@@ -981,7 +983,7 @@
 <span class="attr">#[zbus::interface(name = <span class="string">"org.mpris.MediaPlayer2.TrackList"</span>)]
 </span><span class="kw">impl</span>&lt;T&gt; RawTrackListInterface&lt;T&gt;
 <span class="kw">where
-    </span>T: <a href="lib.rs.html#1170-1176">TrackListInterface</a> + <span class="lifetime">'static</span>,
+    </span>T: <a href="lib.rs.html#1169-1175">TrackListInterface</a> + <span class="lifetime">'static</span>,
 {
     <span class="kw">async fn </span>get_tracks_metadata(<span class="kw-2">&amp;</span><span class="self">self</span>, track_ids: Vec&lt;<a href="track_id.rs.html#32">TrackId</a>&gt;) -&gt; fdo::Result&lt;Vec&lt;Metadata&gt;&gt; {
         <span class="self">self</span>.imp.get_tracks_metadata(track_ids).<span class="kw">await
@@ -989,7 +991,7 @@
 
     <span class="kw">async fn </span>add_track(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        uri: <a href="lib.rs.html#1222">Uri</a>,
+        uri: <a href="lib.rs.html#1221">Uri</a>,
         after_track: <a href="track_id.rs.html#32">TrackId</a>,
         set_as_current: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
     ) -&gt; fdo::Result&lt;()&gt; {
@@ -1046,9 +1048,9 @@
 <span class="attr">#[zbus::interface(name = <span class="string">"org.mpris.MediaPlayer2.Playlists"</span>)]
 </span><span class="kw">impl</span>&lt;T&gt; RawPlaylistsInterface&lt;T&gt;
 <span class="kw">where
-    </span>T: <a href="lib.rs.html#1170-1176">PlaylistsInterface</a> + <span class="lifetime">'static</span>,
+    </span>T: <a href="lib.rs.html#1169-1175">PlaylistsInterface</a> + <span class="lifetime">'static</span>,
 {
-    <span class="kw">async fn </span>activate_playlist(<span class="kw-2">&amp;</span><span class="self">self</span>, playlist_id: <a href="lib.rs.html#1216">PlaylistId</a>) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>activate_playlist(<span class="kw-2">&amp;</span><span class="self">self</span>, playlist_id: <a href="lib.rs.html#1215">PlaylistId</a>) -&gt; fdo::Result&lt;()&gt; {
         <span class="self">self</span>.imp.activate_playlist(playlist_id).<span class="kw">await
     </span>}
 
@@ -1100,7 +1102,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html">fmt::Debug</a> <span class="kw">for </span>Server&lt;T&gt; {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; <a href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html">fmt::Result</a> {
-        <a href="#358">f</a>.<a href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html#method.debug_struct">debug_struct</a>(<span class="string">"Server"</span>).<a href="https://doc.rust-lang.org/nightly/core/fmt/builders/struct.DebugStruct.html#method.finish">finish</a>()
+        <a href="#359">f</a>.<a href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html#method.debug_struct">debug_struct</a>(<span class="string">"Server"</span>).<a href="https://doc.rust-lang.org/nightly/core/fmt/builders/struct.DebugStruct.html#method.finish">finish</a>()
     }
 }
 
@@ -1118,7 +1120,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; Server&lt;T&gt;
 <span class="kw">where
-    </span>T: <a href="lib.rs.html#1170-1176">PlayerInterface</a> + <span class="lifetime">'static</span>,
+    </span>T: <a href="lib.rs.html#1169-1175">PlayerInterface</a> + <span class="lifetime">'static</span>,
 {
     <span class="doccomment">/// Creates a new [`Server`] with the given bus name suffix and
     /// implementation, `imp`, which must implement [`RootInterface`] and
@@ -1143,7 +1145,7 @@
     <span class="doccomment">/// Returns a reference to the underlying implementation.
     </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>imp(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>T {
-        <span class="kw-2">&amp;</span><a class="self" href="#401">self</a>.imp
+        <span class="kw-2">&amp;</span><a class="self" href="#402">self</a>.imp
     }
 
     <span class="doccomment">/// Returns a reference to the inner [`Connection`].
@@ -1153,7 +1155,7 @@
     #[cfg_attr(docsrs, doc(cfg(feature = <span class="string">"unstable"</span>)))]
     #[inline]
     </span><span class="kw">pub fn </span>connection(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Connection {
-        <span class="kw-2">&amp;</span><a class="self" href="#411">self</a>.connection
+        <span class="kw-2">&amp;</span><a class="self" href="#412">self</a>.connection
     }
 
     <span class="doccomment">/// Emits the given signal.
@@ -1303,7 +1305,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; Server&lt;T&gt;
 <span class="kw">where
-    </span>T: <a href="lib.rs.html#1170-1176">TrackListInterface</a> + <span class="lifetime">'static</span>,
+    </span>T: <a href="lib.rs.html#1169-1175">TrackListInterface</a> + <span class="lifetime">'static</span>,
 {
     <span class="doccomment">/// Creates a new [`Server`] with the given bus name suffix and
     /// implementation, which must implement [`TrackListInterface`] in addition
@@ -1386,7 +1388,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; Server&lt;T&gt;
 <span class="kw">where
-    </span>T: <a href="lib.rs.html#1170-1176">PlaylistsInterface</a> + <span class="lifetime">'static</span>,
+    </span>T: <a href="lib.rs.html#1169-1175">PlaylistsInterface</a> + <span class="lifetime">'static</span>,
 {
     <span class="doccomment">/// Creates a new [`Server`] with the given bus name suffix and
     /// implementation, which must implement [`PlaylistsInterface`] in addition
@@ -1450,7 +1452,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; Server&lt;T&gt;
 <span class="kw">where
-    </span>T: <a href="lib.rs.html#1170-1176">TrackListInterface</a> + <a href="lib.rs.html#1170-1176">PlaylistsInterface</a> + <span class="lifetime">'static</span>,
+    </span>T: <a href="lib.rs.html#1169-1175">TrackListInterface</a> + <a href="lib.rs.html#1169-1175">PlaylistsInterface</a> + <span class="lifetime">'static</span>,
 {
     <span class="doccomment">/// Creates a new [`Server`] with the given bus name suffix and
     /// implementation, which must implement [`TrackListInterface`] and

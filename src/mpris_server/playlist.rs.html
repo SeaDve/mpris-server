@@ -84,7 +84,7 @@
 </pre></div><pre class="rust"><code><span class="kw">use </span><a href="https://docs.rs/serde_derive/1.0.196/serde_derive/derive.Serialize.html">serde::Serialize</a>;
 <span class="kw">use </span>zbus::zvariant::{ObjectPath, Type, Value};
 
-<span class="kw">use crate</span>::{<a href="lib.rs.html#1216">PlaylistId</a>, <a href="lib.rs.html#1222">Uri</a>};
+<span class="kw">use crate</span>::{<a href="lib.rs.html#1215">PlaylistId</a>, <a href="lib.rs.html#1221">Uri</a>};
 
 <span class="doccomment">/// A data structure describing a playlist.
 </span><span class="attr">#[derive(Debug, Clone, PartialEq, Eq, Serialize, Type)]
@@ -92,11 +92,11 @@
     <span class="doccomment">/// A unique identifier for the playlist.
     ///
     /// This should remain the same if the playlist is renamed.
-    </span><span class="kw">pub </span>id: <a href="lib.rs.html#1216">PlaylistId</a>,
+    </span><span class="kw">pub </span>id: <a href="lib.rs.html#1215">PlaylistId</a>,
     <span class="doccomment">/// The name of the playlist, typically given by the user.
     </span><span class="kw">pub </span>name: <a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>,
     <span class="doccomment">/// The URI of an (optional) icon.
-    </span><span class="kw">pub </span>icon: <a href="lib.rs.html#1222">Uri</a>,
+    </span><span class="kw">pub </span>icon: <a href="lib.rs.html#1221">Uri</a>,
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; From&lt;<a href="#8-17">Playlist</a>&gt; <span class="kw">for </span>Value&lt;<span class="lifetime">'a</span>&gt; {

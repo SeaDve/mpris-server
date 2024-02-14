@@ -1236,7 +1236,6 @@
 <a href="#1234" id="1234">1234</a>
 <a href="#1235" id="1235">1235</a>
 <a href="#1236" id="1236">1236</a>
-<a href="#1237" id="1237">1237</a>
 </pre></div><pre class="rust"><code><span class="attr">#![cfg_attr(docsrs, feature(doc_cfg))]
 #![warn(rust_2018_idioms, missing_debug_implementations)]
 #![deny(rustdoc::broken_intra_doc_links)]
@@ -1245,7 +1244,6 @@
 </span><span class="comment">// TODO:
 // * Document the rest of public interface
 // * Access Server from interfaces
-// * Don't let `dbus_interface` emit properties changed signal internally
 // * Replace `DateTime` and `Uri` with proper types
 // * Add sensible default method impls on `*Interface` traits
 // * Profile if inlining is worth it
@@ -1254,23 +1252,23 @@
 
 </span><span class="kw">mod </span><a href="local_server.rs.html#1-1051">local_server</a>;
 <span class="kw">mod </span><a href="loop_status.rs.html#1-59">loop_status</a>;
-<span class="kw">mod </span><a href="metadata.rs.html#1-678">metadata</a>;
+<span class="kw">mod </span><a href="metadata.rs.html#1-657">metadata</a>;
 <span class="kw">mod </span><a href="playback_status.rs.html#1-39">playback_status</a>;
 <span class="kw">mod </span><a href="player.rs.html#1-1054">player</a>;
 <span class="kw">mod </span><a href="playlist.rs.html#1-81">playlist</a>;
 <span class="kw">mod </span><a href="playlist_ordering.rs.html#1-59">playlist_ordering</a>;
 <span class="kw">mod </span><a href="property.rs.html#1-68">property</a>;
-<span class="kw">mod </span><a href="server.rs.html#1-742">server</a>;
+<span class="kw">mod </span><a href="server.rs.html#1-743">server</a>;
 <span class="kw">mod </span><a href="signal.rs.html#1-140">signal</a>;
-<span class="kw">mod </span><a href="time.rs.html#1-364">time</a>;
-<span class="kw">mod </span><a href="track_id.rs.html#1-126">track_id</a>;
+<span class="kw">mod </span><a href="time.rs.html#1-372">time</a>;
+<span class="kw">mod </span><a href="track_id.rs.html#1-134">track_id</a>;
 
 <span class="doccomment">/// This contains the definitions of builder-pattern structs.
 ///
 /// The `builder` methods on the objects must be used instead to construct
 /// these builder-pattern structs.
 </span><span class="kw">pub mod </span><a href="../../mpris_server/builder/index.html">builder</a> {
-    <span class="kw">pub use crate</span>::{<a href="metadata.rs.html#437-439">metadata::MetadataBuilder</a>, <a href="player.rs.html#840-866">player::PlayerBuilder</a>};
+    <span class="kw">pub use crate</span>::{<a href="metadata.rs.html#416-418">metadata::MetadataBuilder</a>, <a href="player.rs.html#840-866">player::PlayerBuilder</a>};
 }
 
 <span class="doccomment">/// Retrofits support for `async fn` in trait impls and declarations.
@@ -1319,7 +1317,7 @@
     <a href="playlist.rs.html#8-17">playlist::Playlist</a>,
     <a href="playlist_ordering.rs.html#18-34">playlist_ordering::PlaylistOrdering</a>,
     property::{<a href="property.rs.html#64-68">PlaylistsProperty</a>, <a href="property.rs.html#11-36">Property</a>, <a href="property.rs.html#48-52">TrackListProperty</a>},
-    <a href="server.rs.html#352-355">server::Server</a>,
+    <a href="server.rs.html#353-356">server::Server</a>,
     signal::{<a href="signal.rs.html#123-140">PlaylistsSignal</a>, <a href="signal.rs.html#8-25">Signal</a>, <a href="signal.rs.html#36-112">TrackListSignal</a>},
     <a href="time.rs.html#15">time::Time</a>,
     <a href="track_id.rs.html#32">track_id::TrackId</a>,
@@ -2406,18 +2404,18 @@
     };
 }
 
-<a class="macro" href="#89-1168">define_iface!</a>(
+<a class="macro" href="#88-1167">define_iface!</a>(
     <span class="attr">#[async_trait]</span>,
-    <a href="#1170-1176">RootInterface</a>: Send + Sync extra_docs <span class="string">""</span>,
-    <a href="#1170-1176">PlayerInterface</a> extra_docs <span class="string">""</span>,
+    <a href="#1169-1175">RootInterface</a>: Send + Sync extra_docs <span class="string">""</span>,
+    <a href="#1169-1175">PlayerInterface</a> extra_docs <span class="string">""</span>,
     <a href="../../mpris_server/trait.TrackListInterface.html">TrackListInterface</a> extra_docs <span class="string">""</span>,
     <a href="../../mpris_server/trait.PlaylistsInterface.html">PlaylistsInterface</a> extra_docs <span class="string">""
 </span>);
 
-<a class="macro" href="#89-1168">define_iface!</a>(
+<a class="macro" href="#88-1167">define_iface!</a>(
     <span class="attr">#[async_trait(<span class="question-mark">?</span>Send)]</span>,
-    <a href="#1178-1184">LocalRootInterface</a> extra_docs <span class="string">"Local version of [`RootInterface`] to be used with [`LocalServer`]."</span>,
-    <a href="#1178-1184">LocalPlayerInterface</a> extra_docs <span class="string">"Local version of [`PlayerInterface`] to be used with [`LocalServer`]."</span>,
+    <a href="#1177-1183">LocalRootInterface</a> extra_docs <span class="string">"Local version of [`RootInterface`] to be used with [`LocalServer`]."</span>,
+    <a href="#1177-1183">LocalPlayerInterface</a> extra_docs <span class="string">"Local version of [`PlayerInterface`] to be used with [`LocalServer`]."</span>,
     <a href="../../mpris_server/trait.LocalTrackListInterface.html">LocalTrackListInterface</a> extra_docs <span class="string">"Local version of [`TrackListInterface`] to be used with [`LocalServer`]."</span>,
     <a href="../../mpris_server/trait.LocalPlaylistsInterface.html">LocalPlaylistsInterface</a>  extra_docs <span class="string">"Local version of [`PlaylistsInterface`] to be used with [`LocalServer`]."
 </span>);

@@ -69,7 +69,7 @@
 <a href="#67" id="67">67</a>
 <a href="#68" id="68">68</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{
-    <a href="loop_status.rs.html#9-17">LoopStatus</a>, <a href="metadata.rs.html#36">Metadata</a>, <a href="lib.rs.html#1192">PlaybackRate</a>, <a href="playback_status.rs.html#9-16">PlaybackStatus</a>, <a href="playlist.rs.html#8-17">Playlist</a>, <a href="playlist_ordering.rs.html#18-34">PlaylistOrdering</a>, <a href="lib.rs.html#1201">Volume</a>,
+    <a href="loop_status.rs.html#9-17">LoopStatus</a>, <a href="metadata.rs.html#36">Metadata</a>, <a href="lib.rs.html#1191">PlaybackRate</a>, <a href="playback_status.rs.html#9-16">PlaybackStatus</a>, <a href="playlist.rs.html#8-17">Playlist</a>, <a href="playlist_ordering.rs.html#18-34">PlaylistOrdering</a>, <a href="lib.rs.html#1200">Volume</a>,
 };
 
 <span class="doccomment">/// Used for emitting `PropertiesChanged` signals on
@@ -90,13 +90,13 @@
     SupportedMimeTypes(Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;),
     PlaybackStatus(<a href="playback_status.rs.html#9-16">PlaybackStatus</a>),
     LoopStatus(<a href="loop_status.rs.html#9-17">LoopStatus</a>),
-    Rate(<a href="lib.rs.html#1192">PlaybackRate</a>),
+    Rate(<a href="lib.rs.html#1191">PlaybackRate</a>),
     Shuffle(<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>),
     Metadata(<a href="metadata.rs.html#36">Metadata</a>),
-    Volume(<a href="lib.rs.html#1201">Volume</a>),
+    Volume(<a href="lib.rs.html#1200">Volume</a>),
     <span class="comment">// Position (must use `Rate` property together with `Seeked` signal instead)
-    </span>MinimumRate(<a href="lib.rs.html#1192">PlaybackRate</a>),
-    MaximumRate(<a href="lib.rs.html#1192">PlaybackRate</a>),
+    </span>MinimumRate(<a href="lib.rs.html#1191">PlaybackRate</a>),
+    MaximumRate(<a href="lib.rs.html#1191">PlaybackRate</a>),
     CanGoNext(<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>),
     CanGoPrevious(<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>),
     CanPlay(<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>),

@@ -657,33 +657,12 @@
 <a href="#655" id="655">655</a>
 <a href="#656" id="656">656</a>
 <a href="#657" id="657">657</a>
-<a href="#658" id="658">658</a>
-<a href="#659" id="659">659</a>
-<a href="#660" id="660">660</a>
-<a href="#661" id="661">661</a>
-<a href="#662" id="662">662</a>
-<a href="#663" id="663">663</a>
-<a href="#664" id="664">664</a>
-<a href="#665" id="665">665</a>
-<a href="#666" id="666">666</a>
-<a href="#667" id="667">667</a>
-<a href="#668" id="668">668</a>
-<a href="#669" id="669">669</a>
-<a href="#670" id="670">670</a>
-<a href="#671" id="671">671</a>
-<a href="#672" id="672">672</a>
-<a href="#673" id="673">673</a>
-<a href="#674" id="674">674</a>
-<a href="#675" id="675">675</a>
-<a href="#676" id="676">676</a>
-<a href="#677" id="677">677</a>
-<a href="#678" id="678">678</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{<a href="https://doc.rust-lang.org/nightly/std/collections/hash/map/struct.HashMap.html">collections::HashMap</a>, <a href="https://doc.rust-lang.org/nightly/alloc/fmt/index.html">fmt</a>};
 
 <span class="kw">use </span><a href="https://docs.rs/serde_derive/1.0.196/serde_derive/derive.Serialize.html">serde::Serialize</a>;
 <span class="kw">use </span>zbus::zvariant::{Error, <span class="prelude-ty">Result</span>, Type, Value};
 
-<span class="kw">use crate</span>::{<a href="time.rs.html#15">Time</a>, <a href="track_id.rs.html#32">TrackId</a>, <a href="lib.rs.html#1222">Uri</a>};
+<span class="kw">use crate</span>::{<a href="time.rs.html#15">Time</a>, <a href="track_id.rs.html#32">TrackId</a>, <a href="lib.rs.html#1221">Uri</a>};
 
 <span class="doccomment">/// Combined date and time.
 ///
@@ -746,8 +725,8 @@
     }
 
     <span class="doccomment">/// Creates a new builder-pattern struct instance to construct [`Metadata`].
-    </span><span class="kw">pub fn </span>builder() -&gt; <a href="#437-439">MetadataBuilder</a> {
-        <a href="#437-439">MetadataBuilder</a> { m: <a href="#64-66">Metadata::new</a>() }
+    </span><span class="kw">pub fn </span>builder() -&gt; <a href="#416-418">MetadataBuilder</a> {
+        <a href="#416-418">MetadataBuilder</a> { m: <a href="#64-66">Metadata::new</a>() }
     }
 
     <span class="doccomment">/// Returns the value corresponding to the key and convert it to `V`.
@@ -800,10 +779,7 @@
     /// D-Bus object at that path; this specification says nothing about
     /// what interfaces such an object may implement.
     </span><span class="kw">pub fn </span>trackid(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="track_id.rs.html#32">TrackId</a>&gt; {
-        <a class="self" href="#122">self</a>.<a href="#83-85">get_value</a>(<span class="string">"mpris:trackid"</span>)<span class="question-mark">?
-            </span>.try_clone()
-            .<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
-            .<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.and_then">and_then</a>(|v| <a href="#126">v</a>.downcast().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>())
+        <a class="self" href="#122">self</a>.<a href="#83-85">get_value</a>(<span class="string">"mpris:trackid"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
     }
 
     <span class="doccomment">/// Sets a unique identity for this track within the context of an
@@ -814,57 +790,51 @@
     /// D-Bus object at that path; this specification says nothing about
     /// what interfaces such an object may implement.
     </span><span class="kw">pub fn </span>set_trackid(<span class="kw-2">&amp;mut </span><span class="self">self</span>, trackid: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>Into&lt;<a href="track_id.rs.html#32">TrackId</a>&gt;&gt;) {
-        <a class="self" href="#136">self</a>.<a href="#91-97">set</a>(<span class="string">"mpris:trackid"</span>, <a href="#136">trackid</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|trackid| <a href="#137">trackid</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()));
+        <a class="self" href="#133">self</a>.<a href="#91-97">set</a>(<span class="string">"mpris:trackid"</span>, <a href="#133">trackid</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|trackid| <a href="#134">trackid</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()));
     }
 
     <span class="doccomment">/// The duration of the track.
     </span><span class="kw">pub fn </span>length(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="time.rs.html#15">Time</a>&gt; {
-        <a class="self" href="#141">self</a>.<a href="#83-85">get_value</a>(<span class="string">"mpris:length"</span>)<span class="question-mark">?
-            </span>.try_clone()
-            .<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
-            .<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.and_then">and_then</a>(|v| <a href="#145">v</a>.downcast().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>())
+        <a class="self" href="#138">self</a>.<a href="#83-85">get_value</a>(<span class="string">"mpris:length"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
     }
 
     <span class="doccomment">/// Sets the duration of the track.
     </span><span class="kw">pub fn </span>set_length(<span class="kw-2">&amp;mut </span><span class="self">self</span>, length: <span class="prelude-ty">Option</span>&lt;<a href="time.rs.html#15">Time</a>&gt;) {
-        <a class="self" href="#149">self</a>.<a href="#91-97">set</a>(<span class="string">"mpris:length"</span>, <a href="#149">length</a>);
+        <a class="self" href="#143">self</a>.<a href="#91-97">set</a>(<span class="string">"mpris:length"</span>, <a href="#143">length</a>);
     }
 
     <span class="doccomment">/// The location of an image representing the track or album.
     ///
     /// Clients should not assume this will continue to exist when
     /// the media player stops giving out the URL.
-    </span><span class="kw">pub fn </span>art_url(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="lib.rs.html#1222">Uri</a>&gt; {
-        <a class="self" href="#157">self</a>.<a href="#83-85">get_value</a>(<span class="string">"mpris:artUrl"</span>)<span class="question-mark">?
-            </span>.try_clone()
-            .<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
-            .<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.and_then">and_then</a>(|v| <a href="#161">v</a>.downcast().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>())
+    </span><span class="kw">pub fn </span>art_url(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="lib.rs.html#1221">Uri</a>&gt; {
+        <a class="self" href="#151">self</a>.<a href="#83-85">get_value</a>(<span class="string">"mpris:artUrl"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
     }
 
     <span class="doccomment">/// Sets the location of an image representing the track or album.
     ///
     /// Clients should not assume this will continue to exist when
     /// the media player stops giving out the URL.
-    </span><span class="kw">pub fn </span>set_art_url(<span class="kw-2">&amp;mut </span><span class="self">self</span>, art_url: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>Into&lt;<a href="lib.rs.html#1222">Uri</a>&gt;&gt;) {
-        <a class="self" href="#168">self</a>.<a href="#91-97">set</a>(<span class="string">"mpris:artUrl"</span>, <a href="#168">art_url</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|art_url| <a href="#169">art_url</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()));
+    </span><span class="kw">pub fn </span>set_art_url(<span class="kw-2">&amp;mut </span><span class="self">self</span>, art_url: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>Into&lt;<a href="lib.rs.html#1221">Uri</a>&gt;&gt;) {
+        <a class="self" href="#159">self</a>.<a href="#91-97">set</a>(<span class="string">"mpris:artUrl"</span>, <a href="#159">art_url</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|art_url| <a href="#160">art_url</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()));
     }
 
     <span class="doccomment">/// The album name.
     </span><span class="kw">pub fn </span>album(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt; {
-        <a class="self" href="#173">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:album"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
+        <a class="self" href="#164">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:album"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
     }
 
     <span class="doccomment">/// Sets the album name.
     </span><span class="kw">pub fn </span>set_album(<span class="kw-2">&amp;mut </span><span class="self">self</span>, album: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;) {
-        <a class="self" href="#178">self</a>.<a href="#91-97">set</a>(<span class="string">"xesam:album"</span>, <a href="#178">album</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|album| <a href="#179">album</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()));
+        <a class="self" href="#169">self</a>.<a href="#91-97">set</a>(<span class="string">"xesam:album"</span>, <a href="#169">album</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|album| <a href="#170">album</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()));
     }
 
     <span class="doccomment">/// The album artist(s).
     </span><span class="kw">pub fn </span>album_artist(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt; {
-        <a class="self" href="#183">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:albumArtist"</span>)<span class="question-mark">?
+        <a class="self" href="#174">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:albumArtist"</span>)<span class="question-mark">?
             </span>.try_clone()
             .<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
-            .<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.and_then">and_then</a>(|v| <a href="#187">v</a>.downcast().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>())
+            .<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.and_then">and_then</a>(|v| <a href="#178">v</a>.downcast().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>())
     }
 
     <span class="doccomment">/// Sets the album artist(s).
@@ -872,12 +842,12 @@
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         album_artist: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;&gt;,
     ) {
-        <a class="self" href="#192">self</a>.<a href="#91-97">set</a>(
+        <a class="self" href="#183">self</a>.<a href="#91-97">set</a>(
             <span class="string">"xesam:albumArtist"</span>,
-            <a href="#193">album_artist</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|album_artist| {
-                <a href="#197">album_artist</a>
+            <a href="#184">album_artist</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|album_artist| {
+                <a href="#188">album_artist</a>
                     .<a href="https://doc.rust-lang.org/nightly/core/iter/traits/collect/trait.IntoIterator.html#tymethod.into_iter">into_iter</a>()
-                    .<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#tymethod.map">map</a>(|i| <a href="#200">i</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>())
+                    .<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#tymethod.map">map</a>(|i| <a href="#191">i</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>())
                     .<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#tymethod.collect">collect</a>::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
             }),
         );
@@ -885,229 +855,217 @@
 
     <span class="doccomment">/// The track artist(s).
     </span><span class="kw">pub fn </span>artist(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt; {
-        <a class="self" href="#207">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:artist"</span>)<span class="question-mark">?
+        <a class="self" href="#198">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:artist"</span>)<span class="question-mark">?
             </span>.try_clone()
             .<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
-            .<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.and_then">and_then</a>(|v| <a href="#211">v</a>.downcast().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>())
+            .<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.and_then">and_then</a>(|v| <a href="#202">v</a>.downcast().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>())
     }
 
     <span class="doccomment">/// Sets the track artist(s).
     </span><span class="kw">pub fn </span>set_artist(<span class="kw-2">&amp;mut </span><span class="self">self</span>, artist: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;&gt;) {
-        <a class="self" href="#215">self</a>.<a href="#91-97">set</a>(
+        <a class="self" href="#206">self</a>.<a href="#91-97">set</a>(
             <span class="string">"xesam:artist"</span>,
-            <a href="#215">artist</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|artist| <a href="#218">artist</a>.<a href="https://doc.rust-lang.org/nightly/core/iter/traits/collect/trait.IntoIterator.html#tymethod.into_iter">into_iter</a>().<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#tymethod.map">map</a>(|i| <a href="#218">i</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()).<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#tymethod.collect">collect</a>::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()),
+            <a href="#206">artist</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|artist| <a href="#209">artist</a>.<a href="https://doc.rust-lang.org/nightly/core/iter/traits/collect/trait.IntoIterator.html#tymethod.into_iter">into_iter</a>().<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#tymethod.map">map</a>(|i| <a href="#209">i</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()).<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#tymethod.collect">collect</a>::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()),
         );
     }
 
     <span class="doccomment">/// The track lyrics.
     </span><span class="kw">pub fn </span>lyrics(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt; {
-        <a class="self" href="#223">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:asText"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
+        <a class="self" href="#214">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:asText"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
     }
 
     <span class="doccomment">/// Sets the track lyrics.
     </span><span class="kw">pub fn </span>set_lyrics(<span class="kw-2">&amp;mut </span><span class="self">self</span>, lyrics: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;) {
-        <a class="self" href="#228">self</a>.<a href="#91-97">set</a>(<span class="string">"xesam:asText"</span>, <a href="#228">lyrics</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|lyrics| <a href="#229">lyrics</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()));
+        <a class="self" href="#219">self</a>.<a href="#91-97">set</a>(<span class="string">"xesam:asText"</span>, <a href="#219">lyrics</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|lyrics| <a href="#220">lyrics</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()));
     }
 
     <span class="doccomment">/// The speed of the music, in beats per minute.
     </span><span class="kw">pub fn </span>audio_bpm(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>&gt; {
-        <a class="self" href="#233">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:audioBPM"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
+        <a class="self" href="#224">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:audioBPM"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
     }
 
     <span class="doccomment">/// Sets the speed of the music, in beats per minute.
     </span><span class="kw">pub fn </span>set_audio_bpm(<span class="kw-2">&amp;mut </span><span class="self">self</span>, audio_bpm: <span class="prelude-ty">Option</span>&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>&gt;) {
-        <a class="self" href="#238">self</a>.<a href="#91-97">set</a>(<span class="string">"xesam:audioBPM"</span>, <a href="#238">audio_bpm</a>);
+        <a class="self" href="#229">self</a>.<a href="#91-97">set</a>(<span class="string">"xesam:audioBPM"</span>, <a href="#229">audio_bpm</a>);
     }
 
     <span class="doccomment">/// An automatically-generated rating, based on things such
     /// as how often it has been played. This should be in the
     /// range 0.0 to 1.0.
     </span><span class="kw">pub fn </span>auto_rating(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>&gt; {
-        <a class="self" href="#245">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:autoRating"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
+        <a class="self" href="#236">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:autoRating"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
     }
 
     <span class="doccomment">/// Sets an automatically-generated rating, based on things such
     /// as how often it has been played. This should be in the
     /// range 0.0 to 1.0.
     </span><span class="kw">pub fn </span>set_auto_rating(<span class="kw-2">&amp;mut </span><span class="self">self</span>, auto_rating: <span class="prelude-ty">Option</span>&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>&gt;) {
-        <a class="self" href="#252">self</a>.<a href="#91-97">set</a>(<span class="string">"xesam:autoRating"</span>, <a href="#252">auto_rating</a>);
+        <a class="self" href="#243">self</a>.<a href="#91-97">set</a>(<span class="string">"xesam:autoRating"</span>, <a href="#243">auto_rating</a>);
     }
 
     <span class="doccomment">/// A (list of) freeform comment(s).
     </span><span class="kw">pub fn </span>comment(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt; {
-        <a class="self" href="#257">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:comment"</span>)<span class="question-mark">?
+        <a class="self" href="#248">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:comment"</span>)<span class="question-mark">?
             </span>.try_clone()
             .<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
-            .<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.and_then">and_then</a>(|v| <a href="#261">v</a>.downcast().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>())
+            .<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.and_then">and_then</a>(|v| <a href="#252">v</a>.downcast().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>())
     }
 
     <span class="doccomment">/// Sets a (list of) freeform comment(s).
     </span><span class="kw">pub fn </span>set_comment(<span class="kw-2">&amp;mut </span><span class="self">self</span>, comment: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;&gt;) {
-        <a class="self" href="#265">self</a>.<a href="#91-97">set</a>(
+        <a class="self" href="#256">self</a>.<a href="#91-97">set</a>(
             <span class="string">"xesam:comment"</span>,
-            <a href="#265">comment</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|comment| <a href="#268">comment</a>.<a href="https://doc.rust-lang.org/nightly/core/iter/traits/collect/trait.IntoIterator.html#tymethod.into_iter">into_iter</a>().<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#tymethod.map">map</a>(|i| <a href="#268">i</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()).<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#tymethod.collect">collect</a>::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()),
+            <a href="#256">comment</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|comment| <a href="#259">comment</a>.<a href="https://doc.rust-lang.org/nightly/core/iter/traits/collect/trait.IntoIterator.html#tymethod.into_iter">into_iter</a>().<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#tymethod.map">map</a>(|i| <a href="#259">i</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()).<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#tymethod.collect">collect</a>::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()),
         );
     }
 
     <span class="doccomment">/// The composer(s) of the track.
     </span><span class="kw">pub fn </span>composer(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt; {
-        <a class="self" href="#273">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:composer"</span>)<span class="question-mark">?
+        <a class="self" href="#264">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:composer"</span>)<span class="question-mark">?
             </span>.try_clone()
             .<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
-            .<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.and_then">and_then</a>(|v| <a href="#277">v</a>.downcast().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>())
+            .<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.and_then">and_then</a>(|v| <a href="#268">v</a>.downcast().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>())
     }
 
     <span class="doccomment">/// Sets the composer(s) of the track.
     </span><span class="kw">pub fn </span>set_composer(<span class="kw-2">&amp;mut </span><span class="self">self</span>, composer: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;&gt;) {
-        <a class="self" href="#281">self</a>.<a href="#91-97">set</a>(
+        <a class="self" href="#272">self</a>.<a href="#91-97">set</a>(
             <span class="string">"xesam:composer"</span>,
-            <a href="#281">composer</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|composer| <a href="#284">composer</a>.<a href="https://doc.rust-lang.org/nightly/core/iter/traits/collect/trait.IntoIterator.html#tymethod.into_iter">into_iter</a>().<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#tymethod.map">map</a>(|i| <a href="#284">i</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()).<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#tymethod.collect">collect</a>::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()),
+            <a href="#272">composer</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|composer| <a href="#275">composer</a>.<a href="https://doc.rust-lang.org/nightly/core/iter/traits/collect/trait.IntoIterator.html#tymethod.into_iter">into_iter</a>().<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#tymethod.map">map</a>(|i| <a href="#275">i</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()).<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#tymethod.collect">collect</a>::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()),
         );
     }
 
     <span class="doccomment">/// When the track was created. Usually only the year component
     /// will be useful.
     </span><span class="kw">pub fn </span>content_created(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="#17">DateTime</a>&gt; {
-        <a class="self" href="#290">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:contentCreated"</span>)<span class="question-mark">?
-            </span>.try_clone()
-            .<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
-            .<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.and_then">and_then</a>(|v| <a href="#294">v</a>.downcast().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>())
+        <a class="self" href="#281">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:contentCreated"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
     }
 
     <span class="doccomment">/// Sets when the track was created. Usually only the year component
     /// will be useful.
     </span><span class="kw">pub fn </span>set_content_created(<span class="kw-2">&amp;mut </span><span class="self">self</span>, content_created: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>Into&lt;<a href="#17">DateTime</a>&gt;&gt;) {
-        <a class="self" href="#299">self</a>.<a href="#91-97">set</a>(
+        <a class="self" href="#287">self</a>.<a href="#91-97">set</a>(
             <span class="string">"xesam:contentCreated"</span>,
-            <a href="#299">content_created</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|content_created| <a href="#302">content_created</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()),
+            <a href="#287">content_created</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|content_created| <a href="#290">content_created</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()),
         );
     }
 
     <span class="doccomment">/// The disc number on the album that this track is from.
     </span><span class="kw">pub fn </span>disc_number(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>&gt; {
-        <a class="self" href="#307">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:discNumber"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
+        <a class="self" href="#295">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:discNumber"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
     }
 
     <span class="doccomment">/// Sets the disc number on the album that this track is from.
     </span><span class="kw">pub fn </span>set_disc_number(<span class="kw-2">&amp;mut </span><span class="self">self</span>, disc_number: <span class="prelude-ty">Option</span>&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>&gt;) {
-        <a class="self" href="#312">self</a>.<a href="#91-97">set</a>(<span class="string">"xesam:discNumber"</span>, <a href="#312">disc_number</a>);
+        <a class="self" href="#300">self</a>.<a href="#91-97">set</a>(<span class="string">"xesam:discNumber"</span>, <a href="#300">disc_number</a>);
     }
 
     <span class="doccomment">/// When the track was first played.
     </span><span class="kw">pub fn </span>first_used(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="#17">DateTime</a>&gt; {
-        <a class="self" href="#317">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:firstUsed"</span>)<span class="question-mark">?
-            </span>.try_clone()
-            .<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
-            .<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.and_then">and_then</a>(|v| <a href="#321">v</a>.downcast().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>())
+        <a class="self" href="#305">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:firstUsed"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
     }
 
     <span class="doccomment">/// Sets when the track was first played.
     </span><span class="kw">pub fn </span>set_first_used(<span class="kw-2">&amp;mut </span><span class="self">self</span>, first_used: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>Into&lt;<a href="#17">DateTime</a>&gt;&gt;) {
-        <a class="self" href="#325">self</a>.<a href="#91-97">set</a>(
+        <a class="self" href="#310">self</a>.<a href="#91-97">set</a>(
             <span class="string">"xesam:firstUsed"</span>,
-            <a href="#325">first_used</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|first_used| <a href="#328">first_used</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()),
+            <a href="#310">first_used</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|first_used| <a href="#313">first_used</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()),
         );
     }
 
     <span class="doccomment">/// The genre(s) of the track.
     </span><span class="kw">pub fn </span>genre(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt; {
-        <a class="self" href="#333">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:genre"</span>)<span class="question-mark">?
+        <a class="self" href="#318">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:genre"</span>)<span class="question-mark">?
             </span>.try_clone()
             .<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
-            .<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.and_then">and_then</a>(|v| <a href="#337">v</a>.downcast().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>())
+            .<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.and_then">and_then</a>(|v| <a href="#322">v</a>.downcast().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>())
     }
 
     <span class="doccomment">/// Sets the genre(s) of the track.
     </span><span class="kw">pub fn </span>set_genre(<span class="kw-2">&amp;mut </span><span class="self">self</span>, genre: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;&gt;) {
-        <a class="self" href="#341">self</a>.<a href="#91-97">set</a>(
+        <a class="self" href="#326">self</a>.<a href="#91-97">set</a>(
             <span class="string">"xesam:genre"</span>,
-            <a href="#341">genre</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|genre| <a href="#344">genre</a>.<a href="https://doc.rust-lang.org/nightly/core/iter/traits/collect/trait.IntoIterator.html#tymethod.into_iter">into_iter</a>().<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#tymethod.map">map</a>(|i| <a href="#344">i</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()).<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#tymethod.collect">collect</a>::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()),
+            <a href="#326">genre</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|genre| <a href="#329">genre</a>.<a href="https://doc.rust-lang.org/nightly/core/iter/traits/collect/trait.IntoIterator.html#tymethod.into_iter">into_iter</a>().<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#tymethod.map">map</a>(|i| <a href="#329">i</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()).<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#tymethod.collect">collect</a>::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()),
         );
     }
 
     <span class="doccomment">/// When the track was last played.
     </span><span class="kw">pub fn </span>last_used(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="#17">DateTime</a>&gt; {
-        <a class="self" href="#349">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:lastUsed"</span>)<span class="question-mark">?
-            </span>.try_clone()
-            .<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
-            .<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.and_then">and_then</a>(|v| <a href="#353">v</a>.downcast().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>())
+        <a class="self" href="#334">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:lastUsed"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
     }
 
     <span class="doccomment">/// Sets when the track was last played.
     </span><span class="kw">pub fn </span>set_last_used(<span class="kw-2">&amp;mut </span><span class="self">self</span>, last_used: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>Into&lt;<a href="#17">DateTime</a>&gt;&gt;) {
-        <a class="self" href="#357">self</a>.<a href="#91-97">set</a>(
+        <a class="self" href="#339">self</a>.<a href="#91-97">set</a>(
             <span class="string">"xesam:lastUsed"</span>,
-            <a href="#357">last_used</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|last_used| <a href="#360">last_used</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()),
+            <a href="#339">last_used</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|last_used| <a href="#342">last_used</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()),
         );
     }
 
     <span class="doccomment">/// The lyricist(s) of the track.
     </span><span class="kw">pub fn </span>lyricist(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt; {
-        <a class="self" href="#365">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:lyricist"</span>)<span class="question-mark">?
+        <a class="self" href="#347">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:lyricist"</span>)<span class="question-mark">?
             </span>.try_clone()
             .<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
-            .<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.and_then">and_then</a>(|v| <a href="#369">v</a>.downcast().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>())
+            .<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.and_then">and_then</a>(|v| <a href="#351">v</a>.downcast().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>())
     }
 
     <span class="doccomment">/// Sets the lyricist(s) of the track.
     </span><span class="kw">pub fn </span>set_lyricist(<span class="kw-2">&amp;mut </span><span class="self">self</span>, lyricist: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;&gt;) {
-        <a class="self" href="#373">self</a>.<a href="#91-97">set</a>(
+        <a class="self" href="#355">self</a>.<a href="#91-97">set</a>(
             <span class="string">"xesam:lyricist"</span>,
-            <a href="#373">lyricist</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|lyricist| <a href="#376">lyricist</a>.<a href="https://doc.rust-lang.org/nightly/core/iter/traits/collect/trait.IntoIterator.html#tymethod.into_iter">into_iter</a>().<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#tymethod.map">map</a>(|i| <a href="#376">i</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()).<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#tymethod.collect">collect</a>::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()),
+            <a href="#355">lyricist</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|lyricist| <a href="#358">lyricist</a>.<a href="https://doc.rust-lang.org/nightly/core/iter/traits/collect/trait.IntoIterator.html#tymethod.into_iter">into_iter</a>().<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#tymethod.map">map</a>(|i| <a href="#358">i</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()).<a href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html#tymethod.collect">collect</a>::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()),
         );
     }
 
     <span class="doccomment">/// The track title.
     </span><span class="kw">pub fn </span>title(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt; {
-        <a class="self" href="#381">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:title"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
+        <a class="self" href="#363">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:title"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
     }
 
     <span class="doccomment">/// Sets the track title.
     </span><span class="kw">pub fn </span>set_title(<span class="kw-2">&amp;mut </span><span class="self">self</span>, title: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;) {
-        <a class="self" href="#386">self</a>.<a href="#91-97">set</a>(<span class="string">"xesam:title"</span>, <a href="#386">title</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|title| <a href="#387">title</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()));
+        <a class="self" href="#368">self</a>.<a href="#91-97">set</a>(<span class="string">"xesam:title"</span>, <a href="#368">title</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|title| <a href="#369">title</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()));
     }
 
     <span class="doccomment">/// The track number on the album disc.
     </span><span class="kw">pub fn </span>track_number(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>&gt; {
-        <a class="self" href="#391">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:trackNumber"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
+        <a class="self" href="#373">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:trackNumber"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
     }
 
     <span class="doccomment">/// Sets the track number on the album disc.
     </span><span class="kw">pub fn </span>set_track_number(<span class="kw-2">&amp;mut </span><span class="self">self</span>, track_number: <span class="prelude-ty">Option</span>&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>&gt;) {
-        <a class="self" href="#396">self</a>.<a href="#91-97">set</a>(<span class="string">"xesam:trackNumber"</span>, <a href="#396">track_number</a>);
+        <a class="self" href="#378">self</a>.<a href="#91-97">set</a>(<span class="string">"xesam:trackNumber"</span>, <a href="#378">track_number</a>);
     }
 
     <span class="doccomment">/// The location of the media file.
-    </span><span class="kw">pub fn </span>url(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="lib.rs.html#1222">Uri</a>&gt; {
-        <a class="self" href="#401">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:url"</span>)<span class="question-mark">?
-            </span>.try_clone()
-            .<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
-            .<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.and_then">and_then</a>(|v| <a href="#405">v</a>.downcast().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>())
+    </span><span class="kw">pub fn </span>url(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="lib.rs.html#1221">Uri</a>&gt; {
+        <a class="self" href="#383">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:url"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
     }
 
     <span class="doccomment">/// Sets the location of the media file.
-    </span><span class="kw">pub fn </span>set_url(<span class="kw-2">&amp;mut </span><span class="self">self</span>, url: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>Into&lt;<a href="lib.rs.html#1222">Uri</a>&gt;&gt;) {
-        <a class="self" href="#409">self</a>.<a href="#91-97">set</a>(<span class="string">"xesam:url"</span>, <a href="#409">url</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|url| <a href="#410">url</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()));
+    </span><span class="kw">pub fn </span>set_url(<span class="kw-2">&amp;mut </span><span class="self">self</span>, url: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>Into&lt;<a href="lib.rs.html#1221">Uri</a>&gt;&gt;) {
+        <a class="self" href="#388">self</a>.<a href="#91-97">set</a>(<span class="string">"xesam:url"</span>, <a href="#388">url</a>.<a href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html#method.map">map</a>(|url| <a href="#389">url</a>.<a href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into">into</a>()));
     }
 
     <span class="doccomment">/// The number of times the track has been played.
     </span><span class="kw">pub fn </span>use_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>&gt; {
-        <a class="self" href="#414">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:useCount"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
+        <a class="self" href="#393">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:useCount"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
     }
 
     <span class="doccomment">/// Sets the number of times the track has been played.
     </span><span class="kw">pub fn </span>set_use_count(<span class="kw-2">&amp;mut </span><span class="self">self</span>, use_count: <span class="prelude-ty">Option</span>&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>&gt;) {
-        <a class="self" href="#419">self</a>.<a href="#91-97">set</a>(<span class="string">"xesam:useCount"</span>, <a href="#419">use_count</a>);
+        <a class="self" href="#398">self</a>.<a href="#91-97">set</a>(<span class="string">"xesam:useCount"</span>, <a href="#398">use_count</a>);
     }
 
     <span class="doccomment">/// A user-specified rating. This should be in the range 0.0 to 1.0.
     </span><span class="kw">pub fn </span>user_rating(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>&gt; {
-        <a class="self" href="#424">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:userRating"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
+        <a class="self" href="#403">self</a>.<a href="#83-85">get_value</a>(<span class="string">"xesam:userRating"</span>)<span class="question-mark">?</span>.downcast_ref().<a href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html#method.ok">ok</a>()
     }
 
     <span class="doccomment">/// Sets a user-specified rating. This should be in the range 0.0 to 1.0.
     </span><span class="kw">pub fn </span>set_user_rating(<span class="kw-2">&amp;mut </span><span class="self">self</span>, user_rating: <span class="prelude-ty">Option</span>&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>&gt;) {
-        <a class="self" href="#429">self</a>.<a href="#91-97">set</a>(<span class="string">"xesam:userRating"</span>, <a href="#429">user_rating</a>);
+        <a class="self" href="#408">self</a>.<a href="#91-97">set</a>(<span class="string">"xesam:userRating"</span>, <a href="#408">user_rating</a>);
     }
 }
 
@@ -1118,11 +1076,11 @@
     m: <a href="#36">Metadata</a>,
 }
 
-<span class="kw">impl </span><a href="#437-439">MetadataBuilder</a> {
+<span class="kw">impl </span><a href="#416-418">MetadataBuilder</a> {
     <span class="doccomment">/// Sets a value for the given key.
     </span><span class="kw">pub fn </span>other(<span class="kw-2">mut </span><span class="self">self</span>, key: <span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, value: <span class="kw">impl </span>Into&lt;Value&lt;<span class="lifetime">'static</span>&gt;&gt;) -&gt; <span class="self">Self </span>{
-        <a class="self" href="#443">self</a>.m.<a href="#91-97">set</a>(<a href="#443">key</a>, <span class="prelude-val">Some</span>(<a href="#443">value</a>));
-        <span class="self"><a href="#443">self</a>
+        <a class="self" href="#422">self</a>.m.<a href="#91-97">set</a>(<a href="#422">key</a>, <span class="prelude-val">Some</span>(<a href="#422">value</a>));
+        <span class="self"><a href="#422">self</a>
     </span>}
 
     <span class="doccomment">/// Sets a unique identity for this track within the context of an
@@ -1133,29 +1091,29 @@
     /// D-Bus object at that path; this specification says nothing about
     /// what interfaces such an object may implement.
     </span><span class="kw">pub fn </span>trackid(<span class="kw-2">mut </span><span class="self">self</span>, trackid: <span class="kw">impl </span>Into&lt;<a href="track_id.rs.html#32">TrackId</a>&gt;) -&gt; <span class="self">Self </span>{
-        <a class="self" href="#455">self</a>.m.<a href="#136-138">set_trackid</a>(<span class="prelude-val">Some</span>(<a href="#455">trackid</a>));
-        <span class="self"><a href="#455">self</a>
+        <a class="self" href="#434">self</a>.m.<a href="#133-135">set_trackid</a>(<span class="prelude-val">Some</span>(<a href="#434">trackid</a>));
+        <span class="self"><a href="#434">self</a>
     </span>}
 
     <span class="doccomment">/// Sets the duration of the track.
     </span><span class="kw">pub fn </span>length(<span class="kw-2">mut </span><span class="self">self</span>, length: <a href="time.rs.html#15">Time</a>) -&gt; <span class="self">Self </span>{
-        <a class="self" href="#461">self</a>.m.<a href="#149-151">set_length</a>(<span class="prelude-val">Some</span>(<a href="#461">length</a>));
-        <span class="self"><a href="#461">self</a>
+        <a class="self" href="#440">self</a>.m.<a href="#143-145">set_length</a>(<span class="prelude-val">Some</span>(<a href="#440">length</a>));
+        <span class="self"><a href="#440">self</a>
     </span>}
 
     <span class="doccomment">/// Sets the location of an image representing the track or album.
     ///
     /// Clients should not assume this will continue to exist when
     /// the media player stops giving out the URL.
-    </span><span class="kw">pub fn </span>art_url(<span class="kw-2">mut </span><span class="self">self</span>, art_url: <span class="kw">impl </span>Into&lt;<a href="lib.rs.html#1222">Uri</a>&gt;) -&gt; <span class="self">Self </span>{
-        <a class="self" href="#470">self</a>.m.<a href="#168-170">set_art_url</a>(<span class="prelude-val">Some</span>(<a href="#470">art_url</a>));
-        <span class="self"><a href="#470">self</a>
+    </span><span class="kw">pub fn </span>art_url(<span class="kw-2">mut </span><span class="self">self</span>, art_url: <span class="kw">impl </span>Into&lt;<a href="lib.rs.html#1221">Uri</a>&gt;) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#449">self</a>.m.<a href="#159-161">set_art_url</a>(<span class="prelude-val">Some</span>(<a href="#449">art_url</a>));
+        <span class="self"><a href="#449">self</a>
     </span>}
 
     <span class="doccomment">/// Sets the album name.
     </span><span class="kw">pub fn </span>album(<span class="kw-2">mut </span><span class="self">self</span>, album: <span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;) -&gt; <span class="self">Self </span>{
-        <a class="self" href="#476">self</a>.m.<a href="#178-180">set_album</a>(<span class="prelude-val">Some</span>(<a href="#476">album</a>));
-        <span class="self"><a href="#476">self</a>
+        <a class="self" href="#455">self</a>.m.<a href="#169-171">set_album</a>(<span class="prelude-val">Some</span>(<a href="#455">album</a>));
+        <span class="self"><a href="#455">self</a>
     </span>}
 
     <span class="doccomment">/// Sets the album artist(s).
@@ -1163,125 +1121,125 @@
         <span class="kw-2">mut </span><span class="self">self</span>,
         album_artist: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;,
     ) -&gt; <span class="self">Self </span>{
-        <a class="self" href="#483">self</a>.m.<a href="#191-204">set_album_artist</a>(<span class="prelude-val">Some</span>(<a href="#484">album_artist</a>));
-        <span class="self"><a href="#483">self</a>
+        <a class="self" href="#462">self</a>.m.<a href="#182-195">set_album_artist</a>(<span class="prelude-val">Some</span>(<a href="#463">album_artist</a>));
+        <span class="self"><a href="#462">self</a>
     </span>}
 
     <span class="doccomment">/// Sets the track artist(s).
     </span><span class="kw">pub fn </span>artist(<span class="kw-2">mut </span><span class="self">self</span>, artist: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;) -&gt; <span class="self">Self </span>{
-        <a class="self" href="#491">self</a>.m.<a href="#215-220">set_artist</a>(<span class="prelude-val">Some</span>(<a href="#491">artist</a>));
-        <span class="self"><a href="#491">self</a>
+        <a class="self" href="#470">self</a>.m.<a href="#206-211">set_artist</a>(<span class="prelude-val">Some</span>(<a href="#470">artist</a>));
+        <span class="self"><a href="#470">self</a>
     </span>}
 
     <span class="doccomment">/// Sets the track lyrics.
     </span><span class="kw">pub fn </span>lyrics(<span class="kw-2">mut </span><span class="self">self</span>, lyrics: <span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;) -&gt; <span class="self">Self </span>{
-        <a class="self" href="#497">self</a>.m.<a href="#228-230">set_lyrics</a>(<span class="prelude-val">Some</span>(<a href="#497">lyrics</a>));
-        <span class="self"><a href="#497">self</a>
+        <a class="self" href="#476">self</a>.m.<a href="#219-221">set_lyrics</a>(<span class="prelude-val">Some</span>(<a href="#476">lyrics</a>));
+        <span class="self"><a href="#476">self</a>
     </span>}
 
     <span class="doccomment">/// Sets the speed of the music, in beats per minute.
     </span><span class="kw">pub fn </span>audio_bpm(<span class="kw-2">mut </span><span class="self">self</span>, audio_bpm: <a href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>) -&gt; <span class="self">Self </span>{
-        <a class="self" href="#503">self</a>.m.<a href="#238-240">set_audio_bpm</a>(<span class="prelude-val">Some</span>(<a href="#503">audio_bpm</a>));
-        <span class="self"><a href="#503">self</a>
+        <a class="self" href="#482">self</a>.m.<a href="#229-231">set_audio_bpm</a>(<span class="prelude-val">Some</span>(<a href="#482">audio_bpm</a>));
+        <span class="self"><a href="#482">self</a>
     </span>}
 
     <span class="doccomment">/// Sets an automatically-generated rating, based on things such
     /// as how often it has been played. This should be in the
     /// range 0.0 to 1.0.
     </span><span class="kw">pub fn </span>auto_rating(<span class="kw-2">mut </span><span class="self">self</span>, auto_rating: <a href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>) -&gt; <span class="self">Self </span>{
-        <a class="self" href="#511">self</a>.m.<a href="#252-254">set_auto_rating</a>(<span class="prelude-val">Some</span>(<a href="#511">auto_rating</a>));
-        <span class="self"><a href="#511">self</a>
+        <a class="self" href="#490">self</a>.m.<a href="#243-245">set_auto_rating</a>(<span class="prelude-val">Some</span>(<a href="#490">auto_rating</a>));
+        <span class="self"><a href="#490">self</a>
     </span>}
 
     <span class="doccomment">/// Sets a (list of) freeform comment(s).
     </span><span class="kw">pub fn </span>comment(<span class="kw-2">mut </span><span class="self">self</span>, comment: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;) -&gt; <span class="self">Self </span>{
-        <a class="self" href="#517">self</a>.m.<a href="#265-270">set_comment</a>(<span class="prelude-val">Some</span>(<a href="#517">comment</a>));
-        <span class="self"><a href="#517">self</a>
+        <a class="self" href="#496">self</a>.m.<a href="#256-261">set_comment</a>(<span class="prelude-val">Some</span>(<a href="#496">comment</a>));
+        <span class="self"><a href="#496">self</a>
     </span>}
 
     <span class="doccomment">/// Sets the composer(s) of the track.
     </span><span class="kw">pub fn </span>composer(<span class="kw-2">mut </span><span class="self">self</span>, composer: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;) -&gt; <span class="self">Self </span>{
-        <a class="self" href="#523">self</a>.m.<a href="#281-286">set_composer</a>(<span class="prelude-val">Some</span>(<a href="#523">composer</a>));
-        <span class="self"><a href="#523">self</a>
+        <a class="self" href="#502">self</a>.m.<a href="#272-277">set_composer</a>(<span class="prelude-val">Some</span>(<a href="#502">composer</a>));
+        <span class="self"><a href="#502">self</a>
     </span>}
 
     <span class="doccomment">/// Sets when the track was created. Usually only the year component
     /// will be useful.
     </span><span class="kw">pub fn </span>content_created(<span class="kw-2">mut </span><span class="self">self</span>, content_created: <span class="kw">impl </span>Into&lt;<a href="#17">DateTime</a>&gt;) -&gt; <span class="self">Self </span>{
-        <a class="self" href="#530">self</a>.m.<a href="#299-304">set_content_created</a>(<span class="prelude-val">Some</span>(<a href="#530">content_created</a>));
-        <span class="self"><a href="#530">self</a>
+        <a class="self" href="#509">self</a>.m.<a href="#287-292">set_content_created</a>(<span class="prelude-val">Some</span>(<a href="#509">content_created</a>));
+        <span class="self"><a href="#509">self</a>
     </span>}
 
     <span class="doccomment">/// Sets the disc number on the album that this track is from.
     </span><span class="kw">pub fn </span>disc_number(<span class="kw-2">mut </span><span class="self">self</span>, disc_number: <a href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>) -&gt; <span class="self">Self </span>{
-        <a class="self" href="#536">self</a>.m.<a href="#312-314">set_disc_number</a>(<span class="prelude-val">Some</span>(<a href="#536">disc_number</a>));
-        <span class="self"><a href="#536">self</a>
+        <a class="self" href="#515">self</a>.m.<a href="#300-302">set_disc_number</a>(<span class="prelude-val">Some</span>(<a href="#515">disc_number</a>));
+        <span class="self"><a href="#515">self</a>
     </span>}
 
     <span class="doccomment">/// Sets when the track was first played.
     </span><span class="kw">pub fn </span>first_used(<span class="kw-2">mut </span><span class="self">self</span>, first_used: <span class="kw">impl </span>Into&lt;<a href="#17">DateTime</a>&gt;) -&gt; <span class="self">Self </span>{
-        <a class="self" href="#542">self</a>.m.<a href="#325-330">set_first_used</a>(<span class="prelude-val">Some</span>(<a href="#542">first_used</a>));
-        <span class="self"><a href="#542">self</a>
+        <a class="self" href="#521">self</a>.m.<a href="#310-315">set_first_used</a>(<span class="prelude-val">Some</span>(<a href="#521">first_used</a>));
+        <span class="self"><a href="#521">self</a>
     </span>}
 
     <span class="doccomment">/// Sets the genre(s) of the track.
     </span><span class="kw">pub fn </span>genre(<span class="kw-2">mut </span><span class="self">self</span>, genre: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;) -&gt; <span class="self">Self </span>{
-        <a class="self" href="#548">self</a>.m.<a href="#341-346">set_genre</a>(<span class="prelude-val">Some</span>(<a href="#548">genre</a>));
-        <span class="self"><a href="#548">self</a>
+        <a class="self" href="#527">self</a>.m.<a href="#326-331">set_genre</a>(<span class="prelude-val">Some</span>(<a href="#527">genre</a>));
+        <span class="self"><a href="#527">self</a>
     </span>}
 
     <span class="doccomment">/// Sets when the track was last played.
     </span><span class="kw">pub fn </span>last_used(<span class="kw-2">mut </span><span class="self">self</span>, last_used: <span class="kw">impl </span>Into&lt;<a href="#17">DateTime</a>&gt;) -&gt; <span class="self">Self </span>{
-        <a class="self" href="#554">self</a>.m.<a href="#357-362">set_last_used</a>(<span class="prelude-val">Some</span>(<a href="#554">last_used</a>));
-        <span class="self"><a href="#554">self</a>
+        <a class="self" href="#533">self</a>.m.<a href="#339-344">set_last_used</a>(<span class="prelude-val">Some</span>(<a href="#533">last_used</a>));
+        <span class="self"><a href="#533">self</a>
     </span>}
 
     <span class="doccomment">/// Sets the lyricist(s) of the track.
     </span><span class="kw">pub fn </span>lyricist(<span class="kw-2">mut </span><span class="self">self</span>, lyricist: <span class="kw">impl </span>IntoIterator&lt;Item = <span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;&gt;) -&gt; <span class="self">Self </span>{
-        <a class="self" href="#560">self</a>.m.<a href="#373-378">set_lyricist</a>(<span class="prelude-val">Some</span>(<a href="#560">lyricist</a>));
-        <span class="self"><a href="#560">self</a>
+        <a class="self" href="#539">self</a>.m.<a href="#355-360">set_lyricist</a>(<span class="prelude-val">Some</span>(<a href="#539">lyricist</a>));
+        <span class="self"><a href="#539">self</a>
     </span>}
 
     <span class="doccomment">/// Sets the track title.
     </span><span class="kw">pub fn </span>title(<span class="kw-2">mut </span><span class="self">self</span>, title: <span class="kw">impl </span>Into&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;) -&gt; <span class="self">Self </span>{
-        <a class="self" href="#566">self</a>.m.<a href="#386-388">set_title</a>(<span class="prelude-val">Some</span>(<a href="#566">title</a>));
-        <span class="self"><a href="#566">self</a>
+        <a class="self" href="#545">self</a>.m.<a href="#368-370">set_title</a>(<span class="prelude-val">Some</span>(<a href="#545">title</a>));
+        <span class="self"><a href="#545">self</a>
     </span>}
 
     <span class="doccomment">/// Sets the track number on the album disc.
     </span><span class="kw">pub fn </span>track_number(<span class="kw-2">mut </span><span class="self">self</span>, track_number: <a href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>) -&gt; <span class="self">Self </span>{
-        <a class="self" href="#572">self</a>.m.<a href="#396-398">set_track_number</a>(<span class="prelude-val">Some</span>(<a href="#572">track_number</a>));
-        <span class="self"><a href="#572">self</a>
+        <a class="self" href="#551">self</a>.m.<a href="#378-380">set_track_number</a>(<span class="prelude-val">Some</span>(<a href="#551">track_number</a>));
+        <span class="self"><a href="#551">self</a>
     </span>}
 
     <span class="doccomment">/// Sets the location of the media file.
-    </span><span class="kw">pub fn </span>url(<span class="kw-2">mut </span><span class="self">self</span>, url: <span class="kw">impl </span>Into&lt;<a href="lib.rs.html#1222">Uri</a>&gt;) -&gt; <span class="self">Self </span>{
-        <a class="self" href="#578">self</a>.m.<a href="#409-411">set_url</a>(<span class="prelude-val">Some</span>(<a href="#578">url</a>));
-        <span class="self"><a href="#578">self</a>
+    </span><span class="kw">pub fn </span>url(<span class="kw-2">mut </span><span class="self">self</span>, url: <span class="kw">impl </span>Into&lt;<a href="lib.rs.html#1221">Uri</a>&gt;) -&gt; <span class="self">Self </span>{
+        <a class="self" href="#557">self</a>.m.<a href="#388-390">set_url</a>(<span class="prelude-val">Some</span>(<a href="#557">url</a>));
+        <span class="self"><a href="#557">self</a>
     </span>}
 
     <span class="doccomment">/// Sets the number of times the track has been played.
     </span><span class="kw">pub fn </span>use_count(<span class="kw-2">mut </span><span class="self">self</span>, use_count: <a href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>) -&gt; <span class="self">Self </span>{
-        <a class="self" href="#584">self</a>.m.<a href="#419-421">set_use_count</a>(<span class="prelude-val">Some</span>(<a href="#584">use_count</a>));
-        <span class="self"><a href="#584">self</a>
+        <a class="self" href="#563">self</a>.m.<a href="#398-400">set_use_count</a>(<span class="prelude-val">Some</span>(<a href="#563">use_count</a>));
+        <span class="self"><a href="#563">self</a>
     </span>}
 
     <span class="doccomment">/// Sets a user-specified rating. This should be in the range 0.0 to 1.0.
     </span><span class="kw">pub fn </span>user_rating(<span class="kw-2">mut </span><span class="self">self</span>, user_rating: <a href="https://doc.rust-lang.org/nightly/std/primitive.f64.html">f64</a>) -&gt; <span class="self">Self </span>{
-        <a class="self" href="#590">self</a>.m.<a href="#429-431">set_user_rating</a>(<span class="prelude-val">Some</span>(<a href="#590">user_rating</a>));
-        <span class="self"><a href="#590">self</a>
+        <a class="self" href="#569">self</a>.m.<a href="#408-410">set_user_rating</a>(<span class="prelude-val">Some</span>(<a href="#569">user_rating</a>));
+        <span class="self"><a href="#569">self</a>
     </span>}
 
     <span class="doccomment">/// Creates [`Metadata`] from the builder.
     </span><span class="attr">#[must_use = <span class="string">"building metadata is usually expensive and is not expected to have side effects"</span>]
     </span><span class="kw">pub fn </span>build(<span class="self">self</span>) -&gt; <a href="#36">Metadata</a> {
-        <a class="self" href="#597">self</a>.m
+        <a class="self" href="#576">self</a>.m
     }
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; From&lt;<a href="#36">Metadata</a>&gt; <span class="kw">for </span>Value&lt;<span class="lifetime">'a</span>&gt; {
     <span class="kw">fn </span>from(metainfo: <a href="#36">Metadata</a>) -&gt; <span class="self">Self </span>{
-        Value::new(<a href="#603">metainfo</a>.<span class="number">0</span>)
+        Value::new(<a href="#582">metainfo</a>.<span class="number">0</span>)
     }
 }
 

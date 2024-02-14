@@ -1063,8 +1063,8 @@
 <span class="kw">use </span>zbus::{fdo, <span class="prelude-ty">Result</span>};
 
 <span class="kw">use crate</span>::{
-    <a href="lib.rs.html#1178-1184">LocalPlayerInterface</a>, <a href="lib.rs.html#1178-1184">LocalRootInterface</a>, <a href="local_server.rs.html#538-542">LocalServer</a>, <a href="local_server.rs.html#508-510">LocalServerRunTask</a>, <a href="loop_status.rs.html#9-17">LoopStatus</a>,
-    <a href="metadata.rs.html#36">Metadata</a>, <a href="lib.rs.html#1192">PlaybackRate</a>, <a href="playback_status.rs.html#9-16">PlaybackStatus</a>, <a href="property.rs.html#11-36">Property</a>, <a href="signal.rs.html#8-25">Signal</a>, <a href="time.rs.html#15">Time</a>, <a href="track_id.rs.html#32">TrackId</a>, <a href="lib.rs.html#1201">Volume</a>,
+    <a href="lib.rs.html#1177-1183">LocalPlayerInterface</a>, <a href="lib.rs.html#1177-1183">LocalRootInterface</a>, <a href="local_server.rs.html#538-542">LocalServer</a>, <a href="local_server.rs.html#508-510">LocalServerRunTask</a>, <a href="loop_status.rs.html#9-17">LoopStatus</a>,
+    <a href="metadata.rs.html#36">Metadata</a>, <a href="lib.rs.html#1191">PlaybackRate</a>, <a href="playback_status.rs.html#9-16">PlaybackStatus</a>, <a href="property.rs.html#11-36">Property</a>, <a href="signal.rs.html#8-25">Signal</a>, <a href="time.rs.html#15">Time</a>, <a href="track_id.rs.html#32">TrackId</a>, <a href="lib.rs.html#1200">Volume</a>,
 };
 
 <span class="doccomment">/// Ready-to-use mutable *service*-side object that internally implements
@@ -1109,18 +1109,18 @@
     set_position_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>, <span class="kw-2">&amp;</span><a href="track_id.rs.html#32">TrackId</a>, <a href="time.rs.html#15">Time</a>)&gt;&gt;&gt;,
     open_uri_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>, <span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>)&gt;&gt;&gt;,
     set_loop_status_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>, <a href="loop_status.rs.html#9-17">LoopStatus</a>)&gt;&gt;&gt;, <span class="comment">// Property
-    </span>set_rate_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>, <a href="lib.rs.html#1192">PlaybackRate</a>)&gt;&gt;&gt;,      <span class="comment">// Property
+    </span>set_rate_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>, <a href="lib.rs.html#1191">PlaybackRate</a>)&gt;&gt;&gt;,      <span class="comment">// Property
     </span>set_shuffle_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>, <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>)&gt;&gt;&gt;,           <span class="comment">// Property
-    </span>set_volume_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>, <a href="lib.rs.html#1201">Volume</a>)&gt;&gt;&gt;,          <span class="comment">// Property
+    </span>set_volume_cbs: RefCell&lt;Vec&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span><a href="#25-27">Player</a>, <a href="lib.rs.html#1200">Volume</a>)&gt;&gt;&gt;,          <span class="comment">// Property
     </span>playback_status: Cell&lt;<a href="playback_status.rs.html#9-16">PlaybackStatus</a>&gt;,
     loop_status: Cell&lt;<a href="loop_status.rs.html#9-17">LoopStatus</a>&gt;,
-    rate: Cell&lt;<a href="lib.rs.html#1192">PlaybackRate</a>&gt;,
+    rate: Cell&lt;<a href="lib.rs.html#1191">PlaybackRate</a>&gt;,
     shuffle: Cell&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;,
     metadata: RefCell&lt;<a href="metadata.rs.html#36">Metadata</a>&gt;,
-    volume: Cell&lt;<a href="lib.rs.html#1201">Volume</a>&gt;,
+    volume: Cell&lt;<a href="lib.rs.html#1200">Volume</a>&gt;,
     position: Cell&lt;<a href="time.rs.html#15">Time</a>&gt;,
-    minimum_rate: Cell&lt;<a href="lib.rs.html#1192">PlaybackRate</a>&gt;,
-    maximum_rate: Cell&lt;<a href="lib.rs.html#1192">PlaybackRate</a>&gt;,
+    minimum_rate: Cell&lt;<a href="lib.rs.html#1191">PlaybackRate</a>&gt;,
+    maximum_rate: Cell&lt;<a href="lib.rs.html#1191">PlaybackRate</a>&gt;,
     can_go_next: Cell&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;,
     can_go_previous: Cell&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;,
     can_play: Cell&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;,
@@ -1144,7 +1144,7 @@
 }
 
 <span class="attr">#[async_trait(<span class="question-mark">?</span>Send)]
-</span><span class="kw">impl </span><a href="lib.rs.html#1178-1184">LocalRootInterface</a> <span class="kw">for </span><a href="#30-74">State</a> {
+</span><span class="kw">impl </span><a href="lib.rs.html#1177-1183">LocalRootInterface</a> <span class="kw">for </span><a href="#30-74">State</a> {
     <span class="kw">async fn </span>raise(<span class="kw-2">&amp;</span><a class="self" href="#92">self</a>) -&gt; fdo::Result&lt;()&gt; {
         <span class="kw">let </span>player = <a class="self" href="#92">self</a>.<a href="#77-87">player</a>();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.raise_cbs.borrow().iter() {
@@ -1207,7 +1207,7 @@
 }
 
 <span class="attr">#[async_trait(<span class="question-mark">?</span>Send)]
-</span><span class="kw">impl </span><a href="lib.rs.html#1178-1184">LocalPlayerInterface</a> <span class="kw">for </span><a href="#30-74">State</a> {
+</span><span class="kw">impl </span><a href="lib.rs.html#1177-1183">LocalPlayerInterface</a> <span class="kw">for </span><a href="#30-74">State</a> {
     <span class="kw">async fn </span>next(<span class="kw-2">&amp;</span><a class="self" href="#155">self</a>) -&gt; fdo::Result&lt;()&gt; {
         <span class="kw">let </span>player = <a class="self" href="#155">self</a>.<a href="#77-87">player</a>();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.next_cbs.borrow().iter() {
@@ -1296,11 +1296,11 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async fn </span>rate(<span class="kw-2">&amp;</span><a class="self" href="#243">self</a>) -&gt; fdo::Result&lt;<a href="lib.rs.html#1192">PlaybackRate</a>&gt; {
+    <span class="kw">async fn </span>rate(<span class="kw-2">&amp;</span><a class="self" href="#243">self</a>) -&gt; fdo::Result&lt;<a href="lib.rs.html#1191">PlaybackRate</a>&gt; {
         <span class="prelude-val">Ok</span>(<a class="self" href="#243">self</a>.rate.<a href="https://doc.rust-lang.org/nightly/core/cell/struct.Cell.html#method.get">get</a>())
     }
 
-    <span class="kw">async fn </span>set_rate(<span class="kw-2">&amp;</span><a class="self" href="#247">self</a>, <a href="#247">rate</a>: <a href="lib.rs.html#1192">PlaybackRate</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">async fn </span>set_rate(<span class="kw-2">&amp;</span><a class="self" href="#247">self</a>, <a href="#247">rate</a>: <a href="lib.rs.html#1191">PlaybackRate</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span>player = <a class="self" href="#247">self</a>.<a href="#77-87">player</a>();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.set_rate_cbs.borrow().iter() {
             cb(<span class="kw-2">&amp;</span>player, rate);
@@ -1324,11 +1324,11 @@
         <span class="prelude-val">Ok</span>(<a class="self" href="#267">self</a>.metadata.<a href="https://doc.rust-lang.org/nightly/core/cell/struct.RefCell.html#method.borrow">borrow</a>().<a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">clone</a>())
     }
 
-    <span class="kw">async fn </span>volume(<span class="kw-2">&amp;</span><a class="self" href="#271">self</a>) -&gt; fdo::Result&lt;<a href="lib.rs.html#1201">Volume</a>&gt; {
+    <span class="kw">async fn </span>volume(<span class="kw-2">&amp;</span><a class="self" href="#271">self</a>) -&gt; fdo::Result&lt;<a href="lib.rs.html#1200">Volume</a>&gt; {
         <span class="prelude-val">Ok</span>(<a class="self" href="#271">self</a>.volume.<a href="https://doc.rust-lang.org/nightly/core/cell/struct.Cell.html#method.get">get</a>())
     }
 
-    <span class="kw">async fn </span>set_volume(<span class="kw-2">&amp;</span><a class="self" href="#275">self</a>, <a href="#275">volume</a>: <a href="lib.rs.html#1201">Volume</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">async fn </span>set_volume(<span class="kw-2">&amp;</span><a class="self" href="#275">self</a>, <a href="#275">volume</a>: <a href="lib.rs.html#1200">Volume</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">let </span>player = <a class="self" href="#275">self</a>.<a href="#77-87">player</a>();
         <span class="kw">for </span>cb <span class="kw">in </span><span class="self">self</span>.set_volume_cbs.borrow().iter() {
             cb(<span class="kw-2">&amp;</span>player, volume);
@@ -1340,11 +1340,11 @@
         <span class="prelude-val">Ok</span>(<a class="self" href="#283">self</a>.position.<a href="https://doc.rust-lang.org/nightly/core/cell/struct.Cell.html#method.get">get</a>())
     }
 
-    <span class="kw">async fn </span>minimum_rate(<span class="kw-2">&amp;</span><a class="self" href="#287">self</a>) -&gt; fdo::Result&lt;<a href="lib.rs.html#1192">PlaybackRate</a>&gt; {
+    <span class="kw">async fn </span>minimum_rate(<span class="kw-2">&amp;</span><a class="self" href="#287">self</a>) -&gt; fdo::Result&lt;<a href="lib.rs.html#1191">PlaybackRate</a>&gt; {
         <span class="prelude-val">Ok</span>(<a class="self" href="#287">self</a>.minimum_rate.<a href="https://doc.rust-lang.org/nightly/core/cell/struct.Cell.html#method.get">get</a>())
     }
 
-    <span class="kw">async fn </span>maximum_rate(<span class="kw-2">&amp;</span><a class="self" href="#291">self</a>) -&gt; fdo::Result&lt;<a href="lib.rs.html#1192">PlaybackRate</a>&gt; {
+    <span class="kw">async fn </span>maximum_rate(<span class="kw-2">&amp;</span><a class="self" href="#291">self</a>) -&gt; fdo::Result&lt;<a href="lib.rs.html#1191">PlaybackRate</a>&gt; {
         <span class="prelude-val">Ok</span>(<a class="self" href="#291">self</a>.maximum_rate.<a href="https://doc.rust-lang.org/nightly/core/cell/struct.Cell.html#method.get">get</a>())
     }
 
@@ -1654,7 +1654,7 @@
             .<a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html#method.push">push</a>(<a href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html#method.new">Box::new</a>(<a href="#593">cb</a>));
     }
 
-    <span class="kw">pub fn </span>connect_set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, <a href="lib.rs.html#1192">PlaybackRate</a>) + <span class="lifetime">'static</span>) {
+    <span class="kw">pub fn </span>connect_set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, <a href="lib.rs.html#1191">PlaybackRate</a>) + <span class="lifetime">'static</span>) {
         <a class="self" href="#601">self</a>.server
             .<a href="local_server.rs.html#601-603">imp</a>()
             .set_rate_cbs
@@ -1670,7 +1670,7 @@
             .<a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html#method.push">push</a>(<a href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html#method.new">Box::new</a>(<a href="#609">cb</a>));
     }
 
-    <span class="kw">pub fn </span>connect_set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, <a href="lib.rs.html#1201">Volume</a>) + <span class="lifetime">'static</span>) {
+    <span class="kw">pub fn </span>connect_set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, cb: <span class="kw">impl </span>Fn(<span class="kw-2">&amp;</span><span class="self">Self</span>, <a href="lib.rs.html#1200">Volume</a>) + <span class="lifetime">'static</span>) {
         <a class="self" href="#617">self</a>.server
             .<a href="local_server.rs.html#601-603">imp</a>()
             .set_volume_cbs
@@ -1712,11 +1712,11 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="lib.rs.html#1192">PlaybackRate</a> {
+    <span class="kw">pub fn </span>rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="lib.rs.html#1191">PlaybackRate</a> {
         <a class="self" href="#659">self</a>.server.<a href="local_server.rs.html#601-603">imp</a>().rate.<a href="https://doc.rust-lang.org/nightly/core/cell/struct.Cell.html#method.get">get</a>()
     }
 
-    <span class="kw">pub async fn </span>set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, rate: <a href="lib.rs.html#1192">PlaybackRate</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, rate: <a href="lib.rs.html#1191">PlaybackRate</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.rate() == rate {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1755,11 +1755,11 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>volume(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="lib.rs.html#1201">Volume</a> {
+    <span class="kw">pub fn </span>volume(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="lib.rs.html#1200">Volume</a> {
         <a class="self" href="#702">self</a>.server.<a href="local_server.rs.html#601-603">imp</a>().volume.<a href="https://doc.rust-lang.org/nightly/core/cell/struct.Cell.html#method.get">get</a>()
     }
 
-    <span class="kw">pub async fn </span>set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, volume: <a href="lib.rs.html#1201">Volume</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, volume: <a href="lib.rs.html#1200">Volume</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.volume() == volume {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1779,11 +1779,11 @@
         <a class="self" href="#722">self</a>.server.<a href="local_server.rs.html#601-603">imp</a>().position.<a href="https://doc.rust-lang.org/nightly/core/cell/struct.Cell.html#method.set">set</a>(<a href="#722">position</a>);
     }
 
-    <span class="kw">pub fn </span>minimum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="lib.rs.html#1192">PlaybackRate</a> {
+    <span class="kw">pub fn </span>minimum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="lib.rs.html#1191">PlaybackRate</a> {
         <a class="self" href="#726">self</a>.server.<a href="local_server.rs.html#601-603">imp</a>().minimum_rate.<a href="https://doc.rust-lang.org/nightly/core/cell/struct.Cell.html#method.get">get</a>()
     }
 
-    <span class="kw">pub async fn </span>set_minimum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, minimum_rate: <a href="lib.rs.html#1192">PlaybackRate</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_minimum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, minimum_rate: <a href="lib.rs.html#1191">PlaybackRate</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.minimum_rate() == minimum_rate {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1794,11 +1794,11 @@
             .<span class="kw">await
     </span>}
 
-    <span class="kw">pub fn </span>maximum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="lib.rs.html#1192">PlaybackRate</a> {
+    <span class="kw">pub fn </span>maximum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <a href="lib.rs.html#1191">PlaybackRate</a> {
         <a class="self" href="#741">self</a>.server.<a href="local_server.rs.html#601-603">imp</a>().maximum_rate.<a href="https://doc.rust-lang.org/nightly/core/cell/struct.Cell.html#method.get">get</a>()
     }
 
-    <span class="kw">pub async fn </span>set_maximum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, maximum_rate: <a href="lib.rs.html#1192">PlaybackRate</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">pub async fn </span>set_maximum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, maximum_rate: <a href="lib.rs.html#1191">PlaybackRate</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">if </span><span class="self">self</span>.maximum_rate() == maximum_rate {
             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
         }
@@ -1906,13 +1906,13 @@
     supported_mime_types: Vec&lt;<a href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html">String</a>&gt;,
     playback_status: <a href="playback_status.rs.html#9-16">PlaybackStatus</a>,
     loop_status: <a href="loop_status.rs.html#9-17">LoopStatus</a>,
-    rate: <a href="lib.rs.html#1192">PlaybackRate</a>,
+    rate: <a href="lib.rs.html#1191">PlaybackRate</a>,
     shuffle: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
     metadata: <a href="metadata.rs.html#36">Metadata</a>,
-    volume: <a href="lib.rs.html#1201">Volume</a>,
+    volume: <a href="lib.rs.html#1200">Volume</a>,
     position: <a href="time.rs.html#15">Time</a>,
-    minimum_rate: <a href="lib.rs.html#1192">PlaybackRate</a>,
-    maximum_rate: <a href="lib.rs.html#1192">PlaybackRate</a>,
+    minimum_rate: <a href="lib.rs.html#1191">PlaybackRate</a>,
+    maximum_rate: <a href="lib.rs.html#1191">PlaybackRate</a>,
     can_go_next: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
     can_go_previous: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
     can_play: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
@@ -1986,7 +1986,7 @@
         <span class="self"><a href="#928">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>rate(<span class="kw-2">mut </span><span class="self">self</span>, rate: <a href="lib.rs.html#1192">PlaybackRate</a>) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>rate(<span class="kw-2">mut </span><span class="self">self</span>, rate: <a href="lib.rs.html#1191">PlaybackRate</a>) -&gt; <span class="self">Self </span>{
         <a class="self" href="#933">self</a>.rate = <a href="#933">rate</a>;
         <span class="self"><a href="#933">self</a>
     </span>}
@@ -2001,7 +2001,7 @@
         <span class="self"><a href="#943">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>volume(<span class="kw-2">mut </span><span class="self">self</span>, volume: <a href="lib.rs.html#1201">Volume</a>) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>volume(<span class="kw-2">mut </span><span class="self">self</span>, volume: <a href="lib.rs.html#1200">Volume</a>) -&gt; <span class="self">Self </span>{
         <a class="self" href="#948">self</a>.volume = <a href="#948">volume</a>;
         <span class="self"><a href="#948">self</a>
     </span>}
@@ -2011,12 +2011,12 @@
         <span class="self"><a href="#953">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>minimum_rate(<span class="kw-2">mut </span><span class="self">self</span>, minimum_rate: <a href="lib.rs.html#1192">PlaybackRate</a>) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>minimum_rate(<span class="kw-2">mut </span><span class="self">self</span>, minimum_rate: <a href="lib.rs.html#1191">PlaybackRate</a>) -&gt; <span class="self">Self </span>{
         <a class="self" href="#958">self</a>.minimum_rate = <a href="#958">minimum_rate</a>;
         <span class="self"><a href="#958">self</a>
     </span>}
 
-    <span class="kw">pub fn </span>maximum_rate(<span class="kw-2">mut </span><span class="self">self</span>, maximum_rate: <a href="lib.rs.html#1192">PlaybackRate</a>) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>maximum_rate(<span class="kw-2">mut </span><span class="self">self</span>, maximum_rate: <a href="lib.rs.html#1191">PlaybackRate</a>) -&gt; <span class="self">Self </span>{
         <a class="self" href="#963">self</a>.maximum_rate = <a href="#963">maximum_rate</a>;
         <span class="self"><a href="#963">self</a>
     </span>}
