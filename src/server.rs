@@ -224,7 +224,8 @@ where
         self.imp.can_seek().await
     }
 
-    #[zbus(property(emits_changed_signal = "const"))]
+    // FIXME This should have been "const", but it is "false" in the spec.
+    #[zbus(property(emits_changed_signal = "false"))]
     async fn can_control(&self) -> fdo::Result<bool> {
         self.imp.can_control().await
     }
