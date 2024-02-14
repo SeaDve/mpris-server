@@ -136,10 +136,7 @@ impl Metadata {
 
     /// The duration of the track.
     pub fn length(&self) -> Option<Time> {
-        self.get_value("mpris:length")?
-            .try_clone()
-            .ok()
-            .and_then(|v| v.downcast().ok())
+        self.get_value("mpris:length")?.downcast_ref().ok()
     }
 
     /// Sets the duration of the track.

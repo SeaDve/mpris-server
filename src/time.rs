@@ -353,6 +353,14 @@ impl TryFrom<Value<'_>> for Time {
     }
 }
 
+impl TryFrom<&Value<'_>> for Time {
+    type Error = Error;
+
+    fn try_from(value: &Value<'_>) -> Result<Self, Self::Error> {
+        i64::try_from(value).map(Self)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
