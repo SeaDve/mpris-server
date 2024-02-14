@@ -1141,7 +1141,7 @@ define_iface!(
 );
 
 define_iface!(
-    #[trait_variant::make],
+    #[allow(async_fn_in_trait)],
     LocalRootInterface extra_docs "Local version of [`RootInterface`] to be used with [`LocalServer`].",
     LocalPlayerInterface extra_docs "Local version of [`PlayerInterface`] to be used with [`LocalServer`].",
     LocalTrackListInterface extra_docs "Local version of [`TrackListInterface`] to be used with [`LocalServer`].",
