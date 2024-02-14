@@ -1192,6 +1192,11 @@ mod tests {
 
     use super::*;
 
+    assert_trait_sub_all!(RootInterface: Send, Sync);
+    assert_trait_sub_all!(PlayerInterface: Send, Sync);
+    assert_trait_sub_all!(TrackListInterface: Send, Sync);
+    assert_trait_sub_all!(PlaylistsInterface: Send, Sync);
+
     assert_trait_sub_all!(PlayerInterface: RootInterface);
     assert_trait_sub_all!(TrackListInterface: PlayerInterface, RootInterface);
     assert_trait_sub_all!(PlaylistsInterface: PlayerInterface, RootInterface);
