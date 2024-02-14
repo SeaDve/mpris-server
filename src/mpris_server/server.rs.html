@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/server.rs`."><title>server.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-b1a3e7f8283b8434.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="mpris_server" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.0-nightly (5bd5d214e 2024-01-25)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/server.rs`."><title>server.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="mpris_server" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (a84bb95a1 2024-02-13)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
             <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
     <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../mpris_server/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
@@ -746,7 +746,7 @@
 
 <span class="kw">use </span><a href="https://docs.rs/serde_derive/1.0.196/serde_derive/derive.Serialize.html">serde::Serialize</a>;
 <span class="kw">use </span>zbus::{
-    dbus_interface, fdo,
+    fdo,
     names::BusName,
     zvariant::{DynamicType, ObjectPath, Value},
     Connection, ConnectionBuilder, Interface, <span class="prelude-ty">Result</span>, SignalContext,
@@ -766,7 +766,7 @@
     imp: Arc&lt;T&gt;,
 }
 
-<span class="attr">#[dbus_interface(name = <span class="string">"org.mpris.MediaPlayer2"</span>)]
+<span class="attr">#[zbus::interface(name = <span class="string">"org.mpris.MediaPlayer2"</span>)]
 </span><span class="kw">impl</span>&lt;T&gt; RawRootInterface&lt;T&gt;
 <span class="kw">where
     </span>T: <a href="lib.rs.html#1170-1176">RootInterface</a> + <span class="lifetime">'static</span>,
@@ -779,52 +779,52 @@
         <span class="self">self</span>.imp.quit().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>can_quit(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
         <span class="self">self</span>.imp.can_quit().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
         <span class="self">self</span>.imp.fullscreen().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>, fullscreen: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.imp.set_fullscreen(fullscreen).<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>can_set_fullscreen(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
         <span class="self">self</span>.imp.can_set_fullscreen().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>can_raise(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
         <span class="self">self</span>.imp.can_raise().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>has_track_list(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
         <span class="self">self</span>.imp.has_track_list().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>identity(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;String&gt; {
         <span class="self">self</span>.imp.identity().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>desktop_entry(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;String&gt; {
         <span class="self">self</span>.imp.desktop_entry().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>supported_uri_schemes(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;String&gt;&gt; {
         <span class="self">self</span>.imp.supported_uri_schemes().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>supported_mime_types(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;String&gt;&gt; {
         <span class="self">self</span>.imp.supported_mime_types().<span class="kw">await
     </span>}
@@ -834,7 +834,7 @@
     imp: Arc&lt;T&gt;,
 }
 
-<span class="attr">#[dbus_interface(name = <span class="string">"org.mpris.MediaPlayer2.Player"</span>)]
+<span class="attr">#[zbus::interface(name = <span class="string">"org.mpris.MediaPlayer2.Player"</span>)]
 </span><span class="kw">impl</span>&lt;T&gt; RawPlayerInterface&lt;T&gt;
 <span class="kw">where
     </span>T: <a href="lib.rs.html#1170-1176">PlayerInterface</a> + <span class="lifetime">'static</span>,
@@ -875,100 +875,100 @@
         <span class="self">self</span>.imp.open_uri(uri).<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(signal)]
+    <span class="attr">#[zbus(signal)]
     </span><span class="kw">async fn </span>seeked(ctxt: <span class="kw-2">&amp;</span>SignalContext&lt;<span class="lifetime">'_</span>&gt;, position: <a href="time.rs.html#15">Time</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>playback_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackStatus&gt; {
         <span class="self">self</span>.imp.playback_status().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;LoopStatus&gt; {
         <span class="self">self</span>.imp.loop_status().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>set_loop_status(<span class="kw-2">&amp;</span><span class="self">self</span>, loop_status: <a href="loop_status.rs.html#9-17">LoopStatus</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.imp.set_loop_status(loop_status).<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackRate&gt; {
         <span class="self">self</span>.imp.rate().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, rate: <a href="lib.rs.html#1192">PlaybackRate</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.imp.set_rate(rate).<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
         <span class="self">self</span>.imp.shuffle().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>set_shuffle(<span class="kw-2">&amp;</span><span class="self">self</span>, shuffle: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.imp.set_shuffle(shuffle).<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>metadata(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Metadata&gt; {
         <span class="self">self</span>.imp.metadata().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>volume(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Volume&gt; {
         <span class="self">self</span>.imp.volume().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, volume: <a href="lib.rs.html#1201">Volume</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.imp.set_volume(volume).<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Time&gt; {
         <span class="self">self</span>.imp.position().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>minimum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackRate&gt; {
         <span class="self">self</span>.imp.minimum_rate().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>maximum_rate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;PlaybackRate&gt; {
         <span class="self">self</span>.imp.maximum_rate().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>can_go_next(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
         <span class="self">self</span>.imp.can_go_next().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>can_go_previous(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
         <span class="self">self</span>.imp.can_go_previous().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>can_play(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
         <span class="self">self</span>.imp.can_play().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>can_pause(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
         <span class="self">self</span>.imp.can_pause().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>can_seek(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
         <span class="self">self</span>.imp.can_seek().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>can_control(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
         <span class="self">self</span>.imp.can_control().<span class="kw">await
     </span>}
@@ -978,7 +978,7 @@
     imp: Arc&lt;T&gt;,
 }
 
-<span class="attr">#[dbus_interface(name = <span class="string">"org.mpris.MediaPlayer2.TrackList"</span>)]
+<span class="attr">#[zbus::interface(name = <span class="string">"org.mpris.MediaPlayer2.TrackList"</span>)]
 </span><span class="kw">impl</span>&lt;T&gt; RawTrackListInterface&lt;T&gt;
 <span class="kw">where
     </span>T: <a href="lib.rs.html#1170-1176">TrackListInterface</a> + <span class="lifetime">'static</span>,
@@ -1004,36 +1004,36 @@
         <span class="self">self</span>.imp.go_to(track_id).<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(signal)]
+    <span class="attr">#[zbus(signal)]
     </span><span class="kw">async fn </span>track_list_replaced(
         ctxt: <span class="kw-2">&amp;</span>SignalContext&lt;<span class="lifetime">'_</span>&gt;,
         tracks: Vec&lt;<a href="track_id.rs.html#32">TrackId</a>&gt;,
         current_track: <a href="track_id.rs.html#32">TrackId</a>,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
 
-    <span class="attr">#[dbus_interface(signal)]
+    <span class="attr">#[zbus(signal)]
     </span><span class="kw">async fn </span>track_added(
         ctxt: <span class="kw-2">&amp;</span>SignalContext&lt;<span class="lifetime">'_</span>&gt;,
         metadata: <a href="metadata.rs.html#36">Metadata</a>,
         after_track: <a href="track_id.rs.html#32">TrackId</a>,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
 
-    <span class="attr">#[dbus_interface(signal)]
+    <span class="attr">#[zbus(signal)]
     </span><span class="kw">async fn </span>track_removed(ctxt: <span class="kw-2">&amp;</span>SignalContext&lt;<span class="lifetime">'_</span>&gt;, track_id: <a href="track_id.rs.html#32">TrackId</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
 
-    <span class="attr">#[dbus_interface(signal)]
+    <span class="attr">#[zbus(signal)]
     </span><span class="kw">async fn </span>track_metadata_changed(
         ctxt: <span class="kw-2">&amp;</span>SignalContext&lt;<span class="lifetime">'_</span>&gt;,
         track_id: <a href="track_id.rs.html#32">TrackId</a>,
         metadata: <a href="metadata.rs.html#36">Metadata</a>,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>tracks(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;TrackId&gt;&gt; {
         <span class="self">self</span>.imp.tracks().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>can_edit_tracks(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;bool&gt; {
         <span class="self">self</span>.imp.can_edit_tracks().<span class="kw">await
     </span>}
@@ -1043,7 +1043,7 @@
     imp: Arc&lt;T&gt;,
 }
 
-<span class="attr">#[dbus_interface(name = <span class="string">"org.mpris.MediaPlayer2.Playlists"</span>)]
+<span class="attr">#[zbus::interface(name = <span class="string">"org.mpris.MediaPlayer2.Playlists"</span>)]
 </span><span class="kw">impl</span>&lt;T&gt; RawPlaylistsInterface&lt;T&gt;
 <span class="kw">where
     </span>T: <a href="lib.rs.html#1170-1176">PlaylistsInterface</a> + <span class="lifetime">'static</span>,
@@ -1064,20 +1064,20 @@
             .<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(signal)]
+    <span class="attr">#[zbus(signal)]
     </span><span class="kw">async fn </span>playlist_changed(ctxt: <span class="kw-2">&amp;</span>SignalContext&lt;<span class="lifetime">'_</span>&gt;, playlist: <a href="playlist.rs.html#8-17">Playlist</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;;
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>playlist_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;u32&gt; {
         <span class="self">self</span>.imp.playlist_count().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>orderings(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;Vec&lt;PlaylistOrdering&gt;&gt; {
         <span class="self">self</span>.imp.orderings().<span class="kw">await
     </span>}
 
-    <span class="attr">#[dbus_interface(property)]
+    <span class="attr">#[zbus(property)]
     </span><span class="kw">async fn </span>active_playlist(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;MaybePlaylist&gt; {
         <span class="self">self</span>.imp.active_playlist().<span class="kw">await</span>.map(MaybePlaylist::from)
     }
@@ -1100,7 +1100,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html">fmt::Debug</a> <span class="kw">for </span>Server&lt;T&gt; {
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; <a href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html">fmt::Result</a> {
-        <a href="#358">f</a>.debug_struct(<span class="string">"Server"</span>).finish()
+        <a href="#358">f</a>.<a href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html#method.debug_struct">debug_struct</a>(<span class="string">"Server"</span>).<a href="https://doc.rust-lang.org/nightly/core/fmt/builders/struct.DebugStruct.html#method.finish">finish</a>()
     }
 }
 
