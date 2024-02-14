@@ -16,7 +16,6 @@ edition = "2021"
 async-channel = "2.2"
 async-trait = "0.1"
 futures-channel = "0.3"
-futures-util = { version = "0.3", default-features = false, features = ["std"] }
 serde = "1.0"
 zbus = "4.0"
 

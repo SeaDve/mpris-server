@@ -11,7 +11,6 @@ use std::{
 use async_channel::{Receiver, Sender};
 use async_trait::async_trait;
 use futures_channel::oneshot;
-use futures_util::FutureExt;
 use zbus::{fdo, Connection, Result};
 
 use crate::{
@@ -523,7 +522,7 @@ impl Future for LocalServerRunTask {
 
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         match self.inner.as_mut() {
-            Some(inner) => inner.poll_unpin(cx),
+            Some(inner) => Pin::new(inner).poll(cx),
             None => Poll::Ready(()),
         }
     }
