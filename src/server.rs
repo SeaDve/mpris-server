@@ -184,7 +184,7 @@ where
         self.imp.set_volume(volume).await
     }
 
-    #[zbus(property)]
+    #[zbus(property(emits_changed_signal = "false"))]
     async fn position(&self) -> fdo::Result<Time> {
         self.imp.position().await
     }
@@ -224,7 +224,7 @@ where
         self.imp.can_seek().await
     }
 
-    #[zbus(property)]
+    #[zbus(property(emits_changed_signal = "const"))]
     async fn can_control(&self) -> fdo::Result<bool> {
         self.imp.can_control().await
     }
@@ -284,7 +284,7 @@ where
         metadata: Metadata,
     ) -> Result<()>;
 
-    #[zbus(property)]
+    #[zbus(property(emits_changed_signal = "invalidates"))]
     async fn tracks(&self) -> fdo::Result<Vec<TrackId>> {
         self.imp.tracks().await
     }
