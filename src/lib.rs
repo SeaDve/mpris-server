@@ -53,7 +53,7 @@ pub use crate::{
 
 macro_rules! define_iface {
     (#[$attr:meta],
-        $root_iface_ident:ident$(: $bound:tt $(+ $other_bounds:tt)* )? extra_docs $extra_root_docs:literal,
+        $root_iface_ident:ident extra_docs $extra_root_docs:literal,
         $player_iface_ident:ident extra_docs $extra_player_docs:literal,
         $track_list_iface_ident:ident extra_docs $extra_track_list_docs:literal,
         $playlists_iface_ident:ident extra_docs $extra_playlists_docs:literal) => {
@@ -63,7 +63,7 @@ macro_rules! define_iface {
         ///
         /// [org.mpris.MediaPlayer2]: https://specifications.freedesktop.org/mpris-spec/2.2/Media_Player.html
         #[$attr]
-        pub trait $root_iface_ident$(: $bound $(+ $other_bounds)* )?  {
+        pub trait $root_iface_ident {
             /// Brings the media player's user interface to the front using any
             /// appropriate mechanism available.
             ///
@@ -1134,7 +1134,7 @@ macro_rules! define_iface {
 
 define_iface!(
     #[trait_variant::make(Send + Sync)],
-    RootInterface: Send + Sync extra_docs "",
+    RootInterface extra_docs "",
     PlayerInterface extra_docs "",
     TrackListInterface extra_docs "",
     PlaylistsInterface extra_docs ""
