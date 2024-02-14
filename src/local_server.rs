@@ -8,9 +8,10 @@ use std::{
     task::{Context, Poll},
 };
 
+use async_channel::{Receiver, Sender};
 use async_trait::async_trait;
-use futures_channel::{mpsc, oneshot};
-use futures_util::{FutureExt, StreamExt};
+use futures_channel::oneshot;
+use futures_util::FutureExt;
 use zbus::{fdo, Connection, Result};
 
 use crate::{
@@ -109,7 +110,7 @@ enum Action {
 }
 
 struct InnerImp<T> {
-    tx: mpsc::UnboundedSender<Action>,
+    tx: Sender<Action>,
 
     // If we use `PhantomData<T>` and `T` is not `Send` and `Sync`, we get a compile error
     // when using `InnerImp` in the inner non-local `Server` as it requires `T` to be `Send`
@@ -120,20 +121,20 @@ struct InnerImp<T> {
 }
 
 impl<T> InnerImp<T> {
-    fn send_root(&self, action: RootAction) {
-        self.tx.unbounded_send(Action::Root(action)).unwrap();
+    async fn send_root(&self, action: RootAction) {
+        self.tx.send(Action::Root(action)).await.unwrap();
     }
 
-    fn send_player(&self, action: PlayerAction) {
-        self.tx.unbounded_send(Action::Player(action)).unwrap();
+    async fn send_player(&self, action: PlayerAction) {
+        self.tx.send(Action::Player(action)).await.unwrap();
     }
 
-    fn send_track_list(&self, action: TrackListAction) {
-        self.tx.unbounded_send(Action::TrackList(action)).unwrap();
+    async fn send_track_list(&self, action: TrackListAction) {
+        self.tx.send(Action::TrackList(action)).await.unwrap();
     }
 
-    fn send_playlists(&self, action: PlaylistsAction) {
-        self.tx.unbounded_send(Action::Playlists(action)).unwrap();
+    async fn send_playlists(&self, action: PlaylistsAction) {
+        self.tx.send(Action::Playlists(action)).await.unwrap();
     }
 }
 
@@ -141,73 +142,74 @@ impl<T> InnerImp<T> {
 impl<T> RootInterface for InnerImp<T> {
     async fn raise(&self) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::Raise(tx));
+        self.send_root(RootAction::Raise(tx)).await;
         rx.await.unwrap()
     }
 
     async fn quit(&self) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::Quit(tx));
+        self.send_root(RootAction::Quit(tx)).await;
         rx.await.unwrap()
     }
 
     async fn can_quit(&self) -> fdo::Result<bool> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::CanQuit(tx));
+        self.send_root(RootAction::CanQuit(tx)).await;
         rx.await.unwrap()
     }
 
     async fn fullscreen(&self) -> fdo::Result<bool> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::Fullscreen(tx));
+        self.send_root(RootAction::Fullscreen(tx)).await;
         rx.await.unwrap()
     }
 
     async fn set_fullscreen(&self, fullscreen: bool) -> Result<()> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::SetFullscreen(fullscreen, tx));
+        self.send_root(RootAction::SetFullscreen(fullscreen, tx))
+            .await;
         rx.await.unwrap()
     }
 
     async fn can_set_fullscreen(&self) -> fdo::Result<bool> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::CanSetFullScreen(tx));
+        self.send_root(RootAction::CanSetFullScreen(tx)).await;
         rx.await.unwrap()
     }
 
     async fn can_raise(&self) -> fdo::Result<bool> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::CanRaise(tx));
+        self.send_root(RootAction::CanRaise(tx)).await;
         rx.await.unwrap()
     }
 
     async fn has_track_list(&self) -> fdo::Result<bool> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::HasTrackList(tx));
+        self.send_root(RootAction::HasTrackList(tx)).await;
         rx.await.unwrap()
     }
 
     async fn identity(&self) -> fdo::Result<String> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::Identity(tx));
+        self.send_root(RootAction::Identity(tx)).await;
         rx.await.unwrap()
     }
 
     async fn desktop_entry(&self) -> fdo::Result<String> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::DesktopEntry(tx));
+        self.send_root(RootAction::DesktopEntry(tx)).await;
         rx.await.unwrap()
     }
 
     async fn supported_uri_schemes(&self) -> fdo::Result<Vec<String>> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::SupportedUriSchemes(tx));
+        self.send_root(RootAction::SupportedUriSchemes(tx)).await;
         rx.await.unwrap()
     }
 
     async fn supported_mime_types(&self) -> fdo::Result<Vec<String>> {
         let (tx, rx) = oneshot::channel();
-        self.send_root(RootAction::SupportedMimeTypes(tx));
+        self.send_root(RootAction::SupportedMimeTypes(tx)).await;
         rx.await.unwrap()
     }
 }
@@ -216,169 +218,172 @@ impl<T> RootInterface for InnerImp<T> {
 impl<T> PlayerInterface for InnerImp<T> {
     async fn next(&self) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::Next(tx));
+        self.send_player(PlayerAction::Next(tx)).await;
         rx.await.unwrap()
     }
 
     async fn previous(&self) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::Previous(tx));
+        self.send_player(PlayerAction::Previous(tx)).await;
         rx.await.unwrap()
     }
 
     async fn pause(&self) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::Pause(tx));
+        self.send_player(PlayerAction::Pause(tx)).await;
         rx.await.unwrap()
     }
 
     async fn play_pause(&self) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::PlayPause(tx));
+        self.send_player(PlayerAction::PlayPause(tx)).await;
         rx.await.unwrap()
     }
 
     async fn stop(&self) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::Stop(tx));
+        self.send_player(PlayerAction::Stop(tx)).await;
         rx.await.unwrap()
     }
 
     async fn play(&self) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::Play(tx));
+        self.send_player(PlayerAction::Play(tx)).await;
         rx.await.unwrap()
     }
 
     async fn seek(&self, offset: Time) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::Seek(offset, tx));
+        self.send_player(PlayerAction::Seek(offset, tx)).await;
         rx.await.unwrap()
     }
 
     async fn set_position(&self, track_id: TrackId, position: Time) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::SetPosition(track_id, position, tx));
+        self.send_player(PlayerAction::SetPosition(track_id, position, tx))
+            .await;
         rx.await.unwrap()
     }
 
     async fn open_uri(&self, uri: String) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::OpenUri(uri, tx));
+        self.send_player(PlayerAction::OpenUri(uri, tx)).await;
         rx.await.unwrap()
     }
 
     async fn playback_status(&self) -> fdo::Result<PlaybackStatus> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::PlaybackStatus(tx));
+        self.send_player(PlayerAction::PlaybackStatus(tx)).await;
         rx.await.unwrap()
     }
 
     async fn loop_status(&self) -> fdo::Result<LoopStatus> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::LoopStatus(tx));
+        self.send_player(PlayerAction::LoopStatus(tx)).await;
         rx.await.unwrap()
     }
 
     async fn set_loop_status(&self, loop_status: LoopStatus) -> Result<()> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::SetLoopStatus(loop_status, tx));
+        self.send_player(PlayerAction::SetLoopStatus(loop_status, tx))
+            .await;
         rx.await.unwrap()
     }
 
     async fn rate(&self) -> fdo::Result<PlaybackRate> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::Rate(tx));
+        self.send_player(PlayerAction::Rate(tx)).await;
         rx.await.unwrap()
     }
 
     async fn set_rate(&self, rate: PlaybackRate) -> Result<()> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::SetRate(rate, tx));
+        self.send_player(PlayerAction::SetRate(rate, tx)).await;
         rx.await.unwrap()
     }
 
     async fn shuffle(&self) -> fdo::Result<bool> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::Shuffle(tx));
+        self.send_player(PlayerAction::Shuffle(tx)).await;
         rx.await.unwrap()
     }
 
     async fn set_shuffle(&self, shuffle: bool) -> Result<()> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::SetShuffle(shuffle, tx));
+        self.send_player(PlayerAction::SetShuffle(shuffle, tx))
+            .await;
         rx.await.unwrap()
     }
 
     async fn metadata(&self) -> fdo::Result<Metadata> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::Metadata(tx));
+        self.send_player(PlayerAction::Metadata(tx)).await;
         rx.await.unwrap()
     }
 
     async fn volume(&self) -> fdo::Result<Volume> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::Volume(tx));
+        self.send_player(PlayerAction::Volume(tx)).await;
         rx.await.unwrap()
     }
 
     async fn set_volume(&self, volume: Volume) -> Result<()> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::SetVolume(volume, tx));
+        self.send_player(PlayerAction::SetVolume(volume, tx)).await;
         rx.await.unwrap()
     }
 
     async fn position(&self) -> fdo::Result<Time> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::Position(tx));
+        self.send_player(PlayerAction::Position(tx)).await;
         rx.await.unwrap()
     }
 
     async fn minimum_rate(&self) -> fdo::Result<PlaybackRate> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::MinimumRate(tx));
+        self.send_player(PlayerAction::MinimumRate(tx)).await;
         rx.await.unwrap()
     }
 
     async fn maximum_rate(&self) -> fdo::Result<PlaybackRate> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::MaximumRate(tx));
+        self.send_player(PlayerAction::MaximumRate(tx)).await;
         rx.await.unwrap()
     }
 
     async fn can_go_next(&self) -> fdo::Result<bool> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::CanGoNext(tx));
+        self.send_player(PlayerAction::CanGoNext(tx)).await;
         rx.await.unwrap()
     }
 
     async fn can_go_previous(&self) -> fdo::Result<bool> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::CanGoPrevious(tx));
+        self.send_player(PlayerAction::CanGoPrevious(tx)).await;
         rx.await.unwrap()
     }
 
     async fn can_play(&self) -> fdo::Result<bool> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::CanPlay(tx));
+        self.send_player(PlayerAction::CanPlay(tx)).await;
         rx.await.unwrap()
     }
 
     async fn can_pause(&self) -> fdo::Result<bool> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::CanPause(tx));
+        self.send_player(PlayerAction::CanPause(tx)).await;
         rx.await.unwrap()
     }
 
     async fn can_seek(&self) -> fdo::Result<bool> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::CanSeek(tx));
+        self.send_player(PlayerAction::CanSeek(tx)).await;
         rx.await.unwrap()
     }
 
     async fn can_control(&self) -> fdo::Result<bool> {
         let (tx, rx) = oneshot::channel();
-        self.send_player(PlayerAction::CanControl(tx));
+        self.send_player(PlayerAction::CanControl(tx)).await;
         rx.await.unwrap()
     }
 }
@@ -390,7 +395,8 @@ where
 {
     async fn get_tracks_metadata(&self, track_ids: Vec<TrackId>) -> fdo::Result<Vec<Metadata>> {
         let (tx, rx) = oneshot::channel();
-        self.send_track_list(TrackListAction::GetTracksMetadata(track_ids, tx));
+        self.send_track_list(TrackListAction::GetTracksMetadata(track_ids, tx))
+            .await;
         rx.await.unwrap()
     }
 
@@ -406,31 +412,35 @@ where
             after_track,
             set_as_current,
             tx,
-        ));
+        ))
+        .await;
         rx.await.unwrap()
     }
 
     async fn remove_track(&self, track_id: TrackId) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
-        self.send_track_list(TrackListAction::RemoveTrack(track_id, tx));
+        self.send_track_list(TrackListAction::RemoveTrack(track_id, tx))
+            .await;
         rx.await.unwrap()
     }
 
     async fn go_to(&self, track_id: TrackId) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
-        self.send_track_list(TrackListAction::GoTo(track_id, tx));
+        self.send_track_list(TrackListAction::GoTo(track_id, tx))
+            .await;
         rx.await.unwrap()
     }
 
     async fn tracks(&self) -> fdo::Result<Vec<TrackId>> {
         let (tx, rx) = oneshot::channel();
-        self.send_track_list(TrackListAction::Tracks(tx));
+        self.send_track_list(TrackListAction::Tracks(tx)).await;
         rx.await.unwrap()
     }
 
     async fn can_edit_tracks(&self) -> fdo::Result<bool> {
         let (tx, rx) = oneshot::channel();
-        self.send_track_list(TrackListAction::CanEditTracks(tx));
+        self.send_track_list(TrackListAction::CanEditTracks(tx))
+            .await;
         rx.await.unwrap()
     }
 }
@@ -442,7 +452,8 @@ where
 {
     async fn activate_playlist(&self, playlist_id: PlaylistId) -> fdo::Result<()> {
         let (tx, rx) = oneshot::channel();
-        self.send_playlists(PlaylistsAction::ActivatePlaylist(playlist_id, tx));
+        self.send_playlists(PlaylistsAction::ActivatePlaylist(playlist_id, tx))
+            .await;
         rx.await.unwrap()
     }
 
@@ -460,25 +471,28 @@ where
             order,
             reverse_order,
             tx,
-        ));
+        ))
+        .await;
         rx.await.unwrap()
     }
 
     async fn playlist_count(&self) -> fdo::Result<u32> {
         let (tx, rx) = oneshot::channel();
-        self.send_playlists(PlaylistsAction::PlaylistCount(tx));
+        self.send_playlists(PlaylistsAction::PlaylistCount(tx))
+            .await;
         rx.await.unwrap()
     }
 
     async fn orderings(&self) -> fdo::Result<Vec<PlaylistOrdering>> {
         let (tx, rx) = oneshot::channel();
-        self.send_playlists(PlaylistsAction::Orderings(tx));
+        self.send_playlists(PlaylistsAction::Orderings(tx)).await;
         rx.await.unwrap()
     }
 
     async fn active_playlist(&self) -> fdo::Result<Option<Playlist>> {
         let (tx, rx) = oneshot::channel();
-        self.send_playlists(PlaylistsAction::ActivePlaylist(tx));
+        self.send_playlists(PlaylistsAction::ActivePlaylist(tx))
+            .await;
         rx.await.unwrap()
     }
 }
@@ -559,20 +573,15 @@ where
     /// [`LocalRootInterface`]: crate::LocalRootInterface
     /// [D-Bus specification]: https://dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus
     pub async fn new(bus_name_suffix: &str, imp: T) -> Result<Self> {
-        Self::new_inner(
-            bus_name_suffix,
-            imp,
-            Server::new,
-            |mut rx, imp| async move {
-                while let Some(action) = rx.next().await {
-                    match action {
-                        Action::Root(action) => Self::handle_root_action(&imp, action).await,
-                        Action::Player(action) => Self::handle_player_action(&imp, action).await,
-                        Action::TrackList(_) | Action::Playlists(_) => unreachable!(),
-                    }
+        Self::new_inner(bus_name_suffix, imp, Server::new, |rx, imp| async move {
+            while let Ok(action) = rx.recv().await {
+                match action {
+                    Action::Root(action) => Self::handle_root_action(&imp, action).await,
+                    Action::Player(action) => Self::handle_player_action(&imp, action).await,
+                    Action::TrackList(_) | Action::Playlists(_) => unreachable!(),
                 }
-            },
-        )
+            }
+        })
         .await
     }
 
@@ -805,13 +814,13 @@ where
         bus_name_suffix: &'a str,
         imp: T,
         server_func: impl FnOnce(&'a str, InnerImp<T>) -> SR + 'static,
-        runner_func: impl FnOnce(mpsc::UnboundedReceiver<Action>, Rc<T>) -> RR + 'static,
+        runner_func: impl FnOnce(Receiver<Action>, Rc<T>) -> RR + 'static,
     ) -> Result<Self>
     where
         SR: Future<Output = Result<Server<InnerImp<T>>>>,
         RR: Future<Output = ()> + 'static,
     {
-        let (tx, rx) = mpsc::unbounded::<Action>();
+        let (tx, rx) = async_channel::bounded(1);
 
         let inner = server_func(
             bus_name_suffix,
@@ -849,8 +858,8 @@ where
             bus_name_suffix,
             imp,
             Server::new_with_track_list,
-            |mut rx, imp| async move {
-                while let Some(action) = rx.next().await {
+            |rx, imp| async move {
+                while let Ok(action) = rx.recv().await {
                     match action {
                         Action::Root(action) => Self::handle_root_action(&imp, action).await,
                         Action::Player(action) => Self::handle_player_action(&imp, action).await,
@@ -931,8 +940,8 @@ where
             bus_name_suffix,
             imp,
             Server::new_with_playlists,
-            |mut rx, imp| async move {
-                while let Some(action) = rx.next().await {
+            |rx, imp| async move {
+                while let Ok(action) = rx.recv().await {
                     match action {
                         Action::Root(action) => Self::handle_root_action(&imp, action).await,
                         Action::Player(action) => Self::handle_player_action(&imp, action).await,
@@ -1010,8 +1019,8 @@ where
             bus_name_suffix,
             imp,
             Server::new_with_all,
-            |mut rx, imp| async move {
-                while let Some(action) = rx.next().await {
+            |rx, imp| async move {
+                while let Ok(action) = rx.recv().await {
                     match action {
                         Action::Root(action) => Self::handle_root_action(&imp, action).await,
                         Action::Player(action) => Self::handle_player_action(&imp, action).await,
