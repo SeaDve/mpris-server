@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/server.rs`."><title>server.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="mpris_server" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (a84bb95a1 2024-02-13)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/server.rs`."><title>server.rs - source</title><script> if (window.location.protocol !== "file:") document.write(`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2">`)</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="mpris_server" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (3c85e5624 2024-03-18)" data-channel="nightly" data-search-js="search-42d8da7a6b9792c2.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
             <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
     <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../mpris_server/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
@@ -745,7 +745,7 @@
 <a href="#743" id="743">743</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{<a href="https://doc.rust-lang.org/nightly/std/collections/hash/map/struct.HashMap.html">collections::HashMap</a>, <a href="https://doc.rust-lang.org/nightly/alloc/fmt/index.html">fmt</a>, <a href="https://doc.rust-lang.org/nightly/alloc/sync/struct.Arc.html">sync::Arc</a>};
 
-<span class="kw">use </span><a href="https://docs.rs/serde_derive/1.0.196/serde_derive/derive.Serialize.html">serde::Serialize</a>;
+<span class="kw">use </span><a href="https://docs.rs/serde_derive/1.0.197/serde_derive/derive.Serialize.html">serde::Serialize</a>;
 <span class="kw">use </span>zbus::{
     fdo,
     names::BusName,
@@ -754,10 +754,10 @@
 };
 
 <span class="kw">use crate</span>::{
-    <a href="playlist.rs.html#35-45">playlist::MaybePlaylist</a>, <a href="loop_status.rs.html#9-17">LoopStatus</a>, <a href="metadata.rs.html#36">Metadata</a>, <a href="lib.rs.html#1191">PlaybackRate</a>, <a href="playback_status.rs.html#9-16">PlaybackStatus</a>, <a href="lib.rs.html#1169-1175">PlayerInterface</a>,
-    <a href="playlist.rs.html#8-17">Playlist</a>, <a href="lib.rs.html#1215">PlaylistId</a>, <a href="playlist_ordering.rs.html#18-34">PlaylistOrdering</a>, <a href="lib.rs.html#1169-1175">PlaylistsInterface</a>, <a href="property.rs.html#64-68">PlaylistsProperty</a>, <a href="signal.rs.html#123-140">PlaylistsSignal</a>,
-    <a href="property.rs.html#11-36">Property</a>, <a href="lib.rs.html#1169-1175">RootInterface</a>, <a href="signal.rs.html#8-25">Signal</a>, <a href="time.rs.html#15">Time</a>, <a href="track_id.rs.html#32">TrackId</a>, <a href="lib.rs.html#1169-1175">TrackListInterface</a>, <a href="property.rs.html#48-52">TrackListProperty</a>,
-    <a href="signal.rs.html#36-112">TrackListSignal</a>, <a href="lib.rs.html#1221">Uri</a>, <a href="lib.rs.html#1200">Volume</a>,
+    <a href="playlist.rs.html#35-45">playlist::MaybePlaylist</a>, <a href="loop_status.rs.html#9-17">LoopStatus</a>, <a href="metadata.rs.html#36">Metadata</a>, <a href="lib.rs.html#1157">PlaybackRate</a>, <a href="playback_status.rs.html#9-16">PlaybackStatus</a>, <a href="lib.rs.html#1135-1141">PlayerInterface</a>,
+    <a href="playlist.rs.html#8-17">Playlist</a>, <a href="lib.rs.html#1181">PlaylistId</a>, <a href="playlist_ordering.rs.html#18-34">PlaylistOrdering</a>, <a href="lib.rs.html#1135-1141">PlaylistsInterface</a>, <a href="property.rs.html#64-68">PlaylistsProperty</a>, <a href="signal.rs.html#123-140">PlaylistsSignal</a>,
+    <a href="property.rs.html#11-36">Property</a>, <a href="lib.rs.html#1135-1141">RootInterface</a>, <a href="signal.rs.html#8-25">Signal</a>, <a href="time.rs.html#15">Time</a>, <a href="track_id.rs.html#32">TrackId</a>, <a href="lib.rs.html#1135-1141">TrackListInterface</a>, <a href="property.rs.html#48-52">TrackListProperty</a>,
+    <a href="signal.rs.html#36-112">TrackListSignal</a>, <a href="lib.rs.html#1187">Uri</a>, <a href="lib.rs.html#1166">Volume</a>,
 };
 
 <span class="kw">const </span>OBJECT_PATH: ObjectPath&lt;<span class="lifetime">'static</span>&gt; =
@@ -770,7 +770,7 @@
 <span class="attr">#[zbus::interface(name = <span class="string">"org.mpris.MediaPlayer2"</span>)]
 </span><span class="kw">impl</span>&lt;T&gt; RawRootInterface&lt;T&gt;
 <span class="kw">where
-    </span>T: <a href="lib.rs.html#1169-1175">RootInterface</a> + <span class="lifetime">'static</span>,
+    </span>T: <a href="lib.rs.html#1135-1141">RootInterface</a> + <span class="lifetime">'static</span>,
 {
     <span class="kw">async fn </span>raise(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
         <span class="self">self</span>.imp.raise().<span class="kw">await
@@ -838,7 +838,7 @@
 <span class="attr">#[zbus::interface(name = <span class="string">"org.mpris.MediaPlayer2.Player"</span>)]
 </span><span class="kw">impl</span>&lt;T&gt; RawPlayerInterface&lt;T&gt;
 <span class="kw">where
-    </span>T: <a href="lib.rs.html#1169-1175">PlayerInterface</a> + <span class="lifetime">'static</span>,
+    </span>T: <a href="lib.rs.html#1135-1141">PlayerInterface</a> + <span class="lifetime">'static</span>,
 {
     <span class="kw">async fn </span>next(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
         <span class="self">self</span>.imp.next().<span class="kw">await
@@ -900,7 +900,7 @@
     </span>}
 
     <span class="attr">#[zbus(property)]
-    </span><span class="kw">async fn </span>set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, rate: <a href="lib.rs.html#1191">PlaybackRate</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    </span><span class="kw">async fn </span>set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, rate: <a href="lib.rs.html#1157">PlaybackRate</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.imp.set_rate(rate).<span class="kw">await
     </span>}
 
@@ -925,7 +925,7 @@
     </span>}
 
     <span class="attr">#[zbus(property)]
-    </span><span class="kw">async fn </span>set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, volume: <a href="lib.rs.html#1200">Volume</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    </span><span class="kw">async fn </span>set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, volume: <a href="lib.rs.html#1166">Volume</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="self">self</span>.imp.set_volume(volume).<span class="kw">await
     </span>}
 
@@ -983,7 +983,7 @@
 <span class="attr">#[zbus::interface(name = <span class="string">"org.mpris.MediaPlayer2.TrackList"</span>)]
 </span><span class="kw">impl</span>&lt;T&gt; RawTrackListInterface&lt;T&gt;
 <span class="kw">where
-    </span>T: <a href="lib.rs.html#1169-1175">TrackListInterface</a> + <span class="lifetime">'static</span>,
+    </span>T: <a href="lib.rs.html#1135-1141">TrackListInterface</a> + <span class="lifetime">'static</span>,
 {
     <span class="kw">async fn </span>get_tracks_metadata(<span class="kw-2">&amp;</span><span class="self">self</span>, track_ids: Vec&lt;<a href="track_id.rs.html#32">TrackId</a>&gt;) -&gt; fdo::Result&lt;Vec&lt;Metadata&gt;&gt; {
         <span class="self">self</span>.imp.get_tracks_metadata(track_ids).<span class="kw">await
@@ -991,7 +991,7 @@
 
     <span class="kw">async fn </span>add_track(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        uri: <a href="lib.rs.html#1221">Uri</a>,
+        uri: <a href="lib.rs.html#1187">Uri</a>,
         after_track: <a href="track_id.rs.html#32">TrackId</a>,
         set_as_current: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
     ) -&gt; fdo::Result&lt;()&gt; {
@@ -1048,9 +1048,9 @@
 <span class="attr">#[zbus::interface(name = <span class="string">"org.mpris.MediaPlayer2.Playlists"</span>)]
 </span><span class="kw">impl</span>&lt;T&gt; RawPlaylistsInterface&lt;T&gt;
 <span class="kw">where
-    </span>T: <a href="lib.rs.html#1169-1175">PlaylistsInterface</a> + <span class="lifetime">'static</span>,
+    </span>T: <a href="lib.rs.html#1135-1141">PlaylistsInterface</a> + <span class="lifetime">'static</span>,
 {
-    <span class="kw">async fn </span>activate_playlist(<span class="kw-2">&amp;</span><span class="self">self</span>, playlist_id: <a href="lib.rs.html#1215">PlaylistId</a>) -&gt; fdo::Result&lt;()&gt; {
+    <span class="kw">async fn </span>activate_playlist(<span class="kw-2">&amp;</span><span class="self">self</span>, playlist_id: <a href="lib.rs.html#1181">PlaylistId</a>) -&gt; fdo::Result&lt;()&gt; {
         <span class="self">self</span>.imp.activate_playlist(playlist_id).<span class="kw">await
     </span>}
 
@@ -1106,7 +1106,7 @@
     }
 }
 
-<span class="macro">macro_rules! </span>insert_property {
+<span class="macro">macro_rules!</span> insert_property {
     (<span class="macro-nonterminal">$item</span>:ident, <span class="macro-nonterminal">$property_type</span>:ident =&gt; $(<span class="macro-nonterminal">$map</span>:ident, <span class="macro-nonterminal">$property</span>:ident);<span class="kw-2">*</span>) =&gt; {
         <span class="kw">match </span><span class="macro-nonterminal">$item </span>{
             $(
@@ -1120,7 +1120,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; Server&lt;T&gt;
 <span class="kw">where
-    </span>T: <a href="lib.rs.html#1169-1175">PlayerInterface</a> + <span class="lifetime">'static</span>,
+    </span>T: <a href="lib.rs.html#1135-1141">PlayerInterface</a> + <span class="lifetime">'static</span>,
 {
     <span class="doccomment">/// Creates a new [`Server`] with the given bus name suffix and
     /// implementation, `imp`, which must implement [`RootInterface`] and
@@ -1276,7 +1276,7 @@
     <span class="kw">async fn </span>emit_inner&lt;I&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         signal_name: <span class="kw-2">&amp;</span><a href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>,
-        body: <span class="kw-2">&amp;</span>(<span class="kw">impl </span><a href="https://docs.rs/serde/1.0.196/serde/ser/trait.Serialize.html">Serialize</a> + DynamicType),
+        body: <span class="kw-2">&amp;</span>(<span class="kw">impl </span><a href="https://docs.rs/serde/1.0.197/serde/ser/trait.Serialize.html">Serialize</a> + DynamicType),
     ) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt;
     <span class="kw">where
         </span>I: Interface,
@@ -1305,7 +1305,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; Server&lt;T&gt;
 <span class="kw">where
-    </span>T: <a href="lib.rs.html#1169-1175">TrackListInterface</a> + <span class="lifetime">'static</span>,
+    </span>T: <a href="lib.rs.html#1135-1141">TrackListInterface</a> + <span class="lifetime">'static</span>,
 {
     <span class="doccomment">/// Creates a new [`Server`] with the given bus name suffix and
     /// implementation, which must implement [`TrackListInterface`] in addition
@@ -1388,7 +1388,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; Server&lt;T&gt;
 <span class="kw">where
-    </span>T: <a href="lib.rs.html#1169-1175">PlaylistsInterface</a> + <span class="lifetime">'static</span>,
+    </span>T: <a href="lib.rs.html#1135-1141">PlaylistsInterface</a> + <span class="lifetime">'static</span>,
 {
     <span class="doccomment">/// Creates a new [`Server`] with the given bus name suffix and
     /// implementation, which must implement [`PlaylistsInterface`] in addition
@@ -1452,7 +1452,7 @@
 
 <span class="kw">impl</span>&lt;T&gt; Server&lt;T&gt;
 <span class="kw">where
-    </span>T: <a href="lib.rs.html#1169-1175">TrackListInterface</a> + <a href="lib.rs.html#1169-1175">PlaylistsInterface</a> + <span class="lifetime">'static</span>,
+    </span>T: <a href="lib.rs.html#1135-1141">TrackListInterface</a> + <a href="lib.rs.html#1135-1141">PlaylistsInterface</a> + <span class="lifetime">'static</span>,
 {
     <span class="doccomment">/// Creates a new [`Server`] with the given bus name suffix and
     /// implementation, which must implement [`TrackListInterface`] and
