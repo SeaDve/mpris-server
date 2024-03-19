@@ -139,6 +139,6 @@ async fn main() -> Result<()> {
 
 ## License
 
-Copyright 2023 Dave Patrick Caberto
+Copyright 2024 Dave Patrick Caberto
 
 This software is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at [this site](http://mozilla.org/MPL/2.0/).
