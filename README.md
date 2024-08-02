@@ -7,14 +7,14 @@
 
 Implement MPRIS D-Bus interface in your application.
 
-This library provides the essential functionalities for implementing the [MPRIS D-Bus interface](https://specifications.freedesktop.org/mpris-spec/2.2/) on the *service* side. This enables your application to become discoverable and controllable by other MPRIS-compatible media controllers, including but not limited to GNOME Shell, KDE Plasma, and other libraries such as [`mpris`](https://github.com/Mange/mpris-rs).
+This library provides the essential functionalities for implementing the [MPRIS D-Bus interface](https://specifications.freedesktop.org/mpris-spec/latest/) on the *service* side. This enables your application to become discoverable and controllable by other MPRIS-compatible media controllers, including but not limited to GNOME Shell, KDE Plasma, and other libraries such as [`mpris`](https://github.com/Mange/mpris-rs).
 
 This library supports all the following interfaces as defined in the specification:
 
-* [org.mpris.MediaPlayer2](https://specifications.freedesktop.org/mpris-spec/2.2/Media_Player.html)
-* [org.mpris.MediaPlayer2.Player](https://specifications.freedesktop.org/mpris-spec/2.2/Player_Interface.html)
-* [org.mpris.MediaPlayer2.TrackList](https://specifications.freedesktop.org/mpris-spec/2.2/Track_List_Interface.html)
-* [org.mpris.MediaPlayer2.Playlists](https://specifications.freedesktop.org/mpris-spec/2.2/Playlists_Interface.html)
+* [org.mpris.MediaPlayer2](https://specifications.freedesktop.org/mpris-spec/latest/Media_Player.html)
+* [org.mpris.MediaPlayer2.Player](https://specifications.freedesktop.org/mpris-spec/latest/Player_Interface.html)
+* [org.mpris.MediaPlayer2.TrackList](https://specifications.freedesktop.org/mpris-spec/latest/Track_List_Interface.html)
+* [org.mpris.MediaPlayer2.Playlists](https://specifications.freedesktop.org/mpris-spec/latest/Playlists_Interface.html)
 
 To implement these interfaces, this crate offers two flavors: you can either create your own struct and implement `RootInterface` and `PlayerInterface` (or with optional `TrackListInterface` and `PlaylistsInterface`), or you can use the ready-to-use `Player` struct.
 

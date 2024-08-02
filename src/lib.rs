@@ -61,7 +61,7 @@ macro_rules! define_iface {
         #[doc = ""]
         /// Used to implement [org.mpris.MediaPlayer2] interface.
         ///
-        /// [org.mpris.MediaPlayer2]: https://specifications.freedesktop.org/mpris-spec/2.2/Media_Player.html
+        /// [org.mpris.MediaPlayer2]: https://specifications.freedesktop.org/mpris-spec/latest/Media_Player.html
         #[$attr]
         pub trait $root_iface_ident {
             /// Brings the media player's user interface to the front using any
@@ -299,7 +299,7 @@ macro_rules! define_iface {
         /// implements the methods for querying and providing basic control over what is
         /// currently playing.
         ///
-        /// [org.mpris.MediaPlayer2.Player]: https://specifications.freedesktop.org/mpris-spec/2.2/Player_Interface.html
+        /// [org.mpris.MediaPlayer2.Player]: https://specifications.freedesktop.org/mpris-spec/latest/Player_Interface.html
         #[$attr]
         #[doc(alias = "org.mpris.MediaPlayer2.Player")]
         pub trait $player_iface_ident: $root_iface_ident {
@@ -884,7 +884,7 @@ macro_rules! define_iface {
         /// through a large list of tracks, but rather to provide clients with context
         /// about the currently playing track.
         ///
-        /// [org.mpris.MediaPlayer2.TrackList]: https://specifications.freedesktop.org/mpris-spec/2.2/Track_List_Interface.html
+        /// [org.mpris.MediaPlayer2.TrackList]: https://specifications.freedesktop.org/mpris-spec/latest/Track_List_Interface.html
         /// [Rhythmbox]: https://wiki.gnome.org/Apps/Rhythmbox
         /// [`TrackList interface`]: TrackListInterface
         #[$attr]
@@ -1038,7 +1038,7 @@ macro_rules! define_iface {
         /// exported on an object, clients should attempt to get one of the properties
         /// on this interface to see if it is implemented.
         ///
-        /// [org.mpris.MediaPlayer2.Playlists]: https://specifications.freedesktop.org/mpris-spec/2.2/Playlists_Interface.html
+        /// [org.mpris.MediaPlayer2.Playlists]: https://specifications.freedesktop.org/mpris-spec/latest/Playlists_Interface.html
         #[$attr]
         #[doc(alias = "org.mpris.MediaPlayer2.Playlists")]
         pub trait $playlists_iface_ident: $player_iface_ident {
