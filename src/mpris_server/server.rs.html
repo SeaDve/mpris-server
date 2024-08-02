@@ -731,16 +731,6 @@
 <a href="#731" id="731">731</a>
 <a href="#732" id="732">732</a>
 <a href="#733" id="733">733</a>
-<a href="#734" id="734">734</a>
-<a href="#735" id="735">735</a>
-<a href="#736" id="736">736</a>
-<a href="#737" id="737">737</a>
-<a href="#738" id="738">738</a>
-<a href="#739" id="739">739</a>
-<a href="#740" id="740">740</a>
-<a href="#741" id="741">741</a>
-<a href="#742" id="742">742</a>
-<a href="#743" id="743">743</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::{<a href="https://doc.rust-lang.org/nightly/std/collections/hash/map/struct.HashMap.html">collections::HashMap</a>, <a href="https://doc.rust-lang.org/nightly/alloc/fmt/index.html">fmt</a>, <a href="https://doc.rust-lang.org/nightly/alloc/sync/struct.Arc.html">sync::Arc</a>};
 
 <span class="kw">use </span><a href="https://docs.rs/serde_derive/1.0.204/serde_derive/derive.Serialize.html">serde::Serialize</a>;
@@ -1279,16 +1269,6 @@
     <span class="kw">where
         </span>I: Interface,
     {
-        <span class="comment">// FIXME Hold a lock to the interface until the signal is emitted.
-        // This is a workaround for `Invalid client serial` errors.
-        // See https://github.com/flatpak/xdg-dbus-proxy/issues/46
-        </span><span class="kw">let </span>iface_ref = <span class="self">self
-            </span>.connection
-            .object_server()
-            .interface::&lt;<span class="kw">_</span>, I&gt;(OBJECT_PATH)
-            .<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">let </span>_guard = iface_ref.get_mut().<span class="kw">await</span>;
-
         <span class="self">self</span>.connection
             .emit_signal(
                 <span class="prelude-val">None</span>::&lt;BusName&lt;<span class="lifetime">'_</span>&gt;&gt;,
