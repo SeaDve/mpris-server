@@ -1268,7 +1268,7 @@
         #[doc = <span class="string">""</span>]
         </span><span class="doccomment">/// Used to implement [org.mpris.MediaPlayer2] interface.
         ///
-        /// [org.mpris.MediaPlayer2]: https://specifications.freedesktop.org/mpris-spec/2.2/Media_Player.html
+        /// [org.mpris.MediaPlayer2]: https://specifications.freedesktop.org/mpris-spec/latest/Media_Player.html
         </span><span class="attr">#[<span class="macro-nonterminal">$attr</span>]
         </span><span class="kw">pub trait </span><span class="macro-nonterminal">$root_iface_ident </span>{
             <span class="doccomment">/// Brings the media player's user interface to the front using any
@@ -1506,7 +1506,7 @@
         /// implements the methods for querying and providing basic control over what is
         /// currently playing.
         ///
-        /// [org.mpris.MediaPlayer2.Player]: https://specifications.freedesktop.org/mpris-spec/2.2/Player_Interface.html
+        /// [org.mpris.MediaPlayer2.Player]: https://specifications.freedesktop.org/mpris-spec/latest/Player_Interface.html
         </span><span class="attr">#[<span class="macro-nonterminal">$attr</span>]
         #[doc(alias = <span class="string">"org.mpris.MediaPlayer2.Player"</span>)]
         </span><span class="kw">pub trait </span><span class="macro-nonterminal">$player_iface_ident</span>: <span class="macro-nonterminal">$root_iface_ident </span>{
@@ -2091,7 +2091,7 @@
         /// through a large list of tracks, but rather to provide clients with context
         /// about the currently playing track.
         ///
-        /// [org.mpris.MediaPlayer2.TrackList]: https://specifications.freedesktop.org/mpris-spec/2.2/Track_List_Interface.html
+        /// [org.mpris.MediaPlayer2.TrackList]: https://specifications.freedesktop.org/mpris-spec/latest/Track_List_Interface.html
         /// [Rhythmbox]: https://wiki.gnome.org/Apps/Rhythmbox
         /// [`TrackList interface`]: TrackListInterface
         </span><span class="attr">#[<span class="macro-nonterminal">$attr</span>]
@@ -2245,7 +2245,7 @@
         /// exported on an object, clients should attempt to get one of the properties
         /// on this interface to see if it is implemented.
         ///
-        /// [org.mpris.MediaPlayer2.Playlists]: https://specifications.freedesktop.org/mpris-spec/2.2/Playlists_Interface.html
+        /// [org.mpris.MediaPlayer2.Playlists]: https://specifications.freedesktop.org/mpris-spec/latest/Playlists_Interface.html
         </span><span class="attr">#[<span class="macro-nonterminal">$attr</span>]
         #[doc(alias = <span class="string">"org.mpris.MediaPlayer2.Playlists"</span>)]
         </span><span class="kw">pub trait </span><span class="macro-nonterminal">$playlists_iface_ident</span>: <span class="macro-nonterminal">$player_iface_ident </span>{
