@@ -84,10 +84,9 @@ impl Metadata {
         self.0.get(key)
     }
 
-    /// Sets the value for the given key and returns the previous value, if any.
+    /// Replaces the value for the given key and returns the previous value, if any.
     ///
-    /// If the given value is `None`, the key is removed from the metadata,
-    /// if any.
+    /// The entry is removed if the given value is `None`.
     pub fn set(
         &mut self,
         key: &str,
@@ -96,7 +95,9 @@ impl Metadata {
         self.set_value(key, value.map(|value| value.into()))
     }
 
-    /// Sets the value for the given key and returns the previous value, if any.
+    /// Replaces the value for the given key and returns the previous value, if any.
+    ///
+    /// The entry is removed if the given value is `None`.
     ///
     /// This behaves like [`Metadata::set`], but this takes a [`enum@Value`]
     /// instead of a generic type.
