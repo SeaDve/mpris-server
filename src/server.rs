@@ -514,8 +514,7 @@ where
     ) -> Result<Self> {
         let imp = Arc::new(imp);
 
-        let bus_name =
-            OwnedWellKnownName::try_from(format!("{}{}", BUS_NAME_PREFIX, bus_name_suffix))?;
+        let bus_name = OwnedWellKnownName::try_from(format!("{BUS_NAME_PREFIX}{bus_name_suffix}"))?;
 
         let connection_builder = conn::Builder::session()?
             .name(&bus_name)?
