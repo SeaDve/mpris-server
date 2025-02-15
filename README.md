@@ -23,6 +23,7 @@ To implement these interfaces, this crate offers two flavors: you can either cre
 | Feature    | Description                                  | Default |
 | ---------- | -------------------------------------------- | ------- |
 | `unstable` | Enables internal APIs and unstable features. | No      |
+| `tokio`    | Enables `tokio` feature for `zbus`.          | No      |
 
 ## Examples
 
