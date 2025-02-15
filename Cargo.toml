@@ -10,7 +10,7 @@ categories = ["api-bindings", "multimedia", "os::unix-apis"]
 keywords = ["mpris", "dbus"]
 readme = "README.md"
 license = "MPL-2.0"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
 async-channel = "2.3"
@@ -25,8 +25,9 @@ static_assertions = "1.1"
 
 [features]
 unstable = []
+tokio = ["zbus/tokio"]
 
 [package.metadata.docs.rs]
-features = ["unstable"]
+features = ["unstable", "tokio"]
 rustc-args = ["--cfg", "docsrs"]
 rustdoc-args = ["--cfg", "docsrs", "--generate-link-to-definition"]
