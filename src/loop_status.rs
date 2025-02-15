@@ -43,8 +43,7 @@ impl<'a> TryFrom<Value<'a>> for LoopStatus {
                 "Track" => Ok(Self::Track),
                 "Playlist" => Ok(Self::Playlist),
                 _ => Err(zvariant::Error::Message(format!(
-                    "invalid loop status: {}",
-                    s
+                    "invalid loop status: {s}"
                 ))),
             },
             _ => Err(zvariant::Error::IncorrectType),

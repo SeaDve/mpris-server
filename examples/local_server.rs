@@ -31,7 +31,7 @@ impl LocalRootInterface for Player {
     }
 
     async fn set_fullscreen(&self, fullscreen: bool) -> Result<()> {
-        println!("SetFullscreen({})", fullscreen);
+        println!("SetFullscreen({fullscreen})");
         Ok(())
     }
 
@@ -103,17 +103,17 @@ impl LocalPlayerInterface for Player {
     }
 
     async fn seek(&self, offset: Time) -> fdo::Result<()> {
-        println!("Seek({:?})", offset);
+        println!("Seek({offset:?})");
         Ok(())
     }
 
     async fn set_position(&self, track_id: TrackId, position: Time) -> fdo::Result<()> {
-        println!("SetPosition({}, {:?})", track_id, position);
+        println!("SetPosition({track_id}, {position:?})");
         Ok(())
     }
 
     async fn open_uri(&self, uri: String) -> fdo::Result<()> {
-        println!("OpenUri({})", uri);
+        println!("OpenUri({uri})");
         Ok(())
     }
 
@@ -128,7 +128,7 @@ impl LocalPlayerInterface for Player {
     }
 
     async fn set_loop_status(&self, loop_status: LoopStatus) -> Result<()> {
-        println!("SetLoopStatus({})", loop_status);
+        println!("SetLoopStatus({loop_status})");
         Ok(())
     }
 
@@ -138,7 +138,7 @@ impl LocalPlayerInterface for Player {
     }
 
     async fn set_rate(&self, rate: PlaybackRate) -> Result<()> {
-        println!("SetRate({})", rate);
+        println!("SetRate({rate})");
         Ok(())
     }
 
@@ -148,7 +148,7 @@ impl LocalPlayerInterface for Player {
     }
 
     async fn set_shuffle(&self, shuffle: bool) -> Result<()> {
-        println!("SetShuffle({})", shuffle);
+        println!("SetShuffle({shuffle})");
         Ok(())
     }
 
@@ -163,7 +163,7 @@ impl LocalPlayerInterface for Player {
     }
 
     async fn set_volume(&self, volume: Volume) -> Result<()> {
-        println!("SetVolume({})", volume);
+        println!("SetVolume({volume})");
         Ok(())
     }
 
@@ -215,7 +215,7 @@ impl LocalPlayerInterface for Player {
 
 impl LocalTrackListInterface for Player {
     async fn get_tracks_metadata(&self, track_ids: Vec<TrackId>) -> fdo::Result<Vec<Metadata>> {
-        println!("GetTracksMetadata({:?})", track_ids);
+        println!("GetTracksMetadata({track_ids:?})");
         Ok(vec![])
     }
 
@@ -225,17 +225,17 @@ impl LocalTrackListInterface for Player {
         after_track: TrackId,
         set_as_current: bool,
     ) -> fdo::Result<()> {
-        println!("AddTrack({}, {}, {})", uri, after_track, set_as_current);
+        println!("AddTrack({uri}, {after_track}, {set_as_current})");
         Ok(())
     }
 
     async fn remove_track(&self, track_id: TrackId) -> fdo::Result<()> {
-        println!("RemoveTrack({})", track_id);
+        println!("RemoveTrack({track_id})");
         Ok(())
     }
 
     async fn go_to(&self, track_id: TrackId) -> fdo::Result<()> {
-        println!("GoTo({})", track_id);
+        println!("GoTo({track_id})");
         Ok(())
     }
 
@@ -252,7 +252,7 @@ impl LocalTrackListInterface for Player {
 
 impl LocalPlaylistsInterface for Player {
     async fn activate_playlist(&self, playlist_id: PlaylistId) -> fdo::Result<()> {
-        println!("ActivatePlaylist({})", playlist_id);
+        println!("ActivatePlaylist({playlist_id})");
         Ok(())
     }
 
@@ -263,10 +263,7 @@ impl LocalPlaylistsInterface for Player {
         order: PlaylistOrdering,
         reverse_order: bool,
     ) -> fdo::Result<Vec<Playlist>> {
-        println!(
-            "GetPlaylists({}, {}, {}, {})",
-            index, max_count, order, reverse_order
-        );
+        println!("GetPlaylists({index}, {max_count}, {order}, {reverse_order})");
         Ok(vec![])
     }
 
