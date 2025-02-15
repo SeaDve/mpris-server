@@ -16,7 +16,7 @@ pub struct Playlist {
     pub icon: Uri,
 }
 
-impl<'a> From<Playlist> for Value<'a> {
+impl From<Playlist> for Value<'_> {
     fn from(p: Playlist) -> Self {
         Value::from((p.id, p.name, p.icon))
     }
@@ -63,7 +63,7 @@ impl From<Option<Playlist>> for MaybePlaylist {
     }
 }
 
-impl<'a> From<MaybePlaylist> for Value<'a> {
+impl From<MaybePlaylist> for Value<'_> {
     fn from(mp: MaybePlaylist) -> Self {
         Value::from((mp.valid, mp.playlist))
     }
@@ -75,7 +75,7 @@ mod tests {
 
     #[test]
     fn valid_signatures() {
-        assert_eq!(Playlist::signature(), "(oss)");
-        assert_eq!(MaybePlaylist::signature(), "(b(oss))");
+        assert_eq!(Playlist::SIGNATURE, "(oss)");
+        assert_eq!(MaybePlaylist::SIGNATURE, "(b(oss))");
     }
 }

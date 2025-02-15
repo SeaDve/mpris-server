@@ -10,7 +10,7 @@ use std::{
 
 use async_channel::{Receiver, Sender};
 use futures_channel::oneshot;
-use zbus::{fdo, Connection, Result};
+use zbus::{fdo, Result};
 
 use crate::{
     LocalPlayerInterface, LocalPlaylistsInterface, LocalTrackListInterface, LoopStatus, Metadata,
@@ -603,7 +603,7 @@ where
     #[cfg(feature = "unstable")]
     #[cfg_attr(docsrs, doc(cfg(feature = "unstable")))]
     #[inline]
-    pub fn connection(&self) -> &Connection {
+    pub fn connection(&self) -> &zbus::Connection {
         self.inner.connection()
     }
 
