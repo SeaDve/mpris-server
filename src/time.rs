@@ -339,7 +339,7 @@ impl SubAssign for Time {
     }
 }
 
-impl<'a> From<Time> for Value<'a> {
+impl From<Time> for Value<'_> {
     fn from(time: Time) -> Self {
         Value::from(time.0)
     }
@@ -367,6 +367,6 @@ mod tests {
 
     #[test]
     fn valid_signature() {
-        assert_eq!(Time::signature(), "x");
+        assert_eq!(Time::SIGNATURE, "x");
     }
 }

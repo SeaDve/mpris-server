@@ -52,7 +52,7 @@ impl fmt::Display for PlaylistOrdering {
     }
 }
 
-impl<'a> From<PlaylistOrdering> for Value<'a> {
+impl From<PlaylistOrdering> for Value<'_> {
     fn from(status: PlaylistOrdering) -> Self {
         Value::new(status.as_str())
     }

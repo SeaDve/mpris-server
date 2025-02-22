@@ -2,10 +2,11 @@ use std::{collections::HashMap, fmt, sync::Arc};
 
 use serde::Serialize;
 use zbus::{
-    fdo,
+    conn, fdo,
     names::BusName,
+    object_server::{Interface, SignalEmitter},
     zvariant::{DynamicType, ObjectPath, Value},
-    Connection, ConnectionBuilder, Interface, Result, SignalContext,
+    Connection, Result,
 };
 
 use crate::{
@@ -132,7 +133,7 @@ where
     }
 
     #[zbus(signal)]
-    async fn seeked(ctxt: &SignalContext<'_>, position: Time) -> Result<()>;
+    async fn seeked(ctxt: &SignalEmitter<'_>, position: Time) -> Result<()>;
 
     #[zbus(property)]
     async fn playback_status(&self) -> fdo::Result<PlaybackStatus> {
@@ -263,24 +264,24 @@ where
 
     #[zbus(signal)]
     async fn track_list_replaced(
-        ctxt: &SignalContext<'_>,
+        ctxt: &SignalEmitter<'_>,
         tracks: Vec<TrackId>,
         current_track: TrackId,
     ) -> Result<()>;
 
     #[zbus(signal)]
     async fn track_added(
-        ctxt: &SignalContext<'_>,
+        ctxt: &SignalEmitter<'_>,
         metadata: Metadata,
         after_track: TrackId,
     ) -> Result<()>;
 
     #[zbus(signal)]
-    async fn track_removed(ctxt: &SignalContext<'_>, track_id: TrackId) -> Result<()>;
+    async fn track_removed(ctxt: &SignalEmitter<'_>, track_id: TrackId) -> Result<()>;
 
     #[zbus(signal)]
     async fn track_metadata_changed(
-        ctxt: &SignalContext<'_>,
+        ctxt: &SignalEmitter<'_>,
         track_id: TrackId,
         metadata: Metadata,
     ) -> Result<()>;
@@ -322,7 +323,7 @@ where
     }
 
     #[zbus(signal)]
-    async fn playlist_changed(ctxt: &SignalContext<'_>, playlist: Playlist) -> Result<()>;
+    async fn playlist_changed(ctxt: &SignalEmitter<'_>, playlist: Playlist) -> Result<()>;
 
     #[zbus(property)]
     async fn playlist_count(&self) -> fdo::Result<u32> {
@@ -485,14 +486,14 @@ where
     async fn new_inner(
         bus_name_suffix: &str,
         imp: T,
-        builder_ext_func: impl FnOnce(ConnectionBuilder<'_>, Arc<T>) -> Result<ConnectionBuilder<'_>>
+        builder_ext_func: impl FnOnce(conn::Builder<'_>, Arc<T>) -> Result<conn::Builder<'_>>
             + Send
             + Sync
             + 'static,
     ) -> Result<Self> {
         let imp = Arc::new(imp);
 
-        let connection_builder = ConnectionBuilder::session()?
+        let connection_builder = conn::Builder::session()?
             .name(format!("org.mpris.MediaPlayer2.{}", bus_name_suffix))?
             .serve_at(
                 OBJECT_PATH,

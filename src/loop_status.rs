@@ -52,7 +52,7 @@ impl<'a> TryFrom<Value<'a>> for LoopStatus {
     }
 }
 
-impl<'a> From<LoopStatus> for Value<'a> {
+impl From<LoopStatus> for Value<'_> {
     fn from(status: LoopStatus) -> Self {
         Value::new(status.as_str())
     }

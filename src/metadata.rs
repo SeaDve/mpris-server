@@ -84,7 +84,8 @@ impl Metadata {
         self.0.get(key)
     }
 
-    /// Replaces the value for the given key and returns the previous value, if any.
+    /// Replaces the value for the given key and returns the previous value, if
+    /// any.
     ///
     /// The entry is removed if the given value is `None`.
     pub fn set(
@@ -95,7 +96,8 @@ impl Metadata {
         self.set_value(key, value.map(|value| value.into()))
     }
 
-    /// Replaces the value for the given key and returns the previous value, if any.
+    /// Replaces the value for the given key and returns the previous value, if
+    /// any.
     ///
     /// The entry is removed if the given value is `None`.
     ///
@@ -579,7 +581,7 @@ impl MetadataBuilder {
     }
 }
 
-impl<'a> From<Metadata> for Value<'a> {
+impl From<Metadata> for Value<'_> {
     fn from(metainfo: Metadata) -> Self {
         Value::new(metainfo.0)
     }

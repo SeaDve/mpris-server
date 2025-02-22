@@ -32,7 +32,7 @@ impl fmt::Display for PlaybackStatus {
     }
 }
 
-impl<'a> From<PlaybackStatus> for Value<'a> {
+impl From<PlaybackStatus> for Value<'_> {
     fn from(status: PlaybackStatus) -> Self {
         Value::new(status.as_str())
     }
