@@ -597,7 +597,7 @@ where
         &self.imp
     }
 
-    /// Returns a reference to the inner [`Connection`].
+    /// Returns a reference to the inner [`zbus::Connection`].
     ///
     /// If you needed to call this, consider filing an issue.
     #[cfg(feature = "unstable")]
