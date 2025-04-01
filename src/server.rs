@@ -417,6 +417,24 @@ where
         &self.connection
     }
 
+    /// Returns the bus name of the server.
+    pub fn bus_name(&self) -> &WellKnownName<'_> {
+        self.bus_name.inner()
+    }
+
+    /// Releases the bus name of the server.
+    ///
+    /// The bus name is automatically released when the server is dropped. But
+    /// if you want to release it manually, you can call this method.
+    ///
+    /// Unless an error is encountered, returns `Ok(true)` if name was
+    /// previously registered with the bus and it has now been successfully
+    /// deregistered, `Ok(false)` if name was not previously registered or
+    /// already deregistered.
+    pub async fn release_bus_name(&self) -> Result<bool> {
+        self.connection.release_name(self.bus_name()).await
+    }
+
     /// Emits the given signal.
     pub async fn emit(&self, signal: Signal) -> Result<()> {
         match signal {
@@ -495,6 +513,7 @@ where
             + 'static,
     ) -> Result<Self> {
         let imp = Arc::new(imp);
+
         let bus_name =
             OwnedWellKnownName::try_from(format!("{}{}", BUS_NAME_PREFIX, bus_name_suffix))?;
 
@@ -521,24 +540,6 @@ where
             imp,
             bus_name,
         })
-    }
-
-    /// Returns the bus name of the server.
-    pub fn bus_name(&self) -> &WellKnownName<'_> {
-        self.bus_name.inner()
-    }
-
-    /// Releases the bus name of the server.
-    ///
-    /// The bus name is released when the server is dropped. But if you want to
-    /// release it manually, you can call this method.
-    ///
-    /// Unless an error is encountered, returns `Ok(true)` if name was
-    /// previously registered with the bus and it has now been successfully
-    /// deregistered, `Ok(false)` if name was not previously registered or
-    /// already deregistered.
-    pub async fn release_bus_name(&self) -> Result<bool> {
-        self.connection.release_name(self.bus_name()).await
     }
 
     async fn properties_changed_inner<I>(
