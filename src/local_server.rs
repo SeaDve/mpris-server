@@ -10,7 +10,7 @@ use std::{
 
 use async_channel::{Receiver, Sender};
 use futures_channel::oneshot;
-use zbus::{fdo, Result};
+use zbus::{fdo, names::WellKnownName, Result};
 
 use crate::{
     LocalPlayerInterface, LocalPlaylistsInterface, LocalTrackListInterface, LoopStatus, Metadata,
@@ -605,6 +605,26 @@ where
     #[inline]
     pub fn connection(&self) -> &zbus::Connection {
         self.inner.connection()
+    }
+
+    /// Returns the bus name of the server.
+    #[inline]
+    pub fn bus_name(&self) -> &WellKnownName<'_> {
+        self.inner.bus_name()
+    }
+
+    /// Releases the bus name of the server.
+    ///
+    /// The bus name is automatically released when the server is dropped. But
+    /// if you want to release it manually, you can call this method.
+    ///
+    /// Unless an error is encountered, returns `Ok(true)` if name was
+    /// previously registered with the bus and it has now been successfully
+    /// deregistered, `Ok(false)` if name was not previously registered or
+    /// already deregistered.
+    #[inline]
+    pub async fn release_bus_name(&self) -> Result<bool> {
+        self.inner.release_bus_name().await
     }
 
     /// Emits the given signal.
