@@ -1,6 +1,6 @@
 use std::future;
 
-use mpris_server::{zbus::Result, Player, Time};
+use mpris_server::{Player, Time, zbus::Result};
 
 #[async_std::main]
 async fn main() -> Result<()> {

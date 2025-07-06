@@ -2,18 +2,17 @@ use std::{collections::HashMap, fmt, sync::Arc};
 
 use serde::Serialize;
 use zbus::{
-    conn, fdo,
+    Connection, Result, conn, fdo,
     names::{BusName, OwnedWellKnownName, WellKnownName},
     object_server::{Interface, SignalEmitter},
     zvariant::{DynamicType, ObjectPath, Value},
-    Connection, Result,
 };
 
 use crate::{
-    playlist::MaybePlaylist, LoopStatus, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface,
-    Playlist, PlaylistId, PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, PlaylistsSignal,
-    Property, RootInterface, Signal, Time, TrackId, TrackListInterface, TrackListProperty,
-    TrackListSignal, Uri, Volume,
+    LoopStatus, Metadata, PlaybackRate, PlaybackStatus, PlayerInterface, Playlist, PlaylistId,
+    PlaylistOrdering, PlaylistsInterface, PlaylistsProperty, PlaylistsSignal, Property,
+    RootInterface, Signal, Time, TrackId, TrackListInterface, TrackListProperty, TrackListSignal,
+    Uri, Volume, playlist::MaybePlaylist,
 };
 
 const BUS_NAME_PREFIX: &str = "org.mpris.MediaPlayer2.";
@@ -508,9 +507,9 @@ where
         bus_name_suffix: &str,
         imp: T,
         builder_ext_func: impl FnOnce(conn::Builder<'_>, Arc<T>) -> Result<conn::Builder<'_>>
-            + Send
-            + Sync
-            + 'static,
+        + Send
+        + Sync
+        + 'static,
     ) -> Result<Self> {
         let imp = Arc::new(imp);
 

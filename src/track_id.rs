@@ -1,7 +1,7 @@
 use std::{fmt, ops};
 
-use serde::{de, Deserialize, Deserializer, Serialize};
-use zbus::zvariant::{serialized::Format, Basic, Error, ObjectPath, Result, Type, Value};
+use serde::{Deserialize, Deserializer, Serialize, de};
+use zbus::zvariant::{Basic, Error, ObjectPath, Result, Type, Value, serialized::Format};
 
 /// Unique track identifier.
 ///

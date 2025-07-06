@@ -34,7 +34,7 @@ pub mod builder {
 }
 
 pub use zbus;
-use zbus::{fdo, zvariant::OwnedObjectPath, Result};
+use zbus::{Result, fdo, zvariant::OwnedObjectPath};
 
 pub use crate::{
     local_server::{LocalServer, LocalServerRunTask},
@@ -58,7 +58,7 @@ macro_rules! define_iface {
         $track_list_iface_ident:ident extra_docs $extra_track_list_docs:literal,
         $playlists_iface_ident:ident extra_docs $extra_playlists_docs:literal) => {
         #[doc = $extra_root_docs]
-        #[doc = ""]
+        ///
         /// Used to implement [org.mpris.MediaPlayer2] interface.
         ///
         /// [org.mpris.MediaPlayer2]: https://specifications.freedesktop.org/mpris-spec/latest/Media_Player.html
@@ -100,9 +100,9 @@ macro_rules! define_iface {
             /// [`properties_changed`] must be emitted with the new value.
             ///
             /// If **false**, calling [`Quit`] will have no effect, and may raise a
-            /// [`NotSupported`] error. If **true**, calling [`Quit`] will cause the media
-            /// application to attempt to quit (although it may still be prevented from
-            /// quitting by the user, for example).
+            /// [`NotSupported`] error. If **true**, calling [`Quit`] will cause the
+            /// media application to attempt to quit (although it may still be
+            /// prevented from quitting by the user, for example).
             ///
             /// [`properties_changed`]: Server::properties_changed
             /// [`Quit`]: Self::quit
@@ -294,7 +294,7 @@ macro_rules! define_iface {
         }
 
         #[doc = $extra_player_docs]
-        #[doc = ""]
+        ///
         /// Used to implement [org.mpris.MediaPlayer2.Player] interface, which
         /// implements the methods for querying and providing basic control over what is
         /// currently playing.
@@ -854,7 +854,7 @@ macro_rules! define_iface {
         }
 
         #[doc = $extra_track_list_docs]
-        #[doc = ""]
+        ///
         /// Used to implement [org.mpris.MediaPlayer2.TrackList] interface, which
         /// provides access to a short list of tracks which were recently played or will
         /// be played shortly. This is intended to provide context to the
@@ -1030,7 +1030,7 @@ macro_rules! define_iface {
         }
 
         #[doc = $extra_playlists_docs]
-        #[doc = ""]
+        ///
         /// Used to implement [org.mpris.MediaPlayer2.Playlists] interface, which
         /// provides access to the media player's playlists.
         ///
