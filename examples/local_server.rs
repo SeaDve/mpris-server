@@ -1,10 +1,10 @@
 use std::future;
 
 use mpris_server::{
-    zbus::{fdo, Result},
     LocalPlayerInterface, LocalPlaylistsInterface, LocalRootInterface, LocalServer,
     LocalTrackListInterface, LoopStatus, Metadata, PlaybackRate, PlaybackStatus, Playlist,
     PlaylistId, PlaylistOrdering, Property, Signal, Time, TrackId, Uri, Volume,
+    zbus::{Result, fdo},
 };
 
 pub struct Player;

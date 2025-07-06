@@ -3,7 +3,7 @@ use std::{
     rc::{Rc, Weak},
 };
 
-use zbus::{fdo, Result};
+use zbus::{Result, fdo};
 
 use crate::{
     LocalPlayerInterface, LocalRootInterface, LocalServer, LocalServerRunTask, LoopStatus,

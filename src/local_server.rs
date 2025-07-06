@@ -10,7 +10,7 @@ use std::{
 
 use async_channel::{Receiver, Sender};
 use futures_channel::oneshot;
-use zbus::{fdo, names::WellKnownName, Result};
+use zbus::{Result, fdo, names::WellKnownName};
 
 use crate::{
     LocalPlayerInterface, LocalPlaylistsInterface, LocalTrackListInterface, LoopStatus, Metadata,
