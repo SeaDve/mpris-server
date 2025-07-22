@@ -7,7 +7,6 @@
 // * Document the rest of public interface
 // * Access Server from interfaces
 // * Replace `DateTime` and `Uri` with proper types
-// * Add sensible default method impls on `*Interface` traits
 // * Profile if inlining is worth it
 // * Add public `test` method to check if interface is implemented correctly
 // * Avoid clones in `Metadata` getters
@@ -50,6 +49,12 @@ pub use crate::{
     time::Time,
     track_id::TrackId,
 };
+
+macro_rules! unknown_property_err {
+    ($prop_name:literal) => {
+        fdo::Error::UnknownProperty(concat!($prop_name, " is not supported").into())
+    };
+}
 
 macro_rules! define_iface {
     (#[$attr:meta],
@@ -144,7 +149,9 @@ macro_rules! define_iface {
             /// [`properties_changed`]: Server::properties_changed
             /// [`CanSetFullscreen`]: Self::can_set_fullscreen
             #[doc(alias = "Fullscreen")]
-            async fn fullscreen(&self) -> fdo::Result<bool>;
+            async fn fullscreen(&self) -> fdo::Result<bool> {
+                Err(unknown_property_err!("Fullscreen"))
+            }
 
             /// Sets whether the media player is occupying the fullscreen.
             ///
@@ -152,7 +159,9 @@ macro_rules! define_iface {
             ///
             /// [`Fullscreen`]: Self::fullscreen
             #[doc(alias = "Fullscreen")]
-            async fn set_fullscreen(&self, fullscreen: bool) -> Result<()>;
+            async fn set_fullscreen(&self, _fullscreen: bool) -> Result<()> {
+                Err(zbus::Error::from(unknown_property_err!("Fullscreen")))
+            }
 
             /// Whether the player may be asked to enter or leave fullscreen.
             ///
@@ -184,7 +193,9 @@ macro_rules! define_iface {
             /// [`properties_changed`]: Server::properties_changed
             /// [`Fullscreen`]: Self::fullscreen
             #[doc(alias = "CanSetFullscreen")]
-            async fn can_set_fullscreen(&self) -> fdo::Result<bool>;
+            async fn can_set_fullscreen(&self) -> fdo::Result<bool> {
+                Err(unknown_property_err!("CanSetFullscreen"))
+            }
 
             /// Whether the media player may be asked to be raised.
             ///
@@ -245,7 +256,9 @@ macro_rules! define_iface {
             /// [Desktop entry specification]: https://specifications.freedesktop.org/desktop-entry-spec/latest/
             /// [`properties_changed`]: Server::properties_changed
             #[doc(alias = "DesktopEntry")]
-            async fn desktop_entry(&self) -> fdo::Result<String>;
+            async fn desktop_entry(&self) -> fdo::Result<String> {
+                Err(unknown_property_err!("DesktopEntry"))
+            }
 
             /// The URI schemes supported by the media player.
             ///
@@ -514,7 +527,9 @@ macro_rules! define_iface {
             /// [`Playlist`]: LoopStatus::Playlist
             /// [`CanControl`]: Self::can_control
             #[doc(alias = "LoopStatus")]
-            async fn loop_status(&self) -> fdo::Result<LoopStatus>;
+            async fn loop_status(&self) -> fdo::Result<LoopStatus> {
+                Err(unknown_property_err!("LoopStatus"))
+            }
 
             /// Sets the current loop / repeat status
             ///
@@ -522,7 +537,9 @@ macro_rules! define_iface {
             ///
             /// [`LoopStatus`]: Self::loop_status
             #[doc(alias = "LoopStatus")]
-            async fn set_loop_status(&self, loop_status: LoopStatus) -> Result<()>;
+            async fn set_loop_status(&self, _loop_status: LoopStatus) -> Result<()> {
+                Err(zbus::Error::from(unknown_property_err!("LoopStatus")))
+            }
 
             /// The current playback rate.
             ///
@@ -590,7 +607,9 @@ macro_rules! define_iface {
             /// [`properties_changed`]: Server::properties_changed
             /// [`CanControl`]: Self::can_control
             #[doc(alias = "Shuffle")]
-            async fn shuffle(&self) -> fdo::Result<bool>;
+            async fn shuffle(&self) -> fdo::Result<bool> {
+                Err(unknown_property_err!("Shuffle"))
+            }
 
             /// Sets whether playback is shuffled.
             ///
@@ -598,7 +617,9 @@ macro_rules! define_iface {
             ///
             /// [`Shuffle`]: Self::shuffle
             #[doc(alias = "Shuffle")]
-            async fn set_shuffle(&self, shuffle: bool) -> Result<()>;
+            async fn set_shuffle(&self, _shuffle: bool) -> Result<()> {
+                Err(zbus::Error::from(unknown_property_err!("Shuffle")))
+            }
 
             /// The metadata of the current element.
             ///
