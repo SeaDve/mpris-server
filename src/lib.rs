@@ -986,6 +986,7 @@ macro_rules! define_iface {
             /// [`TrackListReplaced`] signal should be fired from
             /// `/org/mpris/MediaPlayer2`.
             ///
+            /// [`/org/mpris/MediaPlayer2/TrackList/NoTrack`]: TrackId::NO_TRACK
             /// [`TrackListReplaced`]: TrackListSignal::TrackListReplaced
             #[doc(alias = "GoTo")]
             async fn go_to(&self, track_id: TrackId) -> fdo::Result<()>;
