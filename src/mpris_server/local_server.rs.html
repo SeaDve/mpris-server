@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/local_server.rs`."><title>local_server.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-aa0817cf.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="mpris_server" data-themes="" data-resource-suffix="" data-rustdoc-version="1.90.0-nightly (2a023bf80 2025-07-10)" data-channel="nightly" data-search-js="search-179e01a3.js" data-settings-js="settings-5514c975.js" ><script src="../../static.files/storage-4e99c027.js"></script><script defer src="../../static.files/src-script-813739b1.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-673ee1e0.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">mpris_server/</div>local_server.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-4"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span>std::{
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/local_server.rs`."><title>local_server.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-528d32ef.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="mpris_server" data-themes="" data-resource-suffix="" data-rustdoc-version="1.91.0-nightly (69b76df90 2025-08-23)" data-channel="nightly" data-search-js="search-5fc2c5c0.js" data-stringdex-js="stringdex-0e748618.js" data-settings-js="settings-c38705f0.js" ><script src="../../static.files/storage-e2aeef58.js"></script><script defer src="../../static.files/src-script-813739b1.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-17c00ba7.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">mpris_server/</div>local_server.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-4"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span>std::{
 <a href=#2 id=2 data-nosnippet>2</a>    <a href="https://doc.rust-lang.org/nightly/core/cell/struct.RefCell.html">cell::RefCell</a>,
 <a href=#3 id=3 data-nosnippet>3</a>    <a href="https://doc.rust-lang.org/nightly/alloc/fmt/index.html">fmt</a>,
 <a href=#4 id=4 data-nosnippet>4</a>    <a href="https://doc.rust-lang.org/nightly/core/future/future/trait.Future.html">future::Future</a>,
@@ -13,10 +13,10 @@
 <a href=#13 id=13 data-nosnippet>13</a><span class="kw">use </span>zbus::{<span class="prelude-ty">Result</span>, fdo, names::WellKnownName};
 <a href=#14 id=14 data-nosnippet>14</a>
 <a href=#15 id=15 data-nosnippet>15</a><span class="kw">use crate</span>::{
-<a href=#16 id=16 data-nosnippet>16</a>    <a href="lib.rs.html#1143-1149">LocalPlayerInterface</a>, <a href="lib.rs.html#1143-1149">LocalPlaylistsInterface</a>, <a href="lib.rs.html#1143-1149">LocalTrackListInterface</a>, <a href="loop_status.rs.html#9-17">LoopStatus</a>, <a href="metadata.rs.html#36">Metadata</a>,
-<a href=#17 id=17 data-nosnippet>17</a>    <a href="lib.rs.html#1157">PlaybackRate</a>, <a href="playback_status.rs.html#9-16">PlaybackStatus</a>, <a href="lib.rs.html#1135-1141">PlayerInterface</a>, <a href="playlist.rs.html#8-17">Playlist</a>, <a href="lib.rs.html#1181">PlaylistId</a>, <a href="playlist_ordering.rs.html#18-34">PlaylistOrdering</a>,
-<a href=#18 id=18 data-nosnippet>18</a>    <a href="lib.rs.html#1135-1141">PlaylistsInterface</a>, <a href="property.rs.html#64-68">PlaylistsProperty</a>, <a href="signal.rs.html#123-140">PlaylistsSignal</a>, <a href="property.rs.html#11-36">Property</a>, <a href="lib.rs.html#1135-1141">RootInterface</a>, <a href="server.rs.html#355-359">Server</a>,
-<a href=#19 id=19 data-nosnippet>19</a>    <a href="signal.rs.html#8-25">Signal</a>, <a href="time.rs.html#15">Time</a>, <a href="track_id.rs.html#32">TrackId</a>, <a href="lib.rs.html#1135-1141">TrackListInterface</a>, <a href="property.rs.html#48-52">TrackListProperty</a>, <a href="signal.rs.html#36-112">TrackListSignal</a>, <a href="lib.rs.html#1187">Uri</a>, <a href="lib.rs.html#1166">Volume</a>,
+<a href=#16 id=16 data-nosnippet>16</a>    <a href="lib.rs.html#1144-1150">LocalPlayerInterface</a>, <a href="lib.rs.html#1144-1150">LocalPlaylistsInterface</a>, <a href="lib.rs.html#1144-1150">LocalTrackListInterface</a>, <a href="loop_status.rs.html#9-17">LoopStatus</a>, <a href="metadata.rs.html#36">Metadata</a>,
+<a href=#17 id=17 data-nosnippet>17</a>    <a href="lib.rs.html#1158">PlaybackRate</a>, <a href="playback_status.rs.html#9-16">PlaybackStatus</a>, <a href="lib.rs.html#1136-1142">PlayerInterface</a>, <a href="playlist.rs.html#8-17">Playlist</a>, <a href="lib.rs.html#1182">PlaylistId</a>, <a href="playlist_ordering.rs.html#18-34">PlaylistOrdering</a>,
+<a href=#18 id=18 data-nosnippet>18</a>    <a href="lib.rs.html#1136-1142">PlaylistsInterface</a>, <a href="property.rs.html#64-68">PlaylistsProperty</a>, <a href="signal.rs.html#123-140">PlaylistsSignal</a>, <a href="property.rs.html#11-36">Property</a>, <a href="lib.rs.html#1136-1142">RootInterface</a>, <a href="server.rs.html#355-359">Server</a>,
+<a href=#19 id=19 data-nosnippet>19</a>    <a href="signal.rs.html#8-25">Signal</a>, <a href="time.rs.html#15">Time</a>, <a href="track_id.rs.html#32">TrackId</a>, <a href="lib.rs.html#1136-1142">TrackListInterface</a>, <a href="property.rs.html#48-52">TrackListProperty</a>, <a href="signal.rs.html#36-112">TrackListSignal</a>, <a href="lib.rs.html#1188">Uri</a>, <a href="lib.rs.html#1167">Volume</a>,
 <a href=#20 id=20 data-nosnippet>20</a>};
 <a href=#21 id=21 data-nosnippet>21</a>
 <a href=#22 id=22 data-nosnippet>22</a><span class="kw">enum </span>RootAction {
@@ -53,16 +53,16 @@
 <a href=#53 id=53 data-nosnippet>53</a>    </span>PlaybackStatus(oneshot::Sender&lt;fdo::Result&lt;<a href="playback_status.rs.html#9-16">PlaybackStatus</a>&gt;&gt;),
 <a href=#54 id=54 data-nosnippet>54</a>    LoopStatus(oneshot::Sender&lt;fdo::Result&lt;<a href="loop_status.rs.html#9-17">LoopStatus</a>&gt;&gt;),
 <a href=#55 id=55 data-nosnippet>55</a>    SetLoopStatus(<a href="loop_status.rs.html#9-17">LoopStatus</a>, oneshot::Sender&lt;<span class="prelude-ty">Result</span>&lt;()&gt;&gt;),
-<a href=#56 id=56 data-nosnippet>56</a>    Rate(oneshot::Sender&lt;fdo::Result&lt;<a href="lib.rs.html#1157">PlaybackRate</a>&gt;&gt;),
-<a href=#57 id=57 data-nosnippet>57</a>    SetRate(<a href="lib.rs.html#1157">PlaybackRate</a>, oneshot::Sender&lt;<span class="prelude-ty">Result</span>&lt;()&gt;&gt;),
+<a href=#56 id=56 data-nosnippet>56</a>    Rate(oneshot::Sender&lt;fdo::Result&lt;<a href="lib.rs.html#1158">PlaybackRate</a>&gt;&gt;),
+<a href=#57 id=57 data-nosnippet>57</a>    SetRate(<a href="lib.rs.html#1158">PlaybackRate</a>, oneshot::Sender&lt;<span class="prelude-ty">Result</span>&lt;()&gt;&gt;),
 <a href=#58 id=58 data-nosnippet>58</a>    Shuffle(oneshot::Sender&lt;fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;&gt;),
 <a href=#59 id=59 data-nosnippet>59</a>    SetShuffle(<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>, oneshot::Sender&lt;<span class="prelude-ty">Result</span>&lt;()&gt;&gt;),
 <a href=#60 id=60 data-nosnippet>60</a>    Metadata(oneshot::Sender&lt;fdo::Result&lt;<a href="metadata.rs.html#36">Metadata</a>&gt;&gt;),
-<a href=#61 id=61 data-nosnippet>61</a>    Volume(oneshot::Sender&lt;fdo::Result&lt;<a href="lib.rs.html#1166">Volume</a>&gt;&gt;),
-<a href=#62 id=62 data-nosnippet>62</a>    SetVolume(<a href="lib.rs.html#1166">Volume</a>, oneshot::Sender&lt;<span class="prelude-ty">Result</span>&lt;()&gt;&gt;),
+<a href=#61 id=61 data-nosnippet>61</a>    Volume(oneshot::Sender&lt;fdo::Result&lt;<a href="lib.rs.html#1167">Volume</a>&gt;&gt;),
+<a href=#62 id=62 data-nosnippet>62</a>    SetVolume(<a href="lib.rs.html#1167">Volume</a>, oneshot::Sender&lt;<span class="prelude-ty">Result</span>&lt;()&gt;&gt;),
 <a href=#63 id=63 data-nosnippet>63</a>    Position(oneshot::Sender&lt;fdo::Result&lt;<a href="time.rs.html#15">Time</a>&gt;&gt;),
-<a href=#64 id=64 data-nosnippet>64</a>    MinimumRate(oneshot::Sender&lt;fdo::Result&lt;<a href="lib.rs.html#1157">PlaybackRate</a>&gt;&gt;),
-<a href=#65 id=65 data-nosnippet>65</a>    MaximumRate(oneshot::Sender&lt;fdo::Result&lt;<a href="lib.rs.html#1157">PlaybackRate</a>&gt;&gt;),
+<a href=#64 id=64 data-nosnippet>64</a>    MinimumRate(oneshot::Sender&lt;fdo::Result&lt;<a href="lib.rs.html#1158">PlaybackRate</a>&gt;&gt;),
+<a href=#65 id=65 data-nosnippet>65</a>    MaximumRate(oneshot::Sender&lt;fdo::Result&lt;<a href="lib.rs.html#1158">PlaybackRate</a>&gt;&gt;),
 <a href=#66 id=66 data-nosnippet>66</a>    CanGoNext(oneshot::Sender&lt;fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;&gt;),
 <a href=#67 id=67 data-nosnippet>67</a>    CanGoPrevious(oneshot::Sender&lt;fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;&gt;),
 <a href=#68 id=68 data-nosnippet>68</a>    CanPlay(oneshot::Sender&lt;fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;&gt;),
@@ -74,7 +74,7 @@
 <a href=#74 id=74 data-nosnippet>74</a><span class="kw">enum </span>TrackListAction {
 <a href=#75 id=75 data-nosnippet>75</a>    <span class="comment">// Methods
 <a href=#76 id=76 data-nosnippet>76</a>    </span>GetTracksMetadata(<a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html">Vec</a>&lt;<a href="track_id.rs.html#32">TrackId</a>&gt;, oneshot::Sender&lt;fdo::Result&lt;<a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html">Vec</a>&lt;<a href="metadata.rs.html#36">Metadata</a>&gt;&gt;&gt;),
-<a href=#77 id=77 data-nosnippet>77</a>    AddTrack(<a href="lib.rs.html#1187">Uri</a>, <a href="track_id.rs.html#32">TrackId</a>, <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
+<a href=#77 id=77 data-nosnippet>77</a>    AddTrack(<a href="lib.rs.html#1188">Uri</a>, <a href="track_id.rs.html#32">TrackId</a>, <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
 <a href=#78 id=78 data-nosnippet>78</a>    RemoveTrack(<a href="track_id.rs.html#32">TrackId</a>, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
 <a href=#79 id=79 data-nosnippet>79</a>    GoTo(<a href="track_id.rs.html#32">TrackId</a>, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
 <a href=#80 id=80 data-nosnippet>80</a>
@@ -85,7 +85,7 @@
 <a href=#85 id=85 data-nosnippet>85</a>
 <a href=#86 id=86 data-nosnippet>86</a><span class="kw">enum </span>PlaylistsAction {
 <a href=#87 id=87 data-nosnippet>87</a>    <span class="comment">// Methods
-<a href=#88 id=88 data-nosnippet>88</a>    </span>ActivatePlaylist(<a href="lib.rs.html#1181">PlaylistId</a>, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
+<a href=#88 id=88 data-nosnippet>88</a>    </span>ActivatePlaylist(<a href="lib.rs.html#1182">PlaylistId</a>, oneshot::Sender&lt;fdo::Result&lt;()&gt;&gt;),
 <a href=#89 id=89 data-nosnippet>89</a>    GetPlaylists(
 <a href=#90 id=90 data-nosnippet>90</a>        <a href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
 <a href=#91 id=91 data-nosnippet>91</a>        <a href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
@@ -136,7 +136,7 @@
 <a href=#136 id=136 data-nosnippet>136</a>    }
 <a href=#137 id=137 data-nosnippet>137</a>}
 <a href=#138 id=138 data-nosnippet>138</a>
-<a href=#139 id=139 data-nosnippet>139</a><span class="kw">impl</span>&lt;T&gt; <a href="lib.rs.html#1135-1141">RootInterface</a> <span class="kw">for </span><a href="#110-119">InnerImp</a>&lt;T&gt; {
+<a href=#139 id=139 data-nosnippet>139</a><span class="kw">impl</span>&lt;T&gt; <a href="lib.rs.html#1136-1142">RootInterface</a> <span class="kw">for </span><a href="#110-119">InnerImp</a>&lt;T&gt; {
 <a href=#140 id=140 data-nosnippet>140</a>    <span class="kw">async fn </span>raise(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
 <a href=#141 id=141 data-nosnippet>141</a>        <span class="kw">let </span>(tx, rx) = oneshot::channel();
 <a href=#142 id=142 data-nosnippet>142</a>        <span class="self">self</span>.send_root(RootAction::Raise(tx)).<span class="kw">await</span>;
@@ -211,7 +211,7 @@
 <a href=#211 id=211 data-nosnippet>211</a>    }
 <a href=#212 id=212 data-nosnippet>212</a>}
 <a href=#213 id=213 data-nosnippet>213</a>
-<a href=#214 id=214 data-nosnippet>214</a><span class="kw">impl</span>&lt;T&gt; <a href="lib.rs.html#1135-1141">PlayerInterface</a> <span class="kw">for </span><a href="#110-119">InnerImp</a>&lt;T&gt; {
+<a href=#214 id=214 data-nosnippet>214</a><span class="kw">impl</span>&lt;T&gt; <a href="lib.rs.html#1136-1142">PlayerInterface</a> <span class="kw">for </span><a href="#110-119">InnerImp</a>&lt;T&gt; {
 <a href=#215 id=215 data-nosnippet>215</a>    <span class="kw">async fn </span>next(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; fdo::Result&lt;()&gt; {
 <a href=#216 id=216 data-nosnippet>216</a>        <span class="kw">let </span>(tx, rx) = oneshot::channel();
 <a href=#217 id=217 data-nosnippet>217</a>        <span class="self">self</span>.send_player(PlayerAction::Next(tx)).<span class="kw">await</span>;
@@ -292,7 +292,7 @@
 <a href=#292 id=292 data-nosnippet>292</a>        rx.<span class="kw">await</span>.unwrap()
 <a href=#293 id=293 data-nosnippet>293</a>    }
 <a href=#294 id=294 data-nosnippet>294</a>
-<a href=#295 id=295 data-nosnippet>295</a>    <span class="kw">async fn </span>set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, rate: <a href="lib.rs.html#1157">PlaybackRate</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+<a href=#295 id=295 data-nosnippet>295</a>    <span class="kw">async fn </span>set_rate(<span class="kw-2">&amp;</span><span class="self">self</span>, rate: <a href="lib.rs.html#1158">PlaybackRate</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
 <a href=#296 id=296 data-nosnippet>296</a>        <span class="kw">let </span>(tx, rx) = oneshot::channel();
 <a href=#297 id=297 data-nosnippet>297</a>        <span class="self">self</span>.send_player(PlayerAction::SetRate(rate, tx)).<span class="kw">await</span>;
 <a href=#298 id=298 data-nosnippet>298</a>        rx.<span class="kw">await</span>.unwrap()
@@ -323,7 +323,7 @@
 <a href=#323 id=323 data-nosnippet>323</a>        rx.<span class="kw">await</span>.unwrap()
 <a href=#324 id=324 data-nosnippet>324</a>    }
 <a href=#325 id=325 data-nosnippet>325</a>
-<a href=#326 id=326 data-nosnippet>326</a>    <span class="kw">async fn </span>set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, volume: <a href="lib.rs.html#1166">Volume</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+<a href=#326 id=326 data-nosnippet>326</a>    <span class="kw">async fn </span>set_volume(<span class="kw-2">&amp;</span><span class="self">self</span>, volume: <a href="lib.rs.html#1167">Volume</a>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
 <a href=#327 id=327 data-nosnippet>327</a>        <span class="kw">let </span>(tx, rx) = oneshot::channel();
 <a href=#328 id=328 data-nosnippet>328</a>        <span class="self">self</span>.send_player(PlayerAction::SetVolume(volume, tx)).<span class="kw">await</span>;
 <a href=#329 id=329 data-nosnippet>329</a>        rx.<span class="kw">await</span>.unwrap()
@@ -384,9 +384,9 @@
 <a href=#384 id=384 data-nosnippet>384</a>    }
 <a href=#385 id=385 data-nosnippet>385</a>}
 <a href=#386 id=386 data-nosnippet>386</a>
-<a href=#387 id=387 data-nosnippet>387</a><span class="kw">impl</span>&lt;T&gt; <a href="lib.rs.html#1135-1141">TrackListInterface</a> <span class="kw">for </span><a href="#110-119">InnerImp</a>&lt;T&gt;
+<a href=#387 id=387 data-nosnippet>387</a><span class="kw">impl</span>&lt;T&gt; <a href="lib.rs.html#1136-1142">TrackListInterface</a> <span class="kw">for </span><a href="#110-119">InnerImp</a>&lt;T&gt;
 <a href=#388 id=388 data-nosnippet>388</a><span class="kw">where
-<a href=#389 id=389 data-nosnippet>389</a>    </span>T: <a href="lib.rs.html#1143-1149">LocalTrackListInterface</a>,
+<a href=#389 id=389 data-nosnippet>389</a>    </span>T: <a href="lib.rs.html#1144-1150">LocalTrackListInterface</a>,
 <a href=#390 id=390 data-nosnippet>390</a>{
 <a href=#391 id=391 data-nosnippet>391</a>    <span class="kw">async fn </span>get_tracks_metadata(<span class="kw-2">&amp;</span><span class="self">self</span>, track_ids: <a href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html">Vec</a>&lt;<a href="track_id.rs.html#32">TrackId</a>&gt;) -&gt; fdo::Result&lt;Vec&lt;Metadata&gt;&gt; {
 <a href=#392 id=392 data-nosnippet>392</a>        <span class="kw">let </span>(tx, rx) = oneshot::channel();
@@ -397,7 +397,7 @@
 <a href=#397 id=397 data-nosnippet>397</a>
 <a href=#398 id=398 data-nosnippet>398</a>    <span class="kw">async fn </span>add_track(
 <a href=#399 id=399 data-nosnippet>399</a>        <span class="kw-2">&amp;</span><span class="self">self</span>,
-<a href=#400 id=400 data-nosnippet>400</a>        uri: <a href="lib.rs.html#1187">Uri</a>,
+<a href=#400 id=400 data-nosnippet>400</a>        uri: <a href="lib.rs.html#1188">Uri</a>,
 <a href=#401 id=401 data-nosnippet>401</a>        after_track: <a href="track_id.rs.html#32">TrackId</a>,
 <a href=#402 id=402 data-nosnippet>402</a>        set_as_current: <a href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
 <a href=#403 id=403 data-nosnippet>403</a>    ) -&gt; fdo::Result&lt;()&gt; {
@@ -440,11 +440,11 @@
 <a href=#440 id=440 data-nosnippet>440</a>    }
 <a href=#441 id=441 data-nosnippet>441</a>}
 <a href=#442 id=442 data-nosnippet>442</a>
-<a href=#443 id=443 data-nosnippet>443</a><span class="kw">impl</span>&lt;T&gt; <a href="lib.rs.html#1135-1141">PlaylistsInterface</a> <span class="kw">for </span><a href="#110-119">InnerImp</a>&lt;T&gt;
+<a href=#443 id=443 data-nosnippet>443</a><span class="kw">impl</span>&lt;T&gt; <a href="lib.rs.html#1136-1142">PlaylistsInterface</a> <span class="kw">for </span><a href="#110-119">InnerImp</a>&lt;T&gt;
 <a href=#444 id=444 data-nosnippet>444</a><span class="kw">where
-<a href=#445 id=445 data-nosnippet>445</a>    </span>T: <a href="lib.rs.html#1143-1149">LocalPlaylistsInterface</a>,
+<a href=#445 id=445 data-nosnippet>445</a>    </span>T: <a href="lib.rs.html#1144-1150">LocalPlaylistsInterface</a>,
 <a href=#446 id=446 data-nosnippet>446</a>{
-<a href=#447 id=447 data-nosnippet>447</a>    <span class="kw">async fn </span>activate_playlist(<span class="kw-2">&amp;</span><span class="self">self</span>, playlist_id: <a href="lib.rs.html#1181">PlaylistId</a>) -&gt; fdo::Result&lt;()&gt; {
+<a href=#447 id=447 data-nosnippet>447</a>    <span class="kw">async fn </span>activate_playlist(<span class="kw-2">&amp;</span><span class="self">self</span>, playlist_id: <a href="lib.rs.html#1182">PlaylistId</a>) -&gt; fdo::Result&lt;()&gt; {
 <a href=#448 id=448 data-nosnippet>448</a>        <span class="kw">let </span>(tx, rx) = oneshot::channel();
 <a href=#449 id=449 data-nosnippet>449</a>        <span class="self">self</span>.send_playlists(PlaylistsAction::ActivatePlaylist(playlist_id, tx))
 <a href=#450 id=450 data-nosnippet>450</a>            .<span class="kw">await</span>;
@@ -544,7 +544,7 @@
 <a href=#544 id=544 data-nosnippet>544</a>
 <a href=#545 id=545 data-nosnippet>545</a><span class="kw">impl</span>&lt;T&gt; <a href="#533-537">LocalServer</a>&lt;T&gt;
 <a href=#546 id=546 data-nosnippet>546</a><span class="kw">where
-<a href=#547 id=547 data-nosnippet>547</a>    </span>T: <a href="lib.rs.html#1143-1149">LocalPlayerInterface</a> + <span class="lifetime">'static</span>,
+<a href=#547 id=547 data-nosnippet>547</a>    </span>T: <a href="lib.rs.html#1144-1150">LocalPlayerInterface</a> + <span class="lifetime">'static</span>,
 <a href=#548 id=548 data-nosnippet>548</a>{
 <a href=#549 id=549 data-nosnippet>549</a>    <span class="doccomment">/// Creates a new [`LocalServer`] with the given bus name suffix and
 <a href=#550 id=550 data-nosnippet>550</a>    /// implementation, `imp`, which must implement [`LocalRootInterface`] and
@@ -858,7 +858,7 @@
 <a href=#858 id=858 data-nosnippet>858</a>
 <a href=#859 id=859 data-nosnippet>859</a><span class="kw">impl</span>&lt;T&gt; <a href="#533-537">LocalServer</a>&lt;T&gt;
 <a href=#860 id=860 data-nosnippet>860</a><span class="kw">where
-<a href=#861 id=861 data-nosnippet>861</a>    </span>T: <a href="lib.rs.html#1143-1149">LocalTrackListInterface</a> + <span class="lifetime">'static</span>,
+<a href=#861 id=861 data-nosnippet>861</a>    </span>T: <a href="lib.rs.html#1144-1150">LocalTrackListInterface</a> + <span class="lifetime">'static</span>,
 <a href=#862 id=862 data-nosnippet>862</a>{
 <a href=#863 id=863 data-nosnippet>863</a>    <span class="doccomment">/// Creates a new [`LocalServer`] with the given bus name suffix and
 <a href=#864 id=864 data-nosnippet>864</a>    /// implementation, which must implement [`TrackListInterface`] in addition
@@ -940,7 +940,7 @@
 <a href=#940 id=940 data-nosnippet>940</a>
 <a href=#941 id=941 data-nosnippet>941</a><span class="kw">impl</span>&lt;T&gt; <a href="#533-537">LocalServer</a>&lt;T&gt;
 <a href=#942 id=942 data-nosnippet>942</a><span class="kw">where
-<a href=#943 id=943 data-nosnippet>943</a>    </span>T: <a href="lib.rs.html#1143-1149">LocalPlaylistsInterface</a> + <span class="lifetime">'static</span>,
+<a href=#943 id=943 data-nosnippet>943</a>    </span>T: <a href="lib.rs.html#1144-1150">LocalPlaylistsInterface</a> + <span class="lifetime">'static</span>,
 <a href=#944 id=944 data-nosnippet>944</a>{
 <a href=#945 id=945 data-nosnippet>945</a>    <span class="doccomment">/// Creates a new [`LocalServer`] with the given bus name suffix and
 <a href=#946 id=946 data-nosnippet>946</a>    /// implementation, which must implement [`LocalPlaylistsInterface`] in
@@ -1018,7 +1018,7 @@
 <a href=#1018 id=1018 data-nosnippet>1018</a>
 <a href=#1019 id=1019 data-nosnippet>1019</a><span class="kw">impl</span>&lt;T&gt; <a href="#533-537">LocalServer</a>&lt;T&gt;
 <a href=#1020 id=1020 data-nosnippet>1020</a><span class="kw">where
-<a href=#1021 id=1021 data-nosnippet>1021</a>    </span>T: <a href="lib.rs.html#1143-1149">LocalTrackListInterface</a> + <a href="lib.rs.html#1143-1149">LocalPlaylistsInterface</a> + <span class="lifetime">'static</span>,
+<a href=#1021 id=1021 data-nosnippet>1021</a>    </span>T: <a href="lib.rs.html#1144-1150">LocalTrackListInterface</a> + <a href="lib.rs.html#1144-1150">LocalPlaylistsInterface</a> + <span class="lifetime">'static</span>,
 <a href=#1022 id=1022 data-nosnippet>1022</a>{
 <a href=#1023 id=1023 data-nosnippet>1023</a>    <span class="doccomment">/// Creates a new [`LocalServer`] with the given bus name suffix and
 <a href=#1024 id=1024 data-nosnippet>1024</a>    /// implementation, which must implement [`LocalTrackListInterface`] and
