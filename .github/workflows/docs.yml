@@ -18,7 +18,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: nightly-2024-06-01
+          toolchain: nightly
           override: true
       - uses: actions-rs/cargo@v1
         env:
