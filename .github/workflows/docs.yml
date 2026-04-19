@@ -1,4 +1,4 @@
-name: Github Pages
+name: Docs
 
 on:
   push:
@@ -18,12 +18,11 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: nightly
+          toolchain: stable
           override: true
       - uses: actions-rs/cargo@v1
         env:
-          RUSTFLAGS: --cfg docsrs
-          RUSTDOCFLAGS: --cfg docsrs -Zunstable-options --generate-link-to-definition
+          RUSTDOCFLAGS: --cfg docsrs
         with:
           command: doc
           args: --package mpris-server --all-features --no-deps
