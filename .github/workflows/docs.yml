@@ -18,11 +18,11 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: stable
+          toolchain: nightly-2024-06-01
           override: true
       - uses: actions-rs/cargo@v1
         env:
-          RUSTDOCFLAGS: --cfg docsrs
+          RUSTDOCFLAGS: --cfg docsrs -Zunstable-options --generate-link-to-definition
         with:
           command: doc
           args: --package mpris-server --all-features --no-deps
