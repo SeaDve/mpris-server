@@ -283,13 +283,13 @@ impl LocalPlaylistsInterface for Player {
     }
 }
 
-#[async_std::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> Result<()> {
     let server = LocalServer::new_with_all("Test.Application", Player).await?;
 
     // Unlike in `Server`, we have to call `run` here to handle incoming
     // requests in the local thread.
-    async_std::task::spawn_local(server.run());
+    tokio::task::spawn_local(server.run());
 
     // Emit `PropertiesChanged` signal for `CanSeek` and `Metadata` properties
     server

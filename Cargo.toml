@@ -20,7 +20,7 @@ trait-variant = "0.1.2"
 zbus = "5.14"
 
 [dev-dependencies]
-async-std = { version = "1.13", features = ["attributes", "unstable"] }
+tokio = { version = "1.48", features = ["macros", "rt"] }
 static_assertions = "1.1"
 
 [features]

@@ -2,7 +2,7 @@ use std::future;
 
 use mpris_server::{Player, Time, zbus::Result};
 
-#[async_std::main]
+#[tokio::main(flavor = "local")]
 async fn main() -> Result<()> {
     let player = Player::builder("Test.Application")
         .can_play(true)
@@ -27,8 +27,8 @@ async fn main() -> Result<()> {
         println!("Next");
     });
 
-    // Run event handler task
-    async_std::task::spawn_local(player.run());
+    // Run event handler task on the local runtime.
+    tokio::task::spawn_local(player.run());
 
     // Update `CanPlay` property and emit `PropertiesChanged` signal for it
     player.set_can_play(false).await?;

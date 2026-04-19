@@ -283,7 +283,7 @@ impl PlaylistsInterface for Player {
     }
 }
 
-#[async_std::main]
+#[tokio::main(flavor = "current_thread")]
 async fn main() -> Result<()> {
     // Create a server that exports `org.mpris.MediaPlayer2` and
     // `org.mpris.MediaPlayer2.Player` interfaces.
