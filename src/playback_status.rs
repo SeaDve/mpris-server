@@ -1,9 +1,10 @@
 use std::fmt;
 
-use zbus::zvariant::{Type, Value};
+use serde::{Deserialize, Serialize};
+use zbus::zvariant::{Type, Variant};
 
 /// A playback state.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Type)]
+#[derive(Deserialize, Serialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
 #[zvariant(signature = "s")]
 #[doc(alias = "Playback_Status")]
 pub enum PlaybackStatus {
@@ -32,8 +33,8 @@ impl fmt::Display for PlaybackStatus {
     }
 }
 
-impl From<PlaybackStatus> for Value<'_> {
+impl From<PlaybackStatus> for Variant<'_> {
     fn from(status: PlaybackStatus) -> Self {
-        Value::new(status.as_str())
+        Variant::new(status.as_str())
     }
 }

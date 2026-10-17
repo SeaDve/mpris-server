@@ -1,5 +1,5 @@
 use serde::Serialize;
-use zbus::zvariant::{ObjectPath, Type, Value};
+use zbus::{ObjectPath, Type, Variant};
 
 use crate::{PlaylistId, Uri};
 
@@ -16,9 +16,9 @@ pub struct Playlist {
     pub icon: Uri,
 }
 
-impl From<Playlist> for Value<'_> {
+impl From<Playlist> for Variant<'_> {
     fn from(p: Playlist) -> Self {
-        Value::from((p.id, p.name, p.icon))
+        Variant::from((p.id, p.name, p.icon))
     }
 }
 
@@ -63,9 +63,9 @@ impl From<Option<Playlist>> for MaybePlaylist {
     }
 }
 
-impl From<MaybePlaylist> for Value<'_> {
+impl From<MaybePlaylist> for Variant<'_> {
     fn from(mp: MaybePlaylist) -> Self {
-        Value::from((mp.valid, mp.playlist))
+        Variant::from((mp.valid, mp.playlist))
     }
 }
 

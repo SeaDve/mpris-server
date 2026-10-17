@@ -34,7 +34,7 @@ pub mod builder {
 }
 
 pub use zbus;
-use zbus::{Result, fdo, zvariant::OwnedObjectPath};
+use zbus::{OwnedObjectPath, Result, fdo};
 
 pub use crate::{
     local_server::{LocalServer, LocalServerRunTask},

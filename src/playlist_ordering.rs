@@ -1,7 +1,7 @@
 use std::fmt;
 
-use serde::Deserialize;
-use zbus::zvariant::{Type, Value};
+use serde::{Deserialize, Serialize};
+use zbus::zvariant::{Type, Variant};
 
 /// Specifies the ordering of returned playlists.
 ///
@@ -12,7 +12,7 @@ use zbus::zvariant::{Type, Value};
 /// in that order.
 ///
 /// </details>
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Type)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize, Type)]
 #[zvariant(signature = "s")]
 #[doc(alias = "Playlist_Ordering")]
 pub enum PlaylistOrdering {
@@ -52,8 +52,8 @@ impl fmt::Display for PlaylistOrdering {
     }
 }
 
-impl From<PlaylistOrdering> for Value<'_> {
+impl From<PlaylistOrdering> for Variant<'_> {
     fn from(status: PlaylistOrdering) -> Self {
-        Value::new(status.as_str())
+        Variant::new(status.as_str())
     }
 }
