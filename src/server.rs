@@ -397,7 +397,7 @@ where
     ///
     /// [D-Bus specification]: https://dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus
     pub async fn new(bus_name_suffix: &str, imp: T) -> Result<Self> {
-        Self::new_inner(bus_name_suffix, imp, |builder, _| Ok(builder)).await
+        Self::new_inner(bus_name_suffix, imp, |builder, _| builder).await
     }
 
     /// Returns a reference to the underlying implementation.
@@ -506,7 +506,7 @@ where
     async fn new_inner(
         bus_name_suffix: &str,
         imp: T,
-        builder_ext_func: impl FnOnce(conn::Builder<'_>, Arc<T>) -> Result<conn::Builder<'_>>
+        builder_ext_func: impl FnOnce(conn::Builder<'_>, Arc<T>) -> conn::Builder<'_>
         + Send
         + Sync
         + 'static,
@@ -529,7 +529,7 @@ where
                     imp: Arc::clone(&imp),
                 },
             );
-        let connection = builder_ext_func(connection_builder, Arc::clone(&imp))?
+        let connection = builder_ext_func(connection_builder, Arc::clone(&imp))
             .build()
             .await?;
 
@@ -586,7 +586,7 @@ where
     /// See also [`Server::new`].
     pub async fn new_with_track_list(bus_name_suffix: &str, imp: T) -> Result<Self> {
         Self::new_inner(bus_name_suffix, imp, |builder, imp| {
-            Ok(builder.serve_at(OBJECT_PATH, RawTrackListInterface { imp }))
+            builder.serve_at(OBJECT_PATH, RawTrackListInterface { imp })
         })
         .await
     }
@@ -669,7 +669,7 @@ where
     /// See also [`Server::new`].
     pub async fn new_with_playlists(bus_name_suffix: &str, imp: T) -> Result<Self> {
         Self::new_inner(bus_name_suffix, imp, |builder, imp| {
-            Ok(builder.serve_at(OBJECT_PATH, RawPlaylistsInterface { imp }))
+            builder.serve_at(OBJECT_PATH, RawPlaylistsInterface { imp })
         })
         .await
     }
@@ -734,14 +734,14 @@ where
     /// See also [`Server::new`].
     pub async fn new_with_all(bus_name_suffix: &str, imp: T) -> Result<Self> {
         Self::new_inner(bus_name_suffix, imp, |builder, imp| {
-            Ok(builder
+            builder
                 .serve_at(
                     OBJECT_PATH,
                     RawTrackListInterface {
                         imp: Arc::clone(&imp),
                     },
                 )
-                .serve_at(OBJECT_PATH, RawPlaylistsInterface { imp }))
+                .serve_at(OBJECT_PATH, RawPlaylistsInterface { imp })
         })
         .await
     }
