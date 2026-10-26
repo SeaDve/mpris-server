@@ -2,10 +2,10 @@ use std::{collections::HashMap, fmt, sync::Arc};
 
 use serde::Serialize;
 use zbus::{
-    Connection, Result, conn, fdo,
+    Connection, ObjectPath, Result, conn, fdo,
     names::{BusName, OwnedWellKnownName, WellKnownName},
     object_server::{Interface, SignalEmitter},
-    zvariant::{DynamicType, ObjectPath, Value},
+    zvariant::{DynamicType, Variant},
 };
 
 use crate::{
@@ -369,7 +369,7 @@ macro_rules! insert_property {
         match $item {
             $(
                 $property_type::$property(val) => {
-                    $map.insert(stringify!($property), Value::new(val));
+                    $map.insert(stringify!($property), Variant::new(val));
                 }
             )*
         }
@@ -515,20 +515,20 @@ where
 
         let bus_name = OwnedWellKnownName::try_from(format!("{BUS_NAME_PREFIX}{bus_name_suffix}"))?;
 
-        let connection_builder = conn::Builder::session()?
-            .name(&bus_name)?
+        let connection_builder = conn::Builder::session()
+            .name(&bus_name)
             .serve_at(
                 OBJECT_PATH,
                 RawRootInterface {
                     imp: Arc::clone(&imp),
                 },
-            )?
+            )
             .serve_at(
                 OBJECT_PATH,
                 RawPlayerInterface {
                     imp: Arc::clone(&imp),
                 },
-            )?;
+            );
         let connection = builder_ext_func(connection_builder, Arc::clone(&imp))?
             .build()
             .await?;
@@ -542,7 +542,7 @@ where
 
     async fn properties_changed_inner<I>(
         &self,
-        changed_properties: HashMap<&str, Value<'_>>,
+        changed_properties: HashMap<&str, Variant<'_>>,
         invalidated_properties: &[&str],
     ) -> Result<()>
     where
@@ -586,7 +586,7 @@ where
     /// See also [`Server::new`].
     pub async fn new_with_track_list(bus_name_suffix: &str, imp: T) -> Result<Self> {
         Self::new_inner(bus_name_suffix, imp, |builder, imp| {
-            builder.serve_at(OBJECT_PATH, RawTrackListInterface { imp })
+            Ok(builder.serve_at(OBJECT_PATH, RawTrackListInterface { imp }))
         })
         .await
     }
@@ -644,7 +644,7 @@ where
                     invalidated.push("Tracks");
                 }
                 TrackListProperty::CanEditTracks(can_edit_tracks) => {
-                    changed.insert("CanEditTracks", Value::new(can_edit_tracks));
+                    changed.insert("CanEditTracks", Variant::new(can_edit_tracks));
                 }
             }
         }
@@ -669,7 +669,7 @@ where
     /// See also [`Server::new`].
     pub async fn new_with_playlists(bus_name_suffix: &str, imp: T) -> Result<Self> {
         Self::new_inner(bus_name_suffix, imp, |builder, imp| {
-            builder.serve_at(OBJECT_PATH, RawPlaylistsInterface { imp })
+            Ok(builder.serve_at(OBJECT_PATH, RawPlaylistsInterface { imp }))
         })
         .await
     }
@@ -699,15 +699,15 @@ where
         for property in properties.into_iter() {
             match property {
                 PlaylistsProperty::PlaylistCount(playlist_count) => {
-                    changed.insert("PlaylistCount", Value::new(playlist_count));
+                    changed.insert("PlaylistCount", Variant::new(playlist_count));
                 }
                 PlaylistsProperty::Orderings(orderings) => {
-                    changed.insert("Orderings", Value::new(orderings));
+                    changed.insert("Orderings", Variant::new(orderings));
                 }
                 PlaylistsProperty::ActivePlaylist(active_playlist) => {
                     changed.insert(
                         "ActivePlaylist",
-                        Value::new(MaybePlaylist::from(active_playlist)),
+                        Variant::new(MaybePlaylist::from(active_playlist)),
                     );
                 }
             }
@@ -734,14 +734,14 @@ where
     /// See also [`Server::new`].
     pub async fn new_with_all(bus_name_suffix: &str, imp: T) -> Result<Self> {
         Self::new_inner(bus_name_suffix, imp, |builder, imp| {
-            builder
+            Ok(builder
                 .serve_at(
                     OBJECT_PATH,
                     RawTrackListInterface {
                         imp: Arc::clone(&imp),
                     },
-                )?
-                .serve_at(OBJECT_PATH, RawPlaylistsInterface { imp })
+                )
+                .serve_at(OBJECT_PATH, RawPlaylistsInterface { imp }))
         })
         .await
     }

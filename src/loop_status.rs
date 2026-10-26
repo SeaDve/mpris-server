@@ -1,9 +1,10 @@
 use std::fmt;
 
-use zbus::zvariant::{self, Type, Value};
+use serde::{Deserialize, Serialize};
+use zbus::{Type, Variant};
 
 /// A repeat / loop status.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Type)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Type, Deserialize, Serialize)]
 #[zvariant(signature = "s")]
 #[doc(alias = "Loop_Status")]
 pub enum LoopStatus {
@@ -33,26 +34,24 @@ impl fmt::Display for LoopStatus {
     }
 }
 
-impl<'a> TryFrom<Value<'a>> for LoopStatus {
-    type Error = zvariant::Error;
+impl<'a> TryFrom<Variant<'a>> for LoopStatus {
+    type Error = zbus::Error;
 
-    fn try_from(value: Value<'a>) -> Result<Self, Self::Error> {
+    fn try_from(value: Variant<'a>) -> Result<Self, Self::Error> {
         match value {
-            Value::Str(s) => match s.as_str() {
+            Variant::Str(s) => match s.as_str() {
                 "None" => Ok(Self::None),
                 "Track" => Ok(Self::Track),
                 "Playlist" => Ok(Self::Playlist),
-                _ => Err(zvariant::Error::Message(format!(
-                    "invalid loop status: {s}"
-                ))),
+                _ => Err(zbus::Error::Failure(format!("invalid loop status: {s}"))),
             },
-            _ => Err(zvariant::Error::IncorrectType),
+            _ => Err(zbus::Error::IncorrectType),
         }
     }
 }
 
-impl From<LoopStatus> for Value<'_> {
+impl From<LoopStatus> for Variant<'_> {
     fn from(status: LoopStatus) -> Self {
-        Value::new(status.as_str())
+        Variant::new(status.as_str())
     }
 }

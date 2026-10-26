@@ -4,7 +4,7 @@ use std::{
 };
 
 use serde::{Deserialize, Serialize};
-use zbus::zvariant::{Error, Type, Value};
+use zbus::{Type, Variant};
 
 /// A time with microsecond precision which can be negative.
 #[derive(
@@ -339,24 +339,24 @@ impl SubAssign for Time {
     }
 }
 
-impl From<Time> for Value<'_> {
+impl From<Time> for Variant<'_> {
     fn from(time: Time) -> Self {
-        Value::from(time.0)
+        Variant::from(time.0)
     }
 }
 
-impl TryFrom<Value<'_>> for Time {
-    type Error = Error;
+impl TryFrom<Variant<'_>> for Time {
+    type Error = zbus::Error;
 
-    fn try_from(value: Value<'_>) -> Result<Self, Self::Error> {
+    fn try_from(value: Variant<'_>) -> Result<Self, Self::Error> {
         i64::try_from(value).map(Self)
     }
 }
 
-impl TryFrom<&Value<'_>> for Time {
-    type Error = Error;
+impl TryFrom<&Variant<'_>> for Time {
+    type Error = zbus::Error;
 
-    fn try_from(value: &Value<'_>) -> Result<Self, Self::Error> {
+    fn try_from(value: &Variant<'_>) -> Result<Self, Self::Error> {
         i64::try_from(value).map(Self)
     }
 }

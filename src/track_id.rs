@@ -1,7 +1,8 @@
 use std::{fmt, ops};
 
 use serde::{Deserialize, Deserializer, Serialize, de};
-use zbus::zvariant::{Basic, Error, ObjectPath, Result, Type, Value, serialized::Format};
+use zbus::zvariant::{Basic, Type};
+use zbus::{ObjectPath, Variant};
 
 /// Unique track identifier.
 ///
@@ -47,8 +48,8 @@ impl Basic for TrackId {
     const SIGNATURE_CHAR: char = ObjectPath::SIGNATURE_CHAR;
     const SIGNATURE_STR: &'static str = ObjectPath::SIGNATURE_STR;
 
-    fn alignment(format: Format) -> usize {
-        ObjectPath::alignment(format)
+    fn alignment() -> usize {
+        ObjectPath::alignment()
     }
 }
 
@@ -66,7 +67,7 @@ impl From<TrackId> for ObjectPath<'static> {
     }
 }
 
-impl From<TrackId> for Value<'_> {
+impl From<TrackId> for Variant<'_> {
     fn from(o: TrackId) -> Self {
         o.into_inner().into()
     }
@@ -85,33 +86,33 @@ impl<'a> From<ObjectPath<'a>> for TrackId {
 }
 
 impl TryFrom<&'_ str> for TrackId {
-    type Error = Error;
+    type Error = zbus::Error;
 
-    fn try_from(value: &str) -> Result<Self> {
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
         Ok(Self::from(ObjectPath::try_from(value)?))
     }
 }
 
 impl TryFrom<String> for TrackId {
-    type Error = Error;
+    type Error = zbus::Error;
 
-    fn try_from(value: String) -> Result<Self> {
+    fn try_from(value: String) -> Result<Self, Self::Error> {
         Ok(Self::from(ObjectPath::try_from(value)?))
     }
 }
 
-impl TryFrom<Value<'_>> for TrackId {
-    type Error = Error;
+impl TryFrom<Variant<'_>> for TrackId {
+    type Error = zbus::Error;
 
-    fn try_from(value: Value<'_>) -> Result<Self> {
+    fn try_from(value: Variant<'_>) -> Result<Self, Self::Error> {
         ObjectPath::try_from(value).map(|o| Self(o.to_owned()))
     }
 }
 
-impl TryFrom<&Value<'_>> for TrackId {
-    type Error = Error;
+impl TryFrom<&Variant<'_>> for TrackId {
+    type Error = zbus::Error;
 
-    fn try_from(value: &Value<'_>) -> Result<Self> {
+    fn try_from(value: &Variant<'_>) -> Result<Self, Self::Error> {
         ObjectPath::try_from(value).map(|o| Self(o.to_owned()))
     }
 }

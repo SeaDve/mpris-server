@@ -1,7 +1,7 @@
 use std::{collections::HashMap, fmt};
 
 use serde::Serialize;
-use zbus::zvariant::{Error, Result, Type, Value};
+use zbus::{Error, Result, Type, Variant};
 
 use crate::{Time, TrackId, Uri};
 
@@ -33,7 +33,7 @@ pub type DateTime = String;
 #[serde(transparent)]
 #[zvariant(signature = "a{sv}")]
 #[doc(alias = "Metadata_Map")]
-pub struct Metadata(HashMap<String, Value<'static>>);
+pub struct Metadata(HashMap<String, Variant<'static>>);
 
 impl Clone for Metadata {
     fn clone(&self) -> Self {
@@ -73,14 +73,14 @@ impl Metadata {
     /// Returns the value corresponding to the key and convert it to `V`.
     pub fn get<'v, V>(&'v self, key: &str) -> Option<Result<&'v V>>
     where
-        &'v V: TryFrom<&'v Value<'v>>,
-        <&'v V as TryFrom<&'v Value<'v>>>::Error: Into<Error>,
+        &'v V: TryFrom<&'v Variant<'v>>,
+        <&'v V as TryFrom<&'v Variant<'v>>>::Error: Into<Error>,
     {
         self.get_value(key).map(|v| v.downcast_ref())
     }
 
     /// Returns a reference to the value corresponding to the key.
-    pub fn get_value(&self, key: &str) -> Option<&Value<'_>> {
+    pub fn get_value(&self, key: &str) -> Option<&Variant<'_>> {
         self.0.get(key)
     }
 
@@ -91,8 +91,8 @@ impl Metadata {
     pub fn set(
         &mut self,
         key: &str,
-        value: Option<impl Into<Value<'static>>>,
-    ) -> Option<Value<'static>> {
+        value: Option<impl Into<Variant<'static>>>,
+    ) -> Option<Variant<'static>> {
         self.set_value(key, value.map(|value| value.into()))
     }
 
@@ -101,13 +101,13 @@ impl Metadata {
     ///
     /// The entry is removed if the given value is `None`.
     ///
-    /// This behaves like [`Metadata::set`], but this takes a [`enum@Value`]
+    /// This behaves like [`Metadata::set`], but this takes a [`enum@Variant`]
     /// instead of a generic type.
     pub fn set_value(
         &mut self,
         key: &str,
-        value: Option<Value<'static>>,
-    ) -> Option<Value<'static>> {
+        value: Option<Variant<'static>>,
+    ) -> Option<Variant<'static>> {
         if let Some(value) = value {
             self.0.insert(key.into(), value)
         } else {
@@ -422,7 +422,7 @@ pub struct MetadataBuilder {
 
 impl MetadataBuilder {
     /// Sets a value for the given key.
-    pub fn other(mut self, key: &str, value: impl Into<Value<'static>>) -> Self {
+    pub fn other(mut self, key: &str, value: impl Into<Variant<'static>>) -> Self {
         self.m.set(key, Some(value));
         self
     }
@@ -581,15 +581,15 @@ impl MetadataBuilder {
     }
 }
 
-impl From<Metadata> for Value<'_> {
+impl From<Metadata> for Variant<'_> {
     fn from(metainfo: Metadata) -> Self {
-        Value::new(metainfo.0)
+        Variant::new(metainfo.0)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use zbus::zvariant::Str;
+    use zbus::Str;
 
     use super::*;
 
